@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd `dirname $0`
+SCRIPTDIR=`pwd`
+cd -
+
+CP="$SCRIPTDIR/config:$SCRIPTDIR/lib/*"
+
+java -classpath $CP com.sandy.sconsole.SConsole
+
