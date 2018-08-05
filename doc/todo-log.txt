@@ -10,5 +10,8 @@ Pending log
 
 Completed log
 --------------------------------------------------------------------------------
-
+* 5/8 - application.properties file and accessing property values
+* 5/8 - Custom properties in application.properties
+        Custom properties file loading in a spring boot application  
+* 5/8 - Accessing container managed beans from non CM classes
 

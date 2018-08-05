@@ -10,12 +10,17 @@ import java.awt.image.BufferedImage ;
 
 import javax.swing.JFrame ;
 
+import org.apache.log4j.Logger ;
+
 import com.sandy.common.ui.SwingUtils ;
 import com.sandy.sconsole.ui.panels.SConsoleBasePanel ;
 import com.sandy.sconsole.ui.panels.daytime.DayTimePanel ;
 
 @SuppressWarnings( "serial" )
 public class SConsoleFrame extends JFrame {
+    
+    @SuppressWarnings( "unused" )
+    private static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
     
     private Container contentPane = null ;
     

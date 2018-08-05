@@ -9,13 +9,16 @@ import java.util.Timer ;
 import java.util.TimerTask ;
 
 import org.apache.log4j.Logger ;
+import org.springframework.beans.BeansException ;
 import org.springframework.boot.SpringApplication ;
 import org.springframework.boot.autoconfigure.SpringBootApplication ;
+import org.springframework.context.ApplicationContext ;
+import org.springframework.context.ApplicationContextAware ;
 
 import com.sandy.sconsole.ui.SConsoleFrame ;
 
 @SpringBootApplication
-public class SConsole {
+public class SConsole implements ApplicationContextAware {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
     
@@ -54,11 +57,27 @@ public class SConsole {
         DAY_TIMER_TASKS.add( task ) ;
     }
     
+    private static ApplicationContext APP_CTX = null ;
+    
+    @Override
+    public void setApplicationContext( ApplicationContext applicationContext )
+            throws BeansException {
+        APP_CTX = applicationContext ;
+    }
+    
+    public static ApplicationContext getAppContext() {
+        return APP_CTX ;
+    }
+    
+    public static SConsoleConfig getConfig() {
+        return ( SConsoleConfig )APP_CTX.getBean( "config" ) ;
+    }
+
     public static void main( String[] args ) {
-        log.debug( "Starting SConsole.." ) ;
-        new SConsoleFrame() ;
-        
         log.debug( "Starting Spring Booot..." ) ;
         SpringApplication.run( SConsole.class, args ) ;
+
+        log.debug( "Starting SConsole.." ) ;
+        new SConsoleFrame() ;
     }
 }
