@@ -1,0 +1,14 @@
+Pending log
+--------------------------------------------------------------------------------
+* 5/8 - Serving static content via Spring Boot
+* 5/8 - Building a simple Angular2 web app
+* 5/8 - Communicating with REST endpoints via JSON
+    * URL parameters
+    * POST data
+* 5/8 - Packaging a Spring Boot application
+
+
+Completed log
+--------------------------------------------------------------------------------
+
+

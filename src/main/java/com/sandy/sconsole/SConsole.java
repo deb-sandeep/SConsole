@@ -9,9 +9,12 @@ import java.util.Timer ;
 import java.util.TimerTask ;
 
 import org.apache.log4j.Logger ;
+import org.springframework.boot.SpringApplication ;
+import org.springframework.boot.autoconfigure.SpringBootApplication ;
 
 import com.sandy.sconsole.ui.SConsoleFrame ;
 
+@SpringBootApplication
 public class SConsole {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
@@ -54,5 +57,8 @@ public class SConsole {
     public static void main( String[] args ) {
         log.debug( "Starting SConsole.." ) ;
         new SConsoleFrame() ;
+        
+        log.debug( "Starting Spring Booot..." ) ;
+        SpringApplication.run( SConsole.class, args ) ;
     }
 }
