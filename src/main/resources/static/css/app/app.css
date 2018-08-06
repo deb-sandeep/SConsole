@@ -127,3 +127,11 @@ a {
 .button.route:hover {
     background: #657A95;
 }
+
+.ota-req-sent {
+    color: #FF0000;
+}
+
+.ota-idle {
+    color: #E2E2E2; 
+}

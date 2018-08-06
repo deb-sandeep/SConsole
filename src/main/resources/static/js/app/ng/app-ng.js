@@ -1,7 +1,1 @@
-var sConsoleApp = angular.module( 'sconsoleApp', 
-                                  [ 'ngRoute', 
-                                    'ui.bootstrap', 
-                                    'ngSanitize', 
-                                    'ui.indeterminate' 
-                                  ] ) ;
-
+var sConsoleApp = angular.module( 'sConsoleApp', [] ) ;

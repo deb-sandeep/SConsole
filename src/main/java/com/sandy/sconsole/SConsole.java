@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication ;
 import org.springframework.context.ApplicationContext ;
 import org.springframework.context.ApplicationContextAware ;
 
-import com.sandy.sconsole.ui.SConsoleFrame ;
-
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
 

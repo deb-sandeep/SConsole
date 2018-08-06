@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="sConsoleApp">
 <head>
     <meta charset="ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,56 +12,66 @@
     <link rel="stylesheet" href="css/app/app.css"/>
     
     <script src="js/app/ng/app-ng.js"></script>
+    <script src="js/app/ng/remote/controller.js"></script>
 </head>
-<body>
+
+<body ng-controller="RemoteController">
 
 <div class="header" style="display: table;">
     <div style="display: table-cell; vertical-align: middle;">
-        <div>SConsole</div>
+        <div ng-class="getOTAStatus()">SConsole</div>
     </div>
 </div>
 
 <div class="remote-body">
   <div class="remote-row-separator"></div>
   <div class="remote-button-row">
-    <div class="button screenlet"><a href="#">S1</a></div>
-    <div class="button screenlet"><a href="#">S2</a></div>
-    <div class="button screenlet"><a href="#">S3</a></div>
-    <div class="button screenlet"><a href="#">S4</a></div>
-    <div class="button screenlet"><a href="#">S5</a></div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '1')">S1</div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '2')">S2</div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '3')">S3</div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '4')">S4</div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '5')">S5</div>
   </div>
   
   <div class="remote-nav-row">
     <div class="button nav-blank"></div>
-    <div class="button nav">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Up')">
         <span class="glyphicon glyphicon-chevron-up"></span>
     </div>
     <div class="button nav-blank"></div>
   </div>
   <div class="remote-nav-row">
-    <div class="button nav">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Left')">
         <span class="glyphicon glyphicon-chevron-left"></span>
     </div>
-    <div class="button nav">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Select')">
         <span class="glyphicon glyphicon-ok-sign"></span>
     </div>
-    <div class="button nav">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Right')">
         <span class="glyphicon glyphicon-chevron-right"></span>
     </div>
   </div>
   <div class="remote-nav-row">
     <div class="button nav-blank"></div>
-    <div class="button nav">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Down')">
         <span class="glyphicon glyphicon-chevron-down"></span>
     </div>
     <div class="button nav-blank"></div>
   </div>
   
   <div class="remote-button-row">
-    <div class="button start-stop">
-        <span class="glyphicon glyphicon-play"></span>
+    <div class="button start-stop"
+         ng-click="btnPressed('Run', 'PlayPause')">
+        <span class="glyphicon glyphicon-play"></span>/
+        <span class="glyphicon glyphicon-pause"></span>
     </div>
-    <div class="button start-stop">
+    <div class="button start-stop"
+         ng-click="btnPressed('Run', 'Stop')">
         <span class="glyphicon glyphicon-stop"></span>
     </div>
   </div>
@@ -69,16 +79,40 @@
   <div class="remote-row-separator"></div>
 
   <div class="remote-button-row">
-    <div class="button fn" style="background-color:#3C979E">A</div>
-    <div class="button fn" style="background-color:#7A9B2E">B</div>
-    <div class="button fn" style="background-color:#B96F1B">C</div>
-    <div class="button fn" style="background-color:#007C85">D</div>
+    <div class="button fn" style="background-color:#3C979E"
+         ng-click="btnPressed('Function', 'A')">
+        A
+    </div>
+    <div class="button fn" style="background-color:#7A9B2E"
+         ng-click="btnPressed('Function', 'B')">
+        B
+    </div>
+    <div class="button fn" style="background-color:#B96F1B"
+         ng-click="btnPressed('Function', 'C')">
+        C
+    </div>
+    <div class="button fn" style="background-color:#007C85"
+         ng-click="btnPressed('Function', 'D')">
+        D
+    </div>
   </div>
   <div class="remote-button-row">
-    <div class="button fn" style="background-color:#95ADBE">E</div>
-    <div class="button fn" style="background-color:#BB545F">F</div>
-    <div class="button fn" style="background-color:#428131">G</div>
-    <div class="button fn" style="background-color:#C5852F">H</div>
+    <div class="button fn" style="background-color:#95ADBE"
+         ng-click="btnPressed('Function', 'E')">
+        E
+    </div>
+    <div class="button fn" style="background-color:#BB545F"
+         ng-click="btnPressed('Function', 'F')">
+        F
+    </div>
+    <div class="button fn" style="background-color:#428131"
+         ng-click="btnPressed('Function', 'G')">
+        G
+    </div>
+    <div class="button fn" style="background-color:#C5852F"
+         ng-click="btnPressed('Function', 'H')">
+        H
+    </div>
   </div>
 
   <div class="remote-row-separator"></div>
