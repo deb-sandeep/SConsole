@@ -78,6 +78,6 @@ public class SConsole implements ApplicationContextAware {
         SpringApplication.run( SConsole.class, args ) ;
 
         log.debug( "Starting SConsole.." ) ;
-        new SConsoleFrame() ;
+        //new SConsoleFrame() ;
     }
 }
