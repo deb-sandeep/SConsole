@@ -23,7 +23,7 @@ public class ScreenletContainer extends JPanel {
 
     private static final Logger log = Logger.getLogger( ScreenletContainer.class ) ;
     
-    private static final int SCREENLET_HEIGHT = 250 ;
+    private static final int SCREENLET_HEIGHT = 150 ;
     
     private SConsoleFrame frame          = null ;
     private JScrollPane   scrollPane     = new JScrollPane() ;

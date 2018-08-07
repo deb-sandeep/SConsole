@@ -13,7 +13,7 @@ public class ScreenletSmallPanel extends ScreenletPanel {
     
     private static final Color MAXIMIZED_BORDER_COLOR  = Color.decode( "0x00FF00" ) ;
     private static final Color ACTIVE_BORDER_COLOR     = Color.decode( "0xFF0000" ) ;
-    private static final Color PASSIVE_BORDER_COLOR    = Color.decode( "0x3C3C3C" ) ;
+    private static final Color PASSIVE_BORDER_COLOR    = Color.decode( "0x353535" ) ;
     private static final Color EMPTY_BORDER_COLOR      = SConsole.BG_COLOR ;
 
     private static final Border MAX_BORDER     = new LineBorder( MAXIMIZED_BORDER_COLOR, 1 ) ; 

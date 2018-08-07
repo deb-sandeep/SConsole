@@ -23,7 +23,6 @@ import com.sandy.sconsole.core.frame.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
-import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
 
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
@@ -33,8 +32,7 @@ public class SConsole implements ApplicationContextAware {
 
     public static Color               BG_COLOR        = Color.BLACK ;
 
-    private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER",
-            true ) ;
+    private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER", true ) ;
     private static Set<TimerTask>     DAY_TIMER_TASKS = new HashSet<TimerTask>() ;
     private static ApplicationContext APP_CTX         = null ;
     private static SConsole           APP             = null ;
@@ -84,8 +82,8 @@ public class SConsole implements ApplicationContextAware {
 
     // ---------------- Instance methods start ---------------------------------
 
-    private List<Screenlet>      screenlets     = new ArrayList<Screenlet>() ;
-    private SConsoleFrame        frame          = null ;
+    private List<Screenlet> screenlets = new ArrayList<Screenlet>() ;
+    private SConsoleFrame   frame      = null ;
 
     @Autowired
     private RemoteKeyEventRouter keyEventRouter = null ;
@@ -97,6 +95,8 @@ public class SConsole implements ApplicationContextAware {
     public void initialize() {
         registerScreenlets() ;
         this.frame = new SConsoleFrame() ;
+        this.frame.toggleScreenletPanelVisibility() ;
+        
         keyEventRouter.registerFrame( frame ) ;
     }
 
@@ -110,11 +110,6 @@ public class SConsole implements ApplicationContextAware {
 
         log.debug( "Registering screenlets" ) ;
         screenlets.add( new DayTimeScreenlet().initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S1" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S2" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S3" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S4" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S5" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {

@@ -95,7 +95,7 @@ public class SConsoleFrame extends JFrame {
         }
     }
     
-    private void toggleScreenletPanelVisibility() {
+    public void toggleScreenletPanelVisibility() {
         
         BorderLayout layout = (BorderLayout)contentPane.getLayout() ;
         if( layout.getLayoutComponent( BorderLayout.WEST ) == null ) {

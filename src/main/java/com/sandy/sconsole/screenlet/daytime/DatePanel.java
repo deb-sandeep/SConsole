@@ -24,7 +24,7 @@ public class DatePanel extends JPanel {
     }
     
     private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 75 ) ;
-    private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 35 ) ;
+    private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 30 ) ;
     
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "d MMM", Locale.ENGLISH ) ;
 
