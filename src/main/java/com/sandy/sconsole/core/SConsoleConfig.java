@@ -1,4 +1,4 @@
-package com.sandy.sconsole;
+package com.sandy.sconsole.core;
 
 import org.springframework.boot.context.properties.ConfigurationProperties ;
 import org.springframework.context.annotation.Configuration ;

@@ -1,4 +1,4 @@
-package com.sandy.sconsole.ui.panels.daytime;
+package com.sandy.sconsole.screenlet.daytime;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
@@ -11,7 +11,6 @@ import javax.swing.JLabel ;
 import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.ui.panels.SConsoleBasePanel ;
 
 @SuppressWarnings( "serial" )
 public class TimePanel extends SConsoleBasePanel {

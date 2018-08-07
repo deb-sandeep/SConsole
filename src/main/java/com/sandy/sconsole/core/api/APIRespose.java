@@ -1,4 +1,4 @@
-package com.sandy.sconsole.dto;
+package com.sandy.sconsole.core.api;
 
 public class APIRespose {
 

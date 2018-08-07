@@ -1,6 +1,6 @@
-package com.sandy.sconsole.dto;
+package com.sandy.sconsole.api.remote;
 
-public class ButtonPressEvent {
+public class KeyPressEvent {
 
     private String btnType = null ;
     private String btnCode = null ;
@@ -19,5 +19,9 @@ public class ButtonPressEvent {
     
     public void setBtnCode( String btnCode ) {
         this.btnCode = btnCode;
+    }
+    
+    public String toString() {
+        return "KeyEvent [" + btnType + ", " + btnCode + "]" ;
     }
 }

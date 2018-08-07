@@ -1,4 +1,4 @@
-package com.sandy.sconsole.ui.panels.daytime;
+package com.sandy.sconsole.screenlet.daytime;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
@@ -12,24 +12,23 @@ import javax.swing.JLabel ;
 import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.ui.panels.SConsoleBasePanel ;
 
 @SuppressWarnings( "serial" )
-public class DayPanel extends SConsoleBasePanel {
+public class DatePanel extends SConsoleBasePanel {
     
     private class DayTriggerHandler extends TimerTask {
         public void run() {
-            dayLabel.setText( SDF.format( new Date() ) );
+            dateLabel.setText( SDF.format( new Date() ) );
         }
     }
     
     private static Font             FONT = new Font( "Courier", Font.PLAIN, 75 ) ;
-    private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, ", Locale.ENGLISH ) ;
+    private static SimpleDateFormat SDF  = new SimpleDateFormat( "d MMM", Locale.ENGLISH ) ;
 
     private DayTriggerHandler dayTimerHandler = new DayTriggerHandler() ;
-    private JLabel            dayLabel        = new JLabel() ;
+    private JLabel            dateLabel       = new JLabel() ;
 
-    public DayPanel() {
+    public DatePanel() {
         super() ;
         SConsole.addDayTimerTask( dayTimerHandler ) ;
         setUpUI() ;
@@ -37,12 +36,12 @@ public class DayPanel extends SConsoleBasePanel {
     
     private void setUpUI() {
         setLayout( new BorderLayout() ) ;
-        add( dayLabel, BorderLayout.CENTER ) ;
+        add( dateLabel, BorderLayout.CENTER ) ;
         
-        dayLabel.setHorizontalAlignment( SwingConstants.RIGHT ) ;
-        dayLabel.setVerticalAlignment( SwingConstants.TOP ) ;
-        dayLabel.setFont( FONT ) ;
-        dayLabel.setForeground( Color.GRAY ) ;
-        dayLabel.setText( SDF.format( new Date() ) );
+        dateLabel.setHorizontalAlignment( SwingConstants.LEFT ) ;
+        dateLabel.setVerticalAlignment( SwingConstants.TOP ) ;
+        dateLabel.setFont( FONT ) ;
+        dateLabel.setForeground( Color.GRAY ) ;
+        dateLabel.setText( SDF.format( new Date() ) );
     }
 }

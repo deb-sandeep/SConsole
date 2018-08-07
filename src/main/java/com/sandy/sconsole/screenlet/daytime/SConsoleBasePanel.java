@@ -1,4 +1,4 @@
-package com.sandy.sconsole.ui.panels;
+package com.sandy.sconsole.screenlet.daytime;
 
 import javax.swing.JPanel ;
 

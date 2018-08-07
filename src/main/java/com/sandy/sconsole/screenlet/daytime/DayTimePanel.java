@@ -1,9 +1,7 @@
-package com.sandy.sconsole.ui.panels.daytime;
+package com.sandy.sconsole.screenlet.daytime;
 
 import javax.swing.BoxLayout ;
 import javax.swing.JPanel ;
-
-import com.sandy.sconsole.ui.panels.SConsoleBasePanel ;
 
 @SuppressWarnings( "serial" )
 public class DayTimePanel extends SConsoleBasePanel {
