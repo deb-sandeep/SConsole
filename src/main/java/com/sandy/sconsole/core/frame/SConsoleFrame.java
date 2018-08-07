@@ -23,7 +23,7 @@ public class SConsoleFrame extends JFrame {
     private static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
     
     private Container contentPane = null ;
-    private ScreenletPanel screenletPanel = null ;
+    private ScreenletContainer screenletPanel = null ;
     
     private ScreenletLargePanel currentLargeScreenletPanel = null ;
     
@@ -31,7 +31,7 @@ public class SConsoleFrame extends JFrame {
         super() ;
         
         this.contentPane = super.getContentPane() ;
-        this.screenletPanel = new ScreenletPanel( this ) ;
+        this.screenletPanel = new ScreenletContainer( this ) ;
         
         setUpUI() ;
         setVisible( true ) ;

@@ -22,6 +22,7 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
 import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
 
 @SpringBootApplication
@@ -108,12 +109,12 @@ public class SConsole implements ApplicationContextAware {
     private void registerScreenlets() {
 
         log.debug( "Registering screenlets" ) ;
+        screenlets.add( new DayTimeScreenlet().initialize() ) ;
         screenlets.add( new DummyScreenlet( "S1" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "S2" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "S3" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "S4" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "S5" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "S6" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {

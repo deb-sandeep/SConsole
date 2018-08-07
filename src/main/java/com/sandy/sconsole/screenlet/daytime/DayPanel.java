@@ -9,12 +9,13 @@ import java.util.Locale ;
 import java.util.TimerTask ;
 
 import javax.swing.JLabel ;
+import javax.swing.JPanel ;
 import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.SConsole ;
 
 @SuppressWarnings( "serial" )
-public class DayPanel extends SConsoleBasePanel {
+public class DayPanel extends JPanel {
     
     private class DayTriggerHandler extends TimerTask {
         public void run() {
@@ -22,25 +23,28 @@ public class DayPanel extends SConsoleBasePanel {
         }
     }
     
-    private static Font             FONT = new Font( "Courier", Font.PLAIN, 75 ) ;
+    private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 75 ) ;
+    private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 35 ) ;
+    
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, ", Locale.ENGLISH ) ;
 
     private DayTriggerHandler dayTimerHandler = new DayTriggerHandler() ;
     private JLabel            dayLabel        = new JLabel() ;
 
-    public DayPanel() {
+    public DayPanel( boolean large ) {
         super() ;
         SConsole.addDayTimerTask( dayTimerHandler ) ;
-        setUpUI() ;
+        setUpUI( large ) ;
     }
     
-    private void setUpUI() {
+    private void setUpUI( boolean large ) {
         setLayout( new BorderLayout() ) ;
+        setBackground( SConsole.BG_COLOR ) ;
         add( dayLabel, BorderLayout.CENTER ) ;
         
         dayLabel.setHorizontalAlignment( SwingConstants.RIGHT ) ;
         dayLabel.setVerticalAlignment( SwingConstants.TOP ) ;
-        dayLabel.setFont( FONT ) ;
+        dayLabel.setFont( large ? LG_FONT : SM_FONT ) ;
         dayLabel.setForeground( Color.GRAY ) ;
         dayLabel.setText( SDF.format( new Date() ) );
     }

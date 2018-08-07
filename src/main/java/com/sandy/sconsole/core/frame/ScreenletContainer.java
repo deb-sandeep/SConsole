@@ -19,9 +19,9 @@ import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
 
 @SuppressWarnings( "serial" )
-public class ScreenletPanel extends JPanel {
+public class ScreenletContainer extends JPanel {
 
-    private static final Logger log = Logger.getLogger( ScreenletPanel.class ) ;
+    private static final Logger log = Logger.getLogger( ScreenletContainer.class ) ;
     
     private static final int SCREENLET_HEIGHT = 250 ;
     
@@ -33,7 +33,7 @@ public class ScreenletPanel extends JPanel {
     private List<Screenlet> screenlets = null ;
     private Screenlet       currentlyMaximizedScreenlet = null ;
     
-    public ScreenletPanel( SConsoleFrame frame ) {
+    public ScreenletContainer( SConsoleFrame frame ) {
         super( true ) ;
         setUpUI() ;
         this.frame = frame ;
