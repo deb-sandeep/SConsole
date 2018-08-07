@@ -19,7 +19,7 @@ public class DummyScreenlet extends AbstractScreenlet {
     
     public ScreenletSmallPanel createSmallPanel() {
         
-        ScreenletSmallPanel panel = new ScreenletSmallPanel() ;
+        ScreenletSmallPanel panel = new ScreenletSmallPanel( this ) ;
         panel.setBackground( SConsole.BG_COLOR ) ;
         panel.setLayout( new BorderLayout() );
         
@@ -35,7 +35,7 @@ public class DummyScreenlet extends AbstractScreenlet {
     
     public ScreenletLargePanel createLargePanel() {
 
-        ScreenletLargePanel panel = new ScreenletLargePanel() ;
+        ScreenletLargePanel panel = new ScreenletLargePanel( this ) ;
         panel.setBackground( Color.GRAY ) ;
         panel.setLayout( new BorderLayout() );
         

@@ -8,10 +8,9 @@ public interface Screenlet {
     public ScreenletSmallPanel getSmallPanel() ;
     public ScreenletLargePanel getLargePanel() ;
     
-    public void toggleStartPause() ;
-    public void stop() ;
     public void handleFunctionKeyPress( String fnCode ) ;
     public void handleNavKeyPress( String navKeyCode ) ;
+    public void handleRunKeyPress( String code ) ;
     
     public void isBeingMinimized() ;
     public void isBeingMaximized() ;

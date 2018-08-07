@@ -75,6 +75,11 @@ public class SConsoleFrame extends JFrame {
             case "ScreenletSelection" :
                 handleScreenletSelectionKeyPress( event.getBtnCode() ) ;
                 break ;
+            case "Run" :
+                if( currentLargeScreenletPanel != null ) {
+                    currentLargeScreenletPanel.getScreenlet()
+                                              .handleRunKeyPress( event.getBtnCode() ) ;
+                }
         }
     }
     
