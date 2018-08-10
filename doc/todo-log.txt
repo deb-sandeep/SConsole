@@ -1,7 +1,9 @@
 Pending log
 --------------------------------------------------------------------------------
-* 11/8 - Mapping a JPA entity to a database table
+* 11/8 - Master data table for topic and subject
+* 11/8 - Tab in remote to switch fields
 * 11/8 - Parent child - one to many relationship
+* 11/8 - Think about adding Topic, Book, problem drop down
 
 Completed log
 --------------------------------------------------------------------------------
@@ -15,4 +17,5 @@ Completed log
     * URL parameters
     * POST data
 * 5/8 - Packaging a Spring Boot application
+* 11/8 - Mapping a JPA entity to a database table
 

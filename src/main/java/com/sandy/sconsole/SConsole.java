@@ -22,8 +22,7 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
-import com.sandy.sconsole.jpa.User ;
-import com.sandy.sconsole.jpa.UserRepository ;
+import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
 
 @SpringBootApplication
@@ -91,7 +90,7 @@ public class SConsole implements ApplicationContextAware {
     private RemoteKeyEventRouter keyEventRouter = null ;
     
     @Autowired
-    private UserRepository userRepository = null ;
+    private SessionRepository sessionRepository = null ;
 
     public SConsole() {
         APP = this ;
@@ -105,14 +104,6 @@ public class SConsole implements ApplicationContextAware {
         keyEventRouter.registerFrame( frame ) ;
     }
     
-    public void insertRecords() {
-        
-        User n = new User();
-        n.setName( "Sandeep" ) ;
-        n.setEmail( "deb.sandeep@gmail.com" ) ;
-        userRepository.save(n);        
-    }
-
     @Override
     public void setApplicationContext( ApplicationContext applicationContext )
             throws BeansException {
@@ -128,6 +119,10 @@ public class SConsole implements ApplicationContextAware {
     public List<Screenlet> getScreenlets() {
         return this.screenlets ;
     }
+    
+    public SessionRepository getSessionRepository() {
+        return this.sessionRepository ;
+    }
 
     // --------------------- Main method ---------------------------------------
 
@@ -138,6 +133,5 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
-        app.insertRecords() ;
     }
 }
