@@ -1,12 +1,7 @@
 Pending log
 --------------------------------------------------------------------------------
-* 5/8 - Serving static content via Spring Boot
-* 5/8 - Building a simple Angular2 web app
-* 5/8 - Communicating with REST endpoints via JSON
-    * URL parameters
-    * POST data
-* 5/8 - Packaging a Spring Boot application
-
+* 11/8 - Mapping a JPA entity to a database table
+* 11/8 - Parent child - one to many relationship
 
 Completed log
 --------------------------------------------------------------------------------
@@ -14,4 +9,10 @@ Completed log
 * 5/8 - Custom properties in application.properties
         Custom properties file loading in a spring boot application  
 * 5/8 - Accessing container managed beans from non CM classes
+* 5/8 - Serving static content via Spring Boot
+* 5/8 - Building a simple Angular2 web app
+* 5/8 - Communicating with REST endpoints via JSON
+    * URL parameters
+    * POST data
+* 5/8 - Packaging a Spring Boot application
 
