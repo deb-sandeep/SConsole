@@ -23,10 +23,10 @@ public class DatePanel extends JPanel {
         }
     }
     
-    private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 75 ) ;
+    private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 80 ) ;
     private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 30 ) ;
     
-    private static SimpleDateFormat SDF  = new SimpleDateFormat( "d MMM", Locale.ENGLISH ) ;
+    private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, d MMM", Locale.ENGLISH ) ;
 
     private DayTriggerHandler dayTimerHandler = new DayTriggerHandler() ;
     private JLabel            dateLabel       = new JLabel() ;
@@ -42,7 +42,7 @@ public class DatePanel extends JPanel {
         setBackground( SConsole.BG_COLOR ) ;
         add( dateLabel, BorderLayout.CENTER ) ;
         
-        dateLabel.setHorizontalAlignment( SwingConstants.LEFT ) ;
+        dateLabel.setHorizontalAlignment( SwingConstants.CENTER ) ;
         dateLabel.setVerticalAlignment( SwingConstants.TOP ) ;
         dateLabel.setFont( large ? LG_FONT : SM_FONT ) ;
         dateLabel.setForeground( Color.GRAY ) ;
