@@ -6,7 +6,10 @@ import javax.persistence.Entity ;
 import javax.persistence.GeneratedValue ;
 import javax.persistence.GenerationType ;
 import javax.persistence.Id ;
+import javax.persistence.ManyToOne ;
 import javax.persistence.Table ;
+
+import com.sandy.sconsole.dao.entity.master.Topic ;
 
 @Entity
 @Table( name = "session" )
@@ -15,8 +18,11 @@ public class Session {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
-    private String subject ;
-    private String topic ;
+    
+    @ManyToOne
+    private Topic topic ;
+    
+    private String sessionType ;
     private Timestamp startTime ;
     private Timestamp endTime ;
     private Integer duration ;
@@ -24,12 +30,6 @@ public class Session {
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
-    
-    public String getSubject() { return subject ; }
-    public void setSubject( String subject ) { this.subject = subject ; }
-    
-    public String getTopic() { return topic ; }
-    public void setTopic( String topic ) { this.topic = topic ; }
     
     public Timestamp getStartTime() { return startTime ; }
     public void setStartTime( Timestamp startTime ) { this.startTime = startTime ; }
@@ -43,5 +43,13 @@ public class Session {
     public Integer getEffectiveDuration() { return effectiveDuration ; }
     public void setEffectiveDuration( Integer effectiveDuration ) {
         this.effectiveDuration = effectiveDuration ;
+    }
+    
+    public Topic getTopic() { return topic ; }
+    public void setTopic( Topic topic ) { this.topic = topic ; }
+    
+    public String getSessionType() { return sessionType ; }
+    public void setSessionType( String sessionType ) {
+        this.sessionType = sessionType ;
     }
 }

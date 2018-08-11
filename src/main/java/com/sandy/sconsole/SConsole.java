@@ -22,7 +22,11 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
+import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
+import com.sandy.sconsole.dao.repository.master.SubjectRepository ;
+import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
 
 @SpringBootApplication
@@ -91,6 +95,15 @@ public class SConsole implements ApplicationContextAware {
     
     @Autowired
     private SessionRepository sessionRepository = null ;
+    
+    @Autowired
+    private ProblemRepository problemRepository = null ;
+    
+    @Autowired
+    private SubjectRepository subjectRepository = null ;
+    
+    @Autowired
+    private TopicRepository topicRepository = null ;
 
     public SConsole() {
         APP = this ;
@@ -102,6 +115,14 @@ public class SConsole implements ApplicationContextAware {
         this.frame.toggleScreenletPanelVisibility() ;
         
         keyEventRouter.registerFrame( frame ) ;
+    }
+    
+    public void testJPA() {
+        
+        List<Topic> topics = topicRepository.findAllBySubjectName( "IIT - Chemistry" ) ;
+        for( Topic topic : topics ) {
+            log.debug( topic.getSection() + " - " + topic.getTopicName() ) ;
+        }
     }
     
     @Override
@@ -120,10 +141,18 @@ public class SConsole implements ApplicationContextAware {
         return this.screenlets ;
     }
     
-    public SessionRepository getSessionRepository() {
-        return this.sessionRepository ;
+    public ProblemRepository getProblemRepository() {
+        return problemRepository ;
     }
 
+    public SubjectRepository getSubjectRepository() {
+        return subjectRepository;
+    }
+
+    public SessionRepository getSessionRepository() {
+        return sessionRepository;
+    }
+    
     // --------------------- Main method ---------------------------------------
 
     public static void main( String[] args ) {
@@ -133,5 +162,6 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
+        app.testJPA() ;
     }
 }
