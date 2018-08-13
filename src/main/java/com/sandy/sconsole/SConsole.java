@@ -19,8 +19,8 @@ import org.springframework.context.ApplicationContext ;
 import org.springframework.context.ApplicationContextAware ;
 
 import com.sandy.sconsole.core.SConsoleConfig ;
-import com.sandy.sconsole.core.frame.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
+import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
@@ -28,6 +28,7 @@ import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.dao.repository.master.SubjectRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
+import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
 
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
@@ -135,6 +136,7 @@ public class SConsole implements ApplicationContextAware {
 
         log.debug( "Registering screenlets" ) ;
         screenlets.add( new DayTimeScreenlet().initialize() ) ;
+        screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {
@@ -151,6 +153,10 @@ public class SConsole implements ApplicationContextAware {
 
     public SessionRepository getSessionRepository() {
         return sessionRepository;
+    }
+    
+    public SConsoleFrame getFrame() {
+        return this.frame ;
     }
     
     // --------------------- Main method ---------------------------------------

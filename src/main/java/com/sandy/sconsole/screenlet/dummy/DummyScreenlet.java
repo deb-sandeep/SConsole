@@ -6,15 +6,21 @@ import java.awt.Font ;
 
 import javax.swing.JLabel ;
 
+import org.apache.log4j.Logger ;
+
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
 
 public class DummyScreenlet extends AbstractScreenlet {
+    
+    private static final Logger log = Logger.getLogger( DummyScreenlet.class ) ;
+    private DummyDialog dialog = null ;
 
     public DummyScreenlet( String name ) {
         super( name ) ;
+        dialog = new DummyDialog() ;
     }
     
     public ScreenletSmallPanel createSmallPanel() {
@@ -47,5 +53,22 @@ public class DummyScreenlet extends AbstractScreenlet {
         panel.add( label, BorderLayout.CENTER ) ;
         
         return panel ;
+    }
+    
+    public void run() {
+        log.debug( "Running dummy screenlet" ) ;
+    }
+
+    public void pause() {
+        log.debug( "Pausing dummy screenlet" ) ;
+        super.showDialog( dialog ) ;
+    }
+    
+    public void resume() {
+        log.debug( "Resuming dummy screenlet" ) ;
+    }
+    
+    public void stop() {
+        log.debug( "Stopping dummy screenlet" ) ;
     }
 }

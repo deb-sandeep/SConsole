@@ -14,6 +14,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.common.ui.SwingUtils ;
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
+import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 
 @SuppressWarnings( "serial" )
@@ -25,6 +26,7 @@ public class SConsoleFrame extends JFrame {
     private Container contentPane = null ;
     private ScreenletContainer screenletPanel = null ;
     
+    private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
     private ScreenletLargePanel currentLargeScreenletPanel = null ;
     
     public SConsoleFrame() {
@@ -71,15 +73,11 @@ public class SConsoleFrame extends JFrame {
 
     public void handleRemoteKeyEvent( KeyPressEvent event ) {
         
-        switch( event.getBtnType() ) {
-            case "ScreenletSelection" :
-                handleScreenletSelectionKeyPress( event.getBtnCode() ) ;
-                break ;
-            case "Run" :
-                if( currentLargeScreenletPanel != null ) {
-                    currentLargeScreenletPanel.getScreenlet()
-                                              .handleRunKeyPress( event.getBtnCode() ) ;
-                }
+        if( event.getBtnType().equals( "ScreenletSelection" ) ) {
+            handleScreenletSelectionKeyPress( event.getBtnCode() ) ;
+        }
+        else {
+            keyProcessor.processKeyEvent( event ) ;
         }
     }
     
@@ -115,6 +113,7 @@ public class SConsoleFrame extends JFrame {
         }
         
         currentLargeScreenletPanel = largePanel ;
+        keyProcessor.setKeyListener( currentLargeScreenletPanel.getScreenlet() ) ;
         
         contentPane.add( currentLargeScreenletPanel, BorderLayout.CENTER ) ;
         contentPane.revalidate() ;

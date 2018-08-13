@@ -1,4 +1,4 @@
-package com.sandy.sconsole.core.frame;
+package com.sandy.sconsole.core.remote;
 
 import java.util.concurrent.LinkedBlockingQueue ;
 
@@ -6,6 +6,7 @@ import org.apache.log4j.Logger ;
 import org.springframework.stereotype.Component ;
 
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
+import com.sandy.sconsole.core.frame.SConsoleFrame ;
 
 @Component
 public class RemoteKeyEventRouter extends Thread {

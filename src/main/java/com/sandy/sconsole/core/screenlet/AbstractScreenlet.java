@@ -1,9 +1,9 @@
 package com.sandy.sconsole.core.screenlet;
 
+import javax.swing.JDialog ;
+
 public abstract class AbstractScreenlet implements Screenlet {
 
-    public static enum RunState { STOPPED, RUNNING, PAUSED } ;
-    
     private String displayName = null ;
     private RunState runState = RunState.STOPPED ;
     private ScreenletSmallPanel smallPanel = null ;
@@ -27,6 +27,10 @@ public abstract class AbstractScreenlet implements Screenlet {
     public void setDisplayName( String displayName ) {
         this.displayName = displayName ;
     }
+    
+    protected void showDialog( JDialog dialog ) {
+        
+    }
 
     @Override
     public String getDisplayName() {
@@ -44,49 +48,6 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
     
     @Override
-    public void handleFunctionKeyPress( String fnCode ) {
-    }
-
-    @Override
-    public void handleNavKeyPress( String navKeyCode ) {
-    }
-    
-    @Override
-    public void handleRunKeyPress( String runKeyCode ) {
-        
-        switch( runKeyCode ) {
-            case "PlayPause":
-                if( this.runState == RunState.PAUSED ||
-                    this.runState == RunState.STOPPED ) {
-                    run() ;
-                    this.runState = RunState.RUNNING ;
-                    this.smallPanel.setActiveBorder( true ) ;
-                }
-                else if( this.runState == RunState.RUNNING ) {
-                    pause() ;
-                    this.runState = RunState.PAUSED ;
-                }
-                break ;
-            case "Stop":
-                if( this.runState != RunState.STOPPED ) {
-                    stop() ;
-                    this.runState = RunState.STOPPED ;
-                    this.smallPanel.setActiveBorder( false ) ;
-                }
-                break ;
-        }
-    }
-    
-    protected void run() {
-    }
-    
-    protected void pause() {
-    }
-    
-    protected void stop() {
-    }
-
-    @Override
     public void isBeingMinimized() {
         this.smallPanel.setPassiveBorder() ;
     }
@@ -94,5 +55,43 @@ public abstract class AbstractScreenlet implements Screenlet {
     @Override
     public void isBeingMaximized() {
         this.smallPanel.setMaximizedBorder() ;
+    }
+
+    @Override
+    public void handleFunctionKey( String fnCode ) {}
+
+    @Override
+    public void run() {}
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void stop() {}
+
+    @Override
+    public void handleLeftNavKey() {}
+
+    @Override
+    public void handleRightNavKey() {}
+
+    @Override
+    public void handleUpNavKey() {}
+
+    @Override
+    public void handleDownNavKey() {}
+
+    @Override
+    public void handleSelectNavKey() {}
+
+    @Override
+    public RunState getCurrentRunState() { return this.runState ; } ;
+
+    @Override
+    public void setCurrentRunState( RunState state ) {
+        this.runState = state ;
     }
 }
