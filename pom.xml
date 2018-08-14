@@ -102,7 +102,7 @@
         <dependency>  
             <groupId>javax.servlet</groupId>  
             <artifactId>javax.servlet-api</artifactId>  
-            <version>3.1.0</version>  
+            <version>3.1.0</version><!--$NO-MVN-MAN-VER$-->  
         </dependency>
          
         <!-- JPA Data (We are going to use Repositories, Entities, Hibernate, etc...) -->
@@ -112,10 +112,17 @@
         </dependency>
 
         <!-- Use MySQL Connector-J -->
+        <!-- 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        
+        -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <scope>runtime</scope>
+		</dependency>          
+         
     </dependencies>
 </project>

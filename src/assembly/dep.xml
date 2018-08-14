@@ -42,17 +42,4 @@
             </includes>
         </fileSet>
     </fileSets>
-
-    <files>
-        <file>
-          <source>${project.basedir}/src/main/config/config.package</source>
-          <outputDirectory>/config</outputDirectory>
-          <destName>config.properties</destName>
-        </file>
-        <file>
-          <source>${project.basedir}/src/main/config/log4j.package</source>
-          <outputDirectory>/config</outputDirectory>
-          <destName>log4j.properties</destName>
-        </file>
-    </files>
 </assembly>

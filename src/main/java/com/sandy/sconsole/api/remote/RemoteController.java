@@ -12,7 +12,8 @@ import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 @RestController
 public class RemoteController {
     
-    private static final Logger log = Logger.getLogger( RemoteController.class ) ;
+    @SuppressWarnings("unused")
+	private static final Logger log = Logger.getLogger( RemoteController.class ) ;
     
     @Autowired
     private RemoteKeyEventRouter keyEventRouter = null ;

@@ -22,6 +22,7 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.dao.entity.master.Problem;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
@@ -124,6 +125,15 @@ public class SConsole implements ApplicationContextAware {
         for( Topic topic : topics ) {
             log.debug( topic.getSection() + " - " + topic.getTopicName() ) ;
         }
+        
+        List<Problem> problems = problemRepository.findByBookIdAndTopicId(54, 81) ;
+        for( Problem problem : problems ) {
+        	log.debug( problem.getId() + " @ " + 
+                       problem.getBook().getBookName() + " @ " + 
+        			   problem.getTopic().getTopicName() + " @ " + 
+                       problem.getExerciseName() + " @ " + 
+        			   problem.getTag() ) ;
+        }
     }
     
     @Override
@@ -168,6 +178,6 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
-        app.testJPA() ;
+        //app.testJPA() ;
     }
 }
