@@ -15,10 +15,13 @@ import org.apache.log4j.Logger ;
 import com.sandy.common.ui.SwingUtils ;
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
+import com.sandy.sconsole.core.remote.RemoteKeyEventRouter;
+import com.sandy.sconsole.core.remote.RemoteKeyReceiver;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 
 @SuppressWarnings( "serial" )
-public class SConsoleFrame extends JFrame {
+public class SConsoleFrame extends JFrame
+	implements RemoteKeyReceiver {
     
     @SuppressWarnings( "unused" )
     private static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
@@ -26,14 +29,18 @@ public class SConsoleFrame extends JFrame {
     private Container contentPane = null ;
     private ScreenletContainer screenletPanel = null ;
     
+    private RemoteKeyEventRouter keyRouter = null ;
     private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
-    private ScreenletLargePanel currentLargeScreenletPanel = null ;
+    private ScreenletLargePanel curLargeScreenletPanel = null ;
     
-    public SConsoleFrame() {
+    public SConsoleFrame( RemoteKeyEventRouter keyRouter ) {
         super() ;
         
         this.contentPane = super.getContentPane() ;
         this.screenletPanel = new ScreenletContainer( this ) ;
+        this.keyRouter = keyRouter ;
+        
+        this.keyRouter.registerRemoteKeyReceiver( this ) ;
         
         setUpUI() ;
         setVisible( true ) ;
@@ -108,14 +115,14 @@ public class SConsoleFrame extends JFrame {
 
     public void setCenterPanel( ScreenletLargePanel largePanel ) {
         
-        if( currentLargeScreenletPanel != null ) {
-            contentPane.remove( currentLargeScreenletPanel ) ;
+        if( curLargeScreenletPanel != null ) {
+            contentPane.remove( curLargeScreenletPanel ) ;
         }
         
-        currentLargeScreenletPanel = largePanel ;
-        keyProcessor.setKeyListener( currentLargeScreenletPanel.getScreenlet() ) ;
+        curLargeScreenletPanel = largePanel ;
+        keyProcessor.setKeyListener( curLargeScreenletPanel.getScreenlet() ) ;
         
-        contentPane.add( currentLargeScreenletPanel, BorderLayout.CENTER ) ;
+        contentPane.add( curLargeScreenletPanel, BorderLayout.CENTER ) ;
         contentPane.revalidate() ;
         contentPane.repaint() ;
     }

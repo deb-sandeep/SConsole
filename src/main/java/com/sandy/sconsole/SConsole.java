@@ -34,8 +34,7 @@ import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
 
-    private static final Logger       log             = Logger
-            .getLogger( SConsole.class ) ;
+    private static final Logger log = Logger.getLogger( SConsole.class ) ;
 
     public static Color               BG_COLOR        = Color.BLACK ;
 
@@ -113,10 +112,8 @@ public class SConsole implements ApplicationContextAware {
 
     public void initialize() {
         registerScreenlets() ;
-        this.frame = new SConsoleFrame() ;
+        this.frame = new SConsoleFrame( keyEventRouter ) ;
         this.frame.toggleScreenletPanelVisibility() ;
-        
-        keyEventRouter.registerFrame( frame ) ;
     }
     
     public void testJPA() {
