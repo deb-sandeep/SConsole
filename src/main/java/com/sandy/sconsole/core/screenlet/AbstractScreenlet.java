@@ -1,6 +1,7 @@
 package com.sandy.sconsole.core.screenlet;
 
-import javax.swing.JDialog ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 
 public abstract class AbstractScreenlet implements Screenlet {
 
@@ -28,8 +29,8 @@ public abstract class AbstractScreenlet implements Screenlet {
         this.displayName = displayName ;
     }
     
-    protected void showDialog( JDialog dialog ) {
-        
+    protected Object showDialog( AbstractDialogPanel panel ) {
+        return SConsole.getApp().getFrame().showDialog( panel ) ;
     }
 
     @Override

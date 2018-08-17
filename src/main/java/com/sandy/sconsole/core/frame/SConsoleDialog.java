@@ -4,6 +4,7 @@ import java.awt.BorderLayout ;
 import java.awt.Color ;
 import java.awt.Container ;
 import java.awt.Cursor ;
+import java.awt.Dimension ;
 import java.awt.Point ;
 import java.awt.Toolkit ;
 import java.awt.image.BufferedImage ;
@@ -12,6 +13,7 @@ import javax.swing.JDialog;
 
 import org.apache.log4j.Logger ;
 
+import com.sandy.common.ui.SwingUtils ;
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
 import com.sandy.sconsole.core.remote.RemoteKeyReceiver;
@@ -25,19 +27,18 @@ class SConsoleDialog extends JDialog
     
     private Container contentPane = null ;
     private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
+    private AbstractDialogPanel panel = null ;
     
     public SConsoleDialog() {
         super() ;
-        
         this.contentPane = super.getContentPane() ;
-        
         setUpUI() ;
-        setVisible( true ) ;
     }
     
     private void setUpUI() {
         setUndecorated( true ) ;
         setResizable( false ) ;
+        setModal( true ) ;
         hideCursor() ;
         
         contentPane.setBackground( Color.BLACK ) ;
@@ -63,5 +64,27 @@ class SConsoleDialog extends JDialog
         if( !event.getBtnType().equals( "ScreenletSelection" ) ) {
             keyProcessor.processKeyEvent( event ) ;
         }
+    }
+    
+    void setPanel( AbstractDialogPanel panel ) {
+        
+        if( this.panel != null ) {
+            contentPane.remove( this.panel ) ;
+            this.panel.setParentDialog( null ) ;
+        }
+        
+        this.panel = panel ;
+        this.keyProcessor.setKeyListener( panel ) ;
+        
+        if( this.panel != null ) {
+            this.panel.setParentDialog( this ) ;
+            contentPane.add( this.panel, BorderLayout.CENTER ) ;
+            
+            Dimension prefSize = this.panel.getPreferredSize() ;
+            setSize( prefSize ) ;
+            SwingUtils.centerOnScreen( this, (int)prefSize.getWidth(), 
+                                             (int)prefSize.getHeight() ) ;
+        }
+
     }
 }

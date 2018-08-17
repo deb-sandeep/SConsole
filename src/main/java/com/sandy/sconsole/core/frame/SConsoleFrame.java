@@ -32,12 +32,14 @@ public class SConsoleFrame extends JFrame
     private RemoteKeyEventRouter keyRouter = null ;
     private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
     private ScreenletLargePanel curLargeScreenletPanel = null ;
+    private SConsoleDialog dialog = null ;
     
     public SConsoleFrame( RemoteKeyEventRouter keyRouter ) {
         super() ;
         
         this.contentPane = super.getContentPane() ;
         this.screenletPanel = new ScreenletContainer( this ) ;
+        this.dialog = new SConsoleDialog() ;
         this.keyRouter = keyRouter ;
         
         this.keyRouter.registerRemoteKeyReceiver( this ) ;
@@ -46,6 +48,7 @@ public class SConsoleFrame extends JFrame
         setVisible( true ) ;
         
         screenletPanel.maximizeDefaultScreenlet() ;
+        this.toggleScreenletPanelVisibility() ;
     }
     
     private void setUpUI() {
@@ -88,6 +91,17 @@ public class SConsoleFrame extends JFrame
         }
     }
     
+    public Object showDialog( AbstractDialogPanel panel ) {
+        
+        dialog.setPanel( panel ) ;
+        keyRouter.registerRemoteKeyReceiver( dialog ) ;
+        dialog.setVisible( true ) ;
+        dialog.setPanel( null ) ;
+        keyRouter.registerRemoteKeyReceiver( this ) ;
+        
+        return panel.getReturnValue() ;
+    }
+    
     private void handleScreenletSelectionKeyPress( String code ) {
 
         switch( code ) {
@@ -100,7 +114,7 @@ public class SConsoleFrame extends JFrame
         }
     }
     
-    public void toggleScreenletPanelVisibility() {
+    private void toggleScreenletPanelVisibility() {
         
         BorderLayout layout = (BorderLayout)contentPane.getLayout() ;
         if( layout.getLayoutComponent( BorderLayout.WEST ) == null ) {
@@ -113,7 +127,7 @@ public class SConsoleFrame extends JFrame
         contentPane.repaint() ;
     }
 
-    public void setCenterPanel( ScreenletLargePanel largePanel ) {
+    void setCenterPanel( ScreenletLargePanel largePanel ) {
         
         if( curLargeScreenletPanel != null ) {
             contentPane.remove( curLargeScreenletPanel ) ;

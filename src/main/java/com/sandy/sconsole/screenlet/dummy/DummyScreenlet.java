@@ -5,6 +5,7 @@ import java.awt.Color ;
 import java.awt.Font ;
 
 import javax.swing.JLabel ;
+import javax.swing.SwingUtilities ;
 
 import org.apache.log4j.Logger ;
 
@@ -56,12 +57,18 @@ public class DummyScreenlet extends AbstractScreenlet {
     }
     
     public void run() {
-        log.debug( "Running dummy screenlet" ) ;
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                log.debug( "Running dummy screenlet" ) ;
+                Object retVal = showDialog( dialog ) ;
+                log.debug( "Return value = " + retVal ) ;
+            }
+        } ) ;
     }
 
     public void pause() {
         log.debug( "Pausing dummy screenlet" ) ;
-        super.showDialog( dialog ) ;
     }
     
     public void resume() {

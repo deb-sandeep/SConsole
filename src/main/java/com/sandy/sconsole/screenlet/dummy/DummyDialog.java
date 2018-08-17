@@ -1,22 +1,32 @@
 package com.sandy.sconsole.screenlet.dummy;
 
-import javax.swing.JDialog ;
-import javax.swing.JRootPane ;
+import java.awt.Dimension ;
 
-import com.sandy.sconsole.SConsole ;
+import org.apache.log4j.Logger ;
+
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 
 @SuppressWarnings( "serial" )
-public class DummyDialog extends JDialog {
+public class DummyDialog extends AbstractDialogPanel {
+    
+    private static final Logger log = Logger.getLogger( DummyDialog.class ) ;
 
     public DummyDialog() {
-        super( SConsole.getApp().getFrame(), true ) ;
         setUpUI() ;
     }
     
     private void setUpUI() {
-        super.setUndecorated( true ) ;
-        super.getRootPane().setWindowDecorationStyle( JRootPane.NONE ) ;
-        
-        setBounds( 500, 500, 300, 300 ) ;
+        setPreferredSize( new Dimension( 400, 400 ) ) ;
+    }
+
+    @Override
+    public Object getReturnValue() {
+        return "Success" ;
+    }
+
+    @Override
+    public void handleSelectNavKey() {
+        log.debug( "Select key press received. Hiding the dialog." ) ;
+        super.hideDialog() ;
     }
 }

@@ -113,7 +113,6 @@ public class SConsole implements ApplicationContextAware {
     public void initialize() {
         registerScreenlets() ;
         this.frame = new SConsoleFrame( keyEventRouter ) ;
-        this.frame.toggleScreenletPanelVisibility() ;
     }
     
     public void testJPA() {
