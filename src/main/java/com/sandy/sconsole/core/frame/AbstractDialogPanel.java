@@ -1,7 +1,13 @@
 package com.sandy.sconsole.core.frame;
 
-import java.awt.BorderLayout ;
+import static com.sandy.sconsole.core.frame.SConsoleDialog.BG_COLOR ;
+import static javax.swing.SwingConstants.CENTER ;
 
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Font ;
+
+import javax.swing.BorderFactory ;
 import javax.swing.JLabel ;
 import javax.swing.JPanel;
 
@@ -11,16 +17,23 @@ import com.sandy.sconsole.core.remote.RemoteKeyListener;
 public abstract class AbstractDialogPanel extends JPanel 
     implements RemoteKeyListener {
 
+    public static final Font  FNBTN_FONT   = new Font( "Courier", Font.PLAIN, 20 ) ;
+    
+    public static final Color FN_A_COLOR = Color.decode( "#3C979E" ) ;
+    public static final Color FN_B_COLOR = Color.decode( "#7A9B2E" ) ;
+    public static final Color FN_C_COLOR = Color.decode( "#B96F1B" ) ;
+    public static final Color FN_D_COLOR = Color.decode( "#007C85" ) ;
+    public static final Color FN_E_COLOR = Color.decode( "#95ADBE" ) ;
+    public static final Color FN_F_COLOR = Color.decode( "#BB545F" ) ;
+    public static final Color FN_G_COLOR = Color.decode( "#428131" ) ;
+    public static final Color FN_H_COLOR = Color.decode( "#C5852F" ) ;
+    
     private SConsoleDialog parentDialog = null ;
     
     protected AbstractDialogPanel( String title ) {
+        super.setName( title ) ;
         setLayout( new BorderLayout() ) ;
-        setTitle( title ) ;
-    }
-    
-    private void setTitle( String title ) {
-        JLabel label = new JLabel( title ) ;
-        add( label, BorderLayout.NORTH ) ;
+        setBackground( SConsoleDialog.BG_COLOR ) ;
     }
     
     @Override public void handleFunctionKey(String fnCode) {}
@@ -55,4 +68,42 @@ public abstract class AbstractDialogPanel extends JPanel
 
     @Override
     public boolean shouldProcessFnEvents() { return true ; }
+    
+    protected JPanel getFnButton( String fnCode, String text ) {
+        
+        JLabel label = new JLabel( text ) ;
+        label.setFont( FNBTN_FONT ) ;
+        label.setForeground( Color.WHITE ) ;
+        label.setHorizontalAlignment( CENTER ) ;
+        label.setVerticalAlignment( CENTER ) ;
+        
+        JPanel panel = new JPanel( new BorderLayout() ) ;
+        panel.setBackground( getFnColor( fnCode ) ) ;
+        panel.add( label ) ;
+        panel.setBorder( BorderFactory.createLineBorder( BG_COLOR, 10 ) ) ;
+        
+        return panel ;
+    }
+    
+    private Color getFnColor( String fnCode ) {
+        switch( fnCode ) {
+            case "A":
+                return FN_A_COLOR ;
+            case "B":
+                return FN_B_COLOR ;
+            case "C":
+                return FN_C_COLOR ;
+            case "D":
+                return FN_D_COLOR ;
+            case "E":
+                return FN_E_COLOR ;
+            case "F":
+                return FN_F_COLOR ;
+            case "G":
+                return FN_G_COLOR ;
+            case "H":
+                return FN_H_COLOR ;
+        }
+        return Color.RED ;
+    }
 }

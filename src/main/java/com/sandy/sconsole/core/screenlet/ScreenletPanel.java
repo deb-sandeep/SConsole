@@ -1,5 +1,7 @@
 package com.sandy.sconsole.core.screenlet;
 
+import java.awt.BorderLayout ;
+
 import javax.swing.JPanel ;
 
 import com.sandy.sconsole.SConsole ;
@@ -11,7 +13,8 @@ public abstract class ScreenletPanel extends JPanel {
     
     protected ScreenletPanel( Screenlet parent ) {
         this.parent = parent ;
-        super.setBackground( SConsole.BG_COLOR );
+        super.setBackground( SConsole.BG_COLOR ) ;
+        super.setLayout( new BorderLayout() ) ;
     }
     
     public Screenlet getScreenlet() {

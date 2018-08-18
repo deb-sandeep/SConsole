@@ -5,11 +5,16 @@ import java.awt.Color ;
 import java.awt.Container ;
 import java.awt.Cursor ;
 import java.awt.Dimension ;
+import java.awt.Font ;
 import java.awt.Point ;
 import java.awt.Toolkit ;
 import java.awt.image.BufferedImage ;
 
 import javax.swing.JDialog;
+import javax.swing.JLabel ;
+import javax.swing.JPanel ;
+import javax.swing.SwingConstants ;
+import javax.swing.border.LineBorder ;
 
 import org.apache.log4j.Logger ;
 
@@ -24,9 +29,17 @@ class SConsoleDialog extends JDialog
     
     private static final Logger log = Logger.getLogger( SConsoleDialog.class ) ;
     
+    public static final Font  TITLE_FONT   = new Font( "Courier", Font.PLAIN, 25 ) ;
+    public static final Color TITLE_COLOR  = Color.decode( "#DFDBBB" ) ;
+    public static final Color BORDER_COLOR = Color.decode( "#807E72" ) ;
+    public static final Color BG_COLOR     = Color.decode( "#4A4942" ) ;
+    
     private Container contentPane = null ;
     private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
     private AbstractDialogPanel panel = null ;
+    
+    private JPanel bodyPanel = null ;
+    private JLabel titleLabel = null ;
     
     public SConsoleDialog() {
         super() ;
@@ -40,8 +53,28 @@ class SConsoleDialog extends JDialog
         setModal( true ) ;
         hideCursor() ;
         
-        contentPane.setBackground( Color.BLACK ) ;
+        titleLabel = getTitleLabel() ;
+        
+        bodyPanel = new JPanel() ;
+        bodyPanel.setLayout( new BorderLayout() ) ;
+        bodyPanel.setBackground( BG_COLOR ) ;
+        bodyPanel.setBorder( new LineBorder( BORDER_COLOR ) ) ;
+        bodyPanel.add( titleLabel, BorderLayout.NORTH ) ;
+        
+        contentPane.setBackground( BG_COLOR ) ;
         contentPane.setLayout( new BorderLayout() ) ;
+        contentPane.add( bodyPanel, BorderLayout.CENTER ) ;
+    }
+    
+    private JLabel getTitleLabel() {
+        JLabel label = new JLabel() ;
+        label.setForeground( TITLE_COLOR ) ;
+        label.setBackground( BG_COLOR ) ;
+        label.setHorizontalAlignment( SwingConstants.CENTER ) ; 
+        label.setVerticalAlignment( SwingConstants.CENTER ) ;
+        label.setFont( TITLE_FONT ) ;
+        
+        return label ;
     }
     
     // The logic has been copied from a stack exchange post.
@@ -69,7 +102,8 @@ class SConsoleDialog extends JDialog
     void setPanel( AbstractDialogPanel panel ) {
         
         if( this.panel != null ) {
-            contentPane.remove( this.panel ) ;
+            bodyPanel.remove( this.panel ) ;
+            titleLabel.setText( "" ) ;
             this.panel.setParentDialog( null ) ;
         }
         
@@ -77,8 +111,10 @@ class SConsoleDialog extends JDialog
         this.keyProcessor.setKeyListener( panel ) ;
         
         if( this.panel != null ) {
+            
             this.panel.setParentDialog( this ) ;
-            contentPane.add( this.panel, BorderLayout.CENTER ) ;
+            bodyPanel.add( this.panel, BorderLayout.CENTER ) ;
+            titleLabel.setText( this.panel.getName() ) ;
             
             Dimension prefSize = this.panel.getPreferredSize() ;
             setSize( prefSize ) ;

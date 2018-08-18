@@ -1,6 +1,7 @@
 package com.sandy.sconsole.screenlet.dummy;
 
 import java.awt.Dimension ;
+import java.awt.GridLayout ;
 
 import org.apache.log4j.Logger ;
 
@@ -18,6 +19,9 @@ public class DummyDialog extends AbstractDialogPanel {
     
     private void setUpUI() {
         setPreferredSize( new Dimension( 400, 400 ) ) ;
+        setLayout( new GridLayout( 2, 1 ) ) ;
+        add( getFnButton( "A", "Shutdown" ) ) ;
+        add( getFnButton( "B", "Hide" ) ) ;
     }
 
     @Override
@@ -26,8 +30,14 @@ public class DummyDialog extends AbstractDialogPanel {
     }
 
     @Override
-    public void handleSelectNavKey() {
-        log.debug( "Select key press received. Hiding the dialog." ) ;
-        super.hideDialog() ;
+    public void handleFunctionKey( String fnCode ) {
+        log.debug( "Handling " + fnCode + " in the dialog." ) ;
+        switch( fnCode ) {
+            case "A":
+                System.exit( 1 ) ;
+            case "B":
+                super.hideDialog() ;
+                break ;
+        }
     }
 }
