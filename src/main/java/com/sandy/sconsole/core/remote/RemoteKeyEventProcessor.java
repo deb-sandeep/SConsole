@@ -1,10 +1,14 @@
 package com.sandy.sconsole.core.remote;
 
+import org.apache.log4j.Logger ;
+
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
 import com.sandy.sconsole.core.remote.RemoteKeyListener.RunState ;
 
 public class RemoteKeyEventProcessor {
 
+    private static final Logger log = Logger.getLogger( RemoteKeyEventProcessor.class ) ;
+    
     private RemoteKeyListener keyListener = null ;
     
     public RemoteKeyEventProcessor() {
@@ -15,16 +19,28 @@ public class RemoteKeyEventProcessor {
     }
     
     public void processKeyEvent( KeyPressEvent event ) {
+
+        if( this.keyListener == null ) {
+            log.warn( "No key listener registered with processor. " + 
+                      "Ignoring key event - " + event ) ;
+            return ;
+        }
         
         switch( event.getBtnType() ) {
             case "Run":
-                processRunKey( event.getBtnCode() ) ;
+                if( this.keyListener.shouldProcessRunEvents() ) {
+                    processRunKey( event.getBtnCode() ) ;
+                }
                 break ;
             case "NavControl":
-                processNavKey( event.getBtnCode() ) ;
+                if( this.keyListener.shouldProcessNavEvents() ) {
+                    processNavKey( event.getBtnCode() ) ;
+                }
                 break ;
             case "Function":
-                keyListener.handleFunctionKey( event.getBtnCode() ) ;
+                if( this.keyListener.shouldProcessFnEvents() ) {
+                    keyListener.handleFunctionKey( event.getBtnCode() ) ;
+                }
                 break ;
         }
     }

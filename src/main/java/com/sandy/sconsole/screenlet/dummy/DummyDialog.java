@@ -12,6 +12,7 @@ public class DummyDialog extends AbstractDialogPanel {
     private static final Logger log = Logger.getLogger( DummyDialog.class ) ;
 
     public DummyDialog() {
+        super( "Dummy" ) ;
         setUpUI() ;
     }
     

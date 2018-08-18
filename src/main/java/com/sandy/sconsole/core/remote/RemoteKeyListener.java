@@ -12,11 +12,15 @@ public interface RemoteKeyListener {
     public void handleDownNavKey() ;
     public void handleSelectNavKey() ;
     
-    public RunState getCurrentRunState() ;
-    public void setCurrentRunState( RunState state ) ;
-    
     public void run() ;
     public void pause() ;
     public void resume() ;
     public void stop() ;
+    
+    public boolean shouldProcessRunEvents() ;
+    public boolean shouldProcessNavEvents() ;
+    public boolean shouldProcessFnEvents() ;
+
+    public RunState getCurrentRunState() ;
+    public void setCurrentRunState( RunState state ) ;
 }

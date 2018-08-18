@@ -41,4 +41,13 @@ public class RemoteKeyAdapter implements RemoteKeyListener {
     public void setCurrentRunState( RunState state ) {
         this.runState = state ;
     }
+
+    @Override
+    public boolean shouldProcessRunEvents() { return true ; }
+
+    @Override
+    public boolean shouldProcessNavEvents() { return true ; }
+
+    @Override
+    public boolean shouldProcessFnEvents() { return true ; }
 }

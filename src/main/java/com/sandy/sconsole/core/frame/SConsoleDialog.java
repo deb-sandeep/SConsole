@@ -22,7 +22,6 @@ import com.sandy.sconsole.core.remote.RemoteKeyReceiver;
 class SConsoleDialog extends JDialog
 	implements RemoteKeyReceiver {
     
-    @SuppressWarnings( "unused" )
     private static final Logger log = Logger.getLogger( SConsoleDialog.class ) ;
     
     private Container contentPane = null ;
@@ -62,6 +61,7 @@ class SConsoleDialog extends JDialog
 
     public void handleRemoteKeyEvent( KeyPressEvent event ) {
         if( !event.getBtnType().equals( "ScreenletSelection" ) ) {
+            log.debug( "Dialog has received the key - " + event ) ;
             keyProcessor.processKeyEvent( event ) ;
         }
     }
