@@ -22,6 +22,7 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.dao.repository.master.SubjectRepository ;
@@ -115,8 +116,9 @@ public class SConsole implements ApplicationContextAware {
     
     public void testJPA() {
         
-        log.debug( "Is meta processed = " + 
-                   problemRepository.isMetaExerciseProcessed( "Test" ) ) ;
+        Topic topic = topicRepository.findBySubjectNameAndTopicName( 
+                        "IIT - Physics", "Work, Energy And Power" ) ;
+        log.debug( topic ) ;
     }
     
     @Override
@@ -164,6 +166,6 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
-        //app.testJPA() ;
+//        app.testJPA() ;
     }
 }

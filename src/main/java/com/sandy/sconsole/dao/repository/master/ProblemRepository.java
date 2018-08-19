@@ -2,17 +2,26 @@ package com.sandy.sconsole.dao.repository.master;
 
 import java.util.List ;
 
+import org.springframework.data.jpa.repository.Modifying ;
 import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.CrudRepository ;
 import org.springframework.data.repository.query.Param ;
+import org.springframework.transaction.annotation.Transactional ;
 
 import com.sandy.sconsole.dao.entity.master.Problem ;
 
 public interface ProblemRepository extends CrudRepository<Problem, Integer> {
     
-    @Query( value="select count(*) from processed_ex_meta where name=:name",
+    @Modifying
+    @Transactional
+    @Query( value="insert into processed_ex_meta (name, date) values ( :name, NOW() )",
+            nativeQuery = true ) 
+    void saveMetaExercise( @Param("name") String name ) ;
+    
+    @Query( value="select case when count(name)>0 then TRUE else FALSE end " + 
+                  "from processed_ex_meta where name=:name",
             nativeQuery=true )
-    int isMetaExerciseProcessed( @Param("name") String exMeta ) ;
+    int getExMetaProcessCount( @Param("name") String exMeta ) ;
     
     List<Problem> findByBookIdAndTopicId( int bookId, int topicId ) ;
 }

@@ -1,10 +1,10 @@
 package com.sandy.sconsole.core.api;
 
-public class APIRespose {
+public class APIResponse {
 
     private String message = null ;
     
-    public APIRespose( String msg ) {
+    public APIResponse( String msg ) {
         this.message = msg ;
     }
 

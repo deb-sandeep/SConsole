@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
-import com.sandy.sconsole.core.api.APIRespose ;
+import com.sandy.sconsole.core.api.APIResponse ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 
 @RestController
@@ -19,8 +19,8 @@ public class RemoteController {
     private RemoteKeyEventRouter keyEventRouter = null ;
     
     @PostMapping( "/RemoteControl" )
-    public APIRespose buttonPressed( @RequestBody KeyPressEvent event ) {
+    public APIResponse buttonPressed( @RequestBody KeyPressEvent event ) {
         keyEventRouter.routeKeyEvent( event ) ;
-        return new APIRespose( "Success" ) ;
+        return new APIResponse( "Success" ) ;
     }
 }

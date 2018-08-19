@@ -9,4 +9,5 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 public interface TopicRepository extends CrudRepository<Topic, Integer> {
     
     List<Topic> findAllBySubjectName( String subjectName ) ;
+    Topic       findBySubjectNameAndTopicName( String subName, String topicName ) ;
 }

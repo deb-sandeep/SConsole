@@ -24,6 +24,8 @@ public class Problem {
     private String chapterId ;
     private String exerciseName ;
     private String problemTag ;
+    private Boolean solved = false ;
+    private Boolean active = true ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -44,4 +46,10 @@ public class Problem {
     
     public String getChapterId() { return chapterId ; }
     public void setChapterId( String id ) { this.chapterId = id ; }
+
+    public Boolean getSolved() { return solved ; }
+    public void setSolved( Boolean solved ) { this.solved = solved ; }
+    
+    public Boolean getActive() { return active ; }
+    public void setActive( Boolean active ) { this.active = active ; }
 }

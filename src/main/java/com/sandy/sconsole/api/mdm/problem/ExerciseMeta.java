@@ -14,9 +14,12 @@ public class ExerciseMeta {
     String exerciseName  = null ;
     int    numProblems[] = new int[0] ;
     
+    String rawData = null ;
+    
     public ExerciseMeta( String rawData ) 
         throws IllegalArgumentException {
         parse( rawData ) ;
+        this.rawData = rawData ;
     }
     
     private void parse( String rawData ) {
@@ -106,6 +109,10 @@ public class ExerciseMeta {
         pMeta.setExerciseName( exerciseName ) ;
         
         return pMeta ;
+    }
+    
+    public String toString() {
+        return this.rawData ;
     }
 }
 
