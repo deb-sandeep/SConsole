@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SConsole</title>
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/bootstrap/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app/app.css"/>
+    
+    <script src="js/app/ng/app-ng.js"></script>
+    <script src="js/app/ng/mdm/problem-master-controller.js"></script>
+</head>
+
+<body ng-controller="ProblemMasterController">
+
+<div class="header" style="display: table;">
+    <div style="display: table-cell; vertical-align: middle;">
+        <div>SConsole - Problem Master Update</div>
+    </div>
+</div>
+
+<div class="page-body">
+    <textarea class="form-control" 
+              rows="20" 
+              style="font-size:12px;font-family: Courier New;"
+              ng-model="inputData"></textarea>
+    <p/>
+    <button type="button" class="btn btn-primary btn-lg pull-right"
+            ng-click="submit()">
+            Submit
+    </button>
+</div>
+
+</body>
+</html>

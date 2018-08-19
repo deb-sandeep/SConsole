@@ -112,17 +112,24 @@
         </dependency>
 
         <!-- Use MySQL Connector-J -->
-        <!-- 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        -->
+        <!-- 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>          
+        -->
          
+        <!-- https://mvnrepository.com/artifact/tablelayout/TableLayout -->
+        <dependency>
+            <groupId>tablelayout</groupId>
+            <artifactId>TableLayout</artifactId>
+            <version>20050920</version>
+        </dependency>
+
     </dependencies>
 </project>

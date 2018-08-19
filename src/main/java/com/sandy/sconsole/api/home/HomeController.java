@@ -10,4 +10,9 @@ public class HomeController {
     public String home() {
         return "index" ;
     }
+    
+    @RequestMapping( "/mdm-problem-master" )
+    public String mdmProblemMaster() {
+        return "mdm-problem-master" ;
+    }
 }

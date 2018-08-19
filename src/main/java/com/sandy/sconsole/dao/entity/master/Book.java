@@ -21,6 +21,8 @@ public class Book {
     private Subject subject ;
     
     private String bookName ;
+    private String bookShortName ;
+    private boolean forProblems ;
     private String authorNames ;
     
     public Integer getId() { return id ; }
@@ -35,5 +37,15 @@ public class Book {
     public String getAuthorNames() { return authorNames ; }
     public void setAuthorNames( String authorNames ) { 
         this.authorNames = authorNames ; 
+    }
+    
+    public String getBookShortName() { return bookShortName ; }
+    public void setBookShortName( String bookShortName ) {
+        this.bookShortName = bookShortName ;
+    }
+    
+    public boolean isForProblems() { return forProblems ; }
+    public void setForProblems( boolean forProblems ) {
+        this.forProblems = forProblems ;
     }
 }

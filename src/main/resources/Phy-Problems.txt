@@ -1,0 +1,263 @@
+IIT - Physics@Physics And Measurement@@@@
+IIT - Physics@Kinematics@@@@
+IIT - Physics@Laws Of Motion@@@@
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@CAE@25, 25, 26, 16, 15
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@Subjective@23
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@SCA@100
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@MCA@25
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@ART@8
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@LCT@55
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@MMT@10
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@IT@14
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@1.8@Archive@27
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@CAE@20,23,24
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@Subjective@23
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@SCA@133
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@MCA@33
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@ART@5
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@LCT@104
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@MMT@13
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@IT@18
+IIT - Physics@Work, Energy And Power@Cengage Phy - Mechanics@2.1@Archive@24
+IIT - Physics@Work, Energy And Power@Resnick Halliday@8@RT@9
+IIT - Physics@Work, Energy And Power@Resnick Halliday@8@MCQ@56
+IIT - Physics@Work, Energy And Power@Resnick Halliday@8@Question@18
+IIT - Physics@Work, Energy And Power@Resnick Halliday@8@Problem@98
+IIT - Physics@Work, Energy And Power@Resnick Halliday@9@RT@13
+IIT - Physics@Work, Energy And Power@Resnick Halliday@9@MCQ@69
+IIT - Physics@Work, Energy And Power@Resnick Halliday@9@LCT@9
+IIT - Physics@Work, Energy And Power@Resnick Halliday@9@Question@12
+IIT - Physics@Work, Energy And Power@Resnick Halliday@9@Problem@97
+IIT - Physics@Work, Energy And Power@HC Verma@8@O1@10
+IIT - Physics@Work, Energy And Power@HC Verma@8@O2@10
+IIT - Physics@Work, Energy And Power@HC Verma@8@Exercise@64
+IIT - Physics@Work, Energy And Power@HC Verma@9@O1@19
+IIT - Physics@Work, Energy And Power@HC Verma@9@O2@11
+IIT - Physics@Work, Energy And Power@HC Verma@9@Exercise@64
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Main - Subjective@33
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Main - SCA@39
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Main - ART@12
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Adv - SCA@32
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Adv - MCA@9
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Adv - MMT@6
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@6@Adv - Subjective@15
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Main - Subjective@34
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Main - SCA@42
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Main - ART@15
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Adv - SCA@31
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Adv - MCA@8
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Adv - MMT@8
+IIT - Physics@Work, Energy And Power@DCP - Mechanics@8@Adv - Subjective@21
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@CAE@6,17,15,11
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@Subjective@13
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@SCA@101
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@MCA@9
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@LCT@28
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@MMT@4
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.2@IT@11
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@CAE@11,14,21,14,
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@Subjective@19
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@SCA@119
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@MCA@41
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@ART@6
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@LCT@71
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@MMT@19
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@IT@15
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Cengage Phy - Mechanics@2.3@Archive@66
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@10@RT@7
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@10@MCQ@24
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@10@Question@16
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@10@Problem@95
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@11@RT@5
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@11@MCQ@32
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@11@LCT@3
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@11@Question@4
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@Resnick Halliday@11@Problem@54
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@HC Verma@10@O1@26
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@HC Verma@10@O2@15
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@HC Verma@10@Exercise@86
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Main - Subjective@42
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Main - SCA@30
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Main - ART@11
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Adv - SCA@53
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Adv - MCA@11
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Adv - MMT@7
+IIT - Physics@Rigid Body Dynamics and Rotational Motion@DCP - Mechanics@9@Adv - Subjective@37
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@CAE@13,15,16,
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@Subjective@15
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@SCA@116
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@MCA@32
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@ART@16
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@LCT@27
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@MMT@7
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@IT@4
+IIT - Physics@Gravitation@Cengage Phy - Mechanics@2.6@Archive@26
+IIT - Physics@Gravitation@Resnick Halliday@13@RT@9
+IIT - Physics@Gravitation@Resnick Halliday@13@MCQ@31
+IIT - Physics@Gravitation@Resnick Halliday@11@LCT@15
+IIT - Physics@Gravitation@Resnick Halliday@13@Question@12
+IIT - Physics@Gravitation@Resnick Halliday@13@Problem@119
+IIT - Physics@Gravitation@HC Verma@11@O1@17
+IIT - Physics@Gravitation@HC Verma@11@O2@6
+IIT - Physics@Gravitation@HC Verma@11@Exercise@39
+IIT - Physics@Gravitation@DCP - Mechanics@10@Main - Subjective@29
+IIT - Physics@Gravitation@DCP - Mechanics@10@Main - SCA@28
+IIT - Physics@Gravitation@DCP - Mechanics@10@Main - ART@11
+IIT - Physics@Gravitation@DCP - Mechanics@10@Adv - SCA@24
+IIT - Physics@Gravitation@DCP - Mechanics@10@Adv - MCA@10
+IIT - Physics@Gravitation@DCP - Mechanics@10@Adv - MMT@5
+IIT - Physics@Gravitation@DCP - Mechanics@10@Adv - Subjective@15
+IIT - Physics@Properties Of Solids And Liquids@@@@
+IIT - Physics@Thermodynamics@@@@
+IIT - Physics@Kinetic Theory Of Gases@@@@
+IIT - Physics@Oscillations And Waves@@@@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@CAE@15, 17, 26
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@Subjective@34
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@SCA@47
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@MCA@8
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@ART@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@LCT@25
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@MMT@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@IT@8
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.1@Archive@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@CAE@16, 14
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@Subjective@12
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@SCA@40
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@MCA@8
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@ART@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@LCT@38
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@MMT@4
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@IT@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.2@Archive@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@CAE@23, 9, 9
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@Subjective@28
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@SCA@56
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@MCA@10
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@ART@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@LCT@31
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@MMT@4
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@IT@5
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.3@Archive@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@CAE@13, 32
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@Subjective@24
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@SCA@49
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@MCA@11
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@ART@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@LCT@35
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@MMT@3
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@IT@5
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.4@Archive@
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@SCA@114
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@MCA@51
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@ART@8
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@LCT@61
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@MMT@25
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@IT@18
+IIT - Physics@Electrostatics@Cengage Phy - Mechanics@5.A1@Archive@80
+IIT - Physics@Electrostatics@Resnick Halliday@22@RT@9
+IIT - Physics@Electrostatics@Resnick Halliday@22@MCQ@28
+IIT - Physics@Electrostatics@Resnick Halliday@22@Question@
+IIT - Physics@Electrostatics@Resnick Halliday@22@Problem@63
+IIT - Physics@Electrostatics@Resnick Halliday@23@RT@4
+IIT - Physics@Electrostatics@Resnick Halliday@23@MCQ@12
+IIT - Physics@Electrostatics@Resnick Halliday@23@Question@
+IIT - Physics@Electrostatics@Resnick Halliday@23@Problem@39
+IIT - Physics@Electrostatics@Resnick Halliday@24@RT@6
+IIT - Physics@Electrostatics@Resnick Halliday@24@MCQ@36
+IIT - Physics@Electrostatics@Resnick Halliday@24@Question@
+IIT - Physics@Electrostatics@Resnick Halliday@24@Problem@51
+IIT - Physics@Electrostatics@Resnick Halliday@25@RT@4
+IIT - Physics@Electrostatics@Resnick Halliday@25@MCQ@19
+IIT - Physics@Electrostatics@Resnick Halliday@25@Question@
+IIT - Physics@Electrostatics@Resnick Halliday@25@Problem@40
+IIT - Physics@Electrostatics@Resnick Halliday@26@RT@5
+IIT - Physics@Electrostatics@Resnick Halliday@26@MCQ@19
+IIT - Physics@Electrostatics@Resnick Halliday@26@Question@
+IIT - Physics@Electrostatics@Resnick Halliday@26@Problem@57
+IIT - Physics@Electrostatics@HC Verma@29@O1@9
+IIT - Physics@Electrostatics@HC Verma@29@O2@8
+IIT - Physics@Electrostatics@HC Verma@29@Exercise@75
+IIT - Physics@Electrostatics@HC Verma@30@O1@7
+IIT - Physics@Electrostatics@HC Verma@30@O2@8
+IIT - Physics@Electrostatics@HC Verma@30@Exercise@24
+IIT - Physics@Electrostatics@HC Verma@31@O1@12
+IIT - Physics@Electrostatics@HC Verma@31@O2@7
+IIT - Physics@Electrostatics@HC Verma@31@Exercise@68
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Main - Subjective@47
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Main - SCA@40
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Main - ART@10
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Adv - SCA@50
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Adv - MCA@10
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Adv - MMT@5
+IIT - Physics@Electrostatics@DCP - Mechanics@21@Adv - Subjective@23
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Main - Subjective@31
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Main - SCA@27
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Main - ART@10
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Adv - SCA@39
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Adv - MCA@10
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Adv - MMT@6
+IIT - Physics@Electrostatics@DCP - Mechanics@22@Adv - Subjective@27
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@CAE@27, 36, 14
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@Subjective@29
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@SCA@73
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@MCA@16
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@ART@
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@LCT@35
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@MMT@5
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@IT@8
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.5@Archive@
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@CAE@15
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@Subjective@12
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@SCA@44
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@MCA@7
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@ART@7
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@LCT@15
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@MMT@3
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@IT@8
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.6@Archive@
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@CAE@22
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@Subjective@8
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@SCA@60
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@MCA@5
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@ART@6
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@LCT@13
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@MMT@3
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@IT@5
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.7@Archive@
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@SCA@117
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@MCA@37
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@ART@8
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@LCT@28
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@MMT@15
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@IT@9
+IIT - Physics@Currrent Electricity@Cengage Phy - Mechanics@5.A2@Archive@50
+IIT - Physics@Currrent Electricity@Resnick Halliday@27@RT@5
+IIT - Physics@Currrent Electricity@Resnick Halliday@27@MCQ@20
+IIT - Physics@Currrent Electricity@Resnick Halliday@27@Question@
+IIT - Physics@Currrent Electricity@Resnick Halliday@27@Problem@25
+IIT - Physics@Currrent Electricity@Resnick Halliday@28@RT@5
+IIT - Physics@Currrent Electricity@Resnick Halliday@28@MCQ@20
+IIT - Physics@Currrent Electricity@Resnick Halliday@28@Question@
+IIT - Physics@Currrent Electricity@Resnick Halliday@28@Problem@42
+IIT - Physics@Currrent Electricity@HC Verma@32@O1@16
+IIT - Physics@Currrent Electricity@HC Verma@32@O2@9
+IIT - Physics@Currrent Electricity@HC Verma@32@Exercise@84
+IIT - Physics@Currrent Electricity@HC Verma@33@O1@8
+IIT - Physics@Currrent Electricity@HC Verma@33@O2@5
+IIT - Physics@Currrent Electricity@HC Verma@33@Exercise@24
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Main - Subjective@58
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Main - SCA@43
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Main - ART@11
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Adv - SCA@39
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Adv - MCA@
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Adv - MMT@5
+IIT - Physics@Currrent Electricity@DCP - Mechanics@20@Adv - Subjective@14
+IIT - Physics@Magnetic Effects Of Current And Magnetism@@@@
+IIT - Physics@Electromagnetic Induction And Alternating Currents@@@@
+IIT - Physics@Electromagnetic Waves@@@@
+IIT - Physics@Optics@@@@
+IIT - Physics@Dual Nature Of Matter And Radiation@@@@
+IIT - Physics@Atoms And Nuclei@@@@
+IIT - Physics@Electronic Devices@@@@
+IIT - Physics@Communication Systems@@@@
+IIT - Physics@Practical Skills@@@@

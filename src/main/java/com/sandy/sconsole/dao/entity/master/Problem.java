@@ -21,8 +21,9 @@ public class Problem {
     @ManyToOne
     private Book book ;
     
+    private String chapterId ;
     private String exerciseName ;
-    private String tag ;
+    private String problemTag ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -38,6 +39,9 @@ public class Problem {
         this.exerciseName = exerciseName ;
     }
     
-    public String getTag() { return tag ; }
-    public void setTag( String tag ) { this.tag = tag ; }
+    public String getProblemTag() { return problemTag ; }
+    public void setProblemTag( String tag ) { this.problemTag = tag ; }
+    
+    public String getChapterId() { return chapterId ; }
+    public void setChapterId( String id ) { this.chapterId = id ; }
 }
