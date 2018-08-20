@@ -20,3 +20,45 @@ order by
     tm.id asc,
     bm.id asc,
     pm.id asc ;
+    
+    
+Number of problems in different books, per topic.
+Change tm.subject_name for a different subject.
+--------------------------------------------------------------------------------
+
+select
+    tm.topic_name, bm.book_short_name, count(pm.problem_tag)
+from
+    problem_master pm,
+    book_master bm,
+    topic_master tm
+where
+    pm.topic_id = tm.id and
+    pm.book_id = bm.id and
+    tm.subject_name = 'IIT - Physics'
+group by
+    tm.topic_name,
+    bm.book_short_name
+order by
+    tm.id asc,
+    bm.id asc ;
+    
+    
+Number of problems in different topic.
+Change tm.subject_name for a different subject.
+--------------------------------------------------------------------------------
+
+select
+    tm.topic_name, count(pm.problem_tag)
+from
+    problem_master pm,
+    book_master bm,
+    topic_master tm
+where
+    pm.topic_id = tm.id and
+    pm.book_id = bm.id and
+    tm.subject_name = 'IIT - Physics'
+group by
+    tm.topic_name
+order by
+    tm.id asc ;

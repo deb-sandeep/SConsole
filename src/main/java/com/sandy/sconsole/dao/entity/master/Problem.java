@@ -26,6 +26,7 @@ public class Problem {
     private String problemTag ;
     private Boolean solved = false ;
     private Boolean active = true ;
+    private Boolean starred = false ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -52,4 +53,7 @@ public class Problem {
     
     public Boolean getActive() { return active ; }
     public void setActive( Boolean active ) { this.active = active ; }
+    
+    public Boolean getStarred() { return starred ; }
+    public void setStarred( Boolean starred ) { this.starred = starred ; }
 }

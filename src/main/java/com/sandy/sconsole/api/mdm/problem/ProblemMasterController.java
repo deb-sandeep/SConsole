@@ -108,6 +108,7 @@ public class ProblemMasterController {
             problem.setTopic( topic ) ;
             problem.setChapterId( ex.chapterId ) ;
             problem.setProblemTag( metaProblem.getProblemTag() ) ;
+            problem.setActive( metaProblem.isActive() ) ;
             
             if( StringUtil.isNotEmptyOrNull( metaProblem.getExerciseSubName() ) ) {
                 problem.setExerciseName( ex.exerciseName + "-" + 

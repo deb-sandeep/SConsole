@@ -10,6 +10,7 @@ public class ProblemMeta {
     private String exerciseName    = null ;
     private String exerciseSubName = null ;
     private String problemTag      = null ;
+    private boolean active         = false ;
     
     public String getSubjectName() {
         return subjectName ;
@@ -67,6 +68,14 @@ public class ProblemMeta {
         this.problemTag = problemTag ;
     }
     
+    public boolean isActive() {
+        return active ;
+    }
+
+    public void setActive( boolean active ) {
+        this.active = active ;
+    }
+
     public String toString() {
         StringBuffer buffer = new StringBuffer() ;
         buffer.append( subjectName ).append( "@" )
@@ -79,7 +88,8 @@ public class ProblemMeta {
             buffer.append( exerciseSubName ).append( "@" ) ;
         }
         
-        buffer.append( problemTag ) ;
+        buffer.append( problemTag ).append( "@" )
+              .append( active ) ;
         return buffer.toString() ;
     }
 }

@@ -7,12 +7,13 @@ import com.sandy.common.util.StringUtil ;
 
 public class ExerciseMeta {
     
-    String subjectName   = null ;
-    String topic         = null ;
-    String bookName      = null ;
-    String chapterId     = null ;
-    String exerciseName  = null ;
-    int    numProblems[] = new int[0] ;
+    String  subjectName   = null ;
+    String  topic         = null ;
+    String  bookName      = null ;
+    String  chapterId     = null ;
+    String  exerciseName  = null ;
+    int     numProblems[] = new int[0] ;
+    boolean active        = false ;
     
     String rawData = null ;
     
@@ -26,7 +27,7 @@ public class ExerciseMeta {
         String temp = null ;
         String[] parts = rawData.split( "@", -1 ) ;
         
-        if( parts.length != 6 ) {
+        if( parts.length != 7 ) {
             throw new IllegalArgumentException( "Input " + rawData + " is non conformant." ) ;
         }
         
@@ -71,6 +72,9 @@ public class ExerciseMeta {
                 numProblems[i] = Integer.parseInt( nonBlankStrings.get( i ) ) ;
             }
         }
+        
+        temp = parts[6].trim() ;
+        active = temp.equalsIgnoreCase( "TRUE" ) ? true : false ;
     }
     
     int getTotalNumProblems() {
@@ -115,6 +119,7 @@ public class ExerciseMeta {
         pMeta.setBookName( bookName ) ;
         pMeta.setChapterId( chapterId ) ;
         pMeta.setExerciseName( exerciseName ) ;
+        pMeta.setActive( active ) ;
         
         return pMeta ;
     }
