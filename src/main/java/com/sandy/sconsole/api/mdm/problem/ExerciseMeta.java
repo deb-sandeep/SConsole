@@ -58,9 +58,17 @@ public class ExerciseMeta {
         temp = parts[5].trim() ;
         if( StringUtil.isNotEmptyOrNull( temp ) ) {
             String numberStr[] = temp.split( "," ) ;
-            this.numProblems = new int[ numberStr.length ] ;
-            for( int i=0; i<numberStr.length; i++ ) {
-                this.numProblems[i] = Integer.parseInt( numberStr[i].trim() ) ;
+            ArrayList<String> nonBlankStrings = new ArrayList<>() ;
+            
+            for( String str : numberStr ) {
+                if( StringUtil.isNotEmptyOrNull( str ) ) {
+                    nonBlankStrings.add( str.trim() ) ;
+                }
+            }
+            
+            numProblems = new int[ nonBlankStrings.size() ] ;
+            for( int i=0; i<numProblems.length; i++ ) {
+                numProblems[i] = Integer.parseInt( nonBlankStrings.get( i ) ) ;
             }
         }
     }
