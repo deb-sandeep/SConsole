@@ -35,12 +35,8 @@ public abstract class AbstractDialogPanel extends JPanel
     @Override public void handleDownNavKey() {}
     @Override public void handleSelectNavKey() {}
 
-    @Override public RunState getCurrentRunState() { throw new UnsupportedOperationException() ; }
-    @Override public void setCurrentRunState( RunState state ) { throw new UnsupportedOperationException() ; }
-    @Override public void run() { throw new UnsupportedOperationException() ; }
-    @Override public void pause() { throw new UnsupportedOperationException() ; }
-    @Override public void resume() { throw new UnsupportedOperationException() ; }
-    @Override public void stop() { throw new UnsupportedOperationException() ; }
+    @Override public void processPlayPauseResumeKey() {} ;
+    @Override public void processStopKey() {} ;
     
     public abstract Object getReturnValue() ;
     

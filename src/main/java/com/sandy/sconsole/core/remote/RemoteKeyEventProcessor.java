@@ -3,7 +3,6 @@ package com.sandy.sconsole.core.remote;
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.api.remote.KeyPressEvent ;
-import com.sandy.sconsole.core.remote.RemoteKeyListener.RunState ;
 
 public class RemoteKeyEventProcessor {
 
@@ -48,26 +47,10 @@ public class RemoteKeyEventProcessor {
     private void processRunKey( String btnCode ) {
 
         if( btnCode.equals( "PlayPause" ) ) {
-            switch( keyListener.getCurrentRunState() ) {
-                case RUNNING:
-                    keyListener.pause() ;
-                    keyListener.setCurrentRunState( RunState.PAUSED ) ;
-                    break ;
-                case PAUSED:
-                    keyListener.resume() ;
-                    keyListener.setCurrentRunState( RunState.RUNNING ) ;
-                    break ;
-                case STOPPED:
-                    keyListener.run() ;
-                    keyListener.setCurrentRunState( RunState.RUNNING ) ;
-                    break ;
-            }
+            keyListener.processPlayPauseResumeKey() ;
         }
         else if( btnCode.equals( "Stop" ) ) {
-            if( keyListener.getCurrentRunState() != RunState.STOPPED ) {
-                keyListener.stop() ;
-                keyListener.setCurrentRunState( RunState.STOPPED ) ; 
-            }
+            keyListener.processStopKey() ;
         }
     }
     

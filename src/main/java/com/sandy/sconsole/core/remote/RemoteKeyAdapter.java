@@ -2,23 +2,15 @@ package com.sandy.sconsole.core.remote;
 
 public class RemoteKeyAdapter implements RemoteKeyListener {
 
-    private RunState runState = RunState.STOPPED ;
-    
     @Override
     public void handleFunctionKey( String fnCode ) {}
 
     @Override
-    public void run() {}
-
+    public void processPlayPauseResumeKey() {}
+    
     @Override
-    public void pause() {}
-
-    @Override
-    public void resume() {}
-
-    @Override
-    public void stop() {}
-
+    public void processStopKey() {}
+    
     @Override
     public void handleLeftNavKey() {}
 
@@ -33,14 +25,6 @@ public class RemoteKeyAdapter implements RemoteKeyListener {
 
     @Override
     public void handleSelectNavKey() {}
-
-    @Override
-    public RunState getCurrentRunState() { return this.runState ; } ;
-
-    @Override
-    public void setCurrentRunState( RunState state ) {
-        this.runState = state ;
-    }
 
     @Override
     public boolean shouldProcessRunEvents() { return true ; }

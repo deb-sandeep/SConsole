@@ -5,6 +5,8 @@ import com.sandy.sconsole.core.remote.RemoteKeyListener ;
 
 public interface Screenlet extends RemoteKeyListener {
 
+    public static enum RunState { STOPPED, RUNNING, PAUSED } ;
+
     public void setDisplayName( String displayName ) ;
     public String getDisplayName() ;
     
@@ -15,4 +17,7 @@ public interface Screenlet extends RemoteKeyListener {
     public void isBeingMaximized() ;
     
     public EventBus getEventBus() ;
+
+    public RunState getCurrentRunState() ;
+    public void setCurrentRunState( RunState state ) ;
 }

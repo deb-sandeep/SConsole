@@ -69,19 +69,37 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
 
     @Override
+    public void processPlayPauseResumeKey() {
+        switch( getCurrentRunState() ) {
+            case RUNNING:
+                setCurrentRunState( RunState.PAUSED ) ;
+                pause() ;
+                eventBus.publishEvent( SCREENLET_PAUSE, this );
+                break ;
+            case PAUSED:
+                setCurrentRunState( RunState.RUNNING ) ;
+                resume() ;
+                eventBus.publishEvent( SCREENLET_RESUME, this );
+                break ;
+            case STOPPED:
+                setCurrentRunState( RunState.RUNNING ) ;
+                run() ;
+                eventBus.publishEvent( SCREENLET_PLAY, this );
+                break ;
+        }
+    }
+    
+    @Override
+    public void processStopKey() {
+        if( getCurrentRunState() != RunState.STOPPED ) {
+            setCurrentRunState( RunState.STOPPED ) ; 
+            stop() ;
+            eventBus.publishEvent( SCREENLET_STOP, this );
+        }
+    }
+    
+    @Override
     public void handleFunctionKey( String fnCode ) {}
-
-    @Override
-    public void run() {}
-
-    @Override
-    public void pause() {}
-
-    @Override
-    public void resume() {}
-
-    @Override
-    public void stop() {}
 
     @Override
     public void handleLeftNavKey() {}
@@ -116,4 +134,9 @@ public abstract class AbstractScreenlet implements Screenlet {
     public boolean shouldProcessFnEvents() { return true ; }
     
     public EventBus getEventBus() { return this.eventBus ; }
+    
+    public void run(){} ;
+    public void pause(){} ;
+    public void resume(){} ;
+    public void stop(){} ;
 }
