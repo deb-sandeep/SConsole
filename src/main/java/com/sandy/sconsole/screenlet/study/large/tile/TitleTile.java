@@ -6,7 +6,6 @@ import java.awt.BorderLayout ;
 import java.awt.Color ;
 
 import javax.swing.JLabel ;
-import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
@@ -23,9 +22,7 @@ public class TitleTile extends AbstractScreenletTile {
     
     private void setUpUI() {
 
-        JLabel label = new JLabel() ;
-        label.setHorizontalAlignment( SwingConstants.CENTER ) ;
-        label.setVerticalAlignment( SwingConstants.CENTER ) ;
+        JLabel label = getTemplateLabel() ;
         label.setForeground( FG_COLOR ) ;
         label.setFont( SCREENLET_TITLE_FONT ) ;
         label.setText( getScreenlet().getDisplayName() );

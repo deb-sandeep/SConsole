@@ -1,5 +1,7 @@
 package com.sandy.sconsole.core.screenlet;
 
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+
 import java.awt.BorderLayout ;
 import java.awt.Color ;
 
@@ -7,15 +9,13 @@ import javax.swing.border.Border ;
 import javax.swing.border.CompoundBorder ;
 import javax.swing.border.LineBorder ;
 
-import com.sandy.sconsole.SConsole ;
-
 @SuppressWarnings( "serial" )
 public class ScreenletSmallPanel extends ScreenletPanel {
     
     private static final Color MAXIMIZED_BORDER_COLOR  = Color.decode( "0x00FF00" ) ;
     private static final Color ACTIVE_BORDER_COLOR     = Color.decode( "0xFF0000" ) ;
     private static final Color PASSIVE_BORDER_COLOR    = Color.decode( "0x353535" ) ;
-    private static final Color EMPTY_BORDER_COLOR      = SConsole.BG_COLOR ;
+    private static final Color EMPTY_BORDER_COLOR      = BG_COLOR ;
 
     private static final Border MAX_BORDER     = new LineBorder( MAXIMIZED_BORDER_COLOR, 1 ) ; 
     private static final Border ACTIVE_BORDER  = new LineBorder( ACTIVE_BORDER_COLOR, 2 ) ; 

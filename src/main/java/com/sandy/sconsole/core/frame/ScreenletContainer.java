@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.frame;
 
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER ;
 
@@ -50,7 +51,7 @@ public class ScreenletContainer extends JPanel {
         
         setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) ) ;
         setPreferredSize( new Dimension( preferredWidth, 100 ) ) ;
-        setBackground( SConsole.BG_COLOR ) ;
+        setBackground( BG_COLOR ) ;
         
         this.screenlets = SConsole.getApp().getScreenlets() ;
         addScreenletSmallScreens() ;

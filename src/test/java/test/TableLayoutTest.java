@@ -1,5 +1,7 @@
 package test;
 
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+
 import java.awt.Color ;
 import java.awt.Container ;
 
@@ -8,7 +10,6 @@ import javax.swing.JPanel ;
 import javax.swing.border.LineBorder ;
 
 import com.sandy.common.ui.SwingUtils ;
-import com.sandy.sconsole.SConsole ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -101,7 +102,7 @@ public class TableLayoutTest extends JFrame {
     
     private void addPanel( String constraints ) {
         JPanel panel = new JPanel() ;
-        panel.setBackground( SConsole.BG_COLOR ) ;
+        panel.setBackground( BG_COLOR ) ;
         panel.setBorder( new LineBorder( Color.DARK_GRAY.darker().darker() ) );
         cPane.add( panel, constraints ) ;
     }

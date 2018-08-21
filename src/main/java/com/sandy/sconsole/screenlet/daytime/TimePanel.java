@@ -1,10 +1,15 @@
 package com.sandy.sconsole.screenlet.daytime;
 
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.DF_TIME_LG ;
+import static com.sandy.sconsole.core.frame.UIConstant.DF_TIME_SM ;
+
 import java.awt.BorderLayout ;
 import java.awt.Color ;
 import java.awt.Font ;
 import java.text.SimpleDateFormat ;
 import java.util.Calendar ;
+import java.util.Date ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
@@ -19,9 +24,6 @@ public class TimePanel extends JPanel implements SecondTickListener {
     private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 250 ) ;
     private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 60 ) ;
     
-    private static SimpleDateFormat SDF_LG = new SimpleDateFormat( "H:mm:ss" ) ;
-    private static SimpleDateFormat SDF_SM = new SimpleDateFormat( "H:mm" ) ;
-
     private JLabel timeLabel = new JLabel() ;
     private boolean largeDisplay = true ;
     private SimpleDateFormat df = null ;
@@ -29,20 +31,21 @@ public class TimePanel extends JPanel implements SecondTickListener {
     public TimePanel( boolean large ) {
         super() ;
         this.largeDisplay = large ;
-        this.df = this.largeDisplay ? SDF_LG : SDF_SM ;
+        this.df = this.largeDisplay ? DF_TIME_LG : DF_TIME_SM ;
         SConsole.addSecTimerTask( this ) ;
         setUpUI( large ) ;
     }
     
     private void setUpUI( boolean large ) {
         setLayout( new BorderLayout() ) ;
-        setBackground( SConsole.BG_COLOR ) ;
+        setBackground( BG_COLOR ) ;
         add( timeLabel, BorderLayout.CENTER ) ;
         
         timeLabel.setHorizontalAlignment( SwingConstants.CENTER ) ;
         timeLabel.setVerticalAlignment( SwingConstants.BOTTOM ) ;
         timeLabel.setFont( large ? LG_FONT : SM_FONT );
         timeLabel.setForeground( Color.GRAY ) ;
+        timeLabel.setText( df.format( new Date() ) ) ;
     }
 
     @Override

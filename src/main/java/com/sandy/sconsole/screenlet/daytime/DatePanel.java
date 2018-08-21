@@ -1,5 +1,7 @@
 package com.sandy.sconsole.screenlet.daytime;
 
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+
 import java.awt.BorderLayout ;
 import java.awt.Color ;
 import java.awt.Font ;
@@ -37,7 +39,7 @@ public class DatePanel extends JPanel implements DayTickListener {
     
     private void setUpUI( boolean large ) {
         setLayout( new BorderLayout() ) ;
-        setBackground( SConsole.BG_COLOR ) ;
+        setBackground( BG_COLOR ) ;
         add( dateLabel, BorderLayout.CENTER ) ;
         
         dateLabel.setHorizontalAlignment( SwingConstants.CENTER ) ;

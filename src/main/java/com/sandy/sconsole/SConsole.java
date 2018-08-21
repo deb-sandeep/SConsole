@@ -1,6 +1,5 @@
 package com.sandy.sconsole ;
 
-import java.awt.Color ;
 import java.util.ArrayList ;
 import java.util.Calendar ;
 import java.util.Date ;
@@ -35,8 +34,6 @@ import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 public class SConsole implements ApplicationContextAware {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
-
-    public static Color               BG_COLOR        = Color.BLACK ;
 
     private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER", true ) ;
     private static ApplicationContext APP_CTX         = null ;

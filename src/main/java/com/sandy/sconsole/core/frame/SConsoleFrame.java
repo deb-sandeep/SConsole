@@ -62,7 +62,12 @@ public class SConsoleFrame extends JFrame
         
         contentPane.add( screenletPanel, BorderLayout.WEST ) ;
         
-        SwingUtils.setMaximized( this ) ;
+        if( SwingUtils.getScreenWidth() > 1920 ) {
+            SwingUtils.centerOnScreen( this, 1920, 1080 ) ;
+        }
+        else {
+            SwingUtils.setMaximized( this ) ;
+        }
     }
     
     // The logic has been copied from a stack exchange post.
