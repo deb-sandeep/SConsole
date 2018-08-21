@@ -21,7 +21,7 @@ import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
-import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.dao.repository.master.SubjectRepository ;
@@ -122,9 +122,8 @@ public class SConsole implements ApplicationContextAware {
     
     public void testJPA() {
         
-        Topic topic = topicRepository.findBySubjectNameAndTopicName( 
-                        "IIT - Physics", "Work, Energy And Power" ) ;
-        log.debug( topic ) ;
+        Session session = sessionRepository.findById( 1 ).get() ;
+        log.debug( session ) ;
     }
     
     @Override

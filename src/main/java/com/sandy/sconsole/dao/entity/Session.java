@@ -6,9 +6,12 @@ import javax.persistence.Entity ;
 import javax.persistence.GeneratedValue ;
 import javax.persistence.GenerationType ;
 import javax.persistence.Id ;
+import javax.persistence.JoinColumn ;
 import javax.persistence.ManyToOne ;
 import javax.persistence.Table ;
 
+import com.sandy.sconsole.dao.entity.master.Book ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 
 @Entity
@@ -19,37 +22,67 @@ public class Session {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
     
+    private String sessionType ;
+    
     @ManyToOne
+    @JoinColumn( name="topic_id" )
     private Topic topic ;
     
-    private String sessionType ;
+    @ManyToOne
+    @JoinColumn( name="book_id" )
+    private Book book ;
+    
+    @ManyToOne
+    @JoinColumn( name="last_problem_id" )
+    private Problem lastProblem ;
+    
     private Timestamp startTime ;
     private Timestamp endTime ;
     private Integer duration ;
-    private Integer effectiveDuration ;
+    private Integer absoluteDuration ;
     
     public Integer getId() { return id ; }
-    public void setId( Integer id ) { this.id = id ; }
+    public void setId( Integer id ) { 
+        this.id = id ; 
+    }
     
     public Timestamp getStartTime() { return startTime ; }
-    public void setStartTime( Timestamp startTime ) { this.startTime = startTime ; }
+    public void setStartTime( Timestamp startTime ) { 
+        this.startTime = startTime ; 
+    }
     
     public Timestamp getEndTime() { return endTime ; }
-    public void setEndTime( Timestamp endTime ) { this.endTime = endTime ; }
+    public void setEndTime( Timestamp endTime ) { 
+        this.endTime = endTime ; 
+    }
     
     public Integer getDuration() { return duration ; }
-    public void setDuration( Integer duration ) { this.duration = duration ; }
+    public void setDuration( Integer duration ) { 
+        this.duration = duration ; 
+    }
     
-    public Integer getEffectiveDuration() { return effectiveDuration ; }
-    public void setEffectiveDuration( Integer effectiveDuration ) {
-        this.effectiveDuration = effectiveDuration ;
+    public Integer getAbsoluteDuration() { return absoluteDuration ; }
+    public void setAbsoluteDuration( Integer effectiveDuration ) {
+        this.absoluteDuration = effectiveDuration ;
     }
     
     public Topic getTopic() { return topic ; }
-    public void setTopic( Topic topic ) { this.topic = topic ; }
+    public void setTopic( Topic topic ) { 
+        this.topic = topic ; 
+    }
     
     public String getSessionType() { return sessionType ; }
     public void setSessionType( String sessionType ) {
         this.sessionType = sessionType ;
+    }
+    
+    public Book getBook() { return book ; }
+    public void setBook( Book book ) {
+        this.book = book ;
+    }
+    
+    public Problem getLastProblem() { return lastProblem ; }
+    public void setLastProblem( Problem lastProblem ) {
+        this.lastProblem = lastProblem ;
     }
 }
