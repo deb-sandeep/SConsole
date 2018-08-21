@@ -9,21 +9,23 @@ import javax.swing.JLabel ;
 
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SuppressWarnings( "serial" )
 public class TitleTile extends AbstractScreenletTile {
     
-    private static Color FG_COLOR  = Color.decode( "#E8DF00" ) ;
-    
     public TitleTile( ScreenletPanel mother ) {
-        super( mother ) ;
-        setUpUI() ;
+        super( mother, false ) ;
+        StudyScreenlet parent = ( StudyScreenlet )mother.getScreenlet() ;
+        String subjectName = parent.getDisplayName() ;
+        Color fgColor = parent.getSubjectColor( subjectName ) ;
+        setUpUI( fgColor ) ;
     }
     
-    private void setUpUI() {
+    private void setUpUI( Color fgColor ) {
 
         JLabel label = getTemplateLabel() ;
-        label.setForeground( FG_COLOR ) ;
+        label.setForeground( fgColor ) ;
         label.setFont( SCREENLET_TITLE_FONT ) ;
         label.setText( getScreenlet().getDisplayName() );
         

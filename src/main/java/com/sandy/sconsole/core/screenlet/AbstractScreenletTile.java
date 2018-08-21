@@ -18,9 +18,16 @@ public abstract class AbstractScreenletTile extends JPanel {
     protected ScreenletPanel parent = null ;
     
     protected AbstractScreenletTile( ScreenletPanel mother ) {
+        this( mother, true ) ;
+    }
+    
+    protected AbstractScreenletTile( ScreenletPanel mother,
+                                     boolean drawBorder ) {
         this.parent = mother ;
         super.setBackground( BG_COLOR ) ;
-        super.setBorder( new LineBorder( Color.DARK_GRAY.darker() ) ) ;
+        if( drawBorder ) {
+            super.setBorder( new LineBorder( Color.DARK_GRAY.darker() ) ) ;
+        }
         super.setLayout( new BorderLayout() ) ;
     }
     

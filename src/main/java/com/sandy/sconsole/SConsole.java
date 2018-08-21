@@ -138,6 +138,8 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Registering screenlets" ) ;
         screenlets.add( new DayTimeScreenlet().initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
+        screenlets.add( new StudyScreenlet( "IIT - Chemistry" ).initialize() ) ;
+        screenlets.add( new StudyScreenlet( "IIT - Maths" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 

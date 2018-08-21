@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat ;
 public class UIConstant {
 
     public static final Font BASE_FONT = new Font( "Courier", Font.PLAIN, 20 ) ;
-    public static final Font SCREENLET_TITLE_FONT = BASE_FONT.deriveFont( Font.BOLD, 50 ) ;
+    public static final Font SCREENLET_TITLE_FONT = BASE_FONT.deriveFont( Font.BOLD, 60 ) ;
 
     public static final Color BG_COLOR   = Color.BLACK ;
     public static final Color FN_A_COLOR = Color.decode( "#3C979E" ) ;

@@ -26,7 +26,7 @@ public class DateTile extends AbstractScreenletTile
     private JLabel label = null ;
     
     public DateTile( ScreenletPanel mother ) {
-        super( mother ) ;
+        super( mother, false ) ;
         setUpUI() ;
         SConsole.addDayTimerTask( this ) ;
     }

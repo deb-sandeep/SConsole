@@ -22,7 +22,7 @@ public class TimeTile extends AbstractScreenletTile
     private JLabel label = null ;
     
     public TimeTile( ScreenletPanel mother ) {
-        super( mother ) ;
+        super( mother, false ) ;
         setUpUI() ;
         SConsole.addSecTimerTask( this ) ;
     }
