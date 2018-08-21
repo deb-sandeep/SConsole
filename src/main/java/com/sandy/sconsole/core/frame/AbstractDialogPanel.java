@@ -1,6 +1,7 @@
 package com.sandy.sconsole.core.frame;
 
 import static com.sandy.sconsole.core.frame.SConsoleDialog.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.BorderLayout ;
@@ -18,15 +19,6 @@ public abstract class AbstractDialogPanel extends JPanel
     implements RemoteKeyListener {
 
     public static final Font  FNBTN_FONT   = new Font( "Courier", Font.PLAIN, 20 ) ;
-    
-    public static final Color FN_A_COLOR = Color.decode( "#3C979E" ) ;
-    public static final Color FN_B_COLOR = Color.decode( "#7A9B2E" ) ;
-    public static final Color FN_C_COLOR = Color.decode( "#B96F1B" ) ;
-    public static final Color FN_D_COLOR = Color.decode( "#007C85" ) ;
-    public static final Color FN_E_COLOR = Color.decode( "#95ADBE" ) ;
-    public static final Color FN_F_COLOR = Color.decode( "#BB545F" ) ;
-    public static final Color FN_G_COLOR = Color.decode( "#428131" ) ;
-    public static final Color FN_H_COLOR = Color.decode( "#C5852F" ) ;
     
     private SConsoleDialog parentDialog = null ;
     

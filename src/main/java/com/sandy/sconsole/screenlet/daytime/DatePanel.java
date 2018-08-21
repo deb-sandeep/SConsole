@@ -4,37 +4,35 @@ import java.awt.BorderLayout ;
 import java.awt.Color ;
 import java.awt.Font ;
 import java.text.SimpleDateFormat ;
+import java.util.Calendar ;
 import java.util.Date ;
 import java.util.Locale ;
-import java.util.TimerTask ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
 import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.util.DayTickListener ;
 
 @SuppressWarnings( "serial" )
-public class DatePanel extends JPanel {
-    
-    private class DayTriggerHandler extends TimerTask {
-        public void run() {
-            dateLabel.setText( SDF.format( new Date() ) );
-        }
-    }
+public class DatePanel extends JPanel implements DayTickListener {
     
     private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 80 ) ;
     private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 30 ) ;
     
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, d MMM", Locale.ENGLISH ) ;
 
-    private DayTriggerHandler dayTimerHandler = new DayTriggerHandler() ;
-    private JLabel            dateLabel       = new JLabel() ;
+    private JLabel dateLabel       = new JLabel() ;
 
     public DatePanel( boolean large ) {
         super() ;
-        SConsole.addDayTimerTask( dayTimerHandler ) ;
+        SConsole.addDayTimerTask( this ) ;
         setUpUI( large ) ;
+    }
+    
+    public void dayTicked( Calendar time ) {
+        dateLabel.setText( SDF.format( time.getTime() ) ) ;
     }
     
     private void setUpUI( boolean large ) {

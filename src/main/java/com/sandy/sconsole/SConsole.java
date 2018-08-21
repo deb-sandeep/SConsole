@@ -4,9 +4,7 @@ import java.awt.Color ;
 import java.util.ArrayList ;
 import java.util.Calendar ;
 import java.util.Date ;
-import java.util.HashSet ;
 import java.util.List ;
-import java.util.Set ;
 import java.util.Timer ;
 import java.util.TimerTask ;
 
@@ -22,6 +20,8 @@ import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.core.util.DayTickListener ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
@@ -39,39 +39,47 @@ public class SConsole implements ApplicationContextAware {
     public static Color               BG_COLOR        = Color.BLACK ;
 
     private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER", true ) ;
-    private static Set<TimerTask>     DAY_TIMER_TASKS = new HashSet<TimerTask>() ;
     private static ApplicationContext APP_CTX         = null ;
     private static SConsole           APP             = null ;
+    
+    private static List<SecondTickListener> secondListeners = new ArrayList<>() ;
+    private static List<DayTickListener>    dayListeners    = new ArrayList<>() ;
 
     static {
-        addSecTimerTask( new TimerTask() {
+        SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
             Calendar lastDate = null ;
 
             public void run() {
+                
+                Calendar now = Calendar.getInstance() ;
+                
+                for( SecondTickListener task : secondListeners ) {
+                    task.secondTicked( now ) ;
+                }
+
                 if( lastDate == null ) {
-                    lastDate = Calendar.getInstance() ;
+                    lastDate = now ;
                 }
                 else {
-                    Calendar now = Calendar.getInstance() ;
                     if( now.get( Calendar.DAY_OF_YEAR ) != lastDate
                             .get( Calendar.DAY_OF_YEAR ) ) {
 
-                        for( TimerTask task : DAY_TIMER_TASKS ) {
-                            task.run() ;
+                        for( DayTickListener task : dayListeners ) {
+                            task.dayTicked( now ) ;
                         }
                     }
                     lastDate = now ;
                 }
             }
-        } ) ;
+        }, new Date(), 1000 ) ;
     }
 
-    public static void addSecTimerTask( TimerTask task ) {
-        SEC_TIMER.scheduleAtFixedRate( task, new Date(), 1000 ) ;
+    public static void addSecTimerTask( SecondTickListener task ) {
+        secondListeners.add( task ) ;
     }
 
-    public static void addDayTimerTask( TimerTask task ) {
-        DAY_TIMER_TASKS.add( task ) ;
+    public static void addDayTimerTask( DayTickListener task ) {
+        dayListeners.add( task ) ;
     }
 
     public static ApplicationContext getAppContext() {

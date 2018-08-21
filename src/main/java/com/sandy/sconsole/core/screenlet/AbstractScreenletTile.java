@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.screenlet;
 
+import java.awt.BorderLayout ;
 import java.awt.Color ;
 
 import javax.swing.JPanel ;
@@ -16,10 +17,15 @@ public abstract class AbstractScreenletTile extends JPanel {
     protected AbstractScreenletTile( ScreenletPanel mother ) {
         this.parent = mother ;
         super.setBackground( SConsole.BG_COLOR ) ;
-        super.setBorder( new LineBorder( Color.DARK_GRAY.darker() ) );
+        super.setBorder( new LineBorder( Color.DARK_GRAY.darker() ) ) ;
+        super.setLayout( new BorderLayout() ) ;
     }
     
     public EventBus getEventBus() {
         return this.parent.getEventBus() ;
+    }
+    
+    public Screenlet getScreenlet() {
+        return parent.getScreenlet() ;
     }
 }

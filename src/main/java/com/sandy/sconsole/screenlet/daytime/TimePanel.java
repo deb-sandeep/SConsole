@@ -4,24 +4,17 @@ import java.awt.BorderLayout ;
 import java.awt.Color ;
 import java.awt.Font ;
 import java.text.SimpleDateFormat ;
-import java.util.Date ;
-import java.util.TimerTask ;
+import java.util.Calendar ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
 import javax.swing.SwingConstants ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
 
 @SuppressWarnings( "serial" )
-public class TimePanel extends JPanel {
-    
-    private class SecondTriggerHandler extends TimerTask {
-        @Override
-        public void run() {
-            timeLabel.setText( df.format( new Date() ) ) ;
-        }
-    }
+public class TimePanel extends JPanel implements SecondTickListener {
     
     private static Font LG_FONT = new Font( "Courier", Font.PLAIN, 250 ) ;
     private static Font SM_FONT = new Font( "Courier", Font.PLAIN, 60 ) ;
@@ -29,7 +22,6 @@ public class TimePanel extends JPanel {
     private static SimpleDateFormat SDF_LG = new SimpleDateFormat( "H:mm:ss" ) ;
     private static SimpleDateFormat SDF_SM = new SimpleDateFormat( "H:mm" ) ;
 
-    private SecondTriggerHandler secTimerHandler = new SecondTriggerHandler() ;
     private JLabel timeLabel = new JLabel() ;
     private boolean largeDisplay = true ;
     private SimpleDateFormat df = null ;
@@ -38,7 +30,7 @@ public class TimePanel extends JPanel {
         super() ;
         this.largeDisplay = large ;
         this.df = this.largeDisplay ? SDF_LG : SDF_SM ;
-        SConsole.addSecTimerTask( secTimerHandler ) ;
+        SConsole.addSecTimerTask( this ) ;
         setUpUI( large ) ;
     }
     
@@ -51,5 +43,10 @@ public class TimePanel extends JPanel {
         timeLabel.setVerticalAlignment( SwingConstants.BOTTOM ) ;
         timeLabel.setFont( large ? LG_FONT : SM_FONT );
         timeLabel.setForeground( Color.GRAY ) ;
+    }
+
+    @Override
+    public void secondTicked( Calendar time ) {
+        timeLabel.setText( df.format( time.getTime() ) ) ;
     }
 }
