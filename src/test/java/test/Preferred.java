@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import info.clearthought.layout.TableLayout;
 
+@SuppressWarnings( "serial" )
 public class Preferred extends JFrame
 {
 
@@ -73,6 +74,6 @@ public class Preferred extends JFrame
 
         pack();
         setResizable(false);
-        show();
+        setVisible( true ) ;
     }
 }

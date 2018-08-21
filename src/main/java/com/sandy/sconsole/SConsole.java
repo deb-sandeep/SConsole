@@ -29,6 +29,7 @@ import com.sandy.sconsole.dao.repository.master.SubjectRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
 import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
@@ -131,6 +132,7 @@ public class SConsole implements ApplicationContextAware {
 
         log.debug( "Registering screenlets" ) ;
         screenlets.add( new DayTimeScreenlet().initialize() ) ;
+        screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
         screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 

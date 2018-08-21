@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.screenlet;
 
+import java.awt.BorderLayout ;
 import java.awt.Color ;
 
 import javax.swing.border.Border ;
@@ -27,6 +28,7 @@ public class ScreenletSmallPanel extends ScreenletPanel {
     public ScreenletSmallPanel( Screenlet parent ) {
         super( parent ) ;
         setBorder( border ) ;
+        setLayout( new BorderLayout() ) ;
     }
     
     public void setMaximizedBorder() {
