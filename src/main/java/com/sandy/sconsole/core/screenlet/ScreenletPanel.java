@@ -6,10 +6,13 @@ import java.awt.BorderLayout ;
 
 import javax.swing.JPanel ;
 
+import com.sandy.common.bus.Event ;
 import com.sandy.common.bus.EventBus ;
+import com.sandy.common.bus.EventSubscriber ;
 
 @SuppressWarnings( "serial" )
-public abstract class ScreenletPanel extends JPanel {
+public abstract class ScreenletPanel extends JPanel
+    implements EventSubscriber {
 
     private Screenlet parent = null ;
     
@@ -25,5 +28,9 @@ public abstract class ScreenletPanel extends JPanel {
     
     public EventBus getEventBus() {
         return this.parent.getEventBus() ;
+    }
+
+    @Override
+    public void handleEvent( Event event ) {
     }
 }

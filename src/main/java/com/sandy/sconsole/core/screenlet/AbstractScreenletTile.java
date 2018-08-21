@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.screenlet;
 
+import static com.sandy.sconsole.core.CoreEventID.* ;
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
 import java.awt.BorderLayout ;
@@ -10,10 +11,13 @@ import javax.swing.JPanel ;
 import javax.swing.SwingConstants ;
 import javax.swing.border.LineBorder ;
 
+import com.sandy.common.bus.Event ;
 import com.sandy.common.bus.EventBus ;
+import com.sandy.common.bus.EventSubscriber ;
 
 @SuppressWarnings( "serial" )
-public abstract class AbstractScreenletTile extends JPanel {
+public abstract class AbstractScreenletTile extends JPanel
+    implements EventSubscriber {
 
     protected ScreenletPanel parent = null ;
     
@@ -24,6 +28,7 @@ public abstract class AbstractScreenletTile extends JPanel {
     protected AbstractScreenletTile( ScreenletPanel mother,
                                      boolean drawBorder ) {
         this.parent = mother ;
+        this.parent.getEventBus().addSubscriberForEventRange( this, false, RANGE_MIN, RANGE_MAX );
         super.setBackground( BG_COLOR ) ;
         if( drawBorder ) {
             super.setBorder( new LineBorder( Color.DARK_GRAY.darker() ) ) ;
@@ -47,5 +52,9 @@ public abstract class AbstractScreenletTile extends JPanel {
         label.setBackground( BG_COLOR ) ;
         label.setForeground( Color.GRAY ) ;
         return label ;
+    }
+
+    @Override
+    public void handleEvent( Event event ) {
     }
 }

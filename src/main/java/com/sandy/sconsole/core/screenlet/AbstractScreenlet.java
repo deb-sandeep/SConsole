@@ -1,5 +1,7 @@
 package com.sandy.sconsole.core.screenlet;
 
+import static com.sandy.sconsole.core.CoreEventID.* ;
+
 import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
@@ -22,6 +24,9 @@ public abstract class AbstractScreenlet implements Screenlet {
     public Screenlet initialize() {
         this.smallPanel = createSmallPanel() ;
         this.largePanel = createLargePanel() ;
+        
+        eventBus.addSubscriberForEventRange( smallPanel, false, RANGE_MIN, RANGE_MAX ) ;
+        
         return this ;
     }
     
@@ -54,11 +59,13 @@ public abstract class AbstractScreenlet implements Screenlet {
     @Override
     public void isBeingMinimized() {
         this.smallPanel.setPassiveBorder() ;
+        eventBus.publishEvent( SCREENLET_MINIMIZED, this ) ;
     }
 
     @Override
     public void isBeingMaximized() {
         this.smallPanel.setMaximizedBorder() ;
+        eventBus.publishEvent( SCREENLET_MAXIMIZED, this ) ;
     }
 
     @Override

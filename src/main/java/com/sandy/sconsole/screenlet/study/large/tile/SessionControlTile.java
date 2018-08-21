@@ -6,7 +6,7 @@ import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends AbstractScreenletTile {
 
-    public SessionControlTile( ScreenletPanel mother ) {
-        super( mother ) ;
+    public SessionControlTile( ScreenletPanel parent ) {
+        super( parent ) ;
     }
 }
