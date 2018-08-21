@@ -4,6 +4,7 @@ import java.awt.BorderLayout ;
 
 import javax.swing.JPanel ;
 
+import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.SConsole ;
 
 @SuppressWarnings( "serial" )
@@ -21,4 +22,7 @@ public abstract class ScreenletPanel extends JPanel {
         return this.parent ;
     }
     
+    public EventBus getEventBus() {
+        return this.parent.getEventBus() ;
+    }
 }

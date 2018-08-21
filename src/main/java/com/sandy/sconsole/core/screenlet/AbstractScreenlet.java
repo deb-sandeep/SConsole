@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.screenlet;
 
+import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 
@@ -9,9 +10,11 @@ public abstract class AbstractScreenlet implements Screenlet {
     private RunState runState = RunState.STOPPED ;
     private ScreenletSmallPanel smallPanel = null ;
     private ScreenletLargePanel largePanel = null ;
+    private EventBus eventBus = null ;
     
     protected AbstractScreenlet( String displayName ) {
         this.displayName = displayName ;
+        this.eventBus = new EventBus() ;
     }
     
     // This function will be called by the framework after creating an
@@ -104,4 +107,6 @@ public abstract class AbstractScreenlet implements Screenlet {
 
     @Override
     public boolean shouldProcessFnEvents() { return true ; }
+    
+    public EventBus getEventBus() { return this.eventBus ; }
 }

@@ -1,5 +1,6 @@
 package com.sandy.sconsole.core.screenlet;
 
+import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.core.remote.RemoteKeyListener ;
 
 public interface Screenlet extends RemoteKeyListener {
@@ -12,4 +13,6 @@ public interface Screenlet extends RemoteKeyListener {
     
     public void isBeingMinimized() ;
     public void isBeingMaximized() ;
+    
+    public EventBus getEventBus() ;
 }
