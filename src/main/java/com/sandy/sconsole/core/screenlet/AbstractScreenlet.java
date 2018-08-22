@@ -125,15 +125,6 @@ public abstract class AbstractScreenlet implements Screenlet {
         this.runState = state ;
     }
 
-    @Override
-    public boolean shouldProcessRunEvents() { return true ; }
-
-    @Override
-    public boolean shouldProcessNavEvents() { return true ; }
-
-    @Override
-    public boolean shouldProcessFnEvents() { return true ; }
-    
     public EventBus getEventBus() { return this.eventBus ; }
     
     public void run(){} ;

@@ -48,15 +48,6 @@ public abstract class AbstractDialogPanel extends JPanel
         this.parentDialog.setVisible( false ) ;
     }
 
-    @Override
-    public boolean shouldProcessRunEvents() { return false ; }
-
-    @Override
-    public boolean shouldProcessNavEvents() { return true ; }
-
-    @Override
-    public boolean shouldProcessFnEvents() { return true ; }
-    
     protected JPanel getFnButton( String fnCode, String text ) {
         
         JLabel label = new JLabel( text ) ;

@@ -12,8 +12,4 @@ public interface RemoteKeyListener {
 
     public void processPlayPauseResumeKey() ;
     public void processStopKey() ;
-    
-    public boolean shouldProcessRunEvents() ;
-    public boolean shouldProcessNavEvents() ;
-    public boolean shouldProcessFnEvents() ;
 }

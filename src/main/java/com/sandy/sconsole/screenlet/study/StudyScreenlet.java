@@ -3,10 +3,13 @@ package com.sandy.sconsole.screenlet.study;
 import static com.sandy.sconsole.SConsole.getAppContext ;
 
 import java.awt.Color ;
+import java.util.Optional ;
 
 import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
+import com.sandy.sconsole.dao.entity.LastSession ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.repository.LastSessionRepository ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.small.StudyScreenletSmallPanel ;
@@ -17,6 +20,7 @@ public class StudyScreenlet extends AbstractScreenlet {
     private StudyScreenletLargePanel largePanel = null ;
     
     private LastSessionRepository lastSessionRepo = null ;
+    private Session lastSession = null ;
     
     public Color getSubjectColor( String subjectName ) {
         if( subjectName.contains( "Physics" ) ) {
@@ -49,6 +53,20 @@ public class StudyScreenlet extends AbstractScreenlet {
     
     @Override
     public void initScreenlet() {
+        loadRepositories() ;
+        loadLastSession() ;
+        
+        largePanel.populateLastSessionDetails( lastSession ) ;
+    }
+    
+    private void loadRepositories() {
         lastSessionRepo = getAppContext().getBean( LastSessionRepository.class ) ;
+    }
+    
+    private void loadLastSession() {
+        Optional<LastSession> lsOpt = lastSessionRepo.findById( getDisplayName() ) ;
+        if( lsOpt.isPresent() ) {
+            lastSession = lsOpt.get().getSession() ;
+        }
     }
 }

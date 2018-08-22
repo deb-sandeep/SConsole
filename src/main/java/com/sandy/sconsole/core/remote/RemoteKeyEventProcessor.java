@@ -27,19 +27,13 @@ public class RemoteKeyEventProcessor {
         
         switch( event.getBtnType() ) {
             case "Run":
-                if( this.keyListener.shouldProcessRunEvents() ) {
-                    processRunKey( event.getBtnCode() ) ;
-                }
+                processRunKey( event.getBtnCode() ) ;
                 break ;
             case "NavControl":
-                if( this.keyListener.shouldProcessNavEvents() ) {
-                    processNavKey( event.getBtnCode() ) ;
-                }
+                processNavKey( event.getBtnCode() ) ;
                 break ;
             case "Function":
-                if( this.keyListener.shouldProcessFnEvents() ) {
-                    keyListener.handleFunctionKey( event.getBtnCode() ) ;
-                }
+                keyListener.handleFunctionKey( event.getBtnCode() ) ;
                 break ;
         }
     }

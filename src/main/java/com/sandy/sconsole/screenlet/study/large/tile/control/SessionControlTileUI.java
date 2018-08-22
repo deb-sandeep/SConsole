@@ -1,11 +1,17 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
-import static java.awt.Color.* ;
-import static javax.swing.SwingConstants.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_A_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_B_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_C_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_D_COLOR ;
+import static java.awt.Color.WHITE ;
+import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
+import java.util.HashMap ;
+import java.util.Map ;
 
 import javax.swing.Icon ;
 import javax.swing.ImageIcon ;
@@ -17,6 +23,8 @@ import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -39,6 +47,10 @@ public class SessionControlTileUI extends AbstractScreenletTile {
             this( p, l, con, fSz, Color.GRAY, true ) ;
         }
         
+        LabelMeta( JPanel p, JLabel l, String con, boolean border ) {
+            this( p, l, con, 25F, Color.GRAY, border ) ;
+        }
+        
         LabelMeta( JPanel p, JLabel l, String con, float fSz, boolean border ) {
             this( p, l, con, fSz, Color.GRAY, border ) ;
         }
@@ -56,39 +68,39 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     private static final int NUM_ROW = 8 ;
     private static final int NUM_COL = 12 ;
 
-    protected JLabel typeLbl      = createDefaultLabel( "" ) ;
-    protected JLabel topicLbl     = createDefaultLabel( "Work, Energy & Power" ) ;
-    protected JLabel bookLbl      = createDefaultLabel( "Cengage - Physics" ) ;
-    protected JLabel problemLbl   = createDefaultLabel( "8.1 / CAE-2 / 23" ) ;
-    protected JLabel sTimeLbl     = createDefaultLabel( "00:23:00" ) ;
-    protected JLabel numSkipLbl   = createDefaultLabel( "0" ) ;
-    protected JLabel numSolvedLbl = createDefaultLabel( "5" ) ;
-    protected JLabel numRedoLbl   = createDefaultLabel( "2" ) ;
-    protected JLabel numPigeonLbl = createDefaultLabel( "1" ) ;
-    protected JLabel lTimeLbl     = createDefaultLabel( "4:00" ) ;
-    protected JLabel btnSkipLbl   = createDefaultLabel( "Skip (A)" ) ;
-    protected JLabel btnSolvedLbl = createDefaultLabel( "Solved (B)" ) ;
-    protected JLabel btnRedoLbl   = createDefaultLabel( "Redo (C)" ) ;
-    protected JLabel btnPigeonLbl = createDefaultLabel( "Pigeon (D)" ) ;
-    protected JLabel btn1Lbl      = createDefaultLabel( "" ) ;
-    protected JLabel btn2Lbl      = createDefaultLabel( "" ) ;
+    private JLabel typeLbl      = createDefaultLabel( "" ) ;
+    private JLabel topicLbl     = createDefaultLabel( "" ) ;
+    private JLabel bookLbl      = createDefaultLabel( "" ) ;
+    private JLabel problemLbl   = createDefaultLabel( "" ) ;
+    private JLabel sTimeLbl     = createDefaultLabel( "" ) ;
+    private JLabel numSkipLbl   = createDefaultLabel( "" ) ;
+    private JLabel numSolvedLbl = createDefaultLabel( "" ) ;
+    private JLabel numRedoLbl   = createDefaultLabel( "" ) ;
+    private JLabel numPigeonLbl = createDefaultLabel( "" ) ;
+    private JLabel lTimeLbl     = createDefaultLabel( "" ) ;
+    private JLabel btnSkipLbl   = createDefaultLabel( "Skip (A)" ) ;
+    private JLabel btnSolvedLbl = createDefaultLabel( "Solved (B)" ) ;
+    private JLabel btnRedoLbl   = createDefaultLabel( "Redo (C)" ) ;
+    private JLabel btnPigeonLbl = createDefaultLabel( "Pigeon (D)" ) ;
+    private JLabel btn1Lbl      = createDefaultLabel( "" ) ;
+    private JLabel btn2Lbl      = createDefaultLabel( "" ) ;
     
-    protected JPanel typePnl      = createDefaultPanel() ;
-    protected JPanel topicPnl     = createDefaultPanel() ;
-    protected JPanel bookPnl      = createDefaultPanel() ;
-    protected JPanel problemPnl   = createDefaultPanel() ;
-    protected JPanel sTimePnl     = createDefaultPanel() ;
-    protected JPanel numSkipPnl   = createDefaultPanel() ;
-    protected JPanel numSolvedPnl = createDefaultPanel() ;
-    protected JPanel numRedoPnl   = createDefaultPanel() ;
-    protected JPanel numPigeonPnl = createDefaultPanel() ;
-    protected JPanel lTimePnl     = createDefaultPanel() ;
-    protected JPanel btnSkipPnl   = createDefaultPanel() ;
-    protected JPanel btnSolvedPnl = createDefaultPanel() ;
-    protected JPanel btnRedoPnl   = createDefaultPanel() ;
-    protected JPanel btnPigeonPnl = createDefaultPanel() ;
-    protected JPanel btn1Pnl      = createDefaultPanel() ;
-    protected JPanel btn2Pnl      = createDefaultPanel() ;
+    private JPanel typePnl      = createDefaultPanel() ;
+    private JPanel topicPnl     = createDefaultPanel() ;
+    private JPanel bookPnl      = createDefaultPanel() ;
+    private JPanel problemPnl   = createDefaultPanel() ;
+    private JPanel sTimePnl     = createDefaultPanel() ;
+    private JPanel numSkipPnl   = createDefaultPanel() ;
+    private JPanel numSolvedPnl = createDefaultPanel() ;
+    private JPanel numRedoPnl   = createDefaultPanel() ;
+    private JPanel numPigeonPnl = createDefaultPanel() ;
+    private JPanel lTimePnl     = createDefaultPanel() ;
+    private JPanel btnSkipPnl   = createDefaultPanel() ;
+    private JPanel btnSolvedPnl = createDefaultPanel() ;
+    private JPanel btnRedoPnl   = createDefaultPanel() ;
+    private JPanel btnPigeonPnl = createDefaultPanel() ;
+    private JPanel btn1Pnl      = createDefaultPanel() ;
+    private JPanel btn2Pnl      = createDefaultPanel() ;
 
     private Icon exerciseIcon = null ;
     private Icon theoryIcon   = null ;
@@ -97,38 +109,39 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     private Icon pauseIcon    = null ;
     private Icon stopIcon     = null ;
     
-    private LabelMeta[] labelMetaList = {
-        new LabelMeta( typePnl,      typeLbl,      "0,0,1,2" ),
-        new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, false ),
-        new LabelMeta( bookPnl,      bookLbl,      "2,2,11,2", 35F, false ),
-        new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  60F ),
-        new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 50F ),
-        new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F ),
-        new LabelMeta( numSolvedPnl, numSolvedLbl, "2,5,3,6",  60F ),
-        new LabelMeta( numRedoPnl,   numRedoLbl,   "4,5,5,6",  60F ),
-        new LabelMeta( numPigeonPnl, numPigeonLbl, "6,5,7,6",  60F ),
-        new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F ),
-        new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7" ),
-        new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7" ),
-        new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7" ),
-        new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7" ),
-        new LabelMeta( btn1Pnl,      btn1Lbl,      "8,7,9,7" ),
-        new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7" )
-    } ;
-
+    private Map<JPanel, LabelMeta> pmMap = new HashMap<>() ;
+    
     public SessionControlTileUI( ScreenletPanel parent ) {
         super( parent ) ;
+        populatePanelMetaMap() ;
         setUpUI() ;
+    }
+    
+    private void populatePanelMetaMap() {
+        pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2"              ) ) ;
+        pmMap.put( topicPnl,     new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, false ) ) ;
+        pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,11,2", 35F, false ) ) ;
+        pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  60F        ) ) ;
+        pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 50F        ) ) ;
+        pmMap.put( numSkipPnl,   new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F        ) ) ;
+        pmMap.put( numSolvedPnl, new LabelMeta( numSolvedPnl, numSolvedLbl, "2,5,3,6",  60F        ) ) ;
+        pmMap.put( numRedoPnl,   new LabelMeta( numRedoPnl,   numRedoLbl,   "4,5,5,6",  60F        ) ) ;
+        pmMap.put( numPigeonPnl, new LabelMeta( numPigeonPnl, numPigeonLbl, "6,5,7,6",  60F        ) ) ;
+        pmMap.put( lTimePnl,     new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F        ) ) ;
+        pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7", false       ) ) ;
+        pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7", false       ) ) ;
+        pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7", false       ) ) ;
+        pmMap.put( btnPigeonPnl, new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7", false       ) ) ;
+        pmMap.put( btn1Pnl,      new LabelMeta( btn1Pnl,      btn1Lbl,      "8,7,9,7"              ) ) ;
+        pmMap.put( btn2Pnl,      new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7"            ) ) ;
     }
     
     private void setUpUI() {
         setLayout( createLayout() ) ;
         loadIcons() ;
-        for( LabelMeta meta : labelMetaList ) {
+        for( LabelMeta meta : pmMap.values() ) {
             addPanel( meta ) ;
         }
-        
-        typeLbl.setIcon( exerciseIcon ) ;
         
         btnSkipPnl.setBackground( FN_A_COLOR ) ;
         btnSolvedPnl.setBackground( FN_B_COLOR ) ;
@@ -187,6 +200,12 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         }
         return new TableLayout( colSizes, rowSizes ) ;
     }
+    
+    private void removePanel( JPanel panel ) {
+        remove( panel ) ;
+        validate() ;
+        repaint() ;
+    }
 
     private void addPanel( LabelMeta meta ) {
         
@@ -199,9 +218,62 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         JPanel panel = meta.panel ;
         panel.add( meta.label ) ;
         if( meta.border ) {
-            panel.setBorder( new LineBorder( Color.GRAY ) ) ;
+            panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR.darker() ) ) ;
         }
         
         add( panel, meta.constraint ) ;
+    }
+    
+    protected void setIcon( String type ) {
+        
+        Icon icon = null ;
+        switch( type ) {
+            case Session.TYPE_EXERCISE :
+                icon = exerciseIcon ;
+                break ;
+            case Session.TYPE_THEORY :
+                icon = theoryIcon ;
+                break ;
+            case Session.TYPE_LECTURE :
+                icon = lectureIcon ;
+                break ;
+        }
+        typeLbl.setIcon( icon ) ;
+    }
+
+    protected void setTopic( String name ) {
+        topicLbl.setText( name ) ;
+    }
+    
+    protected void setProblem( Problem problem ) {
+        problemLbl.setText( "" ) ;
+        if( problem != null ) {
+            problemLbl.setText( problem.getChapterId() + " / " + 
+                                problem.getExerciseName() + " / " + 
+                                problem.getProblemTag() ) ;
+        }
+    }
+
+    protected void setBook( String name ) {
+        bookLbl.setText( "" ) ;
+        if( name != null ) {
+            bookLbl.setText( name ) ;
+        }
+    }
+    
+    protected void setProblemButtonsVisible( boolean visible ) {
+        
+        if( !visible ) {
+            removePanel( btnSkipPnl ) ;
+            removePanel( btnSolvedPnl ) ;
+            removePanel( btnRedoPnl ) ;
+            removePanel( btnPigeonPnl ) ;
+        }
+        else {
+            addPanel( pmMap.get( btnSkipPnl   ) ) ;
+            addPanel( pmMap.get( btnSolvedPnl ) ) ;
+            addPanel( pmMap.get( btnRedoPnl   ) ) ;
+            addPanel( pmMap.get( btnPigeonPnl ) ) ;
+        }
     }
 }

@@ -17,6 +17,10 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 @Entity
 @Table( name = "session" )
 public class Session {
+    
+    public static final String TYPE_LECTURE = "Lecture" ;
+    public static final String TYPE_EXERCISE = "Exercise" ;
+    public static final String TYPE_THEORY = "Theory" ;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

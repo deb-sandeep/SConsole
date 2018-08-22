@@ -25,13 +25,4 @@ public class RemoteKeyAdapter implements RemoteKeyListener {
 
     @Override
     public void handleSelectNavKey() {}
-
-    @Override
-    public boolean shouldProcessRunEvents() { return true ; }
-
-    @Override
-    public boolean shouldProcessNavEvents() { return true ; }
-
-    @Override
-    public boolean shouldProcessFnEvents() { return true ; }
 }

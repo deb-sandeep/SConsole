@@ -1,6 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large;
 
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
@@ -109,5 +110,9 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         add( dayTotalTile, DAY_TOTAL_PC ) ;
         add( dayRelativeHoursTile, DAY_RELATIVE_PC ) ;
         add( last30DaysHoursTile, LAST_30D_PC ) ;
+    }
+
+    public void populateLastSessionDetails( Session session ) {
+        sessionControlTile.populateLastSessionDetails( session ) ;
     }
 }

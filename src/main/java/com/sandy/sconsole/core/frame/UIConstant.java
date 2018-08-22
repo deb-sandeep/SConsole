@@ -19,6 +19,8 @@ public class UIConstant {
     public static final Color FN_G_COLOR = Color.decode( "#428131" ) ;
     public static final Color FN_H_COLOR = Color.decode( "#C5852F" ) ;
     
+    public static final Color TILE_BORDER_COLOR = Color.DARK_GRAY.darker() ;
+    
     public static final SimpleDateFormat DF_TIME_LG = new SimpleDateFormat( "H:mm:ss" ) ;
     public static final SimpleDateFormat DF_TIME_SM = new SimpleDateFormat( "H:mm" ) ;
 }
