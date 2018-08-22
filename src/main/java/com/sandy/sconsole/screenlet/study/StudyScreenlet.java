@@ -1,14 +1,22 @@
 package com.sandy.sconsole.screenlet.study;
 
+import static com.sandy.sconsole.SConsole.getAppContext ;
+
 import java.awt.Color ;
 
 import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
+import com.sandy.sconsole.dao.repository.LastSessionRepository ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.small.StudyScreenletSmallPanel ;
 
 public class StudyScreenlet extends AbstractScreenlet {
+    
+    private StudyScreenletSmallPanel smallPanel = null ;
+    private StudyScreenletLargePanel largePanel = null ;
+    
+    private LastSessionRepository lastSessionRepo = null ;
     
     public Color getSubjectColor( String subjectName ) {
         if( subjectName.contains( "Physics" ) ) {
@@ -29,11 +37,18 @@ public class StudyScreenlet extends AbstractScreenlet {
 
     @Override
     protected ScreenletSmallPanel createSmallPanel() {
-        return new StudyScreenletSmallPanel( this ) ;
+        smallPanel = new StudyScreenletSmallPanel( this ) ;
+        return smallPanel ;
     }
 
     @Override
     protected ScreenletLargePanel createLargePanel() {
-        return new StudyScreenletLargePanel( this ) ;
+        largePanel = new StudyScreenletLargePanel( this ) ;
+        return largePanel ;
+    }
+    
+    @Override
+    public void initScreenlet() {
+        lastSessionRepo = getAppContext().getBean( LastSessionRepository.class ) ;
     }
 }

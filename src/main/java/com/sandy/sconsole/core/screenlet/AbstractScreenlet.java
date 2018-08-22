@@ -21,17 +21,18 @@ public abstract class AbstractScreenlet implements Screenlet {
     
     // This function will be called by the framework after creating an
     // instance of this class.
-    public Screenlet initialize() {
+    public final Screenlet initialize() {
         this.smallPanel = createSmallPanel() ;
         this.largePanel = createLargePanel() ;
         
         eventBus.addSubscriberForEventRange( smallPanel, false, RANGE_MIN, RANGE_MAX ) ;
-        
+        initScreenlet() ;
         return this ;
     }
     
     protected abstract ScreenletSmallPanel createSmallPanel() ;
     protected abstract ScreenletLargePanel createLargePanel() ;
+    protected void initScreenlet() {};
     
     public void setDisplayName( String displayName ) {
         this.displayName = displayName ;
@@ -69,7 +70,7 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
 
     @Override
-    public void processPlayPauseResumeKey() {
+    public final void processPlayPauseResumeKey() {
         switch( getCurrentRunState() ) {
             case RUNNING:
                 setCurrentRunState( RunState.PAUSED ) ;
@@ -90,7 +91,7 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
     
     @Override
-    public void processStopKey() {
+    public final void processStopKey() {
         if( getCurrentRunState() != RunState.STOPPED ) {
             setCurrentRunState( RunState.STOPPED ) ; 
             stop() ;

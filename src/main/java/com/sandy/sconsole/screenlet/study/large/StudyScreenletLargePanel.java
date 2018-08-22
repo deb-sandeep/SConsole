@@ -1,7 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large;
 
-import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DayGanttTile ;
@@ -48,7 +48,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private DayRelativeHoursTile dayRelativeHoursTile = null ;
     private Last30DaysHoursTile  last30DaysHoursTile  = null ;
     
-    public StudyScreenletLargePanel( Screenlet screenlet ) {
+    public StudyScreenletLargePanel( StudyScreenlet screenlet ) {
         super( screenlet ) ;
         initializeTiles() ;
         setUpUI() ;

@@ -15,6 +15,7 @@ import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 public class TitleTile extends AbstractScreenletTile {
     
     public TitleTile( ScreenletPanel mother ) {
+        
         super( mother, false ) ;
         StudyScreenlet parent = ( StudyScreenlet )mother.getScreenlet() ;
         String subjectName = parent.getDisplayName() ;

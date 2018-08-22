@@ -1,7 +1,8 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.* ;
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.CoreEventID.RANGE_MAX ;
+import static com.sandy.sconsole.core.CoreEventID.RANGE_MIN ;
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
