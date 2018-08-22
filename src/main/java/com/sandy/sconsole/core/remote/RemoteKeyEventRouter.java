@@ -33,7 +33,12 @@ public class RemoteKeyEventRouter extends Thread {
         while( true ) {
             try {
                 KeyPressEvent event = eventQueue.take() ;
-                keyReceiver.handleRemoteKeyEvent( event ) ;
+                if( keyReceiver != null ) {
+                    keyReceiver.handleRemoteKeyEvent( event ) ;
+                }
+                else {
+                    log.warn( "No key receiver registered with key router" ) ;
+                }
             }
             catch( InterruptedException e ) {
                 log.debug( "Event pump interrupted." ) ;

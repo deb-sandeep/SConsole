@@ -11,6 +11,7 @@ public class DayTimeScreenlet extends AbstractScreenlet {
 
     public DayTimeScreenlet() {
         super( "DayTime" ) ;
+        super.disableAllKeys() ;
     }
     
     @Override

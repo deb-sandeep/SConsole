@@ -145,8 +145,8 @@ public class SConsole implements ApplicationContextAware {
         screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Chemistry" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Maths" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
         screenlets.add( new DayTimeScreenlet().initialize() ) ;
+        screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {
@@ -172,6 +172,11 @@ public class SConsole implements ApplicationContextAware {
     public SConsoleFrame getFrame() {
         return this.frame ;
     }
+    
+    public RemoteKeyEventRouter getKeyRouter() {
+        return this.keyEventRouter ;
+    }
+    
     // --------------------- Main method ---------------------------------------
 
     public static void main( String[] args ) {

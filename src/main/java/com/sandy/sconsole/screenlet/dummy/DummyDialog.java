@@ -1,5 +1,8 @@
 package com.sandy.sconsole.screenlet.dummy;
 
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_A ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_B ;
+
 import java.awt.Dimension ;
 import java.awt.GridLayout ;
 
@@ -15,6 +18,8 @@ public class DummyDialog extends AbstractDialogPanel {
     public DummyDialog() {
         super( "Dummy" ) ;
         setUpUI() ;
+        super.disableAllKeys() ;
+        super.enableKey( true, FN_A, FN_B ) ;
     }
     
     private void setUpUI() {

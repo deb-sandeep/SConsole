@@ -1,10 +1,24 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.* ;
+import static com.sandy.sconsole.core.CoreEventID.RANGE_MAX ;
+import static com.sandy.sconsole.core.CoreEventID.RANGE_MIN ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_MAXIMIZED ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_MINIMIZED ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_PAUSE ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_PLAY ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_RESUME ;
+import static com.sandy.sconsole.core.CoreEventID.SCREENLET_STOP ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_FN ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_NAV_CONTROL ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_RUN ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.getsKeysOfType ;
+
+import java.util.Map ;
 
 import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
+import com.sandy.sconsole.core.remote.RemoteKeyCode ;
 
 public abstract class AbstractScreenlet implements Screenlet {
 
@@ -14,9 +28,12 @@ public abstract class AbstractScreenlet implements Screenlet {
     private ScreenletLargePanel largePanel = null ;
     private EventBus eventBus = null ;
     
+    private Map<String, Boolean> keyActivationMap = null ;
+    
     protected AbstractScreenlet( String displayName ) {
         this.displayName = displayName ;
         this.eventBus = new EventBus() ;
+        this.keyActivationMap = RemoteKeyCode.getDefaultKeyActivationMap() ;
     }
     
     // This function will be called by the framework after creating an
@@ -67,6 +84,11 @@ public abstract class AbstractScreenlet implements Screenlet {
     public void isBeingMaximized() {
         this.smallPanel.setMaximizedBorder() ;
         eventBus.publishEvent( SCREENLET_MAXIMIZED, this ) ;
+    }
+
+    @Override
+    public boolean isKeyActive( String keyId ) {
+        return keyActivationMap.get( keyId ) ;
     }
 
     @Override
@@ -131,4 +153,47 @@ public abstract class AbstractScreenlet implements Screenlet {
     public void pause(){} ;
     public void resume(){} ;
     public void stop(){} ;
+    
+    private void enableKeyType( String keyType, boolean enable ) {
+        for( String key : getsKeysOfType( keyType ) ) {
+            keyActivationMap.put( key, enable ) ;
+        }
+    }
+    
+    public void enableKey( boolean enable, String... keyIds ) {
+        for( String id : keyIds ) {
+            enableKey( id, enable ) ;
+        }
+    }
+    
+    public void enableKey( String keyID, boolean enable ) {
+        if( !keyActivationMap.containsKey( keyID ) ) {
+            throw new IllegalArgumentException( "No key by ID : " + keyID ) ;
+        }
+        keyActivationMap.put( keyID, enable ) ;
+    }
+    
+    public void enableNavKeys( boolean enable ) {
+        enableKeyType( KEY_TYPE_NAV_CONTROL, enable ) ;
+    }
+    
+    public void enableRunKeys( boolean enable ) {
+        enableKeyType( KEY_TYPE_RUN, enable ) ;
+    }
+    
+    public void enableFnKeys( boolean enable ) {
+        enableKeyType( KEY_TYPE_FN, enable ) ;
+    }
+    
+    public void disableAllKeys() {
+        for( String key : keyActivationMap.keySet() ) {
+            keyActivationMap.put( key, false ) ;
+        }
+    }
+
+    public void enableAllKeys() {
+        for( String key : keyActivationMap.keySet() ) {
+            keyActivationMap.put( key, true ) ;
+        }
+    }
 }

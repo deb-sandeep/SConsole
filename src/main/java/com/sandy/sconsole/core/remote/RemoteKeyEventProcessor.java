@@ -24,7 +24,12 @@ public class RemoteKeyEventProcessor {
                       "Ignoring key event - " + event ) ;
             return ;
         }
+        else if( !this.keyListener.isKeyActive( event.getKeyId() ) ) {
+            log.debug( "Key " + event.getKeyId() + " deactivated. Ignoring." ) ;
+            return ;
+        }
         
+        log.debug( "Processing key " + event.getKeyId() ) ;
         switch( event.getBtnType() ) {
             case "Run":
                 processRunKey( event.getBtnCode() ) ;

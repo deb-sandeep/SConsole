@@ -12,4 +12,6 @@ public interface RemoteKeyListener {
 
     public void processPlayPauseResumeKey() ;
     public void processStopKey() ;
+    
+    public boolean isKeyActive( String keyId ) ;
 }

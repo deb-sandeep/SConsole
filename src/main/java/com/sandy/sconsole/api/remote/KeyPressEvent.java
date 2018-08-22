@@ -1,9 +1,13 @@
 package com.sandy.sconsole.api.remote;
 
 public class KeyPressEvent {
-
+    
     private String btnType = null ;
     private String btnCode = null ;
+    
+    public String getKeyId() {
+        return btnType + "@" + btnCode ;
+    }
     
     public String getBtnType() {
         return btnType;

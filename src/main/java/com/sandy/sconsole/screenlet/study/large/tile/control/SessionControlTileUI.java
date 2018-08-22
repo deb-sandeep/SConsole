@@ -67,6 +67,9 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     
     private static final int NUM_ROW = 8 ;
     private static final int NUM_COL = 12 ;
+    
+    protected enum Btn1Type { PLAY, PAUSE, CLEAR } ;
+    protected enum Btn2Type { STOP, CHANGE, CLEAR } ;
 
     private JLabel typeLbl      = createDefaultLabel( "" ) ;
     private JLabel topicLbl     = createDefaultLabel( "" ) ;
@@ -155,6 +158,7 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         
         btn1Lbl.setIcon( playIcon ) ;
         btn2Lbl.setIcon( stopIcon ) ;
+        btn2Lbl.setForeground( Color.WHITE ) ;
     }
     
     private void loadIcons() {
@@ -274,6 +278,38 @@ public class SessionControlTileUI extends AbstractScreenletTile {
             addPanel( pmMap.get( btnSolvedPnl ) ) ;
             addPanel( pmMap.get( btnRedoPnl   ) ) ;
             addPanel( pmMap.get( btnPigeonPnl ) ) ;
+        }
+    }
+    
+    protected void setBtn1( Btn1Type btnType ) {
+        switch( btnType ) {
+            case PLAY:
+                btn1Lbl.setIcon( playIcon ) ;
+                break ;
+            case PAUSE:
+                btn1Lbl.setIcon( pauseIcon ) ;
+                break ;
+            case CLEAR:
+                btn1Lbl.setIcon( null ) ;
+                break ;
+        }
+    }
+    
+    protected void setBtn2( Btn2Type btnType ) {
+        
+        btn2Pnl.setBackground( UIConstant.BG_COLOR ) ;
+        btn2Lbl.setText( null ) ;
+        switch( btnType ) {
+            case STOP:
+                btn2Lbl.setIcon( stopIcon ) ;
+                break ;
+            case CHANGE:
+                btn2Pnl.setBackground( FN_A_COLOR ) ;
+                btn2Lbl.setIcon( null ) ;
+                btn2Lbl.setText( "Change" ) ;
+                break ;
+            case CLEAR:
+                break ;
         }
     }
 }

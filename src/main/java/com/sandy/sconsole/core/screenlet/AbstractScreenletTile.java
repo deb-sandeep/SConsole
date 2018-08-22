@@ -42,8 +42,8 @@ public abstract class AbstractScreenletTile extends JPanel
         return this.parent.getEventBus() ;
     }
     
-    public Screenlet getScreenlet() {
-        return parent.getScreenlet() ;
+    public AbstractScreenlet getScreenlet() {
+        return (AbstractScreenlet)parent.getScreenlet() ;
     }
     
     protected JLabel getTemplateLabel() {

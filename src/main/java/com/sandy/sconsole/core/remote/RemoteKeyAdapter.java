@@ -25,4 +25,7 @@ public class RemoteKeyAdapter implements RemoteKeyListener {
 
     @Override
     public void handleSelectNavKey() {}
+
+    @Override
+    public boolean isKeyActive( String keyId ) { return true ; }
 }
