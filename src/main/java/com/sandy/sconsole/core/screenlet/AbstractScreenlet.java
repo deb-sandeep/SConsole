@@ -106,7 +106,7 @@ public abstract class AbstractScreenlet implements Screenlet {
                 break ;
             case STOPPED:
                 setCurrentRunState( RunState.RUNNING ) ;
-                run() ;
+                play() ;
                 eventBus.publishEvent( SCREENLET_PLAY, this );
                 break ;
         }
@@ -149,7 +149,7 @@ public abstract class AbstractScreenlet implements Screenlet {
 
     public EventBus getEventBus() { return this.eventBus ; }
     
-    public void run(){} ;
+    public void play(){} ;
     public void pause(){} ;
     public void resume(){} ;
     public void stop(){} ;
