@@ -9,10 +9,10 @@ import com.sandy.sconsole.screenlet.study.large.tile.DayRelativeHoursTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DayStatTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DayTotalTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.Last30DaysHoursTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.SessionStatTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TimeTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TitleTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
 import info.clearthought.layout.TableLayout ;
 
