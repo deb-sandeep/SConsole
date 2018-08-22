@@ -27,6 +27,7 @@ public class Problem {
     private Boolean solved = false ;
     private Boolean active = true ;
     private Boolean starred = false ;
+    private Boolean markedForRedo = false ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -56,4 +57,17 @@ public class Problem {
     
     public Boolean getStarred() { return starred ; }
     public void setStarred( Boolean starred ) { this.starred = starred ; }
+    
+    public Boolean getMarkedForRedo() { return markedForRedo ; }
+    public void setMarkedForRedo( Boolean markedForRedo ) {
+        this.markedForRedo = markedForRedo ;
+    }
+    
+    @Override
+    public boolean equals( Object obj ) {
+        if( !(obj instanceof Problem) ) {
+            return false ;
+        }
+        return ((Problem)obj).getId().equals( id ) ;
+    }
 }

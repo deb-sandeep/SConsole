@@ -24,4 +24,15 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
     int getExMetaProcessCount( @Param("name") String exMeta ) ;
     
     List<Problem> findByBookIdAndTopicId( int bookId, int topicId ) ;
+    
+    @Query( "SELECT p "
+          + "FROM Problem p "
+          + "WHERE "
+          +   "p.solved = false and "
+          +   "p.active = true and "
+          +   "p.topic.id = ?1 and "
+          +   "p.book.id = ?2 "
+          + "ORDER BY " 
+          +   "p.id asc" )
+    List<Problem> findUnsolvedProblems( int topicId, int bookId ) ;
 }

@@ -1,14 +1,12 @@
 package com.sandy.sconsole.screenlet.dummy;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_A ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_B ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 
-import java.awt.Dimension ;
-import java.awt.GridLayout ;
+import java.awt.* ;
 
-import org.apache.log4j.Logger ;
+import org.apache.log4j.* ;
 
-import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
+import com.sandy.sconsole.core.frame.* ;
 
 @SuppressWarnings( "serial" )
 public class DummyDialog extends AbstractDialogPanel {
@@ -18,8 +16,8 @@ public class DummyDialog extends AbstractDialogPanel {
     public DummyDialog() {
         super( "Dummy" ) ;
         setUpUI() ;
-        super.disableAllKeys() ;
-        super.enableKey( true, FN_A, FN_B ) ;
+        kaMgr.disableAllKeys() ;
+        kaMgr.enableKey( true, FN_A, FN_B ) ;
     }
     
     private void setUpUI() {

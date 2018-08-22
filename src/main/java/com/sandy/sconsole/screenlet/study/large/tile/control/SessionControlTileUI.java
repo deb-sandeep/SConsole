@@ -124,7 +124,7 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2"              ) ) ;
         pmMap.put( topicPnl,     new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, false ) ) ;
         pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,11,2", 35F, false ) ) ;
-        pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  60F        ) ) ;
+        pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  40F        ) ) ;
         pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 50F        ) ) ;
         pmMap.put( numSkipPnl,   new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F        ) ) ;
         pmMap.put( numSolvedPnl, new LabelMeta( numSolvedPnl, numSolvedLbl, "2,5,3,6",  60F        ) ) ;
@@ -228,7 +228,7 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         add( panel, meta.constraint ) ;
     }
     
-    protected void setIcon( String type ) {
+    protected void setSessionTypeIcon( String type ) {
         
         Icon icon = null ;
         switch( type ) {
@@ -245,20 +245,21 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         typeLbl.setIcon( icon ) ;
     }
 
-    protected void setTopic( String name ) {
+    protected void setTopicLabel( String name ) {
         topicLbl.setText( name ) ;
     }
     
-    protected void setProblem( Problem problem ) {
+    protected void setProblemLabel( Problem problem ) {
         problemLbl.setText( "" ) ;
         if( problem != null ) {
-            problemLbl.setText( problem.getChapterId() + " / " + 
+            problemLbl.setText( "Ch-" + 
+                                problem.getChapterId() + " / " + 
                                 problem.getExerciseName() + " / " + 
                                 problem.getProblemTag() ) ;
         }
     }
 
-    protected void setBook( String name ) {
+    protected void setBookLabel( String name ) {
         bookLbl.setText( "" ) ;
         if( name != null ) {
             bookLbl.setText( name ) ;
@@ -311,5 +312,14 @@ public class SessionControlTileUI extends AbstractScreenletTile {
             case CLEAR:
                 break ;
         }
+    }
+    
+    protected void updateSessionTimeLabel( long seconds ) {
+        int secs    = (int)(seconds) % 60 ;
+        int minutes = (int)((seconds / 60) % 60) ;
+        int hours   = (int)(seconds / (60*60)) ;
+        
+        String str = String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
+        sTimeLbl.setText( str ) ;
     }
 }

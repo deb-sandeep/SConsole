@@ -61,9 +61,8 @@ public class RemoteKeyCode {
         }
         return keyTypeCodeMap.get( type ) ;
     }
-    
+
     public static Map<String, Boolean> getDefaultKeyActivationMap() {
-        
         Map<String, Boolean> map = new HashMap<>() ;
         for( String[] keys : keyTypeCodeMap.values() ) {
             for( String key : keys ) {
