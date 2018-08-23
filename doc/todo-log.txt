@@ -1,9 +1,15 @@
 Pending log
 --------------------------------------------------------------------------------
-* 11/8 - Master data table for topic and subject
-* 11/8 - Tab in remote to switch fields
-* 11/8 - Parent child - one to many relationship
-* 11/8 - Think about adding Topic, Book, problem drop down
+1. @Session play/start - make an entry in the database so that we have a
+   concrete session against which laps can be added.
+    - The end time will be null
+    - End time will be populated at every problem end and again at stop
+        This will ensure resilience against failures
+        
+2. @Session stop - Set the session id to null so that at next play a new
+   session will be created.
+   
+3. 
 
 Completed log
 --------------------------------------------------------------------------------
@@ -18,4 +24,8 @@ Completed log
     * POST data
 * 5/8 - Packaging a Spring Boot application
 * 11/8 - Mapping a JPA entity to a database table
+* 11/8 - Master data table for topic and subject
+* 11/8 - Tab in remote to switch fields
+* 11/8 - Parent child - one to many relationship
+* 11/8 - Think about adding Topic, Book, problem drop down
 

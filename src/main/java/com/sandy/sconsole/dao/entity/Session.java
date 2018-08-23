@@ -81,4 +81,13 @@ public class Session {
     public void setLastProblem( Problem lastProblem ) {
         this.lastProblem = lastProblem ;
     }
+    
+    public Session clone() {
+        Session clone = new Session() ;
+        clone.setTopic( topic ) ;
+        clone.setBook( book ) ;
+        clone.setLastProblem( lastProblem ) ;
+        clone.setSessionType( sessionType ) ;
+        return clone ;
+    }
 }

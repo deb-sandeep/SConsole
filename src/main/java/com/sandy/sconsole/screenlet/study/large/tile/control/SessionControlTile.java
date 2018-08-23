@@ -4,9 +4,12 @@ import static com.sandy.sconsole.core.CoreEventID.* ;
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
+import java.sql.* ;
 import java.util.* ;
+import java.util.Date ;
 
 import org.apache.log4j.* ;
+import org.springframework.context.* ;
 
 import com.sandy.common.bus.* ;
 import com.sandy.sconsole.* ;
@@ -16,6 +19,7 @@ import com.sandy.sconsole.core.screenlet.Screenlet.* ;
 import com.sandy.sconsole.core.util.* ;
 import com.sandy.sconsole.dao.entity.* ;
 import com.sandy.sconsole.dao.entity.master.* ;
+import com.sandy.sconsole.dao.repository.* ;
 import com.sandy.sconsole.dao.repository.master.* ;
 import com.sandy.sconsole.screenlet.study.* ;
 
@@ -27,18 +31,18 @@ public class SessionControlTile extends SessionControlTileUI
     
     private RunState runState = RunState.STOPPED ;
     
-    private Date startTime = null ;
-    private Date endTime = null ;
-    
-    private long runTime = 0 ;
-    private long pauseTime = 0 ;
-    private long totalPauseTime = 0 ;
+    private int runTime = 0 ;
+    private int pauseTime = 0 ;
+    private int totalPauseTime = 0 ;
     
     private StudyScreenlet screenlet = null ;
     
     private Session session = null ;
     
     private ProblemRepository problemRepo = null ;
+    private SessionRepository sessionRepo = null ;
+    private LastSessionRepository lastSessionRepo = null ;
+    
     private Queue<Problem> unsolvedProblems = new LinkedList<>();
 
     public SessionControlTile( ScreenletPanel parent ) {
@@ -46,7 +50,11 @@ public class SessionControlTile extends SessionControlTileUI
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
         kaMgr = screenlet.getKeyActivationManager() ;
         
-        problemRepo = SConsole.getAppContext().getBean( ProblemRepository.class ) ;
+        ApplicationContext ctx = SConsole.getAppContext() ;
+        
+        problemRepo     = ctx.getBean( ProblemRepository.class ) ;
+        sessionRepo     = ctx.getBean( SessionRepository.class ) ;
+        lastSessionRepo = ctx.getBean( LastSessionRepository.class ) ;
         
         SConsole.addSecTimerTask( this ) ;
         getEventBus().addSubscriberForEventTypes( this, false, 
@@ -61,24 +69,25 @@ public class SessionControlTile extends SessionControlTileUI
         
         kaMgr.disableAllKeys() ;
         setProblemButtonsVisible( false ) ;
+        updateSessionTimeLabel( 0 ) ;
         setBtn2( Btn2Type.CHANGE ) ;
         
+        this.runTime = 0 ;
+        this.pauseTime = 0 ;
+        this.totalPauseTime = 0 ;
+        
+        session = new Session() ;
         if( lastSession == null ) {
             // There has been no last session. Keep everything blank and
             // enable only the change button.
-            session = new Session() ;
             setBtn1( Btn1Type.CLEAR ) ;
         }
         else {
             // Use the last session as a template for this session.
-            session = lastSession ;
-            session.setId( null ) ; 
-            
-            setSessionType( session.getSessionType() ) ;
-            setTopic( session.getTopic() ) ;
-            setBook( session.getBook() ) ;
-            
-            if( session.getLastProblem() != null ) {
+            setSessionType( lastSession.getSessionType() ) ;
+            setTopic( lastSession.getTopic() ) ;
+            setBook( lastSession.getBook() ) ;
+            if( lastSession.getLastProblem() != null ) {
                 setBtn1( Btn1Type.PLAY ) ;
             }
         }
@@ -208,11 +217,25 @@ public class SessionControlTile extends SessionControlTileUI
                 break ;
         }
     }
+    
+    private void saveSession() {
+        
+        Date now = new Date() ;
+        session.setEndTime( new Timestamp( now.getTime() ) ) ;
+        session.setDuration( runTime ) ;
+        session.setAbsoluteDuration( runTime + totalPauseTime ) ;
+        session = sessionRepo.save( session ) ;
+    }
 
     private void play() {
         log.debug( "Starting the session" ) ;
         resume() ;
-        startTime = new Date() ;
+        
+        Date now = new Date() ;
+        session.setStartTime( new Timestamp( now.getTime() ) ) ;
+        saveSession() ;
+        
+        lastSessionRepo.update( getScreenlet().getDisplayName(), session.getId() ) ;
     }
     
     private void pause() {
@@ -226,6 +249,7 @@ public class SessionControlTile extends SessionControlTileUI
         if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
             setProblemButtonsVisible( false ) ;
         }
+        saveSession() ;
     }
     
     private void resume() {
@@ -241,20 +265,13 @@ public class SessionControlTile extends SessionControlTileUI
         setBtn2( Btn2Type.STOP ) ;
         
         pauseTime = 0 ;
+        saveSession() ;
     }
     
     private void stop() {
         log.debug( "Ending the session" ) ;
-        kaMgr.disableAllKeys() ;
-
-        setBtn1( Btn1Type.PLAY ) ;
-        setBtn2( Btn2Type.CHANGE ) ;
-        
-        // If session type = Exercise, enable the lap buttons
-        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
-            setProblemButtonsVisible( false ) ;
-        }
-        endTime = new Date() ;
+        saveSession() ;
+        populateLastSessionDetails( session.clone() ) ;
     }
     
     private void skipProblem() {
