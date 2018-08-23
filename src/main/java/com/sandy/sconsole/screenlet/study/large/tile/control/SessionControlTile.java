@@ -32,18 +32,22 @@ public class SessionControlTile extends SessionControlTileUI
     private RunState runState = RunState.STOPPED ;
     
     private int runTime = 0 ;
+    @SuppressWarnings( "unused" )
     private int pauseTime = 0 ;
     private int totalPauseTime = 0 ;
     
+    private Timestamp lapStartTime = null ;
     private int lapTime = 0 ;
+    private int numProblemsLeftInChapter = 0 ;
     
     private StudyScreenlet screenlet = null ;
     
     private Session session = null ;
     
-    private ProblemRepository problemRepo = null ;
-    private SessionRepository sessionRepo = null ;
-    private LastSessionRepository lastSessionRepo = null ;
+    private ProblemRepository        problemRepo = null ;
+    private SessionRepository        sessionRepo = null ;
+    private LastSessionRepository    lastSessionRepo = null ;
+    private ProblemAttemptRepository problemAttemptRepo = null ;
     
     private Queue<Problem> unsolvedProblems = new LinkedList<>() ;
 
@@ -54,9 +58,10 @@ public class SessionControlTile extends SessionControlTileUI
         
         ApplicationContext ctx = SConsole.getAppContext() ;
         
-        problemRepo     = ctx.getBean( ProblemRepository.class ) ;
-        sessionRepo     = ctx.getBean( SessionRepository.class ) ;
-        lastSessionRepo = ctx.getBean( LastSessionRepository.class ) ;
+        problemRepo        = ctx.getBean( ProblemRepository.class ) ;
+        sessionRepo        = ctx.getBean( SessionRepository.class ) ;
+        lastSessionRepo    = ctx.getBean( LastSessionRepository.class ) ;
+        problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
         
         SConsole.addSecTimerTask( this ) ;
         getEventBus().addSubscriberForEventTypes( this, false, 
@@ -76,6 +81,7 @@ public class SessionControlTile extends SessionControlTileUI
         setBtn2( Btn2Type.CHANGE ) ;
         
         this.runTime = 0 ;
+        this.lapTime = 0 ;
         this.pauseTime = 0 ;
         this.totalPauseTime = 0 ;
         
@@ -128,11 +134,11 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void setNextProblem() {
-        Problem nextProblem = unsolvedProblems.poll() ;
-        session.setLastProblem( nextProblem ) ;
-        setProblemLabel( nextProblem ) ;
         
+        Problem nextProblem = unsolvedProblems.poll() ;
         if( nextProblem != null ) {
+            session.setLastProblem( nextProblem ) ;
+            setProblemLabel( nextProblem ) ;
             setBtn1( Btn1Type.PLAY ) ;
         }
         else {
@@ -198,6 +204,8 @@ public class SessionControlTile extends SessionControlTileUI
         }
         
         log.debug( "Session has " + unsolvedProblems.size() + " unsolved problems." ) ;
+        numProblemsLeftInChapter = unsolvedProblems.size() ;
+        updateNumProblemsLeftInChapter( unsolvedProblems.size() ) ;
     }
 
     protected void setProblemButtonsVisible( boolean visible ) {
@@ -257,15 +265,6 @@ public class SessionControlTile extends SessionControlTileUI
         }
     }
     
-    private void saveSession() {
-        
-        Date now = new Date() ;
-        session.setEndTime( new Timestamp( now.getTime() ) ) ;
-        session.setDuration( runTime ) ;
-        session.setAbsoluteDuration( runTime + totalPauseTime ) ;
-        session = sessionRepo.save( session ) ;
-    }
-
     private void play() {
         log.debug( "Starting the session" ) ;
         resume() ;
@@ -278,6 +277,13 @@ public class SessionControlTile extends SessionControlTileUI
         session.setNumPigeon( 0 ) ;
         saveSession() ;
         
+        updateSkippedLabel( 0 ) ;
+        updateSolvedLabel( 0 ) ;
+        updateRedoLabel( 0 ) ;
+        updatePigeonLabel( 0 ) ;
+        updateSessionTimeLabel( 0 ) ;
+        
+        lapStartTime = new Timestamp( now.getTime() ) ;
         lastSessionRepo.update( getScreenlet().getDisplayName(), session.getId() ) ;
     }
     
@@ -320,6 +326,13 @@ public class SessionControlTile extends SessionControlTileUI
     private void saveProblem( boolean solved, boolean redo, 
                               boolean skipped, boolean pigeoned ) {
         
+        String outcome = null ;
+        if( solved ) outcome = ProblemAttempt.OUTCOME_SOLVED ;
+        else if( redo ) outcome = ProblemAttempt.OUTCOME_REDO ;
+        else if( skipped ) outcome = ProblemAttempt.OUTCOME_SKIP ;
+        else if( pigeoned ) outcome = ProblemAttempt.OUTCOME_PIGEON ;
+        
+        
         Problem p = session.getLastProblem() ;
         p.setSolved( solved ) ;
         p.setRedo( redo ) ;
@@ -327,6 +340,28 @@ public class SessionControlTile extends SessionControlTileUI
         p.setPigeoned( pigeoned ) ;
         
         problemRepo.save( p ) ;
+        
+        ProblemAttempt attempt = new ProblemAttempt() ;
+        attempt.setSession( session ) ;
+        attempt.setProblem( session.getLastProblem() ) ;
+        attempt.setStartTime( lapStartTime ) ;
+        attempt.setEndTime( new Timestamp( new Date().getTime() ) ) ;
+        attempt.setDuration( lapTime ) ;
+        attempt.setOutcome( outcome ) ;
+        
+        problemAttemptRepo.save( attempt ) ;
+        saveSession() ;
+        
+        lapStartTime = new Timestamp( new Date().getTime() ) ;
+    }
+    
+    private void saveSession() {
+        
+        Date now = new Date() ;
+        session.setEndTime( new Timestamp( now.getTime() ) ) ;
+        session.setDuration( runTime ) ;
+        session.setAbsoluteDuration( runTime + totalPauseTime ) ;
+        session = sessionRepo.save( session ) ;
     }
     
     private void skipProblem() {
@@ -343,6 +378,9 @@ public class SessionControlTile extends SessionControlTileUI
         lapTime = 0 ;
         updateSolvedLabel( session.incrementNumSolved() ) ;
         setNextProblem() ;
+        
+        numProblemsLeftInChapter-- ;
+        updateNumProblemsLeftInChapter( numProblemsLeftInChapter ) ;
     }
     
     private void redoProblem() {

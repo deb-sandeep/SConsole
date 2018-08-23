@@ -66,6 +66,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private JLabel typeLbl      = createDefaultLabel( "" ) ;
     private JLabel topicLbl     = createDefaultLabel( "" ) ;
     private JLabel bookLbl      = createDefaultLabel( "" ) ;
+    private JLabel sumsLeftLbl  = createDefaultLabel( "" ) ;
     private JLabel problemLbl   = createDefaultLabel( "" ) ;
     private JLabel sTimeLbl     = createDefaultLabel( "" ) ;
     private JLabel numSkipLbl   = createDefaultLabel( "" ) ;
@@ -83,6 +84,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private JPanel typePnl      = createDefaultPanel() ;
     private JPanel topicPnl     = createDefaultPanel() ;
     private JPanel bookPnl      = createDefaultPanel() ;
+    private JPanel sumsLeftPnl  = createDefaultPanel() ;
     private JPanel problemPnl   = createDefaultPanel() ;
     private JPanel sTimePnl     = createDefaultPanel() ;
     private JPanel numSkipPnl   = createDefaultPanel() ;
@@ -117,7 +119,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private void populatePanelMetaMap() {
         pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2"              ) ) ;
         pmMap.put( topicPnl,     new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, false ) ) ;
-        pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,11,2", 35F, false ) ) ;
+        pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,9,2",  35F, false ) ) ;
+        pmMap.put( sumsLeftPnl,  new LabelMeta( sumsLeftPnl,  sumsLeftLbl,  "10,2,11,2",30F, false ) ) ;
         pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  40F        ) ) ;
         pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 50F        ) ) ;
         pmMap.put( numSkipPnl,   new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F        ) ) ;
@@ -351,6 +354,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     protected void updatePigeonLabel( int num ) {
         numPigeonLbl.setText( Integer.toString( num ) ) ;
+    }
+    
+    protected void updateNumProblemsLeftInChapter( int num ) {
+        sumsLeftLbl.setText( "[" + Integer.toString( num ) + "]" ) ;
     }
     
     protected abstract void changeSessionDetails() ;
