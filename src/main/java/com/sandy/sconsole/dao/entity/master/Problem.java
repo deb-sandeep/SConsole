@@ -21,8 +21,9 @@ public class Problem {
     private String problemTag ;
     private Boolean solved = false ;
     private Boolean active = true ;
-    private Boolean starred = false ;
-    private Boolean markedForRedo = false ;
+    private Boolean pigeoned = false ;
+    private Boolean redo = false ;
+    private Boolean skipped = false ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -50,12 +51,17 @@ public class Problem {
     public Boolean getActive() { return active ; }
     public void setActive( Boolean active ) { this.active = active ; }
     
-    public Boolean getStarred() { return starred ; }
-    public void setStarred( Boolean starred ) { this.starred = starred ; }
+    public Boolean getPigeoned() { return pigeoned ; }
+    public void setPigeoned( Boolean starred ) { this.pigeoned = starred ; }
     
-    public Boolean getMarkedForRedo() { return markedForRedo ; }
-    public void setMarkedForRedo( Boolean markedForRedo ) {
-        this.markedForRedo = markedForRedo ;
+    public Boolean getRedo() { return redo ; }
+    public void setRedo( Boolean redo ) {
+        this.redo = redo ;
+    }
+    
+    public Boolean getSkipped() { return skipped ; }
+    public void setSkipped( Boolean skipped ) {
+        this.skipped = skipped ;
     }
     
     @Override

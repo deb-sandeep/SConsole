@@ -35,6 +35,8 @@ public class SessionControlTile extends SessionControlTileUI
     private int pauseTime = 0 ;
     private int totalPauseTime = 0 ;
     
+    private int lapTime = 0 ;
+    
     private StudyScreenlet screenlet = null ;
     
     private Session session = null ;
@@ -43,7 +45,7 @@ public class SessionControlTile extends SessionControlTileUI
     private SessionRepository sessionRepo = null ;
     private LastSessionRepository lastSessionRepo = null ;
     
-    private Queue<Problem> unsolvedProblems = new LinkedList<>();
+    private Queue<Problem> unsolvedProblems = new LinkedList<>() ;
 
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
@@ -66,10 +68,11 @@ public class SessionControlTile extends SessionControlTileUI
 
     public void populateLastSessionDetails( Session lastSession ) {
         
-        
         kaMgr.disableAllKeys() ;
+        
         setProblemButtonsVisible( false ) ;
-        updateSessionTimeLabel( 0 ) ;
+        updateLapTimeLabel( 0 ) ;
+        
         setBtn2( Btn2Type.CHANGE ) ;
         
         this.runTime = 0 ;
@@ -81,15 +84,24 @@ public class SessionControlTile extends SessionControlTileUI
             // There has been no last session. Keep everything blank and
             // enable only the change button.
             setBtn1( Btn1Type.CLEAR ) ;
+            
+            updateSkippedLabel( 0 ) ;
+            updateSolvedLabel( 0 ) ;
+            updateRedoLabel( 0 ) ;
+            updatePigeonLabel( 0 ) ;
+            updateSessionTimeLabel( 0 ) ;
         }
         else {
             // Use the last session as a template for this session.
             setSessionType( lastSession.getSessionType() ) ;
             setTopic( lastSession.getTopic() ) ;
             setBook( lastSession.getBook() ) ;
-            if( lastSession.getLastProblem() != null ) {
-                setBtn1( Btn1Type.PLAY ) ;
-            }
+            
+            updateSkippedLabel( lastSession.getNumSkipped() ) ;
+            updateSolvedLabel( lastSession.getNumSolved() ) ;
+            updateRedoLabel( lastSession.getNumRedo() ) ;
+            updatePigeonLabel( lastSession.getNumPigeon() ) ;
+            updateSessionTimeLabel( lastSession.getDuration() ) ;
         }
     }
     
@@ -111,13 +123,23 @@ public class SessionControlTile extends SessionControlTileUI
         else {
             setBookLabel( session.getBook().getBookShortName() ) ;
             loadUnsolvedProblems() ;
-            setProblem( unsolvedProblems.poll() ) ;
+            setNextProblem() ;
         }
     }
     
-    public void setProblem( Problem problem ) {
-        session.setLastProblem( problem ) ;
-        setProblemLabel( problem ) ;
+    private void setNextProblem() {
+        Problem nextProblem = unsolvedProblems.poll() ;
+        session.setLastProblem( nextProblem ) ;
+        setProblemLabel( nextProblem ) ;
+        
+        if( nextProblem != null ) {
+            setBtn1( Btn1Type.PLAY ) ;
+        }
+        else {
+            if( runState == RUNNING ) {
+                getScreenlet().processStopKey() ;
+            }
+        }
     }
     
     private void loadUnsolvedProblems() {
@@ -135,7 +157,7 @@ public class SessionControlTile extends SessionControlTileUI
 
             // First pass - go through the problems and collect all redo problems
             for( Problem p : problems ) {
-                if( p.getMarkedForRedo() ) {
+                if( p.getRedo() ) {
                     found.add( p ) ;
                 }
             }
@@ -144,14 +166,14 @@ public class SessionControlTile extends SessionControlTileUI
             found.clear() ;
             
             // Second pass - find all the questions whose id is greater than
-            // or equal to the the sessions problem
+            // or equal to the the sessions problem and which are not skipped
             int refProblemId = -1 ;
             Problem currentProblem = session.getLastProblem() ;
             if( currentProblem != null ) {
                 refProblemId = currentProblem.getId() ;
             }
             for( Problem p : problems ) {
-                if( p.getId() >= refProblemId ) {
+                if( p.getId() >= refProblemId && !p.getSkipped() ) {
                     found.add( p ) ;
                 }
             }
@@ -159,10 +181,23 @@ public class SessionControlTile extends SessionControlTileUI
             problems.removeAll( found ) ;
             found.clear() ;
             
-            // Third pass - add all the remaining problems to the unsolved
+            // Third pass - Find all the problems which are not skipped and add
+            for( Problem p : problems ) {
+                if( !p.getSkipped() ) {
+                    found.add( p ) ;
+                }
+            }
+            unsolvedProblems.addAll( found ) ;
+            problems.removeAll( found ) ;
+            found.clear() ;
+            
+            
+            // Fourth pass - add all the remaining problems to the unsolved
             // problem list
             unsolvedProblems.addAll( problems ) ;
         }
+        
+        log.debug( "Session has " + unsolvedProblems.size() + " unsolved problems." ) ;
     }
 
     protected void setProblemButtonsVisible( boolean visible ) {
@@ -183,7 +218,11 @@ public class SessionControlTile extends SessionControlTileUI
     public void secondTicked( Calendar calendar ) {
         if( runState == RUNNING ) {
             runTime++ ;
+            lapTime++ ;
             updateSessionTimeLabel( runTime ) ;
+            if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+                updateLapTimeLabel( lapTime ) ;
+            }
         }
         else if( runState == PAUSED ) {
             pauseTime++ ;
@@ -233,6 +272,10 @@ public class SessionControlTile extends SessionControlTileUI
         
         Date now = new Date() ;
         session.setStartTime( new Timestamp( now.getTime() ) ) ;
+        session.setNumSkipped( 0 ) ;
+        session.setNumSolved( 0 ) ;
+        session.setNumRedo( 0 ) ;
+        session.setNumPigeon( 0 ) ;
         saveSession() ;
         
         lastSessionRepo.update( getScreenlet().getDisplayName(), session.getId() ) ;
@@ -274,20 +317,48 @@ public class SessionControlTile extends SessionControlTileUI
         populateLastSessionDetails( session.clone() ) ;
     }
     
+    private void saveProblem( boolean solved, boolean redo, 
+                              boolean skipped, boolean pigeoned ) {
+        
+        Problem p = session.getLastProblem() ;
+        p.setSolved( solved ) ;
+        p.setRedo( redo ) ;
+        p.setSkipped( skipped ) ;
+        p.setPigeoned( pigeoned ) ;
+        
+        problemRepo.save( p ) ;
+    }
+    
     private void skipProblem() {
         log.debug( "Skipping the problem" ) ;
+        saveProblem( false, false, true, false ) ;
+        lapTime = 0 ;
+        updateSkippedLabel( session.incrementNumSkipped() ) ;
+        setNextProblem() ;
     }
     
     private void problemSolved() {
         log.debug( "Solved the problem" ) ;
+        saveProblem( true, false, false, false ) ;
+        lapTime = 0 ;
+        updateSolvedLabel( session.incrementNumSolved() ) ;
+        setNextProblem() ;
     }
     
     private void redoProblem() {
         log.debug( "Redo the problem" ) ;
+        saveProblem( false, true, false, false ) ;
+        lapTime = 0 ;
+        updateRedoLabel( session.incrementNumRedo() ) ;
+        setNextProblem() ;
     }
     
     private void setPigeon() {
         log.debug( "Set a pigeon" ) ;
+        saveProblem( false, false, false, true ) ;
+        lapTime = 0 ;
+        updatePigeonLabel( session.incrementNumPigeon() ) ;
+        setNextProblem() ;
     }
 
     @Override

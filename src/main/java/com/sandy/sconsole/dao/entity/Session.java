@@ -36,6 +36,10 @@ public class Session {
     private Timestamp endTime ;
     private Integer duration ;
     private Integer absoluteDuration ;
+    private Integer numSkipped = 0 ;
+    private Integer numSolved = 0 ;
+    private Integer numRedo = 0 ;
+    private Integer numPigeon = 0 ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { 
@@ -82,12 +86,42 @@ public class Session {
         this.lastProblem = lastProblem ;
     }
     
+    public Integer getNumSkipped() { return numSkipped ; }
+    public void setNumSkipped( Integer numSkipped ) {
+        this.numSkipped = numSkipped ;
+    }
+    
+    public Integer getNumSolved() { return numSolved ; }
+    public void setNumSolved( Integer numSolved ) {
+        this.numSolved = numSolved ;
+    }
+    
+    public Integer getNumRedo() { return numRedo ; }
+    public void setNumRedo( Integer numRedo ) {
+        this.numRedo = numRedo ;
+    }
+    
+    public Integer getNumPigeon() { return numPigeon ; }
+    public void setNumPigeon( Integer numPigeon ) {
+        this.numPigeon = numPigeon ;
+    }
+    
+    public int incrementNumSkipped() { return ++numSkipped; }
+    public int incrementNumSolved() { return ++numSolved; }
+    public int incrementNumRedo() { return ++numRedo; }
+    public int incrementNumPigeon() { return ++numPigeon; }
+    
     public Session clone() {
         Session clone = new Session() ;
         clone.setTopic( topic ) ;
         clone.setBook( book ) ;
         clone.setLastProblem( lastProblem ) ;
         clone.setSessionType( sessionType ) ;
+        clone.setNumSkipped( numSkipped ) ;
+        clone.setNumSolved( numSolved ) ;
+        clone.setNumRedo( numRedo ) ;
+        clone.setNumPigeon( numPigeon ) ;
+        clone.setDuration( duration ) ;
         return clone ;
     }
 }

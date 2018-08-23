@@ -28,6 +28,7 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
           + "FROM Problem p "
           + "WHERE "
           +   "p.solved = false and "
+          +   "p.pigeoned = false and "
           +   "p.active = true and "
           +   "p.topic.id = ?1 and "
           +   "p.book.id = ?2 "

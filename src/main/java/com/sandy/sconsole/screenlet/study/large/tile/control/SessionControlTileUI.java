@@ -39,7 +39,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             this( p, l, con, fSz, Color.GRAY, true ) ;
         }
         
-        LabelMeta( JPanel p, JLabel l, String con, boolean border, Color fgCol ) {
+        LabelMeta( JPanel p, JLabel l, String con, Color fgCol, boolean border ) {
             this( p, l, con, 25F, fgCol, border ) ;
         }
         
@@ -125,12 +125,12 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         pmMap.put( numRedoPnl,   new LabelMeta( numRedoPnl,   numRedoLbl,   "4,5,5,6",  60F        ) ) ;
         pmMap.put( numPigeonPnl, new LabelMeta( numPigeonPnl, numPigeonLbl, "6,5,7,6",  60F        ) ) ;
         pmMap.put( lTimePnl,     new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F        ) ) ;
-        pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7", false, Color.WHITE ) ) ;
-        pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7", false, Color.WHITE ) ) ;
-        pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7", false, Color.WHITE ) ) ;
-        pmMap.put( btnPigeonPnl, new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7", false, Color.WHITE ) ) ;
+        pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7",  30F, Color.WHITE, false ) ) ;
+        pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7",  30F, Color.WHITE, false ) ) ;
+        pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7",  30F, Color.WHITE, false ) ) ;
+        pmMap.put( btnPigeonPnl, new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7",  30F, Color.WHITE, false ) ) ;
         pmMap.put( btn1Pnl,      new LabelMeta( btn1Pnl,      btn1Lbl,      "8,7,9,7"              ) ) ;
-        pmMap.put( btn2Pnl,      new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7", true, Color.white ) ) ;
+        pmMap.put( btn2Pnl,      new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7", Color.white, true ) ) ;
     }
     
     private void setUpUI() {
@@ -212,7 +212,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             
             panel.add( meta.label ) ;
             if( meta.border ) {
-                panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR.darker() ) ) ;
+                panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR ) ) ;
             }
             meta.initialized = true ;
         }
@@ -317,13 +317,40 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
-    protected void updateSessionTimeLabel( long seconds ) {
+    private String getElapsedTimeLabel( long seconds, boolean longFormat ) {
         int secs    = (int)(seconds) % 60 ;
         int minutes = (int)((seconds / 60) % 60) ;
         int hours   = (int)(seconds / (60*60)) ;
         
-        String str = String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
-        sTimeLbl.setText( str ) ;
+        if( longFormat ) {
+            return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
+        }
+        
+        return String.format("%02d:%02d", minutes, secs ) ;
+    }
+    
+    protected void updateSessionTimeLabel( long seconds ) {
+        sTimeLbl.setText( getElapsedTimeLabel( seconds, true ) ) ;
+    }
+    
+    protected void updateLapTimeLabel( long seconds ) {
+        lTimeLbl.setText( getElapsedTimeLabel( seconds, false ) ) ;
+    }
+    
+    protected void updateSkippedLabel( int num ) {
+        numSkipLbl.setText( Integer.toString( num ) ) ;
+    }
+    
+    protected void updateSolvedLabel( int num ) {
+        numSolvedLbl.setText( Integer.toString( num ) ) ;
+    }
+    
+    protected void updateRedoLabel( int num ) {
+        numRedoLbl.setText( Integer.toString( num ) ) ;
+    }
+    
+    protected void updatePigeonLabel( int num ) {
+        numPigeonLbl.setText( Integer.toString( num ) ) ;
     }
     
     protected abstract void changeSessionDetails() ;
