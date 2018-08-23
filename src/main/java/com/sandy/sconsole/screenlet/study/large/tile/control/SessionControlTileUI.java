@@ -43,6 +43,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             this( p, l, con, 25F, fgCol, border ) ;
         }
         
+        LabelMeta( JPanel p, JLabel l, String con, float fSz, Color fgColor ) {
+            this( p, l, con, fSz, fgColor, true ) ;
+        }
+        
         LabelMeta( JPanel p, JLabel l, String con, float fSz, boolean border ) {
             this( p, l, con, fSz, Color.GRAY, border ) ;
         }
@@ -119,15 +123,15 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private void populatePanelMetaMap() {
         pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2"              ) ) ;
         pmMap.put( topicPnl,     new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, false ) ) ;
-        pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,9,2",  35F, false ) ) ;
+        pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,9,2",  40F, false ) ) ;
         pmMap.put( sumsLeftPnl,  new LabelMeta( sumsLeftPnl,  sumsLeftLbl,  "10,2,11,2",30F, false ) ) ;
-        pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  40F        ) ) ;
-        pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 50F        ) ) ;
+        pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  40F, Color.decode( "#C2E880" ) ) ) ;
+        pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 60F, Color.decode( "#75BAF9" ) ) ) ;
         pmMap.put( numSkipPnl,   new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F        ) ) ;
         pmMap.put( numSolvedPnl, new LabelMeta( numSolvedPnl, numSolvedLbl, "2,5,3,6",  60F        ) ) ;
         pmMap.put( numRedoPnl,   new LabelMeta( numRedoPnl,   numRedoLbl,   "4,5,5,6",  60F        ) ) ;
         pmMap.put( numPigeonPnl, new LabelMeta( numPigeonPnl, numPigeonLbl, "6,5,7,6",  60F        ) ) ;
-        pmMap.put( lTimePnl,     new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F        ) ) ;
+        pmMap.put( lTimePnl,     new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F, Color.decode( "#F98BCC" ) ) ) ;
         pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7",  30F, Color.WHITE, false ) ) ;
         pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7",  30F, Color.WHITE, false ) ) ;
         pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7",  30F, Color.WHITE, false ) ) ;

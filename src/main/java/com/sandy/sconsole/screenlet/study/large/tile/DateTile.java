@@ -17,7 +17,7 @@ public class DateTile extends AbstractScreenletTile
     implements DayTickListener {
 
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, d MMM", Locale.ENGLISH ) ;
-    private static Font FONT = BASE_FONT.deriveFont( 40F ) ;
+    private static Font FONT = BASE_FONT.deriveFont( 50F ) ;
     
     private JLabel label = null ;
     

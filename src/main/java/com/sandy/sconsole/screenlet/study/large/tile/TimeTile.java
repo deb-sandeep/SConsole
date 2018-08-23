@@ -21,7 +21,7 @@ public class TimeTile extends AbstractScreenletTile
 
     static final Logger log = Logger.getLogger( SConsole.class ) ;
     
-    private static Font FONT = BASE_FONT.deriveFont( 40F ) ;
+    private static Font FONT = BASE_FONT.deriveFont( 50F ) ;
     
     private JLabel label = null ;
     
