@@ -1,8 +1,7 @@
 package com.sandy.sconsole.core.frame;
 
-import java.awt.Color ;
-import java.awt.Font ;
-import java.text.SimpleDateFormat ;
+import java.awt.* ;
+import java.text.* ;
 
 public class UIConstant {
 

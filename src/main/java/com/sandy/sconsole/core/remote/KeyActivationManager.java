@@ -1,52 +1,51 @@
 package com.sandy.sconsole.core.remote;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_FN ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_NAV_CONTROL ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.KEY_TYPE_RUN ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.getsKeysOfType ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 
-import java.util.HashMap ;
-import java.util.Map ;
+import java.util.* ;
+
+import org.jfree.util.* ;
 
 public class KeyActivationManager {
 
     private Map<String, Boolean> keyActivationMap = null ;
-    private Map<String, Integer> fnFeatureMap = new HashMap<>() ;
+    private Map<String, FnKeyHandler> fnKeyListeners = new HashMap<>() ;
     
     public KeyActivationManager() {
         keyActivationMap = RemoteKeyCode.getDefaultKeyActivationMap() ;
         for( String keyId : RemoteKeyCode.getsKeysOfType( KEY_TYPE_FN ) ) {
-            fnFeatureMap.put( keyId, -1 ) ;
+            fnKeyListeners.put( keyId, null ) ;
         }
     }
     
-    public void setFnKeyFeature( String keyId, int feature ) {
-        if( !fnFeatureMap.containsKey( keyId ) ) {
-            throw new IllegalArgumentException( "Feature can't be associated " + 
-                                  "with a non function key." + keyId ) ;
+    private void setFnKeyFeature( String keyId, FnKeyHandler listener ) {
+        if( !fnKeyListeners.containsKey( keyId ) ) {
+            throw new IllegalArgumentException( 
+             "Key " + keyId + " is not valid for registering FnKeyListener." ) ;
         }
-        fnFeatureMap.put( keyId, feature ) ;
+        fnKeyListeners.put( keyId, listener ) ;
     }
     
-    public void clearFnKeyFeature( String keyId ) {
-        if( !fnFeatureMap.containsKey( keyId ) ) {
-            throw new IllegalArgumentException( "Feature can't be cleared " + 
-                                  "from a non function key." + keyId ) ;
+    public void clearFnKeyFeature( String... keyIds ) {
+        for( String keyId : keyIds ) {
+            if( !fnKeyListeners.containsKey( keyId ) ) {
+                throw new IllegalArgumentException( 
+                        "Feature can't be cleared " + 
+                        "from a non function key." + keyId ) ;
+            }
+            fnKeyListeners.put( keyId, null ) ;
         }
-        fnFeatureMap.put( keyId, -1 ) ;
-    }
-    
-    public int getFnKeyFeature( String keyId ) {
-        if( !fnFeatureMap.containsKey( keyId ) ) {
-            throw new IllegalArgumentException( keyId + " is not a Function key.") ;
-        }
-        return fnFeatureMap.get( keyId ) ;
     }
     
     public boolean isKeyActive( String keyId ) {
         return keyActivationMap.get( keyId ) ;
     }
 
+    public void enableFnKey( String keyId, FnKeyHandler listener ) {
+        setFnKeyFeature( keyId, listener ) ;
+        enableKey( true, keyId ) ;
+    }
+    
     private void enableKeyType( String keyType, boolean enable ) {
         for( String key : getsKeysOfType( keyType ) ) {
             keyActivationMap.put( key, enable ) ;
@@ -55,15 +54,11 @@ public class KeyActivationManager {
     
     public void enableKey( boolean enable, String... keyIds ) {
         for( String id : keyIds ) {
-            setKeyEnable( id, enable ) ;
+            if( !keyActivationMap.containsKey( id ) ) {
+                throw new IllegalArgumentException( "No key by ID : " + id ) ;
+            }
+            keyActivationMap.put( id, enable ) ;
         }
-    }
-    
-    public void setKeyEnable( String keyID, boolean enable ) {
-        if( !keyActivationMap.containsKey( keyID ) ) {
-            throw new IllegalArgumentException( "No key by ID : " + keyID ) ;
-        }
-        keyActivationMap.put( keyID, enable ) ;
     }
     
     public void enableNavKeys( boolean enable ) {
@@ -87,6 +82,18 @@ public class KeyActivationManager {
     public void enableAllKeys() {
         for( String key : keyActivationMap.keySet() ) {
             keyActivationMap.put( key, true ) ;
+        }
+    }
+
+    public void processFunctionKey( String keyCode ) {
+        String keyId = RemoteKeyCode.KEY_TYPE_FN + "@" + keyCode ;
+        Log.debug( "Processing function key " + keyCode ) ;
+        if( !keyActivationMap.containsKey( keyId ) ) {
+            throw new IllegalArgumentException( "No function key by ID : " + keyId ) ;
+        }
+        FnKeyHandler listener = fnKeyListeners.get( keyId ) ;
+        if( listener != null ) {
+            listener.process() ;
         }
     }
 }

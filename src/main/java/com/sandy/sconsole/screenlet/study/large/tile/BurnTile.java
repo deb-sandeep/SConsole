@@ -1,7 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large.tile;
 
-import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
 public class BurnTile extends AbstractScreenletTile {

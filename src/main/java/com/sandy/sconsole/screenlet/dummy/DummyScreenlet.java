@@ -1,17 +1,15 @@
 package com.sandy.sconsole.screenlet.dummy;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Font ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 
-import javax.swing.JLabel ;
-import javax.swing.SwingUtilities ;
+import java.awt.* ;
 
-import org.apache.log4j.Logger ;
+import javax.swing.* ;
 
-import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
-import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
-import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
+import org.apache.log4j.* ;
+
+import com.sandy.sconsole.core.remote.* ;
+import com.sandy.sconsole.core.screenlet.* ;
 
 public class DummyScreenlet extends AbstractScreenlet {
     
@@ -21,6 +19,11 @@ public class DummyScreenlet extends AbstractScreenlet {
     public DummyScreenlet( String name ) {
         super( name ) ;
         dialog = new DummyDialog() ;
+        kaMgr.disableAllKeys() ;
+        kaMgr.enableKey( true, RUN_PLAYPAUSE, RUN_STOP ) ;
+        kaMgr.enableFnKey( FN_A, new FnKeyHandler() {
+            public void process() { handleFnA(); } 
+        } );
     }
     
     public ScreenletSmallPanel createSmallPanel() {
@@ -74,10 +77,7 @@ public class DummyScreenlet extends AbstractScreenlet {
         log.debug( "Stopping dummy screenlet" ) ;
     }
 
-    @Override
-    public void handleFunctionKey( String fnCode ) {
-        if( fnCode.equals( "A" ) ) {
-            System.exit( -1 ) ;
-        }
+    public void handleFnA() {
+        System.exit( -1 ) ;
     }
 }

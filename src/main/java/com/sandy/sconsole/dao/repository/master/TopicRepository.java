@@ -1,10 +1,10 @@
 package com.sandy.sconsole.dao.repository.master;
 
-import java.util.List ;
+import java.util.* ;
 
-import org.springframework.data.repository.CrudRepository ;
+import org.springframework.data.repository.* ;
 
-import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.entity.master.* ;
 
 public interface TopicRepository extends CrudRepository<Topic, Integer> {
     

@@ -1,11 +1,8 @@
 package com.sandy.sconsole.screenlet.daytime;
 
-import javax.swing.BoxLayout ;
-import javax.swing.JPanel ;
+import javax.swing.* ;
 
-import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
-import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
-import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
+import com.sandy.sconsole.core.screenlet.* ;
 
 public class DayTimeScreenlet extends AbstractScreenlet {
 

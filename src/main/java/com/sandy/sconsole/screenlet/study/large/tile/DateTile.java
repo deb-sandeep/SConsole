@@ -1,20 +1,16 @@
 package com.sandy.sconsole.screenlet.study.large.tile;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Font ;
-import java.text.SimpleDateFormat ;
-import java.util.Calendar ;
-import java.util.Date ;
-import java.util.Locale ;
+import java.awt.* ;
+import java.text.* ;
+import java.util.* ;
 
-import javax.swing.JLabel ;
+import javax.swing.* ;
 
-import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
-import com.sandy.sconsole.core.util.DayTickListener ;
+import com.sandy.sconsole.* ;
+import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.core.util.* ;
 
 @SuppressWarnings( "serial" )
 public class DateTile extends AbstractScreenletTile 

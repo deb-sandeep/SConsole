@@ -1,25 +1,17 @@
 package com.sandy.sconsole.api.mdm.problem;
 
-import java.util.ArrayList ;
-import java.util.List ;
+import java.util.* ;
 
-import org.apache.log4j.Logger ;
-import org.springframework.beans.factory.annotation.Autowired ;
-import org.springframework.http.HttpStatus ;
-import org.springframework.http.ResponseEntity ;
-import org.springframework.web.bind.annotation.PostMapping ;
-import org.springframework.web.bind.annotation.RequestBody ;
-import org.springframework.web.bind.annotation.RestController ;
+import org.apache.log4j.* ;
+import org.springframework.beans.factory.annotation.* ;
+import org.springframework.http.* ;
+import org.springframework.web.bind.annotation.* ;
 
-import com.sandy.common.util.StringUtil ;
-import com.sandy.sconsole.api.mdm.MDMInput ;
-import com.sandy.sconsole.core.api.APIResponse ;
-import com.sandy.sconsole.dao.entity.master.Book ;
-import com.sandy.sconsole.dao.entity.master.Problem ;
-import com.sandy.sconsole.dao.entity.master.Topic ;
-import com.sandy.sconsole.dao.repository.master.BookRepository ;
-import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
-import com.sandy.sconsole.dao.repository.master.TopicRepository ;
+import com.sandy.common.util.* ;
+import com.sandy.sconsole.api.mdm.* ;
+import com.sandy.sconsole.core.api.* ;
+import com.sandy.sconsole.dao.entity.master.* ;
+import com.sandy.sconsole.dao.repository.master.* ;
 
 @RestController
 public class ProblemMasterController {

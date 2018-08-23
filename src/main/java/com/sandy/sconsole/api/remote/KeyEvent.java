@@ -1,6 +1,6 @@
 package com.sandy.sconsole.api.remote;
 
-public class KeyPressEvent {
+public class KeyEvent {
     
     private String btnType = null ;
     private String btnCode = null ;

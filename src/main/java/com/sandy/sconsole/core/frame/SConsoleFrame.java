@@ -1,23 +1,16 @@
 package com.sandy.sconsole.core.frame;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Container ;
-import java.awt.Cursor ;
-import java.awt.Point ;
-import java.awt.Toolkit ;
-import java.awt.image.BufferedImage ;
+import java.awt.* ;
+import java.awt.image.* ;
 
-import javax.swing.JFrame ;
+import javax.swing.* ;
 
-import org.apache.log4j.Logger ;
+import org.apache.log4j.* ;
 
-import com.sandy.common.ui.SwingUtils ;
-import com.sandy.sconsole.api.remote.KeyPressEvent ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventRouter;
-import com.sandy.sconsole.core.remote.RemoteKeyReceiver;
-import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.common.ui.* ;
+import com.sandy.sconsole.api.remote.* ;
+import com.sandy.sconsole.core.remote.* ;
+import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
 public class SConsoleFrame extends JFrame
@@ -86,7 +79,7 @@ public class SConsoleFrame extends JFrame
         contentPane.setCursor( blankCursor ) ;
     }
 
-    public void handleRemoteKeyEvent( KeyPressEvent event ) {
+    public void handleRemoteKeyEvent( KeyEvent event ) {
         
         if( event.getBtnType().equals( "ScreenletSelection" ) ) {
             handleScreenletSelectionKeyPress( event.getBtnCode() ) ;
@@ -139,7 +132,7 @@ public class SConsoleFrame extends JFrame
         }
         
         curLargeScreenletPanel = largePanel ;
-        keyProcessor.setKeyListener( curLargeScreenletPanel.getScreenlet() ) ;
+        keyProcessor.setRemoteListener( curLargeScreenletPanel.getScreenlet() ) ;
         
         contentPane.add( curLargeScreenletPanel, BorderLayout.CENTER ) ;
         contentPane.revalidate() ;

@@ -1,20 +1,16 @@
 package test ;
 
-import static javax.swing.SwingConstants.CENTER ;
+import static javax.swing.SwingConstants.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Container ;
+import java.awt.* ;
 
-import javax.swing.JFrame ;
-import javax.swing.JLabel ;
-import javax.swing.JPanel ;
-import javax.swing.border.LineBorder ;
+import javax.swing.* ;
+import javax.swing.border.* ;
 
-import com.sandy.common.ui.SwingUtils ;
-import com.sandy.sconsole.core.frame.UIConstant ;
+import com.sandy.common.ui.* ;
+import com.sandy.sconsole.core.frame.* ;
 
-import info.clearthought.layout.TableLayout ;
+import info.clearthought.layout.* ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlPanelLayoutPrototype extends JFrame {

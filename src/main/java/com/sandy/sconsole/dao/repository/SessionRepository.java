@@ -1,8 +1,8 @@
 package com.sandy.sconsole.dao.repository;
 
-import org.springframework.data.repository.CrudRepository ;
+import org.springframework.data.repository.* ;
 
-import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.* ;
 
 public interface SessionRepository extends CrudRepository<Session, Integer> {
 }

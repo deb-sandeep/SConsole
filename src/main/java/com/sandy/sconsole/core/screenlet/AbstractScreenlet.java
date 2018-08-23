@@ -1,18 +1,11 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.RANGE_MAX ;
-import static com.sandy.sconsole.core.CoreEventID.RANGE_MIN ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_MAXIMIZED ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_MINIMIZED ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_PAUSE ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_PLAY ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_RESUME ;
-import static com.sandy.sconsole.core.CoreEventID.SCREENLET_STOP ;
+import static com.sandy.sconsole.core.CoreEventID.* ;
 
-import com.sandy.common.bus.EventBus ;
-import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
-import com.sandy.sconsole.core.remote.KeyActivationManager ;
+import com.sandy.common.bus.* ;
+import com.sandy.sconsole.* ;
+import com.sandy.sconsole.core.frame.* ;
+import com.sandy.sconsole.core.remote.* ;
 
 public abstract class AbstractScreenlet implements Screenlet {
 
@@ -115,7 +108,9 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
     
     @Override
-    public void handleFunctionKey( String fnCode ) {}
+    public final void handleFunctionKey( String fnCode ) {
+        this.kaMgr.processFunctionKey( fnCode ) ;
+    }
 
     @Override
     public void handleLeftNavKey() {}

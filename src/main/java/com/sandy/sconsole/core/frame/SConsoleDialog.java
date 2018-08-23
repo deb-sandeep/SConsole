@@ -1,27 +1,16 @@
 package com.sandy.sconsole.core.frame;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Container ;
-import java.awt.Cursor ;
-import java.awt.Dimension ;
-import java.awt.Font ;
-import java.awt.Point ;
-import java.awt.Toolkit ;
-import java.awt.image.BufferedImage ;
+import java.awt.* ;
+import java.awt.image.* ;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel ;
-import javax.swing.JPanel ;
-import javax.swing.SwingConstants ;
-import javax.swing.border.LineBorder ;
+import javax.swing.* ;
+import javax.swing.border.* ;
 
-import org.apache.log4j.Logger ;
+import org.apache.log4j.* ;
 
-import com.sandy.common.ui.SwingUtils ;
-import com.sandy.sconsole.api.remote.KeyPressEvent ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
-import com.sandy.sconsole.core.remote.RemoteKeyReceiver;
+import com.sandy.common.ui.* ;
+import com.sandy.sconsole.api.remote.* ;
+import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings( "serial" )
 class SConsoleDialog extends JDialog
@@ -92,7 +81,7 @@ class SConsoleDialog extends JDialog
         contentPane.setCursor( blankCursor ) ;
     }
 
-    public void handleRemoteKeyEvent( KeyPressEvent event ) {
+    public void handleRemoteKeyEvent( KeyEvent event ) {
         if( !event.getBtnType().equals( "ScreenletSelection" ) ) {
             log.debug( "Dialog has received the key - " + event ) ;
             keyProcessor.processKeyEvent( event ) ;
@@ -108,7 +97,7 @@ class SConsoleDialog extends JDialog
         }
         
         this.panel = panel ;
-        this.keyProcessor.setKeyListener( panel ) ;
+        this.keyProcessor.setRemoteListener( panel ) ;
         
         if( this.panel != null ) {
             

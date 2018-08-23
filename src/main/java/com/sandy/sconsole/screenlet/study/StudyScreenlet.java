@@ -1,18 +1,15 @@
 package com.sandy.sconsole.screenlet.study;
 
-import static com.sandy.sconsole.SConsole.getAppContext ;
+import static com.sandy.sconsole.SConsole.* ;
 
-import java.awt.Color ;
-import java.util.Optional ;
+import java.awt.* ;
+import java.util.* ;
 
-import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
-import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
-import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
-import com.sandy.sconsole.dao.entity.LastSession ;
-import com.sandy.sconsole.dao.entity.Session ;
-import com.sandy.sconsole.dao.repository.LastSessionRepository ;
-import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
-import com.sandy.sconsole.screenlet.study.small.StudyScreenletSmallPanel ;
+import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.dao.entity.* ;
+import com.sandy.sconsole.dao.repository.* ;
+import com.sandy.sconsole.screenlet.study.large.* ;
+import com.sandy.sconsole.screenlet.study.small.* ;
 
 public class StudyScreenlet extends AbstractScreenlet {
     

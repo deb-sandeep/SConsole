@@ -1,7 +1,6 @@
 package com.sandy.sconsole.core.remote;
 
-import java.util.HashMap ;
-import java.util.Map ;
+import java.util.* ;
 
 public class RemoteKeyCode {
 

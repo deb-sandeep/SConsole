@@ -1,9 +1,8 @@
 package com.sandy.sconsole.api.mdm.problem;
 
-import java.util.ArrayList ;
-import java.util.List ;
+import java.util.* ;
 
-import com.sandy.common.util.StringUtil ;
+import com.sandy.common.util.* ;
 
 public class ExerciseMeta {
     

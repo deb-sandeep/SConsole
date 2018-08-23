@@ -6,6 +6,8 @@ import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
 import java.util.* ;
 
+import org.apache.log4j.* ;
+
 import com.sandy.common.bus.* ;
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.core.remote.* ;
@@ -21,7 +23,7 @@ import com.sandy.sconsole.screenlet.study.* ;
 public class SessionControlTile extends SessionControlTileUI 
     implements SecondTickListener {
     
-    private static final int FN_CHANGE = 1 ;
+    static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
     private RunState runState = RunState.STOPPED ;
     
@@ -33,7 +35,6 @@ public class SessionControlTile extends SessionControlTileUI
     private long totalPauseTime = 0 ;
     
     private StudyScreenlet screenlet = null ;
-    private KeyActivationManager kaMgr = null ;
     
     private Session session = null ;
     
@@ -57,12 +58,10 @@ public class SessionControlTile extends SessionControlTileUI
 
     public void populateLastSessionDetails( Session lastSession ) {
         
-        setBtn2( Btn2Type.CHANGE ) ;
-        setProblemButtonsVisible( false ) ;
         
         kaMgr.disableAllKeys() ;
-        kaMgr.setKeyEnable( FN_A, true ) ;
-        kaMgr.setFnKeyFeature( FN_A, FN_CHANGE ) ;
+        setProblemButtonsVisible( false ) ;
+        setBtn2( Btn2Type.CHANGE ) ;
         
         if( lastSession == null ) {
             // There has been no last session. Keep everything blank and
@@ -78,6 +77,10 @@ public class SessionControlTile extends SessionControlTileUI
             setSessionType( session.getSessionType() ) ;
             setTopic( session.getTopic() ) ;
             setBook( session.getBook() ) ;
+            
+            if( session.getLastProblem() != null ) {
+                setBtn1( Btn1Type.PLAY ) ;
+            }
         }
     }
     
@@ -92,13 +95,12 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     public void setBook( Book book ) {
+        session.setBook( book ) ;
         if( book == null ) {
             setBookLabel( null ) ;
         }
         else {
-            session.setBook( book ) ;
             setBookLabel( session.getBook().getBookShortName() ) ;
-            
             loadUnsolvedProblems() ;
             setProblem( unsolvedProblems.poll() ) ;
         }
@@ -154,6 +156,20 @@ public class SessionControlTile extends SessionControlTileUI
         }
     }
 
+    protected void setProblemButtonsVisible( boolean visible ) {
+        super.setProblemButtonsVisible( visible ) ;
+        if( !visible ) {
+            kaMgr.enableKey( false, FN_A, FN_B, FN_C, FN_D ) ;
+            kaMgr.clearFnKeyFeature( FN_A, FN_B, FN_C, FN_D );
+        }
+        else {
+            kaMgr.enableFnKey( FN_A, new FnKeyHandler() { public void process() { skipProblem() ; } } ) ;
+            kaMgr.enableFnKey( FN_B, new FnKeyHandler() { public void process() { problemSolved() ; } }  ) ;
+            kaMgr.enableFnKey( FN_C, new FnKeyHandler() { public void process() { redoProblem() ; } }  ) ;
+            kaMgr.enableFnKey( FN_D, new FnKeyHandler() { public void process() { setPigeon() ; } }  ) ;
+        }
+    }
+    
     @Override
     public void secondTicked( Calendar calendar ) {
         if( runState == RUNNING ) {
@@ -178,25 +194,87 @@ public class SessionControlTile extends SessionControlTileUI
                 break ;
                 
             case SCREENLET_PAUSE:
-                // Need to show the paused dialog.
+                pause() ;
                 break ;
                 
             case SCREENLET_RESUME:
+                resume() ;
                 pauseTime = 0 ;
                 break ;
                 
             case SCREENLET_STOP:
+                stop() ;
                 pauseTime = 0 ;
                 break ;
         }
     }
 
     private void play() {
-        // If session type = Exercise, enable the lap buttons
-        pauseTime = 0 ;
+        log.debug( "Starting the session" ) ;
+        resume() ;
         startTime = new Date() ;
+    }
+    
+    private void pause() {
+        log.debug( "Pausing the session" ) ;
+        kaMgr.disableAllKeys() ;
+
+        setBtn1( Btn1Type.PLAY ) ;
+        setBtn2( Btn2Type.STOP ) ;
+
+        // If session type = Exercise, disable the lap buttons
+        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            setProblemButtonsVisible( false ) ;
+        }
+    }
+    
+    private void resume() {
+        log.debug( "Resuming the session" ) ;
+        kaMgr.disableAllKeys() ;
+        
+        // If session type = Exercise, enable the lap buttons
+        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            setProblemButtonsVisible( true ) ;
+        }
+        
         setBtn1( Btn1Type.PAUSE ) ;
         setBtn2( Btn2Type.STOP ) ;
         
+        pauseTime = 0 ;
+    }
+    
+    private void stop() {
+        log.debug( "Ending the session" ) ;
+        kaMgr.disableAllKeys() ;
+
+        setBtn1( Btn1Type.PLAY ) ;
+        setBtn2( Btn2Type.CHANGE ) ;
+        
+        // If session type = Exercise, enable the lap buttons
+        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            setProblemButtonsVisible( false ) ;
+        }
+        endTime = new Date() ;
+    }
+    
+    private void skipProblem() {
+        log.debug( "Skipping the problem" ) ;
+    }
+    
+    private void problemSolved() {
+        log.debug( "Solved the problem" ) ;
+    }
+    
+    private void redoProblem() {
+        log.debug( "Redo the problem" ) ;
+    }
+    
+    private void setPigeon() {
+        log.debug( "Set a pigeon" ) ;
+    }
+
+    @Override
+    protected void changeSessionDetails() {
+        log.debug( "Change session details called." ) ;
     }
 }

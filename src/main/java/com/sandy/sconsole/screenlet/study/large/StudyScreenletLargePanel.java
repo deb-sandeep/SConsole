@@ -1,21 +1,12 @@
 package com.sandy.sconsole.screenlet.study.large;
 
-import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
-import com.sandy.sconsole.dao.entity.Session ;
-import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
-import com.sandy.sconsole.screenlet.study.large.tile.BurnTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DayGanttTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DayRelativeHoursTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DayStatTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DayTotalTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.Last30DaysHoursTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.SessionStatTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.TimeTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.TitleTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.dao.entity.* ;
+import com.sandy.sconsole.screenlet.study.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.* ;
 
-import info.clearthought.layout.TableLayout ;
+import info.clearthought.layout.* ;
 
 @SuppressWarnings( "serial" )
 public class StudyScreenletLargePanel extends ScreenletLargePanel {

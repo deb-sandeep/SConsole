@@ -1,35 +1,26 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_A_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_B_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_C_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_D_COLOR ;
-import static java.awt.Color.WHITE ;
-import static javax.swing.SwingConstants.CENTER ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static javax.swing.SwingConstants.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.util.HashMap ;
-import java.util.Map ;
+import java.awt.* ;
+import java.util.* ;
 
-import javax.swing.Icon ;
-import javax.swing.ImageIcon ;
-import javax.swing.JLabel ;
-import javax.swing.JPanel ;
-import javax.swing.border.LineBorder ;
+import javax.swing.* ;
+import javax.swing.border.* ;
 
-import com.sandy.common.util.StringUtil ;
-import com.sandy.sconsole.core.frame.UIConstant ;
-import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
-import com.sandy.sconsole.dao.entity.Session ;
-import com.sandy.sconsole.dao.entity.master.Problem ;
+import com.sandy.common.util.* ;
+import com.sandy.sconsole.core.frame.* ;
+import com.sandy.sconsole.core.remote.* ;
+import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.dao.entity.* ;
+import com.sandy.sconsole.dao.entity.master.* ;
 
-import info.clearthought.layout.TableLayout ;
+import info.clearthought.layout.* ;
 
 @SuppressWarnings( "serial" )
-public class SessionControlTileUI extends AbstractScreenletTile {
+public abstract class SessionControlTileUI extends AbstractScreenletTile {
 
     private class LabelMeta {
         JPanel panel = null ;
@@ -38,6 +29,7 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         float fontSize = -1F ;
         Color fgColor = null ;
         boolean border = true ;
+        boolean initialized = false ;
         
         LabelMeta( JPanel p, JLabel l, String con ) {
             this( p, l, con, 25F, true ) ;
@@ -47,8 +39,8 @@ public class SessionControlTileUI extends AbstractScreenletTile {
             this( p, l, con, fSz, Color.GRAY, true ) ;
         }
         
-        LabelMeta( JPanel p, JLabel l, String con, boolean border ) {
-            this( p, l, con, 25F, Color.GRAY, border ) ;
+        LabelMeta( JPanel p, JLabel l, String con, boolean border, Color fgCol ) {
+            this( p, l, con, 25F, fgCol, border ) ;
         }
         
         LabelMeta( JPanel p, JLabel l, String con, float fSz, boolean border ) {
@@ -70,7 +62,7 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     
     protected enum Btn1Type { PLAY, PAUSE, CLEAR } ;
     protected enum Btn2Type { STOP, CHANGE, CLEAR } ;
-
+    
     private JLabel typeLbl      = createDefaultLabel( "" ) ;
     private JLabel topicLbl     = createDefaultLabel( "" ) ;
     private JLabel bookLbl      = createDefaultLabel( "" ) ;
@@ -81,10 +73,10 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     private JLabel numRedoLbl   = createDefaultLabel( "" ) ;
     private JLabel numPigeonLbl = createDefaultLabel( "" ) ;
     private JLabel lTimeLbl     = createDefaultLabel( "" ) ;
-    private JLabel btnSkipLbl   = createDefaultLabel( "Skip (A)" ) ;
-    private JLabel btnSolvedLbl = createDefaultLabel( "Solved (B)" ) ;
-    private JLabel btnRedoLbl   = createDefaultLabel( "Redo (C)" ) ;
-    private JLabel btnPigeonLbl = createDefaultLabel( "Pigeon (D)" ) ;
+    private JLabel btnSkipLbl   = createDefaultLabel( "Skip [A]" ) ;
+    private JLabel btnSolvedLbl = createDefaultLabel( "Solved [B]" ) ;
+    private JLabel btnRedoLbl   = createDefaultLabel( "Redo [C]" ) ;
+    private JLabel btnPigeonLbl = createDefaultLabel( "Pigeon [D]" ) ;
     private JLabel btn1Lbl      = createDefaultLabel( "" ) ;
     private JLabel btn2Lbl      = createDefaultLabel( "" ) ;
     
@@ -114,6 +106,8 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     
     private Map<JPanel, LabelMeta> pmMap = new HashMap<>() ;
     
+    protected KeyActivationManager kaMgr = null ;
+    
     public SessionControlTileUI( ScreenletPanel parent ) {
         super( parent ) ;
         populatePanelMetaMap() ;
@@ -131,12 +125,12 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         pmMap.put( numRedoPnl,   new LabelMeta( numRedoPnl,   numRedoLbl,   "4,5,5,6",  60F        ) ) ;
         pmMap.put( numPigeonPnl, new LabelMeta( numPigeonPnl, numPigeonLbl, "6,5,7,6",  60F        ) ) ;
         pmMap.put( lTimePnl,     new LabelMeta( lTimePnl,     lTimeLbl,     "8,5,11,6", 60F        ) ) ;
-        pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7", false       ) ) ;
-        pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7", false       ) ) ;
-        pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7", false       ) ) ;
-        pmMap.put( btnPigeonPnl, new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7", false       ) ) ;
+        pmMap.put( btnSkipPnl,   new LabelMeta( btnSkipPnl,   btnSkipLbl,   "0,7,1,7", false, Color.WHITE ) ) ;
+        pmMap.put( btnSolvedPnl, new LabelMeta( btnSolvedPnl, btnSolvedLbl, "2,7,3,7", false, Color.WHITE ) ) ;
+        pmMap.put( btnRedoPnl,   new LabelMeta( btnRedoPnl,   btnRedoLbl,   "4,7,5,7", false, Color.WHITE ) ) ;
+        pmMap.put( btnPigeonPnl, new LabelMeta( btnPigeonPnl, btnPigeonLbl, "6,7,7,7", false, Color.WHITE ) ) ;
         pmMap.put( btn1Pnl,      new LabelMeta( btn1Pnl,      btn1Lbl,      "8,7,9,7"              ) ) ;
-        pmMap.put( btn2Pnl,      new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7"            ) ) ;
+        pmMap.put( btn2Pnl,      new LabelMeta( btn2Pnl,      btn2Lbl,      "10,7,11,7", true, Color.white ) ) ;
     }
     
     private void setUpUI() {
@@ -151,14 +145,8 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         btnRedoPnl.setBackground( FN_C_COLOR ) ;
         btnPigeonPnl.setBackground( FN_D_COLOR ) ;
 
-        btnSkipLbl.setForeground( WHITE ) ;
-        btnSolvedLbl.setForeground( WHITE ) ;
-        btnRedoLbl.setForeground( WHITE ) ;
-        btnPigeonLbl.setForeground( WHITE ) ;
-        
         btn1Lbl.setIcon( playIcon ) ;
         btn2Lbl.setIcon( stopIcon ) ;
-        btn2Lbl.setForeground( Color.WHITE ) ;
     }
     
     private void loadIcons() {
@@ -214,18 +202,23 @@ public class SessionControlTileUI extends AbstractScreenletTile {
     private void addPanel( LabelMeta meta ) {
         
         JLabel label = meta.label ;
-        label.setForeground( meta.fgColor ) ;
-        if( meta.fontSize > 0 ) {
-            label.setFont( BASE_FONT.deriveFont( meta.fontSize ) ) ;
-        }
-        
         JPanel panel = meta.panel ;
-        panel.add( meta.label ) ;
-        if( meta.border ) {
-            panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR.darker() ) ) ;
-        }
         
+        if( !meta.initialized ) {
+            label.setForeground( meta.fgColor ) ;
+            if( meta.fontSize > 0 ) {
+                label.setFont( BASE_FONT.deriveFont( meta.fontSize ) ) ;
+            }
+            
+            panel.add( meta.label ) ;
+            if( meta.border ) {
+                panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR.darker() ) ) ;
+            }
+            meta.initialized = true ;
+        }
         add( panel, meta.constraint ) ;
+        validate() ;
+        repaint() ;
     }
     
     protected void setSessionTypeIcon( String type ) {
@@ -286,12 +279,15 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         switch( btnType ) {
             case PLAY:
                 btn1Lbl.setIcon( playIcon ) ;
+                kaMgr.enableKey( true, RUN_PLAYPAUSE ) ;
                 break ;
             case PAUSE:
                 btn1Lbl.setIcon( pauseIcon ) ;
+                kaMgr.enableKey( true, RUN_PLAYPAUSE ) ;
                 break ;
             case CLEAR:
                 btn1Lbl.setIcon( null ) ;
+                kaMgr.enableKey( false, RUN_PLAYPAUSE ) ;
                 break ;
         }
     }
@@ -303,13 +299,20 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         switch( btnType ) {
             case STOP:
                 btn2Lbl.setIcon( stopIcon ) ;
+                kaMgr.enableKey( true, RUN_STOP ) ;
                 break ;
             case CHANGE:
                 btn2Pnl.setBackground( FN_A_COLOR ) ;
                 btn2Lbl.setIcon( null ) ;
-                btn2Lbl.setText( "Change" ) ;
+                btn2Lbl.setText( "Change [A]" ) ;
+                kaMgr.enableFnKey( FN_A, new FnKeyHandler() {
+                    public void process() {
+                        changeSessionDetails() ;
+                    }
+                } ) ;
                 break ;
             case CLEAR:
+                kaMgr.enableKey( false, RUN_STOP, FN_A ) ;
                 break ;
         }
     }
@@ -322,4 +325,6 @@ public class SessionControlTileUI extends AbstractScreenletTile {
         String str = String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
         sTimeLbl.setText( str ) ;
     }
+    
+    protected abstract void changeSessionDetails() ;
 }

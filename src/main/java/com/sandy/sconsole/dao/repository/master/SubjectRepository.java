@@ -1,8 +1,8 @@
 package com.sandy.sconsole.dao.repository.master;
 
-import org.springframework.data.repository.CrudRepository ;
+import org.springframework.data.repository.* ;
 
-import com.sandy.sconsole.dao.entity.master.Subject ;
+import com.sandy.sconsole.dao.entity.master.* ;
 
 public interface SubjectRepository extends CrudRepository<Subject, String> {
 }

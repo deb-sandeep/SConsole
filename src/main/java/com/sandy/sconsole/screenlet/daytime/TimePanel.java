@@ -1,22 +1,15 @@
 package com.sandy.sconsole.screenlet.daytime;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.DF_TIME_LG ;
-import static com.sandy.sconsole.core.frame.UIConstant.DF_TIME_SM ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Font ;
-import java.text.SimpleDateFormat ;
-import java.util.Calendar ;
-import java.util.Date ;
+import java.awt.* ;
+import java.text.* ;
+import java.util.* ;
 
-import javax.swing.JLabel ;
-import javax.swing.JPanel ;
-import javax.swing.SwingConstants ;
+import javax.swing.* ;
 
-import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.* ;
+import com.sandy.sconsole.core.util.* ;
 
 @SuppressWarnings( "serial" )
 public class TimePanel extends JPanel implements SecondTickListener {

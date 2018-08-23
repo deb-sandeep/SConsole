@@ -1,13 +1,11 @@
 package com.sandy.sconsole.api.remote;
 
-import org.apache.log4j.Logger ;
-import org.springframework.beans.factory.annotation.Autowired ;
-import org.springframework.web.bind.annotation.PostMapping ;
-import org.springframework.web.bind.annotation.RequestBody ;
-import org.springframework.web.bind.annotation.RestController ;
+import org.apache.log4j.* ;
+import org.springframework.beans.factory.annotation.* ;
+import org.springframework.web.bind.annotation.* ;
 
-import com.sandy.sconsole.core.api.APIResponse ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventRouter ;
+import com.sandy.sconsole.core.api.* ;
+import com.sandy.sconsole.core.remote.* ;
 
 @RestController
 public class RemoteController {
@@ -19,7 +17,7 @@ public class RemoteController {
     private RemoteKeyEventRouter keyEventRouter = null ;
     
     @PostMapping( "/RemoteControl" )
-    public APIResponse buttonPressed( @RequestBody KeyPressEvent event ) {
+    public APIResponse buttonPressed( @RequestBody KeyEvent event ) {
         keyEventRouter.routeKeyEvent( event ) ;
         return new APIResponse( "Success" ) ;
     }

@@ -1,15 +1,13 @@
 package com.sandy.sconsole.screenlet.study.large.tile;
 
-import static com.sandy.sconsole.core.frame.UIConstant.SCREENLET_TITLE_FONT ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
+import java.awt.* ;
 
-import javax.swing.JLabel ;
+import javax.swing.* ;
 
-import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
-import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
+import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.screenlet.study.* ;
 
 @SuppressWarnings( "serial" )
 public class TitleTile extends AbstractScreenletTile {

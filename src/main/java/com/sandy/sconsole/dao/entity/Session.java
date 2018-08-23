@@ -1,18 +1,10 @@
 package com.sandy.sconsole.dao.entity;
 
-import java.sql.Timestamp ;
+import java.sql.* ;
 
-import javax.persistence.Entity ;
-import javax.persistence.GeneratedValue ;
-import javax.persistence.GenerationType ;
-import javax.persistence.Id ;
-import javax.persistence.JoinColumn ;
-import javax.persistence.ManyToOne ;
-import javax.persistence.Table ;
+import javax.persistence.* ;
 
-import com.sandy.sconsole.dao.entity.master.Book ;
-import com.sandy.sconsole.dao.entity.master.Problem ;
-import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.entity.master.* ;
 
 @Entity
 @Table( name = "session" )

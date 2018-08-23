@@ -1,23 +1,18 @@
 package com.sandy.sconsole.core.frame;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
-import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static javax.swing.ScrollPaneConstants.* ;
 
-import java.awt.Dimension ;
+import java.awt.* ;
 import java.util.List ;
 
-import javax.swing.Box ;
-import javax.swing.BoxLayout ;
-import javax.swing.JPanel ;
-import javax.swing.JScrollPane ;
+import javax.swing.* ;
 
-import org.apache.log4j.Logger ;
+import org.apache.log4j.* ;
 
-import com.sandy.common.ui.SwingUtils ;
-import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.screenlet.Screenlet ;
-import com.sandy.sconsole.core.screenlet.ScreenletSmallPanel ;
+import com.sandy.common.ui.* ;
+import com.sandy.sconsole.* ;
+import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
 public class ScreenletContainer extends JPanel {

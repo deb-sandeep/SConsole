@@ -1,21 +1,16 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.RANGE_MAX ;
-import static com.sandy.sconsole.core.CoreEventID.RANGE_MIN ;
-import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.TILE_BORDER_COLOR ;
-import static javax.swing.SwingConstants.CENTER ;
+import static com.sandy.sconsole.core.CoreEventID.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static javax.swing.SwingConstants.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
+import java.awt.* ;
 
-import javax.swing.JLabel ;
-import javax.swing.JPanel ;
-import javax.swing.border.LineBorder ;
+import javax.swing.* ;
+import javax.swing.border.* ;
 
+import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
-import com.sandy.common.bus.EventBus ;
-import com.sandy.common.bus.EventSubscriber ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractScreenletTile extends JPanel

@@ -1,18 +1,18 @@
 package com.sandy.sconsole.core.remote;
 
-import java.util.concurrent.LinkedBlockingQueue ;
+import java.util.concurrent.* ;
 
-import org.apache.log4j.Logger ;
-import org.springframework.stereotype.Component ;
+import org.apache.log4j.* ;
+import org.springframework.stereotype.* ;
 
-import com.sandy.sconsole.api.remote.KeyPressEvent ;
+import com.sandy.sconsole.api.remote.* ;
 
 @Component
 public class RemoteKeyEventRouter extends Thread {
 
     private static final Logger log = Logger.getLogger( RemoteKeyEventRouter.class ) ;
     
-    private LinkedBlockingQueue<KeyPressEvent> eventQueue = new LinkedBlockingQueue<>() ;
+    private LinkedBlockingQueue<KeyEvent> eventQueue = new LinkedBlockingQueue<>() ;
     private RemoteKeyReceiver keyReceiver = null ;
     
     public RemoteKeyEventRouter() {
@@ -24,7 +24,7 @@ public class RemoteKeyEventRouter extends Thread {
         this.keyReceiver = keyReceiver ;
     }
     
-    public void routeKeyEvent( KeyPressEvent event ) {
+    public void routeKeyEvent( KeyEvent event ) {
         eventQueue.add( event ) ;
     }
     
@@ -32,7 +32,7 @@ public class RemoteKeyEventRouter extends Thread {
         
         while( true ) {
             try {
-                KeyPressEvent event = eventQueue.take() ;
+                KeyEvent event = eventQueue.take() ;
                 if( keyReceiver != null ) {
                     keyReceiver.handleRemoteKeyEvent( event ) ;
                 }

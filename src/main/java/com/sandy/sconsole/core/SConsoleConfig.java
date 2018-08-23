@@ -1,8 +1,7 @@
 package com.sandy.sconsole.core;
 
-import org.springframework.boot.context.properties.ConfigurationProperties ;
-import org.springframework.context.annotation.Configuration ;
-import org.springframework.context.annotation.PropertySource ;
+import org.springframework.boot.context.properties.* ;
+import org.springframework.context.annotation.* ;
 
 @Configuration( "config" )
 @PropertySource( "classpath:sconsole.properties" )

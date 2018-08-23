@@ -1,6 +1,6 @@
 package com.sandy.sconsole.core.util;
 
-import java.util.Calendar ;
+import java.util.* ;
 
 public interface DayTickListener {
     public void dayTicked( Calendar instance ) ;

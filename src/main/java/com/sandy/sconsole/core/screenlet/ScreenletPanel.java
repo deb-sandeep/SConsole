@@ -1,14 +1,13 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
-import java.awt.BorderLayout ;
+import java.awt.* ;
 
-import javax.swing.JPanel ;
+import javax.swing.* ;
 
+import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
-import com.sandy.common.bus.EventBus ;
-import com.sandy.common.bus.EventSubscriber ;
 
 @SuppressWarnings( "serial" )
 public abstract class ScreenletPanel extends JPanel

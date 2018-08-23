@@ -1,30 +1,27 @@
 package com.sandy.sconsole.core.remote;
 
-import org.apache.log4j.Logger ;
+import org.apache.log4j.* ;
 
-import com.sandy.sconsole.api.remote.KeyPressEvent ;
+import com.sandy.sconsole.api.remote.* ;
 
 public class RemoteKeyEventProcessor {
 
     private static final Logger log = Logger.getLogger( RemoteKeyEventProcessor.class ) ;
     
-    private RemoteKeyListener keyListener = null ;
+    private RemoteListener remoteListener = null ;
     
-    public RemoteKeyEventProcessor() {
+    public void setRemoteListener( RemoteListener listener ) {
+        this.remoteListener = listener ;
     }
     
-    public void setKeyListener( RemoteKeyListener listener ) {
-        this.keyListener = listener ;
-    }
-    
-    public void processKeyEvent( KeyPressEvent event ) {
+    public void processKeyEvent( KeyEvent event ) {
 
-        if( this.keyListener == null ) {
-            log.warn( "No key listener registered with processor. " + 
+        if( this.remoteListener == null ) {
+            log.warn( "No remote listener registered with processor. " + 
                       "Ignoring key event - " + event ) ;
             return ;
         }
-        else if( !this.keyListener.isKeyActive( event.getKeyId() ) ) {
+        else if( !this.remoteListener.isKeyActive( event.getKeyId() ) ) {
             log.debug( "Key " + event.getKeyId() + " deactivated. Ignoring." ) ;
             return ;
         }
@@ -38,7 +35,7 @@ public class RemoteKeyEventProcessor {
                 processNavKey( event.getBtnCode() ) ;
                 break ;
             case "Function":
-                keyListener.handleFunctionKey( event.getBtnCode() ) ;
+                remoteListener.handleFunctionKey( event.getBtnCode() ) ;
                 break ;
         }
     }
@@ -46,10 +43,10 @@ public class RemoteKeyEventProcessor {
     private void processRunKey( String btnCode ) {
 
         if( btnCode.equals( "PlayPause" ) ) {
-            keyListener.processPlayPauseResumeKey() ;
+            remoteListener.processPlayPauseResumeKey() ;
         }
         else if( btnCode.equals( "Stop" ) ) {
-            keyListener.processStopKey() ;
+            remoteListener.processStopKey() ;
         }
     }
     
@@ -57,19 +54,19 @@ public class RemoteKeyEventProcessor {
         
         switch( btnCode ) {
             case "Up":
-                keyListener.handleUpNavKey() ;
+                remoteListener.handleUpNavKey() ;
                 break ;
             case "Down":
-                keyListener.handleDownNavKey() ;
+                remoteListener.handleDownNavKey() ;
                 break ;
             case "Right":
-                keyListener.handleRightNavKey() ;
+                remoteListener.handleRightNavKey() ;
                 break ;
             case "Left":
-                keyListener.handleLeftNavKey() ;
+                remoteListener.handleLeftNavKey() ;
                 break ;
             case "Select":
-                keyListener.handleSelectNavKey() ;
+                remoteListener.handleSelectNavKey() ;
                 break ;
         }
     }

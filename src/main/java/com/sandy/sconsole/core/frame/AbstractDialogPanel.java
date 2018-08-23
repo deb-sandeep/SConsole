@@ -1,30 +1,18 @@
 package com.sandy.sconsole.core.frame;
 
 import static com.sandy.sconsole.core.frame.SConsoleDialog.BG_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_A_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_B_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_C_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_D_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_E_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_F_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_G_COLOR ;
-import static com.sandy.sconsole.core.frame.UIConstant.FN_H_COLOR ;
-import static javax.swing.SwingConstants.CENTER ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static javax.swing.SwingConstants.* ;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Font ;
+import java.awt.* ;
 
-import javax.swing.BorderFactory ;
-import javax.swing.JLabel ;
-import javax.swing.JPanel;
+import javax.swing.* ;
 
-import com.sandy.sconsole.core.remote.KeyActivationManager ;
-import com.sandy.sconsole.core.remote.RemoteKeyListener;
+import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings("serial")
 public abstract class AbstractDialogPanel extends JPanel 
-    implements RemoteKeyListener {
+    implements RemoteListener {
 
     public static final Font  FNBTN_FONT   = new Font( "Courier", Font.PLAIN, 20 ) ;
     
@@ -38,7 +26,6 @@ public abstract class AbstractDialogPanel extends JPanel
         setBackground( SConsoleDialog.BG_COLOR ) ;
     }
     
-    @Override public void handleFunctionKey(String fnCode) {}
     @Override public void handleLeftNavKey() {}
     @Override public void handleRightNavKey() {}
     @Override public void handleUpNavKey() {}
@@ -47,6 +34,10 @@ public abstract class AbstractDialogPanel extends JPanel
 
     @Override public void processPlayPauseResumeKey() {} ;
     @Override public void processStopKey() {} ;
+    
+    @Override public void handleFunctionKey(String fnCode) {
+        this.kaMgr.processFunctionKey( fnCode ) ;
+    }
     
     public abstract Object getReturnValue() ;
     

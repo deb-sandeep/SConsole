@@ -1,6 +1,6 @@
 package com.sandy.sconsole.core.remote;
 
-public interface RemoteKeyListener {
+public interface RemoteListener {
 
     public void handleFunctionKey( String fnCode ) ;
     

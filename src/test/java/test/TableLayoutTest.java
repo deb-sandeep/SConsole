@@ -1,17 +1,15 @@
 package test;
 
-import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 
-import java.awt.Color ;
-import java.awt.Container ;
+import java.awt.* ;
 
-import javax.swing.JFrame ;
-import javax.swing.JPanel ;
-import javax.swing.border.LineBorder ;
+import javax.swing.* ;
+import javax.swing.border.* ;
 
-import com.sandy.common.ui.SwingUtils ;
+import com.sandy.common.ui.* ;
 
-import info.clearthought.layout.TableLayout ;
+import info.clearthought.layout.* ;
 
 @SuppressWarnings( "serial" )
 public class TableLayoutTest extends JFrame {
