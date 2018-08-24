@@ -63,13 +63,17 @@ public class ProblemMasterController {
         for( ExerciseMeta exMeta : exMetaList ) {
             
             if( problemRepo.getExMetaProcessCount( exMeta.toString() ) == 0 ) {
-                log.debug( "Processing meta exercise " + exMeta ) ;
+                log.debug( "Processing " + exMeta ) ;
                 processMetaExercise( exMeta ) ;
                 problemRepo.saveMetaExercise( exMeta.toString() ) ;
             }
+            else {
+                log.debug( "Skipping. Exercise = " + exMeta.toString() + 
+                           " already processed." ) ;
+            }
         }
         
-        return new APIResponse( "Success" ) ;
+        return new APIResponse( "Payload processing success" ) ;
     }
     
     public List<ExerciseMeta> generateExerciseMeta( String[] inputLines ) {

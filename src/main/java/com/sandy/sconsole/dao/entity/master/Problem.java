@@ -24,6 +24,7 @@ public class Problem {
     private Boolean pigeoned = false ;
     private Boolean redo = false ;
     private Boolean skipped = false ;
+    private Boolean starred = false ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -62,6 +63,11 @@ public class Problem {
     public Boolean getSkipped() { return skipped ; }
     public void setSkipped( Boolean skipped ) {
         this.skipped = skipped ;
+    }
+    
+    public Boolean getStarred() { return starred ; }
+    public void setStarred( Boolean starred ) {
+        this.starred = starred ;
     }
     
     @Override

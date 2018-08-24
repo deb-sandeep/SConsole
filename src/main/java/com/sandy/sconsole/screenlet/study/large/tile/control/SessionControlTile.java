@@ -75,7 +75,7 @@ public class SessionControlTile extends SessionControlTileUI
         
         kaMgr.disableAllKeys() ;
         
-        setProblemButtonsVisible( false ) ;
+        activateProblemOutcomeButtons( false ) ;
         updateLapTimeLabel( 0 ) ;
         
         setBtn2( Btn2Type.CHANGE ) ;
@@ -91,10 +91,10 @@ public class SessionControlTile extends SessionControlTileUI
             // enable only the change button.
             setBtn1( Btn1Type.CLEAR ) ;
             
-            updateSkippedLabel( 0 ) ;
-            updateSolvedLabel( 0 ) ;
-            updateRedoLabel( 0 ) ;
-            updatePigeonLabel( 0 ) ;
+            updateNumSkippedLabel( 0 ) ;
+            updateNumSolvedLabel( 0 ) ;
+            updateNumRedoLabel( 0 ) ;
+            updateNumPigeonLabel( 0 ) ;
             updateSessionTimeLabel( 0 ) ;
         }
         else {
@@ -103,10 +103,10 @@ public class SessionControlTile extends SessionControlTileUI
             setTopic( lastSession.getTopic() ) ;
             setBook( lastSession.getBook() ) ;
             
-            updateSkippedLabel( lastSession.getNumSkipped() ) ;
-            updateSolvedLabel( lastSession.getNumSolved() ) ;
-            updateRedoLabel( lastSession.getNumRedo() ) ;
-            updatePigeonLabel( lastSession.getNumPigeon() ) ;
+            updateNumSkippedLabel( lastSession.getNumSkipped() ) ;
+            updateNumSolvedLabel( lastSession.getNumSolved() ) ;
+            updateNumRedoLabel( lastSession.getNumRedo() ) ;
+            updateNumPigeonLabel( lastSession.getNumPigeon() ) ;
             updateSessionTimeLabel( lastSession.getDuration() ) ;
         }
     }
@@ -208,17 +208,18 @@ public class SessionControlTile extends SessionControlTileUI
         updateNumProblemsLeftInChapter( unsolvedProblems.size() ) ;
     }
 
-    protected void setProblemButtonsVisible( boolean visible ) {
-        super.setProblemButtonsVisible( visible ) ;
-        if( !visible ) {
-            kaMgr.enableKey( false, FN_A, FN_B, FN_C, FN_D ) ;
-            kaMgr.clearFnKeyFeature( FN_A, FN_B, FN_C, FN_D );
+    protected void activateProblemOutcomeButtons( boolean activate ) {
+        super.activateProblemOutcomeButtons( activate ) ;
+        if( !activate ) {
+            kaMgr.enableKey( false, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
+            kaMgr.clearFnKeyFeature( FN_A, FN_B, FN_C, FN_D, FN_E );
         }
         else {
             kaMgr.enableFnKey( FN_A, new FnKeyHandler() { public void process() { skipProblem() ; } } ) ;
             kaMgr.enableFnKey( FN_B, new FnKeyHandler() { public void process() { problemSolved() ; } }  ) ;
             kaMgr.enableFnKey( FN_C, new FnKeyHandler() { public void process() { redoProblem() ; } }  ) ;
             kaMgr.enableFnKey( FN_D, new FnKeyHandler() { public void process() { setPigeon() ; } }  ) ;
+            kaMgr.enableFnKey( FN_E, new FnKeyHandler() { public void process() { setStarred() ; } }  ) ;
         }
     }
     
@@ -277,10 +278,10 @@ public class SessionControlTile extends SessionControlTileUI
         session.setNumPigeon( 0 ) ;
         saveSession() ;
         
-        updateSkippedLabel( 0 ) ;
-        updateSolvedLabel( 0 ) ;
-        updateRedoLabel( 0 ) ;
-        updatePigeonLabel( 0 ) ;
+        updateNumSkippedLabel( 0 ) ;
+        updateNumSolvedLabel( 0 ) ;
+        updateNumRedoLabel( 0 ) ;
+        updateNumPigeonLabel( 0 ) ;
         updateSessionTimeLabel( 0 ) ;
         
         lapStartTime = new Timestamp( now.getTime() ) ;
@@ -296,7 +297,7 @@ public class SessionControlTile extends SessionControlTileUI
 
         // If session type = Exercise, disable the lap buttons
         if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
-            setProblemButtonsVisible( false ) ;
+            activateProblemOutcomeButtons( false ) ;
         }
         saveSession() ;
     }
@@ -307,7 +308,7 @@ public class SessionControlTile extends SessionControlTileUI
         
         // If session type = Exercise, enable the lap buttons
         if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
-            setProblemButtonsVisible( true ) ;
+            activateProblemOutcomeButtons( true ) ;
         }
         
         setBtn1( Btn1Type.PAUSE ) ;
@@ -368,7 +369,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Skipping the problem" ) ;
         saveProblem( false, false, true, false ) ;
         lapTime = 0 ;
-        updateSkippedLabel( session.incrementNumSkipped() ) ;
+        updateNumSkippedLabel( session.incrementNumSkipped() ) ;
         setNextProblem() ;
     }
     
@@ -376,7 +377,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Solved the problem" ) ;
         saveProblem( true, false, false, false ) ;
         lapTime = 0 ;
-        updateSolvedLabel( session.incrementNumSolved() ) ;
+        updateNumSolvedLabel( session.incrementNumSolved() ) ;
         setNextProblem() ;
         
         numProblemsLeftInChapter-- ;
@@ -387,7 +388,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Redo the problem" ) ;
         saveProblem( false, true, false, false ) ;
         lapTime = 0 ;
-        updateRedoLabel( session.incrementNumRedo() ) ;
+        updateNumRedoLabel( session.incrementNumRedo() ) ;
         setNextProblem() ;
     }
     
@@ -395,8 +396,16 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Set a pigeon" ) ;
         saveProblem( false, false, false, true ) ;
         lapTime = 0 ;
-        updatePigeonLabel( session.incrementNumPigeon() ) ;
+        updateNumPigeonLabel( session.incrementNumPigeon() ) ;
         setNextProblem() ;
+    }
+    
+    private void setStarred() {
+        log.debug( "Un/starring the problem" ) ;
+        Problem p = session.getLastProblem() ;
+        p.setStarred( !p.getStarred() ) ;
+        problemRepo.save( p ) ;
+        super.setProblemLabel( p ) ;
     }
 
     @Override

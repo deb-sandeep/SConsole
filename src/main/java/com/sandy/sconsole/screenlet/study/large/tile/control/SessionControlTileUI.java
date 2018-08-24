@@ -147,11 +147,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             addPanel( meta ) ;
         }
         
-        btnSkipPnl.setBackground( FN_A_COLOR ) ;
-        btnSolvedPnl.setBackground( FN_B_COLOR ) ;
-        btnRedoPnl.setBackground( FN_C_COLOR ) ;
-        btnPigeonPnl.setBackground( FN_D_COLOR ) ;
-
         btn1Lbl.setIcon( playIcon ) ;
         btn2Lbl.setIcon( stopIcon ) ;
     }
@@ -200,12 +195,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         return new TableLayout( colSizes, rowSizes ) ;
     }
     
-    private void removePanel( JPanel panel ) {
-        remove( panel ) ;
-        validate() ;
-        repaint() ;
-    }
-
     private void addPanel( LabelMeta meta ) {
         
         JLabel label = meta.label ;
@@ -252,10 +241,20 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     protected void setProblemLabel( Problem problem ) {
         problemLbl.setText( "" ) ;
         if( problem != null ) {
-            problemLbl.setText( "Ch-" + 
-                                problem.getChapterId() + " / " + 
-                                problem.getExerciseName() + " / " + 
-                                problem.getProblemTag() ) ;
+            
+            StringBuffer text = new StringBuffer() ;
+            
+            if( problem.getStarred() ) {
+                text.append( "* " ) ;
+            }
+            text.append( "Ch-" )
+                .append( problem.getChapterId() )
+                .append( "/" )
+                .append( problem.getExerciseName() )
+                .append( "/" )
+                .append( problem.getProblemTag() ) ;
+            
+            problemLbl.setText( text.toString() ) ;
         }
     }
 
@@ -266,19 +265,39 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
-    protected void setProblemButtonsVisible( boolean visible ) {
+    protected void activateProblemOutcomeButtons( boolean activate ) {
         
-        if( !visible ) {
-            removePanel( btnSkipPnl ) ;
-            removePanel( btnSolvedPnl ) ;
-            removePanel( btnRedoPnl ) ;
-            removePanel( btnPigeonPnl ) ;
+        if( activate ) {
+            btnSkipPnl.setBackground( FN_A_COLOR ) ;
+            btnSolvedPnl.setBackground( FN_B_COLOR ) ;
+            btnRedoPnl.setBackground( FN_C_COLOR ) ;
+            btnPigeonPnl.setBackground( FN_D_COLOR ) ;
+
+            btnSkipLbl.setForeground( Color.WHITE ) ;
+            btnSolvedLbl.setForeground( Color.WHITE ) ;
+            btnRedoLbl.setForeground( Color.WHITE ) ;
+            btnPigeonLbl.setForeground( Color.WHITE ) ;
+
+            btnSkipLbl.setText( "Skip [A]" ) ;
+            btnSolvedLbl.setText( "Solved [B]" ) ;
+            btnRedoLbl.setText( "Redo [C]" ) ;
+            btnPigeonLbl.setText( "Pigeon [D]" ) ;
         }
         else {
-            addPanel( pmMap.get( btnSkipPnl   ) ) ;
-            addPanel( pmMap.get( btnSolvedPnl ) ) ;
-            addPanel( pmMap.get( btnRedoPnl   ) ) ;
-            addPanel( pmMap.get( btnPigeonPnl ) ) ;
+            btnSkipPnl.setBackground( BG_COLOR ) ;
+            btnSolvedPnl.setBackground( BG_COLOR ) ;
+            btnRedoPnl.setBackground( BG_COLOR ) ;
+            btnPigeonPnl.setBackground( BG_COLOR ) ;
+
+            btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
+            btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
+            btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
+            btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
+
+            btnSkipLbl.setText( "Skip" ) ;
+            btnSolvedLbl.setText( "Solved" ) ;
+            btnRedoLbl.setText( "Redo" ) ;
+            btnPigeonLbl.setText( "Pigeon" ) ;
         }
     }
     
@@ -344,19 +363,19 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         lTimeLbl.setText( getElapsedTimeLabel( seconds, false ) ) ;
     }
     
-    protected void updateSkippedLabel( int num ) {
+    protected void updateNumSkippedLabel( int num ) {
         numSkipLbl.setText( Integer.toString( num ) ) ;
     }
     
-    protected void updateSolvedLabel( int num ) {
+    protected void updateNumSolvedLabel( int num ) {
         numSolvedLbl.setText( Integer.toString( num ) ) ;
     }
     
-    protected void updateRedoLabel( int num ) {
+    protected void updateNumRedoLabel( int num ) {
         numRedoLbl.setText( Integer.toString( num ) ) ;
     }
     
-    protected void updatePigeonLabel( int num ) {
+    protected void updateNumPigeonLabel( int num ) {
         numPigeonLbl.setText( Integer.toString( num ) ) ;
     }
     
