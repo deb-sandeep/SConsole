@@ -8,13 +8,10 @@ import javax.swing.* ;
 import org.apache.log4j.* ;
 
 import com.sandy.common.ui.* ;
-import com.sandy.sconsole.api.remote.* ;
-import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
-public class SConsoleFrame extends JFrame
-	implements RemoteKeyReceiver {
+public class SConsoleFrame extends JFrame {
     
     @SuppressWarnings( "unused" )
     private static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
@@ -22,20 +19,15 @@ public class SConsoleFrame extends JFrame
     private Container contentPane = null ;
     private ScreenletContainer screenletPanel = null ;
     
-    private RemoteKeyEventRouter keyRouter = null ;
-    private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
     private ScreenletLargePanel curLargeScreenletPanel = null ;
     private SConsoleDialog dialog = null ;
     
-    public SConsoleFrame( RemoteKeyEventRouter keyRouter ) {
+    public SConsoleFrame() {
         super() ;
         
         this.contentPane = super.getContentPane() ;
         this.screenletPanel = new ScreenletContainer( this ) ;
         this.dialog = new SConsoleDialog() ;
-        this.keyRouter = keyRouter ;
-        
-        this.keyRouter.registerRemoteKeyReceiver( this ) ;
         
         setUpUI() ;
         setVisible( true ) ;
@@ -79,35 +71,34 @@ public class SConsoleFrame extends JFrame
         contentPane.setCursor( blankCursor ) ;
     }
 
-    public void handleRemoteKeyEvent( KeyEvent event ) {
-        
-        if( event.getBtnType().equals( "ScreenletSelection" ) ) {
-            handleScreenletSelectionKeyPress( event.getBtnCode() ) ;
-        }
-        else {
-            keyProcessor.processKeyEvent( event ) ;
-        }
-    }
-    
     public Object showDialog( AbstractDialogPanel panel ) {
         
         dialog.setPanel( panel ) ;
-        keyRouter.registerRemoteKeyReceiver( dialog ) ;
         dialog.setVisible( true ) ;
         dialog.setPanel( null ) ;
-        keyRouter.registerRemoteKeyReceiver( this ) ;
         
         return panel.getReturnValue() ;
     }
     
-    private void handleScreenletSelectionKeyPress( String code ) {
+    void setCenterPanel( ScreenletLargePanel largePanel ) {
+        
+        if( curLargeScreenletPanel != null ) {
+            contentPane.remove( curLargeScreenletPanel ) ;
+        }
+        
+        curLargeScreenletPanel = largePanel ;
+        contentPane.add( curLargeScreenletPanel, BorderLayout.CENTER ) ;
+        contentPane.revalidate() ;
+        contentPane.repaint() ;
+    }
 
-        switch( code ) {
+    public void handleScreenletSelectionEvent( String btnCode ) {
+        switch( btnCode ) {
             case "ShowHide":
                 toggleScreenletPanelVisibility() ;
                 break ;
             default:
-                screenletPanel.handleRemoteScreenSelectionEvent( code ) ;
+                screenletPanel.handleScreenletSelectionEvent( btnCode ) ;
                 break ;
         }
     }
@@ -121,20 +112,6 @@ public class SConsoleFrame extends JFrame
         else {
             contentPane.remove( screenletPanel ) ;
         }
-        contentPane.revalidate() ;
-        contentPane.repaint() ;
-    }
-
-    void setCenterPanel( ScreenletLargePanel largePanel ) {
-        
-        if( curLargeScreenletPanel != null ) {
-            contentPane.remove( curLargeScreenletPanel ) ;
-        }
-        
-        curLargeScreenletPanel = largePanel ;
-        keyProcessor.setRemoteListener( curLargeScreenletPanel.getScreenlet() ) ;
-        
-        contentPane.add( curLargeScreenletPanel, BorderLayout.CENTER ) ;
         contentPane.revalidate() ;
         contentPane.repaint() ;
     }

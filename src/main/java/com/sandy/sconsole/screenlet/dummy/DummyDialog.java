@@ -1,30 +1,42 @@
 package com.sandy.sconsole.screenlet.dummy;
 
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static javax.swing.SwingConstants.* ;
 
 import java.awt.* ;
+
+import javax.swing.* ;
 
 import org.apache.log4j.* ;
 
 import com.sandy.sconsole.core.frame.* ;
+import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings( "serial" )
 public class DummyDialog extends AbstractDialogPanel {
     
-    private static final Logger log = Logger.getLogger( DummyDialog.class ) ;
+    static final Logger log = Logger.getLogger( DummyDialog.class ) ;
 
     public DummyDialog() {
         super( "Dummy" ) ;
+        
         setUpUI() ;
-        kaMgr.disableAllKeys() ;
-        kaMgr.enableKey( true, FN_A, FN_B ) ;
+        keyProcessor.disableAllKeys() ;
+        keyProcessor.setKeyEnabled( true, FN_A, FN_B ) ;
+        keyProcessor.setFnHandler( FN_A, new FnHandler() {
+            public void process() { System.exit( -1 ) ; }
+        } ) ;
+        keyProcessor.setFnHandler( FN_B, new FnHandler() {
+            public void process() { hideDialog() ; }
+        } ) ;
     }
     
     private void setUpUI() {
         setPreferredSize( new Dimension( 400, 400 ) ) ;
         setLayout( new GridLayout( 2, 1 ) ) ;
-        add( getFnButton( "A", "Shutdown" ) ) ;
-        add( getFnButton( "B", "Hide" ) ) ;
+        add( getFnButton( FN_A_COLOR, "Shutdown" ) ) ;
+        add( getFnButton( FN_B_COLOR, "Hide" ) ) ;
     }
 
     @Override
@@ -32,15 +44,19 @@ public class DummyDialog extends AbstractDialogPanel {
         return "Success" ;
     }
 
-    @Override
-    public void handleFunctionKey( String fnCode ) {
-        log.debug( "Handling " + fnCode + " in the dialog." ) ;
-        switch( fnCode ) {
-            case "A":
-                System.exit( 1 ) ;
-            case "B":
-                super.hideDialog() ;
-                break ;
-        }
+    protected JPanel getFnButton( Color color, String text ) {
+        
+        JLabel label = new JLabel( text ) ;
+        label.setFont( FNBTN_FONT ) ;
+        label.setForeground( Color.WHITE ) ;
+        label.setHorizontalAlignment( CENTER ) ;
+        label.setVerticalAlignment( CENTER ) ;
+        
+        JPanel panel = new JPanel( new BorderLayout() ) ;
+        panel.setBackground( color ) ;
+        panel.add( label ) ;
+        panel.setBorder( BorderFactory.createLineBorder( BG_COLOR, 10 ) ) ;
+        
+        return panel ;
     }
 }

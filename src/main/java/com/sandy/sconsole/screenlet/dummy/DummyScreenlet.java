@@ -1,6 +1,7 @@
 package com.sandy.sconsole.screenlet.dummy;
 
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
 import java.awt.* ;
 
@@ -15,15 +16,28 @@ public class DummyScreenlet extends AbstractScreenlet {
     
     private static final Logger log = Logger.getLogger( DummyScreenlet.class ) ;
     private DummyDialog dialog = null ;
-
+    private RemoteKeyEventProcessor keyProcessor = null ;
+    
     public DummyScreenlet( String name ) {
         super( name ) ;
+        keyProcessor = new RemoteKeyEventProcessor( new RemoteKeyListenerAdapter(){
+            public void handlePlayPauseResumeKey() {
+                if( getRunState() == RUNNING ) { pause() ; }
+                else if( getRunState() == STOPPED ) { play() ; }
+                else if( getRunState() == PAUSED ) { resume() ; }
+            }
+            
+            public void handleStopKey() {
+                stop() ;
+            }
+        }) ;
         dialog = new DummyDialog() ;
-        kaMgr.disableAllKeys() ;
-        kaMgr.enableKey( true, RUN_PLAYPAUSE, RUN_STOP ) ;
-        kaMgr.enableFnKey( FN_A, new FnKeyHandler() {
+        
+        keyProcessor.disableAllKeys() ;
+        keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP ) ;
+        keyProcessor.setFnHandler( FN_A, new FnHandler() {
             public void process() { handleFnA(); } 
-        } );
+        } ) ;
     }
     
     public ScreenletSmallPanel createSmallPanel() {
@@ -54,7 +68,7 @@ public class DummyScreenlet extends AbstractScreenlet {
         return panel ;
     }
     
-    public void run() {
+    public void play() {
         SwingUtilities.invokeLater( new Runnable() {
             @Override
             public void run() {

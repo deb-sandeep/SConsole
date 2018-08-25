@@ -9,12 +9,12 @@ import javax.swing.border.* ;
 import org.apache.log4j.* ;
 
 import com.sandy.common.ui.* ;
+import com.sandy.sconsole.* ;
 import com.sandy.sconsole.api.remote.* ;
 import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings( "serial" )
-class SConsoleDialog extends JDialog
-	implements RemoteKeyReceiver {
+class SConsoleDialog extends JDialog {
     
     private static final Logger log = Logger.getLogger( SConsoleDialog.class ) ;
     
@@ -24,7 +24,6 @@ class SConsoleDialog extends JDialog
     public static final Color BG_COLOR     = Color.decode( "#4A4942" ) ;
     
     private Container contentPane = null ;
-    private RemoteKeyEventProcessor keyProcessor = new RemoteKeyEventProcessor() ;
     private AbstractDialogPanel panel = null ;
     
     private JPanel bodyPanel = null ;
@@ -81,13 +80,6 @@ class SConsoleDialog extends JDialog
         contentPane.setCursor( blankCursor ) ;
     }
 
-    public void handleRemoteKeyEvent( KeyEvent event ) {
-        if( !event.getBtnType().equals( "ScreenletSelection" ) ) {
-            log.debug( "Dialog has received the key - " + event ) ;
-            keyProcessor.processKeyEvent( event ) ;
-        }
-    }
-    
     void setPanel( AbstractDialogPanel panel ) {
         
         if( this.panel != null ) {
@@ -97,7 +89,6 @@ class SConsoleDialog extends JDialog
         }
         
         this.panel = panel ;
-        this.keyProcessor.setRemoteListener( panel ) ;
         
         if( this.panel != null ) {
             
@@ -110,6 +101,26 @@ class SConsoleDialog extends JDialog
             SwingUtils.centerOnScreen( this, (int)prefSize.getWidth(), 
                                              (int)prefSize.getHeight() ) ;
         }
-
+    }
+    
+    public void setVisible( boolean visible ) {
+        
+        RemoteKeyEventProcessor keyProcessor = null ;
+        RemoteController controller = null ;
+        
+        if( this.panel != null ) {
+            controller = SConsole.getAppContext()
+                                 .getBean( RemoteController.class ) ;
+            if( visible ) {
+                log.debug( "Dialog is getting visible. Pushing key processor." ) ;
+                keyProcessor = this.panel.getKeyProcessor() ;
+                controller.pushKeyProcessor( keyProcessor ) ;
+            }
+            else {
+                log.debug( "Dialog is getting hidden. Popping key processor." ) ;
+                controller.popKeyProcessor() ;
+            }
+        }
+        super.setVisible( visible ) ;
     }
 }

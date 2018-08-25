@@ -5,7 +5,6 @@ import static com.sandy.sconsole.core.CoreEventID.* ;
 import com.sandy.common.bus.* ;
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.remote.* ;
 
 public abstract class AbstractScreenlet implements Screenlet {
 
@@ -14,12 +13,10 @@ public abstract class AbstractScreenlet implements Screenlet {
     private ScreenletSmallPanel smallPanel = null ;
     private ScreenletLargePanel largePanel = null ;
     private EventBus eventBus = null ;
-    protected KeyActivationManager kaMgr = null ;
     
     protected AbstractScreenlet( String displayName ) {
         this.displayName = displayName ;
         this.eventBus = new EventBus() ;
-        this.kaMgr = new KeyActivationManager() ;
     }
     
     // This function will be called by the framework after creating an
@@ -73,76 +70,13 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
 
     @Override
-    public boolean isKeyActive( String keyId ) {
-        return kaMgr.isKeyActive( keyId ) ;
-    }
-
-    @Override
-    public final void processPlayPauseResumeKey() {
-        switch( getCurrentRunState() ) {
-            case RUNNING:
-                setCurrentRunState( RunState.PAUSED ) ;
-                pause() ;
-                eventBus.publishEvent( SCREENLET_PAUSE, this );
-                break ;
-            case PAUSED:
-                setCurrentRunState( RunState.RUNNING ) ;
-                resume() ;
-                eventBus.publishEvent( SCREENLET_RESUME, this );
-                break ;
-            case STOPPED:
-                setCurrentRunState( RunState.RUNNING ) ;
-                play() ;
-                eventBus.publishEvent( SCREENLET_PLAY, this );
-                break ;
-        }
-    }
-    
-    @Override
-    public final void processStopKey() {
-        if( getCurrentRunState() != RunState.STOPPED ) {
-            setCurrentRunState( RunState.STOPPED ) ; 
-            stop() ;
-            eventBus.publishEvent( SCREENLET_STOP, this );
-        }
-    }
-    
-    @Override
-    public final void handleFunctionKey( String fnCode ) {
-        this.kaMgr.processFunctionKey( fnCode ) ;
-    }
-
-    @Override
-    public void handleLeftNavKey() {}
-
-    @Override
-    public void handleRightNavKey() {}
-
-    @Override
-    public void handleUpNavKey() {}
-
-    @Override
-    public void handleDownNavKey() {}
-
-    @Override
-    public void handleSelectNavKey() {}
-
-    @Override
-    public RunState getCurrentRunState() { return this.runState ; } ;
+    public RunState getRunState() { return this.runState ; } ;
 
     @Override
     public void setCurrentRunState( RunState state ) {
         this.runState = state ;
+        eventBus.publishEvent( SCREENLET_RUN_STATE_CHANGED, this ) ;
     }
 
     public EventBus getEventBus() { return this.eventBus ; }
-    
-    public void play(){} ;
-    public void pause(){} ;
-    public void resume(){} ;
-    public void stop(){} ;
-
-    public KeyActivationManager getKeyActivationManager() {
-        return this.kaMgr ;
-    }
 }

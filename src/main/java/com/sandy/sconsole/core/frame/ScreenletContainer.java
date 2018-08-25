@@ -89,7 +89,7 @@ public class ScreenletContainer extends JPanel {
         frame.setCenterPanel( currentlyMaximizedScreenlet.getLargePanel() ) ;
     }
     
-    public void handleRemoteScreenSelectionEvent( String screenId ) {
+    public void handleScreenletSelectionEvent( String screenId ) {
         
         int index = Integer.parseInt( screenId ) ;
         if( screenlets.size() >= index ) {

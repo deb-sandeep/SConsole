@@ -11,6 +11,7 @@ import javax.swing.border.* ;
 
 import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
+import com.sandy.sconsole.core.screenlet.Screenlet.* ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractScreenletTile extends JPanel
@@ -25,8 +26,11 @@ public abstract class AbstractScreenletTile extends JPanel
     protected AbstractScreenletTile( ScreenletPanel mother,
                                      boolean drawBorder ) {
         this.parent = mother ;
-        this.parent.getEventBus().addSubscriberForEventRange( this, false, RANGE_MIN, RANGE_MAX );
+        this.parent.getEventBus()
+                   .addSubscriberForEventRange( this, false, RANGE_MIN, RANGE_MAX );
+        
         super.setBackground( BG_COLOR ) ;
+        
         if( drawBorder ) {
             super.setBorder( new LineBorder( TILE_BORDER_COLOR ) ) ;
         }
@@ -53,5 +57,25 @@ public abstract class AbstractScreenletTile extends JPanel
 
     @Override
     public void handleEvent( Event event ) {
+        
+        switch( event.getEventType() ) {
+            
+            case SCREENLET_MINIMIZED:
+                break ;
+                
+            case SCREENLET_MAXIMIZED:
+                break ;
+                
+            case SCREENLET_RUN_STATE_CHANGED:
+                RunState runState = this.parent
+                                        .getScreenlet()
+                                        .getRunState() ;
+                screenletRunStateChanged( runState ) ;
+                break ;
+        }
     }
+    
+    protected void screenletMinimized() {}
+    protected void screenletMaximized() {}
+    protected void screenletRunStateChanged( RunState runState ) {}
 }

@@ -4,6 +4,7 @@ import java.util.* ;
 
 public class RemoteKeyCode {
 
+    public static final String KEY_TYPE_SCR_SEL     = "ScreenSelection" ;
     public static final String KEY_TYPE_NAV_CONTROL = "NavControl" ;
     public static final String KEY_TYPE_RUN         = "Run" ;
     public static final String KEY_TYPE_FN          = "Function" ;
@@ -71,5 +72,15 @@ public class RemoteKeyCode {
             }
         }
         return map ;
+    }
+    
+    public static boolean isValidKey( String keyId ) {
+        return keyTypeCodeMap.containsKey( keyId ) ;
+    }
+    
+    public static void assertValidKey( String keyId ) {
+        if( !isValidKey( keyId ) ) {
+            throw new IllegalArgumentException( "Invalid keyID = " + keyId ) ;
+        }
     }
 }

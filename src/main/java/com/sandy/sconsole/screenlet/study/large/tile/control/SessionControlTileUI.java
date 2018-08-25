@@ -112,7 +112,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     private Map<JPanel, LabelMeta> pmMap = new HashMap<>() ;
     
-    protected KeyActivationManager kaMgr = null ;
+    protected RemoteKeyEventProcessor keyProcessor = null ;
     
     public SessionControlTileUI( ScreenletPanel parent ) {
         super( parent ) ;
@@ -170,7 +170,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         if( StringUtil.isNotEmptyOrNull( defaultText ) ) {
             label.setText( defaultText ) ;
         }
-        
         return label ;
     }
     
@@ -305,15 +304,15 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         switch( btnType ) {
             case PLAY:
                 btn1Lbl.setIcon( playIcon ) ;
-                kaMgr.enableKey( true, RUN_PLAYPAUSE ) ;
+                keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE ) ;
                 break ;
             case PAUSE:
                 btn1Lbl.setIcon( pauseIcon ) ;
-                kaMgr.enableKey( true, RUN_PLAYPAUSE ) ;
+                keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE ) ;
                 break ;
             case CLEAR:
                 btn1Lbl.setIcon( null ) ;
-                kaMgr.enableKey( false, RUN_PLAYPAUSE ) ;
+                keyProcessor.setKeyEnabled( false, RUN_PLAYPAUSE ) ;
                 break ;
         }
     }
@@ -325,20 +324,20 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         switch( btnType ) {
             case STOP:
                 btn2Lbl.setIcon( stopIcon ) ;
-                kaMgr.enableKey( true, RUN_STOP ) ;
+                keyProcessor.setKeyEnabled( true, RUN_STOP ) ;
                 break ;
             case CHANGE:
                 btn2Pnl.setBackground( FN_A_COLOR ) ;
                 btn2Lbl.setIcon( null ) ;
                 btn2Lbl.setText( "Change [A]" ) ;
-                kaMgr.enableFnKey( FN_A, new FnKeyHandler() {
+                keyProcessor.setFnHandler( FN_A, new FnHandler() {
                     public void process() {
                         changeSessionDetails() ;
                     }
                 } ) ;
                 break ;
             case CLEAR:
-                kaMgr.enableKey( false, RUN_STOP, FN_A ) ;
+                keyProcessor.setKeyEnabled( false, RUN_STOP, FN_A ) ;
                 break ;
         }
     }

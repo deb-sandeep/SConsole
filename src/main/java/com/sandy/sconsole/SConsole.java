@@ -4,20 +4,15 @@ import java.util.* ;
 
 import org.apache.log4j.* ;
 import org.springframework.beans.* ;
-import org.springframework.beans.factory.annotation.* ;
 import org.springframework.boot.* ;
 import org.springframework.boot.autoconfigure.* ;
 import org.springframework.context.* ;
 
 import com.sandy.sconsole.core.* ;
 import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 import com.sandy.sconsole.core.util.* ;
-import com.sandy.sconsole.dao.repository.* ;
-import com.sandy.sconsole.dao.repository.master.* ;
 import com.sandy.sconsole.screenlet.daytime.* ;
-import com.sandy.sconsole.screenlet.dummy.* ;
 import com.sandy.sconsole.screenlet.study.* ;
 
 @SpringBootApplication
@@ -86,28 +81,13 @@ public class SConsole implements ApplicationContextAware {
     private List<Screenlet> screenlets = new ArrayList<Screenlet>() ;
     private SConsoleFrame   frame      = null ;
 
-    @Autowired
-    private RemoteKeyEventRouter keyEventRouter = null ;
-    
-    @Autowired
-    private SessionRepository sessionRepository = null ;
-    
-    @Autowired
-    private ProblemRepository problemRepository = null ;
-    
-    @Autowired
-    private SubjectRepository subjectRepository = null ;
-    
-    @Autowired
-    private TopicRepository topicRepository = null ;
-
     public SConsole() {
         APP = this ;
     }
 
     public void initialize() {
         registerScreenlets() ;
-        this.frame = new SConsoleFrame( keyEventRouter ) ;
+        this.frame = new SConsoleFrame() ;
     }
     
     public void testJPA() {
@@ -126,35 +106,14 @@ public class SConsole implements ApplicationContextAware {
         screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Chemistry" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Maths" ).initialize() ) ;
-        screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {
         return this.screenlets ;
     }
     
-    public ProblemRepository getProblemRepository() {
-        return problemRepository ;
-    }
-
-    public SubjectRepository getSubjectRepository() {
-        return subjectRepository;
-    }
-
-    public SessionRepository getSessionRepository() {
-        return sessionRepository;
-    }
-    
-    public TopicRepository getTopicRepository() {
-        return topicRepository ;
-    }
-    
     public SConsoleFrame getFrame() {
         return this.frame ;
-    }
-    
-    public RemoteKeyEventRouter getKeyRouter() {
-        return this.keyEventRouter ;
     }
     
     // --------------------- Main method ---------------------------------------
@@ -166,6 +125,5 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
-//        app.testJPA() ;
     }
 }

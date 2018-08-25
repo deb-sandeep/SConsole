@@ -11,8 +11,8 @@ import java.util.Date ;
 import org.apache.log4j.* ;
 import org.springframework.context.* ;
 
-import com.sandy.common.bus.* ;
 import com.sandy.sconsole.* ;
+import com.sandy.sconsole.api.remote.* ;
 import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 import com.sandy.sconsole.core.screenlet.Screenlet.* ;
@@ -25,7 +25,7 @@ import com.sandy.sconsole.screenlet.study.* ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI 
-    implements SecondTickListener {
+    implements SecondTickListener, RemoteKeyListener {
     
     static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
@@ -49,12 +49,14 @@ public class SessionControlTile extends SessionControlTileUI
     private LastSessionRepository    lastSessionRepo = null ;
     private ProblemAttemptRepository problemAttemptRepo = null ;
     
+    private RemoteController remoteController = null ;
+    
     private Queue<Problem> unsolvedProblems = new LinkedList<>() ;
 
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
-        kaMgr = screenlet.getKeyActivationManager() ;
+        keyProcessor = new RemoteKeyEventProcessor( this ) ;
         
         ApplicationContext ctx = SConsole.getAppContext() ;
         
@@ -63,17 +65,27 @@ public class SessionControlTile extends SessionControlTileUI
         lastSessionRepo    = ctx.getBean( LastSessionRepository.class ) ;
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
         
+        remoteController = ctx.getBean( RemoteController.class ) ;
+
         SConsole.addSecTimerTask( this ) ;
         getEventBus().addSubscriberForEventTypes( this, false, 
-                                                    SCREENLET_PLAY, 
-                                                    SCREENLET_PAUSE, 
-                                                    SCREENLET_RESUME, 
-                                                    SCREENLET_STOP ) ;
+                                                    SCREENLET_MINIMIZED, 
+                                                    SCREENLET_MAXIMIZED ) ;
     }
 
+    protected void screenletMaximized() {
+        super.screenletMaximized() ;
+        remoteController.pushKeyProcessor( keyProcessor ) ; 
+    }
+    
+    protected void screenletMinimized() {
+        super.screenletMinimized() ;
+        remoteController.popKeyProcessor() ;
+    }
+    
     public void populateLastSessionDetails( Session lastSession ) {
         
-        kaMgr.disableAllKeys() ;
+        keyProcessor.disableAllKeys() ;
         
         activateProblemOutcomeButtons( false ) ;
         updateLapTimeLabel( 0 ) ;
@@ -143,7 +155,7 @@ public class SessionControlTile extends SessionControlTileUI
         }
         else {
             if( runState == RUNNING ) {
-                getScreenlet().processStopKey() ;
+                handleStopKey() ;
             }
         }
     }
@@ -211,15 +223,15 @@ public class SessionControlTile extends SessionControlTileUI
     protected void activateProblemOutcomeButtons( boolean activate ) {
         super.activateProblemOutcomeButtons( activate ) ;
         if( !activate ) {
-            kaMgr.enableKey( false, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
-            kaMgr.clearFnKeyFeature( FN_A, FN_B, FN_C, FN_D, FN_E );
+            keyProcessor.setKeyEnabled( false, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
+            keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_E );
         }
         else {
-            kaMgr.enableFnKey( FN_A, new FnKeyHandler() { public void process() { skipProblem() ; } } ) ;
-            kaMgr.enableFnKey( FN_B, new FnKeyHandler() { public void process() { problemSolved() ; } }  ) ;
-            kaMgr.enableFnKey( FN_C, new FnKeyHandler() { public void process() { redoProblem() ; } }  ) ;
-            kaMgr.enableFnKey( FN_D, new FnKeyHandler() { public void process() { setPigeon() ; } }  ) ;
-            kaMgr.enableFnKey( FN_E, new FnKeyHandler() { public void process() { setStarred() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_A, new FnHandler() { public void process() { skipProblem() ; } } ) ;
+            keyProcessor.setFnHandler( FN_B, new FnHandler() { public void process() { problemSolved() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_C, new FnHandler() { public void process() { redoProblem() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_D, new FnHandler() { public void process() { setPigeon() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_E, new FnHandler() { public void process() { setStarred() ; } }  ) ;
         }
     }
     
@@ -238,34 +250,51 @@ public class SessionControlTile extends SessionControlTileUI
             totalPauseTime++ ;
         }
     }
+    
+    // --------------- Remote key processing [Start] ---------------------------
 
     @Override
-    public void handleEvent( Event event ) {
+    public void handlePlayPauseResumeKey() {
         
         AbstractScreenlet screenlet = getScreenlet() ;
-        runState = screenlet.getCurrentRunState() ;
+        runState = screenlet.getRunState() ;
         
-        switch( event.getEventType() ) {
-            case SCREENLET_PLAY:
-                play() ;
-                break ;
-                
-            case SCREENLET_PAUSE:
+        switch( runState ) {
+            case RUNNING:
                 pause() ;
+                screenlet.setCurrentRunState( PAUSED ) ;
                 break ;
                 
-            case SCREENLET_RESUME:
+            case STOPPED:
+                play() ;
+                screenlet.setCurrentRunState( RUNNING ) ;
+                break ;
+                
+            case PAUSED:
                 resume() ;
                 pauseTime = 0 ;
-                break ;
-                
-            case SCREENLET_STOP:
-                stop() ;
-                pauseTime = 0 ;
+                screenlet.setCurrentRunState( RUNNING ) ;
                 break ;
         }
     }
     
+    @Override
+    public void handleStopKey() {
+        log.debug( "Ending the session" ) ;
+        saveSession() ;
+        screenlet.setCurrentRunState( STOPPED ) ;
+        populateLastSessionDetails( session.clone() ) ;
+    }
+    
+    @Override public void handleLeftNavKey() {}
+    @Override public void handleRightNavKey() {}
+    @Override public void handleUpNavKey() {}
+    @Override public void handleDownNavKey() {}
+    @Override public void handleSelectNavKey() {}
+    @Override public void handleCancelNavKey() {}
+    
+    // --------------- Remote key processing [End] -----------------------------
+
     private void play() {
         log.debug( "Starting the session" ) ;
         resume() ;
@@ -290,7 +319,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void pause() {
         log.debug( "Pausing the session" ) ;
-        kaMgr.disableAllKeys() ;
+        keyProcessor.disableAllKeys() ;
 
         setBtn1( Btn1Type.PLAY ) ;
         setBtn2( Btn2Type.STOP ) ;
@@ -304,7 +333,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void resume() {
         log.debug( "Resuming the session" ) ;
-        kaMgr.disableAllKeys() ;
+        keyProcessor.disableAllKeys() ;
         
         // If session type = Exercise, enable the lap buttons
         if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
@@ -316,12 +345,6 @@ public class SessionControlTile extends SessionControlTileUI
         
         pauseTime = 0 ;
         saveSession() ;
-    }
-    
-    private void stop() {
-        log.debug( "Ending the session" ) ;
-        saveSession() ;
-        populateLastSessionDetails( session.clone() ) ;
     }
     
     private void saveProblem( boolean solved, boolean redo, 

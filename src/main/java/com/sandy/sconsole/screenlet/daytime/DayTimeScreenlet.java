@@ -2,13 +2,17 @@ package com.sandy.sconsole.screenlet.daytime;
 
 import javax.swing.* ;
 
+import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 
 public class DayTimeScreenlet extends AbstractScreenlet {
 
+    private RemoteKeyEventProcessor keyProcessor = null ;
+    
     public DayTimeScreenlet() {
         super( "DayTime" ) ;
-        kaMgr.disableAllKeys() ;
+        keyProcessor = new RemoteKeyEventProcessor( new RemoteKeyListenerAdapter() ) ;
+        keyProcessor.disableAllKeys() ;
     }
     
     @Override
