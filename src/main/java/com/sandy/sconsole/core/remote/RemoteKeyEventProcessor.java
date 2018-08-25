@@ -13,11 +13,15 @@ public class RemoteKeyEventProcessor {
 
     private static final Logger log = Logger.getLogger( RemoteKeyEventProcessor.class ) ;
     
+    private String name = "<Unnamed Key Processor>" ;
     private Map<String, Boolean> activationMap = null ;
     private Map<String, FnHandler> fnHandlers = new HashMap<>() ;
     private RemoteKeyListener listener = null ;
     
-    public RemoteKeyEventProcessor( RemoteKeyListener listener ) {
+    public RemoteKeyEventProcessor( String name, RemoteKeyListener listener ) {
+        if( name != null ) {
+            this.name = name ;
+        }
         if( listener == null ) {
             throw new IllegalArgumentException( "RemoteKeyListener can't be null" ) ;
         }
@@ -26,6 +30,10 @@ public class RemoteKeyEventProcessor {
         for( String keyId : RemoteKeyCode.getsKeysOfType( KEY_TYPE_FN ) ) {
             fnHandlers.put( keyId, null ) ;
         }
+    }
+    
+    public String getName() {
+        return this.name ;
     }
     
     public void setKeyEnabled( boolean enable, String... keyIds ) {
@@ -67,7 +75,8 @@ public class RemoteKeyEventProcessor {
     }
 
     public void setFnHandler( String keyId, FnHandler handler ) {
-        setFnHandler( keyId, handler, false ) ;
+        assertValidFnKey( keyId ) ;
+        fnHandlers.put( keyId, handler ) ;
     }
     
     public void setFnHandler( String keyId, FnHandler handler, boolean enable ) {
@@ -157,5 +166,16 @@ public class RemoteKeyEventProcessor {
         if( listener != null ) {
             listener.process() ;
         }
+    }
+    
+    public String getDebugState() {
+        StringBuffer buffer = new StringBuffer() ;
+        buffer.append( "Processor = " + getName() + ". Activated keys:\n" ) ;
+        for( String key : activationMap.keySet() ) {
+            if( activationMap.get( key ) ) {
+                buffer.append( "\t" + key + "\n" ) ;
+            }
+        }
+        return buffer.toString() ;
     }
 }

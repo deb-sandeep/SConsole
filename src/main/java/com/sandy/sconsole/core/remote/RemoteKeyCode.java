@@ -4,7 +4,7 @@ import java.util.* ;
 
 public class RemoteKeyCode {
 
-    public static final String KEY_TYPE_SCR_SEL     = "ScreenSelection" ;
+    public static final String KEY_TYPE_SCR_SEL     = "ScreenletSelection" ;
     public static final String KEY_TYPE_NAV_CONTROL = "NavControl" ;
     public static final String KEY_TYPE_RUN         = "Run" ;
     public static final String KEY_TYPE_FN          = "Function" ;
@@ -28,6 +28,7 @@ public class RemoteKeyCode {
     public static final String FN_H               = "Function@H" ;
     
     private static Map<String, String[]> keyTypeCodeMap = new HashMap<>() ;
+    private static List<String> validKeys = new ArrayList<>() ;
     
     static {
         keyTypeCodeMap.put( KEY_TYPE_NAV_CONTROL, new String[]{ 
@@ -54,10 +55,26 @@ public class RemoteKeyCode {
             FN_G, 
             FN_H 
         } ) ;    
+        
+        validKeys.add( NAV_CONTROL_UP ) ;
+        validKeys.add( NAV_CONTROL_LEFT ) ;
+        validKeys.add( NAV_CONTROL_RIGHT ) ;
+        validKeys.add( NAV_CONTROL_DOWN ) ;
+        validKeys.add( NAV_CONTROL_SELECT ) ;
+        validKeys.add( NAV_CONTROL_CANCEL ) ;
+        validKeys.add( RUN_PLAYPAUSE ) ;
+        validKeys.add( RUN_STOP ) ;
+        validKeys.add( FN_A ) ;
+        validKeys.add( FN_B ) ;
+        validKeys.add( FN_C ) ;
+        validKeys.add( FN_D ) ;
+        validKeys.add( FN_E ) ;
+        validKeys.add( FN_F ) ;
+        validKeys.add( FN_G ) ;
+        validKeys.add( FN_H ) ;
     }
     
     public static String[] getsKeysOfType( String type ) {
-        
         if( !keyTypeCodeMap.containsKey( type ) ) {
             throw new IllegalArgumentException( "Invalid key type - " + type ) ;
         }
@@ -68,14 +85,14 @@ public class RemoteKeyCode {
         Map<String, Boolean> map = new HashMap<>() ;
         for( String[] keys : keyTypeCodeMap.values() ) {
             for( String key : keys ) {
-                map.put( key, true ) ;
+                map.put( key, false ) ;
             }
         }
         return map ;
     }
     
     public static boolean isValidKey( String keyId ) {
-        return keyTypeCodeMap.containsKey( keyId ) ;
+        return validKeys.contains( keyId ) ;
     }
     
     public static void assertValidKey( String keyId ) {

@@ -9,37 +9,60 @@ import javax.swing.* ;
 
 import org.apache.log4j.* ;
 
+import com.sandy.sconsole.* ;
+import com.sandy.sconsole.api.remote.* ;
 import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 
 public class DummyScreenlet extends AbstractScreenlet {
     
-    private static final Logger log = Logger.getLogger( DummyScreenlet.class ) ;
+    static final Logger log = Logger.getLogger( DummyScreenlet.class ) ;
+    
     private DummyDialog dialog = null ;
     private RemoteKeyEventProcessor keyProcessor = null ;
+    private RemoteController controller = null ;
     
     public DummyScreenlet( String name ) {
         super( name ) ;
-        keyProcessor = new RemoteKeyEventProcessor( new RemoteKeyListenerAdapter(){
-            public void handlePlayPauseResumeKey() {
-                if( getRunState() == RUNNING ) { pause() ; }
-                else if( getRunState() == STOPPED ) { play() ; }
-                else if( getRunState() == PAUSED ) { resume() ; }
+        
+        controller = SConsole.getAppContext()
+                             .getBean( RemoteController.class ) ;
+        
+        keyProcessor = new RemoteKeyEventProcessor( "Dummy Screenlet", 
+            new RemoteKeyListenerAdapter() {
+                public void handlePlayPauseResumeKey() {
+                    if( getRunState() == RUNNING ) { pause() ; }
+                    else if( getRunState() == STOPPED ) { play() ; }
+                    else if( getRunState() == PAUSED ) { resume() ; }
+                }
+                
+                public void handleStopKey() {
+                    stop() ;
+                }
             }
-            
-            public void handleStopKey() {
-                stop() ;
-            }
-        }) ;
+        ) ;
+        
         dialog = new DummyDialog() ;
         
         keyProcessor.disableAllKeys() ;
-        keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP ) ;
+        keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP, FN_A ) ;
         keyProcessor.setFnHandler( FN_A, new FnHandler() {
             public void process() { handleFnA(); } 
         } ) ;
     }
     
+    @Override public void isBeingMaximized() {
+        log.debug( "Dummy screenlet is being maximized. Taking control of keys." ) ;
+        super.isBeingMaximized() ;
+        controller.pushKeyProcessor( keyProcessor ) ;
+    }
+
+    @Override public void isBeingMinimized() {
+        log.debug( "Dummy screenlet is being minimized. Releasing control of keys." ) ;
+        super.isBeingMinimized() ;
+        controller.popKeyProcessor() ;
+    }
+
     public ScreenletSmallPanel createSmallPanel() {
         
         ScreenletSmallPanel panel = new ScreenletSmallPanel( this ) ;

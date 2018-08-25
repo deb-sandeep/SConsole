@@ -13,6 +13,7 @@ import com.sandy.sconsole.core.frame.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 import com.sandy.sconsole.core.util.* ;
 import com.sandy.sconsole.screenlet.daytime.* ;
+import com.sandy.sconsole.screenlet.dummy.* ;
 import com.sandy.sconsole.screenlet.study.* ;
 
 @SpringBootApplication
@@ -106,6 +107,7 @@ public class SConsole implements ApplicationContextAware {
         screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Chemistry" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Maths" ).initialize() ) ;
+        screenlets.add( new DummyScreenlet( "Dummy" ).initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {
