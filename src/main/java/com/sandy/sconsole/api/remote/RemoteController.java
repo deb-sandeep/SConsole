@@ -63,7 +63,6 @@ public class RemoteController implements Runnable {
                         RemoteKeyEventProcessor processor = null ;
                         processor = processors.peek() ;
                         log.debug( "Routing key to - " + processor.getName() ) ;
-                        log.debug( processor.getDebugState() ) ;
                         processor.processRemoteKeyEvent( event ) ;
                     }
                 }

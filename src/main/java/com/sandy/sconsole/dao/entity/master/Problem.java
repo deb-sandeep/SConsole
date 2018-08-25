@@ -77,4 +77,11 @@ public class Problem {
         }
         return ((Problem)obj).getId().equals( id ) ;
     }
+    
+    public String toString() {
+        return id.toString() + "/" + 
+               chapterId + "/" + 
+               exerciseName + "/" + 
+               problemTag ;
+    }
 }

@@ -116,6 +116,7 @@ public class SessionControlTile extends SessionControlTileUI
             // Use the last session as a template for this session.
             setSessionType( lastSession.getSessionType() ) ;
             setTopic( lastSession.getTopic() ) ;
+            session.setLastProblem( lastSession.getLastProblem() ) ;
             setBook( lastSession.getBook() ) ;
             
             updateNumSkippedLabel( lastSession.getNumSkipped() ) ;
@@ -364,7 +365,6 @@ public class SessionControlTile extends SessionControlTileUI
         else if( redo ) outcome = ProblemAttempt.OUTCOME_REDO ;
         else if( skipped ) outcome = ProblemAttempt.OUTCOME_SKIP ;
         else if( pigeoned ) outcome = ProblemAttempt.OUTCOME_PIGEON ;
-        
         
         Problem p = session.getLastProblem() ;
         p.setSolved( solved ) ;

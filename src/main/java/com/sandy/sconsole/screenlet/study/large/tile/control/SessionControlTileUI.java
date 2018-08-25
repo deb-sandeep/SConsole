@@ -250,7 +250,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
                 .append( problem.getChapterId() )
                 .append( "/" )
                 .append( problem.getExerciseName() )
-                .append( "/" )
+                .append( " / " )
                 .append( problem.getProblemTag() ) ;
             
             problemLbl.setText( text.toString() ) ;
