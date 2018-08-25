@@ -335,6 +335,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
                         changeSessionDetails() ;
                     }
                 } ) ;
+                keyProcessor.setKeyEnabled( true, FN_A ) ;
                 break ;
             case CLEAR:
                 keyProcessor.setKeyEnabled( false, RUN_STOP, FN_A ) ;

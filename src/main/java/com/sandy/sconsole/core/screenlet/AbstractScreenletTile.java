@@ -61,9 +61,11 @@ public abstract class AbstractScreenletTile extends JPanel
         switch( event.getEventType() ) {
             
             case SCREENLET_MINIMIZED:
+                screenletMinimized() ;
                 break ;
                 
             case SCREENLET_MAXIMIZED:
+                screenletMaximized() ;
                 break ;
                 
             case SCREENLET_RUN_STATE_CHANGED:

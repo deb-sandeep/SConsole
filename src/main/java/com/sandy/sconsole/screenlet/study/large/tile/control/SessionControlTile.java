@@ -232,6 +232,7 @@ public class SessionControlTile extends SessionControlTileUI
             keyProcessor.setFnHandler( FN_C, new FnHandler() { public void process() { redoProblem() ; } }  ) ;
             keyProcessor.setFnHandler( FN_D, new FnHandler() { public void process() { setPigeon() ; } }  ) ;
             keyProcessor.setFnHandler( FN_E, new FnHandler() { public void process() { setStarred() ; } }  ) ;
+            keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
         }
     }
     
