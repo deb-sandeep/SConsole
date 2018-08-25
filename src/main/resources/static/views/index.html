@@ -35,11 +35,10 @@
     <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '5')">S5</div>
     <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '6')">S6</div>
     <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '7')">S7</div>
-    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', 'ShowHide')"
-         style="background-color:#BB545F">
-         <span class="glyphicon glyphicon-transfer"></span>
-    </div>
+    <div class="button screenlet" ng-click="btnPressed('ScreenletSelection', '8')">S8</div>
   </div>
+  
+  <div class="remote-row-separator"></div>
   
   <div class="remote-nav-row">
     <div class="button nav-blank"></div>
@@ -64,14 +63,24 @@
     </div>
   </div>
   <div class="remote-nav-row">
-    <div class="button nav-blank"></div>
+    <div class="button nav"
+         ng-click="btnPressed('ScreenletSelection', 'ShowHide')"
+         style="color:#BB545F">
+        <span class="glyphicon glyphicon-transfer"></span>
+    </div>
     <div class="button nav"
          ng-click="btnPressed('NavControl', 'Down')">
         <span class="glyphicon glyphicon-chevron-down"></span>
     </div>
-    <div class="button nav-blank"></div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Cancel')"
+         style="color:#BB545F">
+        <span class="glyphicon glyphicon-remove-sign"></span>
+    </div>
   </div>
-  
+
+  <div class="remote-row-separator"></div>
+
   <div class="remote-button-row">
     <div class="button start-stop"
          ng-click="btnPressed('Run', 'PlayPause')">
@@ -84,6 +93,7 @@
     </div>
   </div>
 
+  <div class="remote-row-separator"></div>
   <div class="remote-row-separator"></div>
 
   <div class="remote-button-row">
@@ -125,13 +135,14 @@
 
   <div class="remote-row-separator"></div>
   <div class="remote-row-separator"></div>
-
+  <!-- 
   <div class="remote-button-row">
     <div class="button route">Config</div>
     <div class="button route">-</div>
     <div class="button route">-</div>
     <div class="button route">-</div>
   </div>
+  -->
 </div>
   
 </body>

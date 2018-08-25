@@ -11,9 +11,10 @@ public class RemoteKeyCode {
     public static final String SCR_SEL_SHOWHIDE   = "ScreenletSelection@ShowHide" ;
     public static final String NAV_CONTROL_UP     = "NavControl@Up" ;
     public static final String NAV_CONTROL_LEFT   = "NavControl@Left" ;
-    public static final String NAV_CONTROL_SELECT = "NavControl@Select" ;
     public static final String NAV_CONTROL_RIGHT  = "NavControl@Right" ;
     public static final String NAV_CONTROL_DOWN   = "NavControl@Down" ;
+    public static final String NAV_CONTROL_SELECT = "NavControl@Select" ;
+    public static final String NAV_CONTROL_CANCEL = "NavControl@Cancel" ;
     public static final String RUN_PLAYPAUSE      = "Run@PlayPause" ;
     public static final String RUN_STOP           = "Run@Stop" ;
     public static final String FN_A               = "Function@A" ;
@@ -33,7 +34,8 @@ public class RemoteKeyCode {
             NAV_CONTROL_LEFT, 
             NAV_CONTROL_SELECT, 
             NAV_CONTROL_RIGHT, 
-            NAV_CONTROL_DOWN 
+            NAV_CONTROL_DOWN,
+            NAV_CONTROL_CANCEL
         } ) ;
         
         keyTypeCodeMap.put( KEY_TYPE_RUN, new String[]{ 
