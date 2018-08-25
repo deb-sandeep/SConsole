@@ -44,21 +44,24 @@ public class RemoteController implements Runnable {
             try {
                 KeyEvent event = eventQueue.takeFirst() ;
                 
-                if( event.getBtnType() == RemoteKeyCode.KEY_TYPE_SCR_SEL ) {
+                if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
                     SConsole.getApp()
                             .getFrame()
                             .handleScreenletSelectionEvent( event.getBtnCode() ) ;
                 }
                 else {
-                    RemoteKeyEventProcessor listener = processors.peek() ;
-                    if( listener == null ) {
+                    if( processors.isEmpty() ) {
                         log.warn( "No key listeners found. Will try processing " +  
                                 "the event again in some time." ) ;
                         eventQueue.putFirst( event ) ;
                         Thread.sleep( 1000 ) ;
                     }
                     else {
-                        listener.processRemoteKeyEvent( event ) ;
+                        RemoteKeyEventProcessor processor = null ;
+                        processor = processors.peek() ;
+                        log.debug( "Routing key to - " + processor.getName() ) ;
+                        log.debug( processor.getDebugState() ) ;
+                        processor.processRemoteKeyEvent( event ) ;
                     }
                 }
             }

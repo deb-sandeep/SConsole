@@ -11,7 +11,6 @@ import org.apache.log4j.* ;
 import com.sandy.common.ui.* ;
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.api.remote.* ;
-import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings( "serial" )
 class SConsoleDialog extends JDialog {
@@ -105,7 +104,6 @@ class SConsoleDialog extends JDialog {
     
     public void setVisible( boolean visible ) {
         
-        RemoteKeyEventProcessor keyProcessor = null ;
         RemoteController controller = null ;
         
         if( this.panel != null ) {
@@ -113,11 +111,12 @@ class SConsoleDialog extends JDialog {
                                  .getBean( RemoteController.class ) ;
             if( visible ) {
                 log.debug( "Dialog is getting visible. Pushing key processor." ) ;
-                keyProcessor = this.panel.getKeyProcessor() ;
-                controller.pushKeyProcessor( keyProcessor ) ;
+                panel.isBeingMadeVisible() ;
+                controller.pushKeyProcessor( panel.getKeyProcessor() ) ;
             }
             else {
                 log.debug( "Dialog is getting hidden. Popping key processor." ) ;
+                this.panel.isBeingHidden() ;
                 controller.popKeyProcessor() ;
             }
         }

@@ -56,7 +56,7 @@ public class SessionControlTile extends SessionControlTileUI
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
-        keyProcessor = new RemoteKeyEventProcessor( this ) ;
+        keyProcessor = new RemoteKeyEventProcessor( "Study Control", this ) ;
         
         ApplicationContext ctx = SConsole.getAppContext() ;
         

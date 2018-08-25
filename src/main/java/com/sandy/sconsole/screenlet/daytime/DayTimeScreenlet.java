@@ -11,7 +11,7 @@ public class DayTimeScreenlet extends AbstractScreenlet {
     
     public DayTimeScreenlet() {
         super( "DayTime" ) ;
-        keyProcessor = new RemoteKeyEventProcessor( new RemoteKeyListenerAdapter() ) ;
+        keyProcessor = new RemoteKeyEventProcessor( "DayTime", new RemoteKeyListenerAdapter() ) ;
         keyProcessor.disableAllKeys() ;
     }
     

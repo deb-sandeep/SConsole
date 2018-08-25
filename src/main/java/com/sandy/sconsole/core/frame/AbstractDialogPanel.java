@@ -17,10 +17,13 @@ public abstract class AbstractDialogPanel extends JPanel
     
     protected AbstractDialogPanel( String title ) {
         super.setName( title ) ;
-        this.keyProcessor = new RemoteKeyEventProcessor( this ) ;
+        keyProcessor = new RemoteKeyEventProcessor( "Dialog" + title , this ) ;
         setLayout( new BorderLayout() ) ;
         setBackground( SConsoleDialog.BG_COLOR ) ;
     }
+    
+    public void isBeingMadeVisible() {} ;
+    public void isBeingHidden() {} ;
     
     @Override public void handleLeftNavKey() {}
     @Override public void handleRightNavKey() {}
@@ -43,6 +46,6 @@ public abstract class AbstractDialogPanel extends JPanel
     }
 
     public RemoteKeyEventProcessor getKeyProcessor() {
-        return null ;
+        return keyProcessor ;
     }
 }
