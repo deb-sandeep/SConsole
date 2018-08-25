@@ -44,6 +44,9 @@ public class RemoteController implements Runnable {
             try {
                 KeyEvent event = eventQueue.takeFirst() ;
                 
+                log.debug( "\n--------------------------------------------------" );
+                log.debug( "Key " + event.getKeyId() + " received at " + new Date() );
+                
                 if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
                     SConsole.getApp()
                             .getFrame()

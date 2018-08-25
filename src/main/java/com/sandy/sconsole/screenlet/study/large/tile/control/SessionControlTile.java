@@ -68,9 +68,6 @@ public class SessionControlTile extends SessionControlTileUI
         remoteController = ctx.getBean( RemoteController.class ) ;
 
         SConsole.addSecTimerTask( this ) ;
-        getEventBus().addSubscriberForEventTypes( this, false, 
-                                                    SCREENLET_MINIMIZED, 
-                                                    SCREENLET_MAXIMIZED ) ;
     }
 
     protected void screenletMaximized() {
@@ -82,6 +79,12 @@ public class SessionControlTile extends SessionControlTileUI
         super.screenletMinimized() ;
         remoteController.popKeyProcessor() ;
     }
+    
+    protected void screenletRunStateChanged( Screenlet screenlet ) {
+        super.screenletRunStateChanged( screenlet ) ;
+        runState = screenlet.getRunState() ;
+    }
+
     
     public void populateLastSessionDetails( Session lastSession ) {
         
@@ -259,19 +262,24 @@ public class SessionControlTile extends SessionControlTileUI
         
         AbstractScreenlet screenlet = getScreenlet() ;
         runState = screenlet.getRunState() ;
+        log.debug( "Play/Pause/Resume command received" ) ;
+        log.debug( "  Current run state = " + runState ) ;
         
         switch( runState ) {
             case RUNNING:
+                log.debug( "\tPausing" ) ;
                 pause() ;
                 screenlet.setCurrentRunState( PAUSED ) ;
                 break ;
                 
             case STOPPED:
+                log.debug( "\tPlaying" ) ;
                 play() ;
                 screenlet.setCurrentRunState( RUNNING ) ;
                 break ;
                 
             case PAUSED:
+                log.debug( "\tResuming" ) ;
                 resume() ;
                 pauseTime = 0 ;
                 screenlet.setCurrentRunState( RUNNING ) ;

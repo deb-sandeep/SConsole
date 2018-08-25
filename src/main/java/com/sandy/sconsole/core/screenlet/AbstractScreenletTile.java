@@ -11,7 +11,6 @@ import javax.swing.border.* ;
 
 import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
-import com.sandy.sconsole.core.screenlet.Screenlet.* ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractScreenletTile extends JPanel
@@ -69,15 +68,13 @@ public abstract class AbstractScreenletTile extends JPanel
                 break ;
                 
             case SCREENLET_RUN_STATE_CHANGED:
-                RunState runState = this.parent
-                                        .getScreenlet()
-                                        .getRunState() ;
-                screenletRunStateChanged( runState ) ;
+                Screenlet screenlet = this.parent.getScreenlet() ;
+                screenletRunStateChanged( screenlet ) ;
                 break ;
         }
     }
     
     protected void screenletMinimized() {}
     protected void screenletMaximized() {}
-    protected void screenletRunStateChanged( RunState runState ) {}
+    protected void screenletRunStateChanged( Screenlet screenlet ) {}
 }
