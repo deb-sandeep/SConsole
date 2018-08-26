@@ -27,6 +27,8 @@ public class SConsole implements ApplicationContextAware {
     
     private static List<SecondTickListener> secondListeners = new ArrayList<>() ;
     private static List<DayTickListener>    dayListeners    = new ArrayList<>() ;
+    
+    private static Object lock = new Object() ;
 
     static {
         SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
@@ -36,8 +38,10 @@ public class SConsole implements ApplicationContextAware {
                 
                 Calendar now = Calendar.getInstance() ;
                 
-                for( SecondTickListener task : secondListeners ) {
-                    task.secondTicked( now ) ;
+                synchronized( lock ) {
+                    for( SecondTickListener task : secondListeners ) {
+                        task.secondTicked( now ) ;
+                    }
                 }
 
                 if( lastDate == null ) {
@@ -58,7 +62,15 @@ public class SConsole implements ApplicationContextAware {
     }
 
     public static void addSecTimerTask( SecondTickListener task ) {
-        secondListeners.add( task ) ;
+        synchronized( lock ) {
+            secondListeners.add( task ) ;
+        }
+    }
+    
+    public static void removeSecTimerTask( SecondTickListener task ) {
+        synchronized( lock ) {
+            secondListeners.remove( task ) ;
+        }
     }
 
     public static void addDayTimerTask( DayTickListener task ) {

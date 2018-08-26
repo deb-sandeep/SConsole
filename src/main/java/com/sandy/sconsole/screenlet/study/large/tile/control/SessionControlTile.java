@@ -61,8 +61,6 @@ public class SessionControlTile extends SessionControlTileUI
     private RunState runState = RunState.STOPPED ;
     
     private int runTime = 0 ;
-    @SuppressWarnings( "unused" )
-    private int pauseTime = 0 ;
     private int totalPauseTime = 0 ;
     
     private Timestamp lapStartTime = null ;
@@ -85,6 +83,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private ChangeSelection changeSelection = null ;
     
+    private PauseDialog pauseDialog = null ;
     private SessionTypeChangeDialog typeChangeDialog = null ;
 
     public SessionControlTile( ScreenletPanel parent ) {
@@ -100,7 +99,8 @@ public class SessionControlTile extends SessionControlTileUI
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
         
         remoteController = ctx.getBean( RemoteController.class ) ;
-        
+
+        pauseDialog = new PauseDialog() ;
         typeChangeDialog = new SessionTypeChangeDialog() ;
 
         SConsole.addSecTimerTask( this ) ;
@@ -132,7 +132,6 @@ public class SessionControlTile extends SessionControlTileUI
         
         this.runTime = 0 ;
         this.lapTime = 0 ;
-        this.pauseTime = 0 ;
         this.totalPauseTime = 0 ;
         
         session = new Session() ;
@@ -287,7 +286,6 @@ public class SessionControlTile extends SessionControlTileUI
             }
         }
         else if( runState == PAUSED ) {
-            pauseTime++ ;
             totalPauseTime++ ;
         }
     }
@@ -320,7 +318,6 @@ public class SessionControlTile extends SessionControlTileUI
             case PAUSED:
                 log.debug( "\tResuming" ) ;
                 resume() ;
-                pauseTime = 0 ;
                 setCurrentUseCase( UseCase.PLAY_SESSION ) ;
                 screenlet.setCurrentRunState( RUNNING ) ;
                 break ;
@@ -374,16 +371,19 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void pause() {
         log.debug( "Pausing the session" ) ;
-        keyProcessor.disableAllKeys() ;
-
-        setBtn1( Btn1Type.PLAY ) ;
-        setBtn2( Btn2Type.STOP ) ;
-
-        // If session type = Exercise, disable the lap buttons
-        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
-            activateProblemOutcomeButtons( false ) ;
-        }
-        saveSession() ;
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                SConsoleFrame frame = SConsole.getApp().getFrame() ;
+                Integer userAction = ( Integer )frame.showDialog( pauseDialog ) ;
+                
+                if( userAction == PauseDialog.PLAY_ACTION ) {
+                    handlePlayPauseResumeKey() ;
+                }
+                else {
+                    handleStopKey() ;
+                }
+            }
+        });
     }
     
     private void resume() {
@@ -398,7 +398,6 @@ public class SessionControlTile extends SessionControlTileUI
         setBtn1( Btn1Type.PAUSE ) ;
         setBtn2( Btn2Type.STOP ) ;
         
-        pauseTime = 0 ;
         saveSession() ;
     }
     
