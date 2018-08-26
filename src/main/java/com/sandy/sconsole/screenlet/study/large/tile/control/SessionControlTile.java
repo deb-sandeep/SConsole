@@ -7,11 +7,14 @@ import java.sql.* ;
 import java.util.* ;
 import java.util.Date ;
 
+import javax.swing.* ;
+
 import org.apache.log4j.* ;
 import org.springframework.context.* ;
 
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.api.remote.* ;
+import com.sandy.sconsole.core.frame.* ;
 import com.sandy.sconsole.core.remote.* ;
 import com.sandy.sconsole.core.screenlet.* ;
 import com.sandy.sconsole.core.screenlet.Screenlet.* ;
@@ -21,6 +24,7 @@ import com.sandy.sconsole.dao.entity.master.* ;
 import com.sandy.sconsole.dao.repository.* ;
 import com.sandy.sconsole.dao.repository.master.* ;
 import com.sandy.sconsole.screenlet.study.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI 
@@ -67,6 +71,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private StudyScreenlet screenlet = null ;
     
+    private ApplicationContext ctx = null ;
     private Session session = null ;
     
     private ProblemRepository        problemRepo = null ;
@@ -79,13 +84,15 @@ public class SessionControlTile extends SessionControlTileUI
     private Queue<Problem> unsolvedProblems = new LinkedList<>() ;
     
     private ChangeSelection changeSelection = null ;
+    
+    private SessionTypeChangeDialog typeChangeDialog = null ;
 
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
         keyProcessor = new RemoteKeyEventProcessor( "Study Control", this ) ;
         
-        ApplicationContext ctx = SConsole.getAppContext() ;
+        ctx = SConsole.getAppContext() ;
         
         problemRepo        = ctx.getBean( ProblemRepository.class ) ;
         sessionRepo        = ctx.getBean( SessionRepository.class ) ;
@@ -93,6 +100,8 @@ public class SessionControlTile extends SessionControlTileUI
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
         
         remoteController = ctx.getBean( RemoteController.class ) ;
+        
+        typeChangeDialog = new SessionTypeChangeDialog() ;
 
         SConsole.addSecTimerTask( this ) ;
     }
@@ -112,7 +121,6 @@ public class SessionControlTile extends SessionControlTileUI
         runState = screenlet.getRunState() ;
     }
 
-    
     public void populateLastSessionDetails( Session lastSession ) {
         
         keyProcessor.disableAllKeys() ;
@@ -479,8 +487,13 @@ public class SessionControlTile extends SessionControlTileUI
         
         keyProcessor.disableAllKeys() ;
         keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_CANCEL );
+        
+        // TODO: Enable play and in play, check the use case. If we are
+        // playing from the change session use case, we need to save the 
+        // changed info and then start the session.
 
         setBtn2( Btn2Type.CANCEL ) ;
+        setBtn1( Btn1Type.PLAY ) ;
         
         keyProcessor.setFnHandler( FN_A,      new Handler() { public void handle(){ changeSessionType() ; } } ) ;
         keyProcessor.setFnHandler( FN_B,      new Handler() { public void handle(){ changeTopic() ; } }  ) ;
@@ -488,7 +501,7 @@ public class SessionControlTile extends SessionControlTileUI
         keyProcessor.setFnHandler( FN_D,      new Handler() { public void handle(){ changeProblem() ; } }  ) ;
         keyProcessor.setFnHandler( FN_CANCEL, new Handler() { public void handle(){ cancelChange() ; } }  ) ;
         
-        keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D, FN_CANCEL ) ;
+        keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D ) ;
         
         changeSelection = new ChangeSelection() ;
         setCurrentUseCase( UseCase.CHANGE_SESSION ) ;
@@ -496,6 +509,79 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeSessionType() {
         log.debug( "Executing changeSessionType" ) ;
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                invokeChangeSessionTypeAsync() ;
+            }
+        });
+    }
+    
+    private void invokeChangeSessionTypeAsync() {
+        
+        SConsoleFrame frame = SConsole.getApp().getFrame() ;
+        String type = ( String )frame.showDialog( typeChangeDialog ) ;
+        
+        log.debug( "New session type chosen = " + type ) ;
+        if( type != null ) {
+            changeSelection.sessionType = type ;
+            setSessionTypeIcon( type ) ;
+            
+            // If the new session is of type Theory or Lecture,
+            // we need to blank out the following :
+            //  - problem label
+            //  - num labels
+            //  - lap time
+            if( !type.equals( Session.TYPE_EXERCISE ) ) {
+                setProblemLabel( null ) ;
+                changeSelection.problem = null ;
+                clearOutcomeStatusAndControls( true ) ;
+                keyProcessor.setKeyEnabled( false, FN_D ) ;
+            }
+            else {
+                clearOutcomeStatusAndControls( false ) ;
+                highlightControlPanelForChange( true ) ;
+                keyProcessor.setKeyEnabled( true, FN_D ) ;
+            }
+        }
+        
+        validateSessionDetailsChange() ;
+    }
+    
+    private void validateSessionDetailsChange() {
+        
+        JPanel invalidAttributePanel = isChangeSelectionValid() ;
+        if( invalidAttributePanel != null ) {
+            highlightPanelValidity( invalidAttributePanel, false ) ;
+            setBtn1( Btn1Type.CLEAR ) ;
+        }
+        else {
+            highlightPanelValidity( typePnl, true ) ;
+            highlightPanelValidity( topicPnl, true ) ;
+            highlightPanelValidity( bookPnl, true ) ;
+            highlightPanelValidity( problemPnl, true ) ;
+            setBtn1( Btn1Type.PLAY ) ;
+        }
+    }
+    
+    private JPanel isChangeSelectionValid() {
+        
+        JPanel invalidAttributePanel = null ;
+        if( changeSelection.sessionType == null ) {
+            invalidAttributePanel = typePnl ;
+        }
+        else {
+            if( changeSelection.sessionType.equals( Session.TYPE_EXERCISE ) ) {
+                if( changeSelection.problem == null ) {
+                    invalidAttributePanel = problemPnl ;
+                }
+            }
+            else {
+                if( changeSelection.problem != null ) {
+                    invalidAttributePanel = problemPnl ;
+                }
+            }
+        }
+        return invalidAttributePanel ;
     }
     
     private void changeTopic() {

@@ -3,6 +3,8 @@ package com.sandy.sconsole.core.frame;
 import java.awt.* ;
 import java.text.* ;
 
+import javax.swing.border.* ;
+
 public class UIConstant {
 
     public static final Font BASE_FONT = new Font( "Courier", Font.PLAIN, 20 ) ;
@@ -19,6 +21,7 @@ public class UIConstant {
     public static final Color FN_H_COLOR = Color.decode( "#C5852F" ) ;
     
     public static final Color TILE_BORDER_COLOR = Color.DARK_GRAY.darker() ;
+    public static final Border TILE_BORDER = new LineBorder( TILE_BORDER_COLOR ) ;
     
     public static final SimpleDateFormat DF_TIME_LG = new SimpleDateFormat( "H:mm:ss" ) ;
     public static final SimpleDateFormat DF_TIME_SM = new SimpleDateFormat( "H:mm" ) ;

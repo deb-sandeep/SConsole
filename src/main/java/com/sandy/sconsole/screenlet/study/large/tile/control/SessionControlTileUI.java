@@ -66,6 +66,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private static Color BTN1_LBL_FG       = Color.GRAY ;
     private static Color BTN2_LBL_FG       = Color.WHITE ;
     
+    private static Border INVALID_PANEL_BORDER = new LineBorder( Color.RED, 3 ) ;
+    
     protected enum Btn1Type { PLAY, PAUSE, CLEAR } ;
     protected enum Btn2Type { STOP, CHANGE, CLEAR, CANCEL } ;
     protected enum UseCase { 
@@ -93,23 +95,23 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private JLabel btn1Lbl      = createDefaultLabel( "" ) ;
     private JLabel btn2Lbl      = createDefaultLabel( "" ) ;
     
-    private JPanel typePnl      = createDefaultPanel() ;
-    private JPanel topicPnl     = createDefaultPanel() ;
-    private JPanel bookPnl      = createDefaultPanel() ;
-    private JPanel sumsLeftPnl  = createDefaultPanel() ;
-    private JPanel problemPnl   = createDefaultPanel() ;
-    private JPanel sTimePnl     = createDefaultPanel() ;
-    private JPanel numSkipPnl   = createDefaultPanel() ;
-    private JPanel numSolvedPnl = createDefaultPanel() ;
-    private JPanel numRedoPnl   = createDefaultPanel() ;
-    private JPanel numPigeonPnl = createDefaultPanel() ;
-    private JPanel lTimePnl     = createDefaultPanel() ;
-    private JPanel btnSkipPnl   = createDefaultPanel() ;
-    private JPanel btnSolvedPnl = createDefaultPanel() ;
-    private JPanel btnRedoPnl   = createDefaultPanel() ;
-    private JPanel btnPigeonPnl = createDefaultPanel() ;
-    private JPanel btn1Pnl      = createDefaultPanel() ;
-    private JPanel btn2Pnl      = createDefaultPanel() ;
+    protected JPanel typePnl      = createDefaultPanel() ;
+    protected JPanel topicPnl     = createDefaultPanel() ;
+    protected JPanel bookPnl      = createDefaultPanel() ;
+    protected JPanel sumsLeftPnl  = createDefaultPanel() ;
+    protected JPanel problemPnl   = createDefaultPanel() ;
+    protected JPanel sTimePnl     = createDefaultPanel() ;
+    protected JPanel numSkipPnl   = createDefaultPanel() ;
+    protected JPanel numSolvedPnl = createDefaultPanel() ;
+    protected JPanel numRedoPnl   = createDefaultPanel() ;
+    protected JPanel numPigeonPnl = createDefaultPanel() ;
+    protected JPanel lTimePnl     = createDefaultPanel() ;
+    protected JPanel btnSkipPnl   = createDefaultPanel() ;
+    protected JPanel btnSolvedPnl = createDefaultPanel() ;
+    protected JPanel btnRedoPnl   = createDefaultPanel() ;
+    protected JPanel btnPigeonPnl = createDefaultPanel() ;
+    protected JPanel btn1Pnl      = createDefaultPanel() ;
+    protected JPanel btn2Pnl      = createDefaultPanel() ;
 
     private Icon exerciseIcon = null ;
     private Icon theoryIcon   = null ;
@@ -218,7 +220,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             
             panel.add( meta.label ) ;
             if( meta.border ) {
-                panel.setBorder( new LineBorder( UIConstant.TILE_BORDER_COLOR ) ) ;
+                panel.setBorder( TILE_BORDER ) ;
             }
             meta.initialized = true ;
         }
@@ -237,23 +239,34 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     protected void setSessionTypeIcon( String type ) {
         
-        Icon icon = null ;
-        switch( type ) {
-            case Session.TYPE_EXERCISE :
-                icon = exerciseIcon ;
-                break ;
-            case Session.TYPE_THEORY :
-                icon = theoryIcon ;
-                break ;
-            case Session.TYPE_LECTURE :
-                icon = lectureIcon ;
-                break ;
+        if( type.equals( Session.TYPE_EXERCISE ) ) {
+            typeLbl.setIcon( exerciseIcon ) ;
         }
-        typeLbl.setIcon( icon ) ;
+        else if( type.equals( Session.TYPE_THEORY ) ) {
+            typeLbl.setIcon( theoryIcon ) ;
+        }
+        else if( type.equals( Session.TYPE_LECTURE ) ) {
+            typeLbl.setIcon( lectureIcon ) ;
+        }
     }
 
     protected void setTopicLabel( String name ) {
         topicLbl.setText( name ) ;
+    }
+    
+    protected void highlightPanelValidity( JPanel panel, boolean valid ) {
+        if( !valid ) {
+            panel.setBorder( INVALID_PANEL_BORDER ) ;
+        }
+        else {
+            LabelMeta meta = pmMap.get( panel ) ;
+            if( meta.border ) {
+                panel.setBorder( TILE_BORDER ) ;
+            }
+            else {
+                panel.setBorder( null ) ;
+            }
+        }
     }
     
     protected void setProblemLabel( Problem problem ) {
@@ -269,7 +282,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
                 .append( problem.getChapterId() )
                 .append( "/" )
                 .append( problem.getExerciseName() )
-                .append( " / " )
+                .append( " - " )
                 .append( problem.getProblemTag() ) ;
             
             problemLbl.setText( text.toString() ) ;
@@ -280,6 +293,49 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         bookLbl.setText( "" ) ;
         if( name != null ) {
             bookLbl.setText( name ) ;
+        }
+    }
+    
+    protected void clearOutcomeStatusAndControls( boolean clear ) {
+        
+        btnSkipPnl.setBackground( BG_COLOR ) ;
+        btnSolvedPnl.setBackground( BG_COLOR ) ;
+        btnRedoPnl.setBackground( BG_COLOR ) ;
+        btnPigeonPnl.setBackground( BG_COLOR ) ;
+        problemPnl.setBackground( BG_COLOR ) ;
+        
+        sTimeLbl.setText( "00:00:00" ) ;
+        
+        if( clear ) {
+            btnSkipLbl.setText( "" ) ;
+            btnSolvedLbl.setText( "" ) ;
+            btnRedoLbl.setText( "" ) ;
+            btnPigeonLbl.setText( "" ) ;
+            
+            numSkipLbl.setText( "" ) ;
+            numSolvedLbl.setText( "" ) ;
+            numRedoLbl.setText( "" ) ;
+            numPigeonLbl.setText( "" ) ;
+            
+            lTimeLbl.setText( "" ) ;
+        }
+        else {
+            btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
+            btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
+            btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
+            btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
+
+            btnSkipLbl.setText( "Skip" ) ;
+            btnSolvedLbl.setText( "Solved" ) ;
+            btnRedoLbl.setText( "Redo" ) ;
+            btnPigeonLbl.setText( "Pigeon" ) ;
+            
+            numSkipLbl.setText( "0" ) ;
+            numSolvedLbl.setText( "0" ) ;
+            numRedoLbl.setText( "0" ) ;
+            numPigeonLbl.setText( "0" ) ;
+            
+            lTimeLbl.setText( "00:00" ) ;
         }
     }
     
@@ -360,7 +416,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
                 btn2Pnl.setBackground( BG_COLOR ) ;
                 btn2Lbl.setIcon( cancelIcon ) ;
                 btn2Lbl.setText( null ) ;
-                keyProcessor.setKeyEnabled( false, FN_A ) ;
+                keyProcessor.setKeyEnabled( true, FN_CANCEL ) ;
                 break ;
             case CLEAR:
                 keyProcessor.setKeyEnabled( false, RUN_STOP, FN_A ) ;
