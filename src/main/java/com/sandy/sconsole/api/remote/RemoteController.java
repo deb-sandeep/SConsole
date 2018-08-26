@@ -54,10 +54,7 @@ public class RemoteController implements Runnable {
                 }
                 else {
                     if( processors.isEmpty() ) {
-                        log.warn( "No key listeners found. Will try processing " +  
-                                "the event again in some time." ) ;
-                        eventQueue.putFirst( event ) ;
-                        Thread.sleep( 1000 ) ;
+                        log.warn( "No key processors found. Ignoring the key." ) ;
                     }
                     else {
                         RemoteKeyEventProcessor processor = null ;

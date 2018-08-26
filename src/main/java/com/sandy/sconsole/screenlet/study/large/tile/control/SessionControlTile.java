@@ -1,6 +1,5 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
-import static com.sandy.sconsole.core.CoreEventID.* ;
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
@@ -29,6 +28,32 @@ public class SessionControlTile extends SessionControlTileUI
     
     static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
+    private class ChangeSelection {
+        
+        String sessionType = null ;
+        Topic topic = null ;
+        Book book = null ;
+        Problem problem = null ;
+        
+        public ChangeSelection() {
+            if( session != null ) {
+                sessionType = session.getSessionType() ;
+                topic = session.getTopic() ;
+                book = session.getBook() ;
+                problem = session.getLastProblem() ;
+            }
+        }
+        
+        public Session createSession() {
+            Session session = new Session() ;
+            session.setSessionType( sessionType ) ;
+            session.setTopic( topic ) ;
+            session.setBook( book ) ;
+            session.setLastProblem( problem ) ;
+            return session ;
+        }
+    }
+    
     private RunState runState = RunState.STOPPED ;
     
     private int runTime = 0 ;
@@ -52,6 +77,8 @@ public class SessionControlTile extends SessionControlTileUI
     private RemoteController remoteController = null ;
     
     private Queue<Problem> unsolvedProblems = new LinkedList<>() ;
+    
+    private ChangeSelection changeSelection = null ;
 
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
@@ -125,6 +152,7 @@ public class SessionControlTile extends SessionControlTileUI
             updateNumPigeonLabel( lastSession.getNumPigeon() ) ;
             updateSessionTimeLabel( lastSession.getDuration() ) ;
         }
+        setCurrentUseCase( UseCase.STOP_SESSION ) ;
     }
     
     public void setSessionType( String sessionType ) {
@@ -231,11 +259,11 @@ public class SessionControlTile extends SessionControlTileUI
             keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_E );
         }
         else {
-            keyProcessor.setFnHandler( FN_A, new FnHandler() { public void process() { skipProblem() ; } } ) ;
-            keyProcessor.setFnHandler( FN_B, new FnHandler() { public void process() { problemSolved() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_C, new FnHandler() { public void process() { redoProblem() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_D, new FnHandler() { public void process() { setPigeon() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_E, new FnHandler() { public void process() { setStarred() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_A, new Handler() { public void handle() { skipProblem() ; } } ) ;
+            keyProcessor.setFnHandler( FN_B, new Handler() { public void handle() { problemSolved() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_C, new Handler() { public void handle() { redoProblem() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_D, new Handler() { public void handle() { setPigeon() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_E, new Handler() { public void handle() { setStarred() ; } }  ) ;
             keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
         }
     }
@@ -270,12 +298,14 @@ public class SessionControlTile extends SessionControlTileUI
             case RUNNING:
                 log.debug( "\tPausing" ) ;
                 pause() ;
+                setCurrentUseCase( UseCase.PAUSE_SESSION ) ;
                 screenlet.setCurrentRunState( PAUSED ) ;
                 break ;
                 
             case STOPPED:
                 log.debug( "\tPlaying" ) ;
                 play() ;
+                setCurrentUseCase( UseCase.PLAY_SESSION ) ;
                 screenlet.setCurrentRunState( RUNNING ) ;
                 break ;
                 
@@ -283,6 +313,7 @@ public class SessionControlTile extends SessionControlTileUI
                 log.debug( "\tResuming" ) ;
                 resume() ;
                 pauseTime = 0 ;
+                setCurrentUseCase( UseCase.PLAY_SESSION ) ;
                 screenlet.setCurrentRunState( RUNNING ) ;
                 break ;
         }
@@ -292,6 +323,7 @@ public class SessionControlTile extends SessionControlTileUI
     public void handleStopKey() {
         log.debug( "Ending the session" ) ;
         saveSession() ;
+        setCurrentUseCase( UseCase.STOP_SESSION ) ;
         screenlet.setCurrentRunState( STOPPED ) ;
         populateLastSessionDetails( session.clone() ) ;
     }
@@ -301,7 +333,6 @@ public class SessionControlTile extends SessionControlTileUI
     @Override public void handleUpNavKey() {}
     @Override public void handleDownNavKey() {}
     @Override public void handleSelectNavKey() {}
-    @Override public void handleCancelNavKey() {}
     
     // --------------- Remote key processing [End] -----------------------------
 
@@ -441,7 +472,52 @@ public class SessionControlTile extends SessionControlTileUI
     }
 
     @Override
-    protected void changeSessionDetails() {
-        log.debug( "Change session details called." ) ;
+    protected void executeChangeSessionDetailsUseCase() {
+        log.debug( "Executing change session details." ) ;
+        
+        super.highlightControlPanelForChange( true ) ;
+        
+        keyProcessor.disableAllKeys() ;
+        keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_CANCEL );
+
+        setBtn2( Btn2Type.CANCEL ) ;
+        
+        keyProcessor.setFnHandler( FN_A,      new Handler() { public void handle(){ changeSessionType() ; } } ) ;
+        keyProcessor.setFnHandler( FN_B,      new Handler() { public void handle(){ changeTopic() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_C,      new Handler() { public void handle(){ changeBook() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_D,      new Handler() { public void handle(){ changeProblem() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_CANCEL, new Handler() { public void handle(){ cancelChange() ; } }  ) ;
+        
+        keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D, FN_CANCEL ) ;
+        
+        changeSelection = new ChangeSelection() ;
+        setCurrentUseCase( UseCase.CHANGE_SESSION ) ;
+    }
+    
+    private void changeSessionType() {
+        log.debug( "Executing changeSessionType" ) ;
+    }
+    
+    private void changeTopic() {
+        log.debug( "Executing changeTopic" ) ;
+
+    }
+    
+    private void changeBook() {
+        log.debug( "Executing changeBook" ) ;
+
+    }
+    
+    private void changeProblem() {
+        log.debug( "Executing changeProblem" ) ;
+
+    }
+    
+    private void cancelChange() {
+        log.debug( "Executing cancelChange" ) ;
+        super.highlightControlPanelForChange( false ) ;
+        changeSelection = null ;
+        setBtn2( Btn2Type.CHANGE ) ;
+        setCurrentUseCase( UseCase.STOP_SESSION ) ;
     }
 }

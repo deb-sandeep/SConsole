@@ -30,7 +30,6 @@ public abstract class AbstractDialogPanel extends JPanel
     @Override public void handleUpNavKey() {}
     @Override public void handleDownNavKey() {}
     @Override public void handleSelectNavKey() {}
-    @Override public void handleCancelNavKey() {}
 
     @Override public void handlePlayPauseResumeKey() {} ;
     @Override public void handleStopKey() {} ;

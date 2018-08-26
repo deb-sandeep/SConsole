@@ -46,8 +46,8 @@ public class DummyScreenlet extends AbstractScreenlet {
         
         keyProcessor.disableAllKeys() ;
         keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP, FN_A ) ;
-        keyProcessor.setFnHandler( FN_A, new FnHandler() {
-            public void process() { handleFnA(); } 
+        keyProcessor.setFnHandler( FN_A, new Handler() {
+            public void handle() { handleFnA(); } 
         } ) ;
     }
     

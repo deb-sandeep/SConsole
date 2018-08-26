@@ -7,7 +7,6 @@ public interface RemoteKeyListener {
     public void handleUpNavKey() ;
     public void handleDownNavKey() ;
     public void handleSelectNavKey() ;
-    public void handleCancelNavKey() ;
     
     public void handlePlayPauseResumeKey() ;
     public void handleStopKey() ;

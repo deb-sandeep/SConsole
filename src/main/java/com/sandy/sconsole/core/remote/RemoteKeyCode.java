@@ -15,7 +15,6 @@ public class RemoteKeyCode {
     public static final String NAV_CONTROL_RIGHT  = "NavControl@Right" ;
     public static final String NAV_CONTROL_DOWN   = "NavControl@Down" ;
     public static final String NAV_CONTROL_SELECT = "NavControl@Select" ;
-    public static final String NAV_CONTROL_CANCEL = "NavControl@Cancel" ;
     public static final String RUN_PLAYPAUSE      = "Run@PlayPause" ;
     public static final String RUN_STOP           = "Run@Stop" ;
     public static final String FN_A               = "Function@A" ;
@@ -26,6 +25,7 @@ public class RemoteKeyCode {
     public static final String FN_F               = "Function@F" ;
     public static final String FN_G               = "Function@G" ;
     public static final String FN_H               = "Function@H" ;
+    public static final String FN_CANCEL          = "Function@Cancel" ;
     
     private static Map<String, String[]> keyTypeCodeMap = new HashMap<>() ;
     private static List<String> validKeys = new ArrayList<>() ;
@@ -37,7 +37,6 @@ public class RemoteKeyCode {
             NAV_CONTROL_SELECT, 
             NAV_CONTROL_RIGHT, 
             NAV_CONTROL_DOWN,
-            NAV_CONTROL_CANCEL
         } ) ;
         
         keyTypeCodeMap.put( KEY_TYPE_RUN, new String[]{ 
@@ -53,7 +52,8 @@ public class RemoteKeyCode {
             FN_E, 
             FN_F, 
             FN_G, 
-            FN_H 
+            FN_H,
+            FN_CANCEL
         } ) ;    
         
         validKeys.add( NAV_CONTROL_UP ) ;
@@ -61,7 +61,6 @@ public class RemoteKeyCode {
         validKeys.add( NAV_CONTROL_RIGHT ) ;
         validKeys.add( NAV_CONTROL_DOWN ) ;
         validKeys.add( NAV_CONTROL_SELECT ) ;
-        validKeys.add( NAV_CONTROL_CANCEL ) ;
         validKeys.add( RUN_PLAYPAUSE ) ;
         validKeys.add( RUN_STOP ) ;
         validKeys.add( FN_A ) ;
@@ -72,6 +71,7 @@ public class RemoteKeyCode {
         validKeys.add( FN_F ) ;
         validKeys.add( FN_G ) ;
         validKeys.add( FN_H ) ;
+        validKeys.add( FN_CANCEL ) ;
     }
     
     public static String[] getsKeysOfType( String type ) {

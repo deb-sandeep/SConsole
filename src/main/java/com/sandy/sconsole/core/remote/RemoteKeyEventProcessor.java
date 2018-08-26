@@ -15,7 +15,7 @@ public class RemoteKeyEventProcessor {
     
     private String name = "<Unnamed Key Processor>" ;
     private Map<String, Boolean> activationMap = null ;
-    private Map<String, FnHandler> fnHandlers = new HashMap<>() ;
+    private Map<String, Handler> fnHandlers = new HashMap<>() ;
     private RemoteKeyListener listener = null ;
     
     public RemoteKeyEventProcessor( String name, RemoteKeyListener listener ) {
@@ -74,12 +74,12 @@ public class RemoteKeyEventProcessor {
         return activationMap.get( keyId ) ;
     }
 
-    public void setFnHandler( String keyId, FnHandler handler ) {
+    public void setFnHandler( String keyId, Handler handler ) {
         assertValidFnKey( keyId ) ;
         fnHandlers.put( keyId, handler ) ;
     }
     
-    public void setFnHandler( String keyId, FnHandler handler, boolean enable ) {
+    public void setFnHandler( String keyId, Handler handler, boolean enable ) {
         assertValidFnKey( keyId ) ;
         fnHandlers.put( keyId, handler ) ;
         setKeyEnabled( enable, keyId ) ;
@@ -143,9 +143,6 @@ public class RemoteKeyEventProcessor {
                     case "Select":
                         listener.handleSelectNavKey() ;
                         break ;
-                    case "Cancel":
-                        listener.handleCancelNavKey() ;
-                        break ;
                 }
                 break ;
 
@@ -162,9 +159,9 @@ public class RemoteKeyEventProcessor {
             throw new IllegalArgumentException( "No function key by ID : " + keyId ) ;
         }
         
-        FnHandler listener = fnHandlers.get( keyId ) ;
+        Handler listener = fnHandlers.get( keyId ) ;
         if( listener != null ) {
-            listener.process() ;
+            listener.handle() ;
         }
     }
     
