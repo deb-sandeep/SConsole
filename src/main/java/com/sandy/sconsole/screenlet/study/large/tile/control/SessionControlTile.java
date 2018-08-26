@@ -346,6 +346,12 @@ public class SessionControlTile extends SessionControlTileUI
 
     private void play() {
         log.debug( "Starting the session" ) ;
+        
+        if( getCurrentUseCase() == UseCase.CHANGE_SESSION ) {
+            session = changeSelection.createSession() ;
+            highlightControlPanelForChange( false ) ;
+        }
+        
         resume() ;
         
         Date now = new Date() ;
