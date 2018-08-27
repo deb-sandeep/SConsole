@@ -300,49 +300,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
-    protected void clearOutcomeStatusAndControls( boolean clear ) {
-        
-        btnSkipPnl.setBackground( BG_COLOR ) ;
-        btnSolvedPnl.setBackground( BG_COLOR ) ;
-        btnRedoPnl.setBackground( BG_COLOR ) ;
-        btnPigeonPnl.setBackground( BG_COLOR ) ;
-        
-        sTimeLbl.setText( "00:00:00" ) ;
-        
-        if( clear ) {
-            btnSkipLbl.setText( "" ) ;
-            btnSolvedLbl.setText( "" ) ;
-            btnRedoLbl.setText( "" ) ;
-            btnPigeonLbl.setText( "" ) ;
-            
-            numSkipLbl.setText( "" ) ;
-            numSolvedLbl.setText( "" ) ;
-            numRedoLbl.setText( "" ) ;
-            numPigeonLbl.setText( "" ) ;
-            
-            lTimeLbl.setText( "" ) ;
-            sumsLeftLbl.setText( "" ) ;
-        }
-        else {
-            btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
-            btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
-            btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
-            btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
-
-            btnSkipLbl.setText( "Skip" ) ;
-            btnSolvedLbl.setText( "Solved" ) ;
-            btnRedoLbl.setText( "Redo" ) ;
-            btnPigeonLbl.setText( "Pigeon" ) ;
-            
-            numSkipLbl.setText( "0" ) ;
-            numSolvedLbl.setText( "0" ) ;
-            numRedoLbl.setText( "0" ) ;
-            numPigeonLbl.setText( "0" ) ;
-            
-            lTimeLbl.setText( "00:00" ) ;
-        }
-    }
-    
     protected void activateProblemOutcomeButtons( boolean activate ) {
         
         if( activate ) {

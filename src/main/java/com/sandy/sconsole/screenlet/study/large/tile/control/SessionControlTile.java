@@ -126,6 +126,10 @@ public class SessionControlTile extends SessionControlTileUI
         super.screenletRunStateChanged( screenlet ) ;
         runState = screenlet.getRunState() ;
     }
+    
+    public Topic getChangeSelectionTopic() {
+        return this.changeSelection.topic ;
+    }
 
     public void populateLastSessionDetails( Session lastSession ) {
         
@@ -139,8 +143,6 @@ public class SessionControlTile extends SessionControlTileUI
         this.runTime = 0 ;
         this.lapTime = 0 ;
         this.totalPauseTime = 0 ;
-        
-        clearOutcomeStatusAndControls( true ) ;
         
         session = new Session() ;
         
@@ -365,17 +367,15 @@ public class SessionControlTile extends SessionControlTileUI
         
         Date now = new Date() ;
         session.setStartTime( new Timestamp( now.getTime() ) ) ;
-        session.setNumSkipped( 0 ) ;
-        session.setNumSolved( 0 ) ;
-        session.setNumRedo( 0 ) ;
-        session.setNumPigeon( 0 ) ;
         saveSession() ;
-        
-        updateNumSkippedLabel( 0 ) ;
-        updateNumSolvedLabel( 0 ) ;
-        updateNumRedoLabel( 0 ) ;
-        updateNumPigeonLabel( 0 ) ;
-        updateSessionTimeLabel( 0 ) ;
+
+        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            updateNumSkippedLabel( 0 ) ;
+            updateNumSolvedLabel( 0 ) ;
+            updateNumRedoLabel( 0 ) ;
+            updateNumPigeonLabel( 0 ) ;
+            updateSessionTimeLabel( 0 ) ;
+        }
         
         lapStartTime = new Timestamp( now.getTime() ) ;
         lastSessionRepo.update( getScreenlet().getDisplayName(), session.getId() ) ;
@@ -591,7 +591,7 @@ public class SessionControlTile extends SessionControlTileUI
             activateControlPanelForChange( type ) ;
             
             if( type.equals( Session.TYPE_EXERCISE ) ) {
-                clearOutcomeStatusAndControls( false ) ;
+//                clearOutcomeStatusAndControls( false ) ;
             }
             else {
                 changeSelection.problem = null ;
@@ -600,11 +600,53 @@ public class SessionControlTile extends SessionControlTileUI
                 setProblemLabel( null ) ;
                 setBookLabel( null ) ;
                 
-                clearOutcomeStatusAndControls( true ) ;
+//                clearOutcomeStatusAndControls( true ) ;
             }
         }
         
         validateSessionDetailsAndActivatePlay() ;
+    }
+    
+    private void changeTopic() {
+        log.debug( "Executing changeTopic" ) ;
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                invokeChangeTopicAsync() ;
+            }
+        });
+    }
+    
+    private void invokeChangeTopicAsync() {
+        
+        SConsoleFrame frame = SConsole.getApp().getFrame() ;
+        Topic selectedTopic = ( Topic )frame.showDialog( topicChangeDialog ) ;
+        
+        log.debug( "New topic chosen = " + selectedTopic ) ;
+        if( selectedTopic != null ) {
+            changeSelection.topic = selectedTopic ;
+            setTopicLabel( selectedTopic.getTopicName() ) ;
+        }
+        
+        // TODO: Change the book and the problems intelligently
+        validateSessionDetailsAndActivatePlay() ;
+    }
+    
+    private void changeBook() {
+        log.debug( "Executing changeBook" ) ;
+    }
+    
+    private void changeProblem() {
+        log.debug( "Executing changeProblem" ) ;
+    }
+    
+    private void cancelChange() {
+        log.debug( "Executing cancelChange" ) ;
+        
+        changeSelection = null ;
+        setBtn2( Btn2Type.CHANGE ) ;
+        setCurrentUseCase( UseCase.STOP_SESSION ) ;
+        deactivateControlPanelForChange() ;
+        populateLastSessionDetails( session.clone() ) ;
     }
     
     private void validateSessionDetailsAndActivatePlay() {
@@ -624,6 +666,8 @@ public class SessionControlTile extends SessionControlTileUI
             highlightPanelValidity( problemPnl, true ) ;
             setBtn1( Btn1Type.PLAY ) ;
         }
+        
+        hideRedundantControlElements() ;
     }
     
     private List<JPanel> validateSessionData() {
@@ -677,49 +721,46 @@ public class SessionControlTile extends SessionControlTileUI
         return invalidAttributePanels ;
     }
     
-    private void changeTopic() {
-        log.debug( "Executing changeTopic" ) ;
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                invokeChangeTopicAsync() ;
-            }
-        });
-    }
-    
-    private void invokeChangeTopicAsync() {
+    private void hideRedundantControlElements() {
         
-        SConsoleFrame frame = SConsole.getApp().getFrame() ;
-        Topic selectedTopic = ( Topic )frame.showDialog( topicChangeDialog ) ;
+        String sessionType = null ;
         
-        log.debug( "New topic chosen = " + selectedTopic ) ;
-        if( selectedTopic != null ) {
-            changeSelection.topic = selectedTopic ;
-            setTopicLabel( selectedTopic.getTopicName() ) ;
+        if( changeSelection != null ) {
+            sessionType = changeSelection.sessionType ;
         }
-        // TODO: Change the book and the problems intelligently
-    }
-    
-    private void changeBook() {
-        log.debug( "Executing changeBook" ) ;
+        else if( session != null ){
+            sessionType = session.getSessionType() ;
+        }
 
-    }
-    
-    private void changeProblem() {
-        log.debug( "Executing changeProblem" ) ;
-
-    }
-    
-    private void cancelChange() {
+        sTimeLbl.setText( "00:00:00" ) ;
         
-        log.debug( "Executing cancelChange" ) ;
-        changeSelection = null ;
-        setBtn2( Btn2Type.CHANGE ) ;
-        setCurrentUseCase( UseCase.STOP_SESSION ) ;
-        deactivateControlPanelForChange() ;
-        populateLastSessionDetails( session.clone() ) ;
-    }
-    
-    public Topic getChangeSelectionTopic() {
-        return this.changeSelection.topic ;
+        btnSkipLbl.setText( "" ) ;
+        btnSolvedLbl.setText( "" ) ;
+        btnRedoLbl.setText( "" ) ;
+        btnPigeonLbl.setText( "" ) ;
+        
+        numSkipLbl.setText( "" ) ;
+        numSolvedLbl.setText( "" ) ;
+        numRedoLbl.setText( "" ) ;
+        numPigeonLbl.setText( "" ) ;
+        
+        lTimeLbl.setText( "" ) ;
+        sumsLeftLbl.setText( "" ) ;
+
+        if( sessionType != null && 
+            sessionType.equals( Session.TYPE_EXERCISE ) ) {
+            
+            btnSkipLbl.setText( "Skip" ) ;
+            btnSolvedLbl.setText( "Solved" ) ;
+            btnRedoLbl.setText( "Redo" ) ;
+            btnPigeonLbl.setText( "Pigeon" ) ;
+            
+            numSkipLbl.setText( "0" ) ;
+            numSolvedLbl.setText( "0" ) ;
+            numRedoLbl.setText( "0" ) ;
+            numPigeonLbl.setText( "0" ) ;
+            
+            lTimeLbl.setText( "00:00" ) ;
+        }
     }
 }
