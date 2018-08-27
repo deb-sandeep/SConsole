@@ -34,8 +34,8 @@ public class Session {
     
     private Timestamp startTime ;
     private Timestamp endTime ;
-    private Integer duration ;
-    private Integer absoluteDuration ;
+    private Integer duration = 0 ;
+    private Integer absoluteDuration = 0 ;
     private Integer numSkipped = 0 ;
     private Integer numSolved = 0 ;
     private Integer numRedo = 0 ;

@@ -432,7 +432,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         if( longFormat ) {
             return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
         }
-        
         return String.format("%02d:%02d", minutes, secs ) ;
     }
     

@@ -85,6 +85,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private PauseDialog pauseDialog = null ;
     private SessionTypeChangeDialog typeChangeDialog = null ;
+    private TopicChangeDialog topicChangeDialog = null ;
 
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
@@ -102,6 +103,7 @@ public class SessionControlTile extends SessionControlTileUI
 
         pauseDialog = new PauseDialog() ;
         typeChangeDialog = new SessionTypeChangeDialog() ;
+        topicChangeDialog = new TopicChangeDialog( this ) ;
 
         SConsole.addSecTimerTask( this ) ;
     }
@@ -591,7 +593,25 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeTopic() {
         log.debug( "Executing changeTopic" ) ;
-
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                invokeChangeTopicAsync() ;
+            }
+        });
+    }
+    
+    private void invokeChangeTopicAsync() {
+        
+        SConsoleFrame frame = SConsole.getApp().getFrame() ;
+        Topic selectedTopic = ( Topic )frame.showDialog( topicChangeDialog ) ;
+        
+        log.debug( "New topic chosen = " + selectedTopic ) ;
+        if( selectedTopic != null ) {
+            changeSelection.topic = selectedTopic ;
+            setTopicLabel( selectedTopic.getTopicName() ) ;
+        }
+        
+        // TODO: Change the book and the problems intelligently
     }
     
     private void changeBook() {
@@ -610,5 +630,10 @@ public class SessionControlTile extends SessionControlTileUI
         changeSelection = null ;
         setBtn2( Btn2Type.CHANGE ) ;
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
+        populateLastSessionDetails( session ) ;
+    }
+    
+    public Topic getChangeSelectionTopic() {
+        return this.changeSelection.topic ;
     }
 }

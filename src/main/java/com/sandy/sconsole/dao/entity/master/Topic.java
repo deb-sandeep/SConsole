@@ -30,4 +30,15 @@ public class Topic {
 
     public String getSection() { return section ; }
     public void setSection( String section ) { this.section = section ; }
+    
+    public String toString() {
+        return id + " / " + subject.getName() + " / " + topicName ;
+    }
+    @Override
+    public boolean equals( Object obj ) {
+        if( obj instanceof Topic ) {
+            return ((Topic)obj).id.equals( id ) ;
+        }
+        return false ;
+    }
 }
