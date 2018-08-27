@@ -48,23 +48,23 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private static final int NUM_ROW = 8 ;
     private static final int NUM_COL = 12 ;
     
-    private static Color TYPE_LBL_FG       = Color.GRAY ;
-    private static Color TOPIC_LBL_FG      = Color.GRAY ;
-    private static Color BOOK_LBL_FG       = Color.GRAY ;
-    private static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
-    private static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
-    private static Color STIME_LBL_FG      = Color.decode( "#75BAF9" ) ;
-    private static Color NUM_SKIP_LBL_FG   = Color.GRAY ;
-    private static Color NUM_SOLVED_LBL_FG = Color.GRAY ;
-    private static Color NUM_REDO_LBL_FG   = Color.GRAY ;
-    private static Color NUM_PIGEON_LBL_FG = Color.GRAY ;
-    private static Color LTIME_LBL_FG      = Color.decode( "#F98BCC" ) ;
-    private static Color BTN_SKIP_LBL_FG   = Color.WHITE ;
-    private static Color BTN_SOLVED_LBL_FG = Color.WHITE ;
-    private static Color BTN_REDO_LBL_FG   = Color.WHITE ;
-    private static Color BTN_PIGEON_LBL_FG = Color.WHITE ;
-    private static Color BTN1_LBL_FG       = Color.GRAY ;
-    private static Color BTN2_LBL_FG       = Color.WHITE ;
+    protected static Color TYPE_LBL_FG       = Color.GRAY ;
+    protected static Color TOPIC_LBL_FG      = Color.GRAY ;
+    protected static Color BOOK_LBL_FG       = Color.GRAY ;
+    protected static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
+    protected static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
+    protected static Color STIME_LBL_FG      = Color.decode( "#75BAF9" ) ;
+    protected static Color NUM_SKIP_LBL_FG   = Color.GRAY ;
+    protected static Color NUM_SOLVED_LBL_FG = Color.GRAY ;
+    protected static Color NUM_REDO_LBL_FG   = Color.GRAY ;
+    protected static Color NUM_PIGEON_LBL_FG = Color.GRAY ;
+    protected static Color LTIME_LBL_FG      = Color.decode( "#F98BCC" ) ;
+    protected static Color BTN_SKIP_LBL_FG   = Color.WHITE ;
+    protected static Color BTN_SOLVED_LBL_FG = Color.WHITE ;
+    protected static Color BTN_REDO_LBL_FG   = Color.WHITE ;
+    protected static Color BTN_PIGEON_LBL_FG = Color.WHITE ;
+    protected static Color BTN1_LBL_FG       = Color.GRAY ;
+    protected static Color BTN2_LBL_FG       = Color.WHITE ;
     
     private static Border INVALID_PANEL_BORDER = new LineBorder( Color.RED, 3 ) ;
     
@@ -77,23 +77,23 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         CHANGE_SESSION
     }
     
-    private JLabel typeLbl      = createDefaultLabel( "" ) ;
-    private JLabel topicLbl     = createDefaultLabel( "" ) ;
-    private JLabel bookLbl      = createDefaultLabel( "" ) ;
-    private JLabel sumsLeftLbl  = createDefaultLabel( "" ) ;
-    private JLabel problemLbl   = createDefaultLabel( "" ) ;
-    private JLabel sTimeLbl     = createDefaultLabel( "" ) ;
-    private JLabel numSkipLbl   = createDefaultLabel( "" ) ;
-    private JLabel numSolvedLbl = createDefaultLabel( "" ) ;
-    private JLabel numRedoLbl   = createDefaultLabel( "" ) ;
-    private JLabel numPigeonLbl = createDefaultLabel( "" ) ;
-    private JLabel lTimeLbl     = createDefaultLabel( "" ) ;
-    private JLabel btnSkipLbl   = createDefaultLabel( "Skip [A]" ) ;
-    private JLabel btnSolvedLbl = createDefaultLabel( "Solved [B]" ) ;
-    private JLabel btnRedoLbl   = createDefaultLabel( "Redo [C]" ) ;
-    private JLabel btnPigeonLbl = createDefaultLabel( "Pigeon [D]" ) ;
-    private JLabel btn1Lbl      = createDefaultLabel( "" ) ;
-    private JLabel btn2Lbl      = createDefaultLabel( "" ) ;
+    protected JLabel typeLbl      = createDefaultLabel( "" ) ;
+    protected JLabel topicLbl     = createDefaultLabel( "" ) ;
+    protected JLabel bookLbl      = createDefaultLabel( "" ) ;
+    protected JLabel sumsLeftLbl  = createDefaultLabel( "" ) ;
+    protected JLabel problemLbl   = createDefaultLabel( "" ) ;
+    protected JLabel sTimeLbl     = createDefaultLabel( "" ) ;
+    protected JLabel numSkipLbl   = createDefaultLabel( "" ) ;
+    protected JLabel numSolvedLbl = createDefaultLabel( "" ) ;
+    protected JLabel numRedoLbl   = createDefaultLabel( "" ) ;
+    protected JLabel numPigeonLbl = createDefaultLabel( "" ) ;
+    protected JLabel lTimeLbl     = createDefaultLabel( "" ) ;
+    protected JLabel btnSkipLbl   = createDefaultLabel( "Skip [A]" ) ;
+    protected JLabel btnSolvedLbl = createDefaultLabel( "Solved [B]" ) ;
+    protected JLabel btnRedoLbl   = createDefaultLabel( "Redo [C]" ) ;
+    protected JLabel btnPigeonLbl = createDefaultLabel( "Pigeon [D]" ) ;
+    protected JLabel btn1Lbl      = createDefaultLabel( "" ) ;
+    protected JLabel btn2Lbl      = createDefaultLabel( "" ) ;
     
     protected JPanel typePnl      = createDefaultPanel() ;
     protected JPanel topicPnl     = createDefaultPanel() ;
@@ -113,13 +113,13 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     protected JPanel btn1Pnl      = createDefaultPanel() ;
     protected JPanel btn2Pnl      = createDefaultPanel() ;
 
-    private Icon exerciseIcon = null ;
-    private Icon theoryIcon   = null ;
-    private Icon lectureIcon  = null ;
-    private Icon playIcon     = null ;
-    private Icon pauseIcon    = null ;
-    private Icon stopIcon     = null ;
-    private Icon cancelIcon   = null ;
+    protected Icon exerciseIcon = null ;
+    protected Icon theoryIcon   = null ;
+    protected Icon lectureIcon  = null ;
+    protected Icon playIcon     = null ;
+    protected Icon pauseIcon    = null ;
+    protected Icon stopIcon     = null ;
+    protected Icon cancelIcon   = null ;
     
     private Map<JPanel, LabelMeta> pmMap = new HashMap<>() ;
     private UseCase currentUseCase = UseCase.STOP_SESSION ;
@@ -131,6 +131,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         populatePanelMetaMap() ;
         setUpUI() ;
     }
+    
+    protected abstract void executeChangeSessionDetailsUseCase() ;
     
     private void populatePanelMetaMap() {
         pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2",  25F, TYPE_LBL_FG,       true  ) ) ;
@@ -289,10 +291,12 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
 
-    protected void setBookLabel( String name ) {
-        bookLbl.setText( "" ) ;
-        if( name != null ) {
-            bookLbl.setText( name ) ;
+    protected void setBookLabel( Book book ) {
+        if( book != null ) {
+            bookLbl.setText( book.getBookShortName() ) ;
+        }
+        else {
+            bookLbl.setText( "" ) ;
         }
     }
     
@@ -302,7 +306,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         btnSolvedPnl.setBackground( BG_COLOR ) ;
         btnRedoPnl.setBackground( BG_COLOR ) ;
         btnPigeonPnl.setBackground( BG_COLOR ) ;
-        problemPnl.setBackground( BG_COLOR ) ;
         
         sTimeLbl.setText( "00:00:00" ) ;
         
@@ -318,6 +321,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             numPigeonLbl.setText( "" ) ;
             
             lTimeLbl.setText( "" ) ;
+            sumsLeftLbl.setText( "" ) ;
         }
         else {
             btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
@@ -459,35 +463,12 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         numPigeonLbl.setText( Integer.toString( num ) ) ;
     }
     
-    protected void updateNumProblemsLeftInChapter( int num ) {
-        sumsLeftLbl.setText( "[" + Integer.toString( num ) + "]" ) ;
-    }
-    
-    protected abstract void executeChangeSessionDetailsUseCase() ;
-    
-    protected void highlightControlPanelForChange( boolean enable ) {
-        log.debug( "Highlighting control panel for change." ) ;
-        if( enable ) {
-            typePnl.setBackground( FN_A_COLOR ) ;
-            topicPnl.setBackground( FN_B_COLOR ) ;
-            bookPnl.setBackground( FN_C_COLOR ) ;
-            problemPnl.setBackground( FN_D_COLOR ) ;
-            
-            typeLbl.setForeground( Color.WHITE ) ;
-            topicLbl.setForeground( Color.WHITE ) ;
-            bookLbl.setForeground( Color.WHITE ) ;
-            problemLbl.setForeground( Color.WHITE ) ;
+    protected void updateNumProblemsLeftInChapterLabel( int num ) {
+        if( num < 0 ) {
+            sumsLeftLbl.setText( "" ) ;
         }
         else {
-            typePnl.setBackground( BG_COLOR ) ;
-            topicPnl.setBackground( BG_COLOR ) ;
-            bookPnl.setBackground( BG_COLOR ) ;
-            problemPnl.setBackground( BG_COLOR ) ;
-            
-            typeLbl.setForeground( TYPE_LBL_FG ) ;
-            topicLbl.setForeground( TOPIC_LBL_FG ) ;
-            bookLbl.setForeground( BOOK_LBL_FG ) ;
-            problemLbl.setForeground( PROBLEM_LBL_FG ) ;
+            sumsLeftLbl.setText( "[" + Integer.toString( num ) + "]" ) ;
         }
     }
 }

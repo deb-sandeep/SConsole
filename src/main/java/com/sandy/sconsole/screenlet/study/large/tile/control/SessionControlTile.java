@@ -1,11 +1,15 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
+import static com.sandy.sconsole.core.frame.UIConstant.* ;
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
+import java.awt.* ;
 import java.sql.* ;
 import java.util.* ;
 import java.util.Date ;
+import java.util.List ;
+import java.util.Queue ;
 
 import javax.swing.* ;
 
@@ -136,65 +140,70 @@ public class SessionControlTile extends SessionControlTileUI
         this.lapTime = 0 ;
         this.totalPauseTime = 0 ;
         
+        clearOutcomeStatusAndControls( true ) ;
+        
         session = new Session() ;
+        
         if( lastSession == null ) {
             // There has been no last session. Keep everything blank and
             // enable only the change button.
             setBtn1( Btn1Type.CLEAR ) ;
-            
-            updateNumSkippedLabel( 0 ) ;
-            updateNumSolvedLabel( 0 ) ;
-            updateNumRedoLabel( 0 ) ;
-            updateNumPigeonLabel( 0 ) ;
-            updateSessionTimeLabel( 0 ) ;
         }
         else {
             // Use the last session as a template for this session.
+            String sessionType = lastSession.getSessionType() ;
             setSessionType( lastSession.getSessionType() ) ;
             setTopic( lastSession.getTopic() ) ;
-            session.setLastProblem( lastSession.getLastProblem() ) ;
-            setBook( lastSession.getBook() ) ;
-            
-            updateNumSkippedLabel( lastSession.getNumSkipped() ) ;
-            updateNumSolvedLabel( lastSession.getNumSolved() ) ;
-            updateNumRedoLabel( lastSession.getNumRedo() ) ;
-            updateNumPigeonLabel( lastSession.getNumPigeon() ) ;
             updateSessionTimeLabel( lastSession.getDuration() ) ;
+            
+            if( sessionType.equals( Session.TYPE_EXERCISE ) ) {
+                setBook( lastSession.getBook() ) ;
+                setProblem( lastSession.getLastProblem() ) ;
+                
+                updateNumSkippedLabel( lastSession.getNumSkipped() ) ;
+                updateNumSolvedLabel( lastSession.getNumSolved() ) ;
+                updateNumRedoLabel( lastSession.getNumRedo() ) ;
+                updateNumPigeonLabel( lastSession.getNumPigeon() ) ;
+                
+                loadUnsolvedProblems() ;
+                setNextProblem() ;
+            }
+            else {
+                setBook( lastSession.getBook() ) ;
+                session.setLastProblem( lastSession.getLastProblem() ) ;
+            }
         }
+        
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
+        validateSessionDetailsAndActivatePlay() ;
     }
     
-    public void setSessionType( String sessionType ) {
+    private void setSessionType( String sessionType ) {
         session.setSessionType( sessionType ) ;
         setSessionTypeIcon( sessionType ) ;
     }
     
-    public void setTopic( Topic topic ) {
+    private void setTopic( Topic topic ) {
         session.setTopic( topic ) ;
         setTopicLabel( session.getTopic().getTopicName() ) ;
     }
     
-    public void setBook( Book book ) {
+    private void setBook( Book book ) {
         session.setBook( book ) ;
-        if( book == null ) {
-            setBookLabel( null ) ;
-        }
-        else {
-            setBookLabel( session.getBook().getBookShortName() ) ;
-            loadUnsolvedProblems() ;
-            setNextProblem() ;
-        }
+        setBookLabel( book ) ;
+    }
+    
+    private void setProblem( Problem problem ) {
+        session.setLastProblem( problem ) ;
+        setProblemLabel( problem ) ;
     }
     
     private void setNextProblem() {
         
         Problem nextProblem = unsolvedProblems.poll() ;
-        if( nextProblem != null ) {
-            session.setLastProblem( nextProblem ) ;
-            setProblemLabel( nextProblem ) ;
-            setBtn1( Btn1Type.PLAY ) ;
-        }
-        else {
+        setProblem( nextProblem ) ;
+        
+        if( nextProblem == null ) {
             if( runState == RUNNING ) {
                 handleStopKey() ;
             }
@@ -258,7 +267,7 @@ public class SessionControlTile extends SessionControlTileUI
         
         log.debug( "Session has " + unsolvedProblems.size() + " unsolved problems." ) ;
         numProblemsLeftInChapter = unsolvedProblems.size() ;
-        updateNumProblemsLeftInChapter( unsolvedProblems.size() ) ;
+        updateNumProblemsLeftInChapterLabel( unsolvedProblems.size() ) ;
     }
 
     protected void activateProblemOutcomeButtons( boolean activate ) {
@@ -348,7 +357,8 @@ public class SessionControlTile extends SessionControlTileUI
         
         if( getCurrentUseCase() == UseCase.CHANGE_SESSION ) {
             session = changeSelection.createSession() ;
-            highlightControlPanelForChange( false ) ;
+            changeSelection = null ;
+            deactivateControlPanelForChange() ;
         }
         
         resume() ;
@@ -459,7 +469,7 @@ public class SessionControlTile extends SessionControlTileUI
         setNextProblem() ;
         
         numProblemsLeftInChapter-- ;
-        updateNumProblemsLeftInChapter( numProblemsLeftInChapter ) ;
+        updateNumProblemsLeftInChapterLabel( numProblemsLeftInChapter ) ;
     }
     
     private void redoProblem() {
@@ -485,32 +495,71 @@ public class SessionControlTile extends SessionControlTileUI
         problemRepo.save( p ) ;
         super.setProblemLabel( p ) ;
     }
+    
+    protected void deactivateControlPanelForChange() {
+        log.debug( "De-activating control panel for change." ) ;
+        
+        typePnl.setBackground( BG_COLOR ) ;
+        topicPnl.setBackground( BG_COLOR ) ;
+        bookPnl.setBackground( BG_COLOR ) ;
+        problemPnl.setBackground( BG_COLOR ) ;
+        
+        typeLbl.setForeground( TYPE_LBL_FG ) ;
+        topicLbl.setForeground( TOPIC_LBL_FG ) ;
+        bookLbl.setForeground( BOOK_LBL_FG ) ;
+        problemLbl.setForeground( PROBLEM_LBL_FG ) ;
+        
+        keyProcessor.disableAllKeys() ;
+        keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_CANCEL ) ;
+        
+        highlightPanelValidity( typePnl, true ) ;
+        highlightPanelValidity( topicPnl, true ) ;
+        highlightPanelValidity( bookPnl, true ) ;
+        highlightPanelValidity( problemPnl, true ) ;
+    }
 
+    protected void activateControlPanelForChange( String sessionType ) {
+        
+        log.debug( "Activating control panel for change." ) ;
+        
+        // First set everything to deactivated state
+        deactivateControlPanelForChange() ;
+        
+        typePnl.setBackground( FN_A_COLOR ) ;
+        typeLbl.setForeground( Color.WHITE ) ;
+        
+        topicPnl.setBackground( FN_B_COLOR ) ;
+        topicLbl.setForeground( Color.WHITE ) ;
+
+        keyProcessor.setFnHandler( FN_A,      new Handler() { public void handle(){ changeSessionType() ; } } ) ;
+        keyProcessor.setFnHandler( FN_B,      new Handler() { public void handle(){ changeTopic() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_CANCEL, new Handler() { public void handle(){ cancelChange() ; } }  ) ;
+        keyProcessor.setKeyEnabled( true, FN_A, FN_B ) ;
+        
+        if( sessionType != null && 
+            sessionType.equals( Session.TYPE_EXERCISE ) ) {
+            
+            bookPnl.setBackground( FN_C_COLOR ) ;
+            bookLbl.setForeground( Color.WHITE ) ;
+            
+            problemPnl.setBackground( FN_D_COLOR ) ;
+            problemLbl.setForeground( Color.WHITE ) ;
+            
+            keyProcessor.setFnHandler( FN_C, new Handler() { public void handle(){ changeBook() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_D, new Handler() { public void handle(){ changeProblem() ; } }  ) ;
+            keyProcessor.setKeyEnabled( true, FN_C, FN_D ) ;
+        }
+        
+        setBtn2( Btn2Type.CANCEL ) ;
+        setBtn1( Btn1Type.PLAY ) ;
+    }
+    
     @Override
     protected void executeChangeSessionDetailsUseCase() {
         log.debug( "Executing change session details." ) ;
         
-        super.highlightControlPanelForChange( true ) ;
-        
-        keyProcessor.disableAllKeys() ;
-        keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_CANCEL );
-        
-        // TODO: Enable play and in play, check the use case. If we are
-        // playing from the change session use case, we need to save the 
-        // changed info and then start the session.
-
-        setBtn2( Btn2Type.CANCEL ) ;
-        setBtn1( Btn1Type.PLAY ) ;
-        
-        keyProcessor.setFnHandler( FN_A,      new Handler() { public void handle(){ changeSessionType() ; } } ) ;
-        keyProcessor.setFnHandler( FN_B,      new Handler() { public void handle(){ changeTopic() ; } }  ) ;
-        keyProcessor.setFnHandler( FN_C,      new Handler() { public void handle(){ changeBook() ; } }  ) ;
-        keyProcessor.setFnHandler( FN_D,      new Handler() { public void handle(){ changeProblem() ; } }  ) ;
-        keyProcessor.setFnHandler( FN_CANCEL, new Handler() { public void handle(){ cancelChange() ; } }  ) ;
-        
-        keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D ) ;
-        
         changeSelection = new ChangeSelection() ;
+        activateControlPanelForChange( changeSelection.sessionType ) ;
         setCurrentUseCase( UseCase.CHANGE_SESSION ) ;
     }
     
@@ -538,28 +587,35 @@ public class SessionControlTile extends SessionControlTileUI
             //  - problem label
             //  - num labels
             //  - lap time
-            if( !type.equals( Session.TYPE_EXERCISE ) ) {
-                setProblemLabel( null ) ;
-                changeSelection.problem = null ;
-                clearOutcomeStatusAndControls( true ) ;
-                keyProcessor.setKeyEnabled( false, FN_D ) ;
+            
+            activateControlPanelForChange( type ) ;
+            
+            if( type.equals( Session.TYPE_EXERCISE ) ) {
+                clearOutcomeStatusAndControls( false ) ;
             }
             else {
-                clearOutcomeStatusAndControls( false ) ;
-                highlightControlPanelForChange( true ) ;
-                keyProcessor.setKeyEnabled( true, FN_D ) ;
+                changeSelection.problem = null ;
+                changeSelection.book = null ;
+                
+                setProblemLabel( null ) ;
+                setBookLabel( null ) ;
+                
+                clearOutcomeStatusAndControls( true ) ;
             }
         }
         
-        validateSessionDetailsChange() ;
+        validateSessionDetailsAndActivatePlay() ;
     }
     
-    private void validateSessionDetailsChange() {
+    private void validateSessionDetailsAndActivatePlay() {
         
-        JPanel invalidAttributePanel = isChangeSelectionValid() ;
-        if( invalidAttributePanel != null ) {
-            highlightPanelValidity( invalidAttributePanel, false ) ;
-            setBtn1( Btn1Type.CLEAR ) ;
+        List<JPanel> invalidPanels = validateSessionData() ;
+        
+        if( !invalidPanels.isEmpty() ) {
+            for( JPanel invalidPanel : invalidPanels ) {
+                highlightPanelValidity( invalidPanel, false ) ;
+                setBtn1( Btn1Type.CLEAR ) ;
+            }
         }
         else {
             highlightPanelValidity( typePnl, true ) ;
@@ -570,25 +626,55 @@ public class SessionControlTile extends SessionControlTileUI
         }
     }
     
-    private JPanel isChangeSelectionValid() {
+    private List<JPanel> validateSessionData() {
         
-        JPanel invalidAttributePanel = null ;
-        if( changeSelection.sessionType == null ) {
-            invalidAttributePanel = typePnl ;
+        List<JPanel> invalidAttributePanels = new ArrayList<JPanel>() ;
+        
+        String sessionType = null ;
+        Topic topic = null ;
+        Book book = null ;
+        Problem problem = null ;
+        
+        if( changeSelection != null ) {
+            sessionType = changeSelection.sessionType ;
+            topic = changeSelection.topic ;
+            book = changeSelection.book ;
+            problem = changeSelection.problem ;
+        }
+        else if( session != null ){
+            sessionType = session.getSessionType() ;
+            topic = session.getTopic() ;
+            book = session.getBook() ;
+            problem = session.getLastProblem() ;
+        }
+        
+        if( sessionType == null ) {
+            invalidAttributePanels.add( typePnl ) ;
+        }
+        
+        if( topic == null ) {
+            invalidAttributePanels.add( topicPnl ) ;
         }
         else {
-            if( changeSelection.sessionType.equals( Session.TYPE_EXERCISE ) ) {
-                if( changeSelection.problem == null ) {
-                    invalidAttributePanel = problemPnl ;
+            if( sessionType.equals( Session.TYPE_EXERCISE ) ) {
+                if( book == null ) {
+                    invalidAttributePanels.add( bookPnl ) ;
+                }
+                if( problem == null ) {
+                    invalidAttributePanels.add( problemPnl ) ;
                 }
             }
             else {
-                if( changeSelection.problem != null ) {
-                    invalidAttributePanel = problemPnl ;
+                if( problem != null ) {
+                    invalidAttributePanels.add( problemPnl ) ;
+                }
+                
+                if( book != null ) {
+                    invalidAttributePanels.add( bookPnl ) ;
                 }
             }
         }
-        return invalidAttributePanel ;
+        return invalidAttributePanels ;
     }
     
     private void changeTopic() {
@@ -610,7 +696,6 @@ public class SessionControlTile extends SessionControlTileUI
             changeSelection.topic = selectedTopic ;
             setTopicLabel( selectedTopic.getTopicName() ) ;
         }
-        
         // TODO: Change the book and the problems intelligently
     }
     
@@ -625,12 +710,13 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void cancelChange() {
+        
         log.debug( "Executing cancelChange" ) ;
-        super.highlightControlPanelForChange( false ) ;
         changeSelection = null ;
         setBtn2( Btn2Type.CHANGE ) ;
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
-        populateLastSessionDetails( session ) ;
+        deactivateControlPanelForChange() ;
+        populateLastSessionDetails( session.clone() ) ;
     }
     
     public Topic getChangeSelectionTopic() {

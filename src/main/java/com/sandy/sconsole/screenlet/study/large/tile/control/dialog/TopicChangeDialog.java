@@ -1,23 +1,26 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
-import static javax.swing.ScrollPaneConstants.* ;
-import static javax.swing.SwingConstants.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_CANCEL ;
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER ;
+import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.* ;
 import java.util.List ;
 
 import javax.swing.* ;
-import javax.swing.border.* ;
+import javax.swing.border.EmptyBorder ;
+import javax.swing.border.LineBorder ;
 
-import org.apache.log4j.* ;
+import org.apache.log4j.Logger ;
 
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.remote.* ;
-import com.sandy.sconsole.dao.entity.master.* ;
-import com.sandy.sconsole.dao.repository.master.* ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.* ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
+import com.sandy.sconsole.core.frame.UIConstant ;
+import com.sandy.sconsole.core.remote.Handler ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.repository.master.TopicRepository ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
 @SuppressWarnings( "serial" )
 public class TopicChangeDialog extends AbstractDialogPanel {
@@ -76,9 +79,10 @@ public class TopicChangeDialog extends AbstractDialogPanel {
         topicList.setCellRenderer( new TopicChangeListCellRenderer() ) ;
         topicList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION ) ;
         
-        JScrollPane sp = new JScrollPane( topicList, VERTICAL_SCROLLBAR_ALWAYS, 
+        JScrollPane sp = new JScrollPane( topicList, VERTICAL_SCROLLBAR_NEVER, 
                                                      HORIZONTAL_SCROLLBAR_NEVER ) ;
         sp.setBackground( UIConstant.BG_COLOR ) ;
+        sp.getVerticalScrollBar().setBackground( UIConstant.BG_COLOR ) ;
         
         JPanel panel = new JPanel() ;
         panel.setBackground( UIConstant.BG_COLOR ) ;
@@ -144,7 +148,7 @@ public class TopicChangeDialog extends AbstractDialogPanel {
         // Populate the list data and prioritize them for usability
         // highlight the current topic
         listModel.clear() ;
-        List<Topic> topics = topicRepo.findAllBySubjectName( subjectName ) ;
+        List<Topic> topics = topicRepo.findAllBySubjectNameOrderByIdAsc( subjectName ) ;
 
         for( Topic topic : topics ) {
             listModel.addElement( topic ) ;

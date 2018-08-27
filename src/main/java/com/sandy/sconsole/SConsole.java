@@ -2,19 +2,21 @@ package com.sandy.sconsole ;
 
 import java.util.* ;
 
-import org.apache.log4j.* ;
-import org.springframework.beans.* ;
-import org.springframework.boot.* ;
-import org.springframework.boot.autoconfigure.* ;
-import org.springframework.context.* ;
+import org.apache.log4j.Logger ;
+import org.springframework.beans.BeansException ;
+import org.springframework.boot.SpringApplication ;
+import org.springframework.boot.autoconfigure.SpringBootApplication ;
+import org.springframework.context.ApplicationContext ;
+import org.springframework.context.ApplicationContextAware ;
 
-import com.sandy.sconsole.core.* ;
-import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.screenlet.* ;
-import com.sandy.sconsole.core.util.* ;
-import com.sandy.sconsole.screenlet.daytime.* ;
-import com.sandy.sconsole.screenlet.dummy.* ;
-import com.sandy.sconsole.screenlet.study.* ;
+import com.sandy.sconsole.core.SConsoleConfig ;
+import com.sandy.sconsole.core.frame.SConsoleFrame ;
+import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.core.util.DayTickListener ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
+import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
 public class SConsole implements ApplicationContextAware {
@@ -48,8 +50,8 @@ public class SConsole implements ApplicationContextAware {
                     lastDate = now ;
                 }
                 else {
-                    if( now.get( Calendar.DAY_OF_YEAR ) != lastDate
-                            .get( Calendar.DAY_OF_YEAR ) ) {
+                    if( now.get( Calendar.DAY_OF_YEAR ) != 
+                        lastDate.get( Calendar.DAY_OF_YEAR ) ) {
 
                         for( DayTickListener task : dayListeners ) {
                             task.dayTicked( now ) ;
