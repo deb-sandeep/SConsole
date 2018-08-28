@@ -49,7 +49,7 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
           +   "p.id asc" )
     List<Problem> findUnsolvedProblems( int topicId, int bookId ) ;
 
-    @Query( "SELECT count(p) "
+    @Query(   "SELECT count(p) "
             + "FROM Problem p "
             + "WHERE "
             +   "p.solved = false and "
