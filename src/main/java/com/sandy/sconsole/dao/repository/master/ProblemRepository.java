@@ -13,12 +13,25 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
     
     @Modifying
     @Transactional
-    @Query( value="insert into processed_ex_meta (name, date) values ( :name, NOW() )",
+    @Query( value="INSERT INTO " + 
+                  "    processed_ex_meta (name, date) " + 
+                  "VALUES " + 
+                  "    (:name, NOW())",
             nativeQuery = true ) 
     void saveMetaExercise( @Param("name") String name ) ;
     
-    @Query( value="select case when count(name)>0 then TRUE else FALSE end " + 
-                  "from processed_ex_meta where name=:name",
+    @Query( value="SELECT " + 
+                  "    CASE " + 
+                  "        WHEN count(name)>0 " + 
+                  "        THEN " + 
+                  "            true " + 
+                  "        ELSE " + 
+                  "            false " + 
+                  "    END " + 
+                  "FROM " + 
+                  "    processed_ex_meta " + 
+                  "WHERE " + 
+                  "    name=:name",
             nativeQuery=true )
     int getExMetaProcessCount( @Param("name") String exMeta ) ;
     

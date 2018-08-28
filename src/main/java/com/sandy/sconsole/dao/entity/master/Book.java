@@ -42,4 +42,8 @@ public class Book {
     public void setForProblems( boolean forProblems ) {
         this.forProblems = forProblems ;
     }
+    
+    public String toString() {
+        return subject.getName() + " / " + bookShortName ;
+    }
 }
