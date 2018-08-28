@@ -46,4 +46,12 @@ public class Book {
     public String toString() {
         return subject.getName() + " / " + bookShortName ;
     }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if( obj instanceof Book ) {
+            return ((Book)obj).id.equals( id ) ;
+        }
+        return false ;
+    }
 }

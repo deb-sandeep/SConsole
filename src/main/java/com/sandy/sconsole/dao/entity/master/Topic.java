@@ -34,6 +34,7 @@ public class Topic {
     public String toString() {
         return id + " / " + subject.getName() + " / " + topicName ;
     }
+    
     @Override
     public boolean equals( Object obj ) {
         if( obj instanceof Topic ) {

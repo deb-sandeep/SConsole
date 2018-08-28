@@ -58,4 +58,21 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
             +   "p.topic.id = ?1 and "
             +   "p.book.id = ?2" )
     Integer findUnsolvedProblemCount( int topicId, int bookId ) ;
+
+    @Query( value=
+              "SELECT "
+            + "    id "
+            + "FROM "
+            + "    problem_master "
+            + "WHERE "
+            + "    topic_id = ?1 AND "
+            + "    book_id = ?2 AND "
+            + "    active = 1 AND "
+            + "    solved = 0 AND "
+            + "    pigeoned = 0 "
+            + "ORDER BY "
+            + "    id asc "
+            + "LIMIT 1 "
+           ,nativeQuery=true )
+    Integer findNextUnsolvedProblem( Integer topicId, Integer bookId ) ;
 }

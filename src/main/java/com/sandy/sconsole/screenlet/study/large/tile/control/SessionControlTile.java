@@ -2,32 +2,41 @@ package com.sandy.sconsole.screenlet.study.large.tile.control;
 
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
-import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
+import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.PAUSED ;
+import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.RUNNING ;
+import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.STOPPED ;
 
-import java.awt.* ;
-import java.sql.* ;
+import java.awt.Color ;
+import java.sql.Timestamp ;
 import java.util.* ;
-import java.util.Date ;
-import java.util.List ;
-import java.util.Queue ;
 
-import javax.swing.* ;
+import javax.swing.JPanel ;
+import javax.swing.SwingUtilities ;
 
-import org.apache.log4j.* ;
-import org.springframework.context.* ;
+import org.apache.log4j.Logger ;
+import org.springframework.context.ApplicationContext ;
 
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.api.remote.* ;
-import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.remote.* ;
-import com.sandy.sconsole.core.screenlet.* ;
-import com.sandy.sconsole.core.screenlet.Screenlet.* ;
-import com.sandy.sconsole.core.util.* ;
-import com.sandy.sconsole.dao.entity.* ;
-import com.sandy.sconsole.dao.entity.master.* ;
-import com.sandy.sconsole.dao.repository.* ;
-import com.sandy.sconsole.dao.repository.master.* ;
-import com.sandy.sconsole.screenlet.study.* ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.remote.RemoteController ;
+import com.sandy.sconsole.core.frame.SConsoleFrame ;
+import com.sandy.sconsole.core.remote.Handler ;
+import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
+import com.sandy.sconsole.core.remote.RemoteKeyListener ;
+import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
+import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
+import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.dao.entity.ProblemAttempt ;
+import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.master.Book ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.repository.LastSessionRepository ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
+import com.sandy.sconsole.dao.repository.SessionRepository ;
+import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
 
 @SuppressWarnings( "serial" )
@@ -65,6 +74,7 @@ public class SessionControlTile extends SessionControlTileUI
     private PauseDialog pauseDialog = null ;
     private SessionTypeChangeDialog typeChangeDialog = null ;
     private TopicChangeDialog topicChangeDialog = null ;
+    private BookChangeDialog bookChangeDialog = null ;
 
     class ChangeSelection {
         
@@ -133,6 +143,7 @@ public class SessionControlTile extends SessionControlTileUI
         pauseDialog = new PauseDialog() ;
         typeChangeDialog = new SessionTypeChangeDialog() ;
         topicChangeDialog = new TopicChangeDialog( this ) ;
+        bookChangeDialog = new BookChangeDialog( this ) ;
 
         SConsole.addSecTimerTask( this ) ;
     }
@@ -681,6 +692,35 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeBook() {
         log.debug( "Executing changeBook" ) ;
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                invokeChangeBookAsync() ;
+            }
+        });
+    }
+    
+    private void invokeChangeBookAsync() {
+        
+        SConsoleFrame frame = SConsole.getApp().getFrame() ;
+        Book selectedBook = ( Book )frame.showDialog( bookChangeDialog ) ;
+        
+        log.debug( "New Book chosen = " + selectedBook ) ;
+        if( selectedBook != null ) {
+            changeSelection.setBook( selectedBook ) ;
+            
+            Topic topic = changeSelection.getTopic() ;
+            if( topic != null ) {
+                Integer problemId = problemRepo.findNextUnsolvedProblem( 
+                                        topic.getId(), selectedBook.getId() ) ;
+                
+                Problem problem = null ;
+                if( problemId != null ) {
+                    problem = problemRepo.findById( problemId ).get() ;
+                }
+                changeSelection.setProblem( problem ) ;
+            }
+        }
+        validateSessionDetailsAndActivatePlay() ;
     }
     
     private void changeProblem() {
@@ -811,12 +851,18 @@ public class SessionControlTile extends SessionControlTileUI
             updateNumProblemsLeftInChapterLabel( 0 ) ;
         }
     }
-
+    
     public Topic getChangeSelectionTopic() {
         if( this.changeSelection != null ) {
             return this.changeSelection.getTopic() ;
         }
-        
+        return null ;
+    }
+
+    public Book getChangeSelectionBook() {
+        if( this.changeSelection != null ) {
+            return this.changeSelection.getBook() ;
+        }
         return null ;
     }
 }
