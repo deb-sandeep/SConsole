@@ -36,32 +36,6 @@ public class SessionControlTile extends SessionControlTileUI
     
     static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
-    private class ChangeSelection {
-        
-        String sessionType = null ;
-        Topic topic = null ;
-        Book book = null ;
-        Problem problem = null ;
-        
-        public ChangeSelection() {
-            if( session != null ) {
-                sessionType = session.getSessionType() ;
-                topic = session.getTopic() ;
-                book = session.getBook() ;
-                problem = session.getLastProblem() ;
-            }
-        }
-        
-        public Session createSession() {
-            Session session = new Session() ;
-            session.setSessionType( sessionType ) ;
-            session.setTopic( topic ) ;
-            session.setBook( book ) ;
-            session.setLastProblem( problem ) ;
-            return session ;
-        }
-    }
-    
     private RunState runState = RunState.STOPPED ;
     
     private int runTime = 0 ;
@@ -74,7 +48,8 @@ public class SessionControlTile extends SessionControlTileUI
     private StudyScreenlet screenlet = null ;
     
     private ApplicationContext ctx = null ;
-    private Session session = null ;
+    private Session currentSession = null ;
+    private Session lastSession = null ;
     
     private ProblemRepository        problemRepo = null ;
     private SessionRepository        sessionRepo = null ;
@@ -91,6 +66,56 @@ public class SessionControlTile extends SessionControlTileUI
     private SessionTypeChangeDialog typeChangeDialog = null ;
     private TopicChangeDialog topicChangeDialog = null ;
 
+    class ChangeSelection {
+        
+        private String sessionType = null ;
+        private Topic topic = null ;
+        private Book book = null ;
+        private Problem problem = null ;
+        
+        public ChangeSelection( Session session ) {
+            if( session != null ) {
+                setSessionType( session.getSessionType() ) ;
+                setTopic( session.getTopic() ) ;
+                setBook( session.getBook() ) ;
+                setProblem( session.getLastProblem() ) ;
+            }
+        }
+        
+        public Session createSession() {
+            Session session = new Session() ;
+            session.setSessionType( sessionType ) ;
+            session.setTopic( topic ) ;
+            session.setBook( book ) ;
+            session.setLastProblem( problem ) ;
+            return session ;
+        }
+        
+        public String getSessionType() { return this.sessionType ; }
+        public void setSessionType( String type ) {
+            this.sessionType = type ;
+            setSessionTypeIcon( this.sessionType ) ;
+        }
+        
+        public Topic getTopic() { return this.topic ; }
+        public void setTopic( Topic topic ) {
+            this.topic = topic ;
+            setTopicLabel( this.topic ) ;
+        }
+        
+        public Book getBook() { return this.book ; }
+        public void setBook( Book book ) {
+            this.book = book ;
+            setBookLabel( this.book ) ;
+        }
+        
+        public Problem getProblem() { return this.problem ; }
+        public void setProblem( Problem problem ) {
+            this.problem = problem ;
+            setProblemLabel( this.problem ) ;
+        }
+    }
+    
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
@@ -127,11 +152,7 @@ public class SessionControlTile extends SessionControlTileUI
         runState = screenlet.getRunState() ;
     }
     
-    public Topic getChangeSelectionTopic() {
-        return this.changeSelection.topic ;
-    }
-
-    public void populateLastSessionDetails( Session lastSession ) {
+    public void populateLastSessionDetails( Session ls ) {
         
         keyProcessor.disableAllKeys() ;
         
@@ -143,36 +164,39 @@ public class SessionControlTile extends SessionControlTileUI
         this.runTime = 0 ;
         this.lapTime = 0 ;
         this.totalPauseTime = 0 ;
+        this.lastSession = ls ;
         
-        session = new Session() ;
+        // Note that current session does not have an identifier till it
+        // is first played.
+        currentSession = new Session() ;
         
-        if( lastSession == null ) {
+        if( ls == null ) {
             // There has been no last session. Keep everything blank and
             // enable only the change button.
             setBtn1( Btn1Type.CLEAR ) ;
         }
         else {
             // Use the last session as a template for this session.
-            String sessionType = lastSession.getSessionType() ;
-            setSessionType( lastSession.getSessionType() ) ;
-            setTopic( lastSession.getTopic() ) ;
-            updateSessionTimeLabel( lastSession.getDuration() ) ;
+            String sessionType = ls.getSessionType() ;
+            setSessionType( ls.getSessionType() ) ;
+            setTopic( ls.getTopic() ) ;
+            updateSessionTimeLabel( ls.getDuration() ) ;
             
             if( sessionType.equals( Session.TYPE_EXERCISE ) ) {
-                setBook( lastSession.getBook() ) ;
-                setProblem( lastSession.getLastProblem() ) ;
+                setBook( ls.getBook() ) ;
+                setProblem( ls.getLastProblem() ) ;
                 
-                updateNumSkippedLabel( lastSession.getNumSkipped() ) ;
-                updateNumSolvedLabel( lastSession.getNumSolved() ) ;
-                updateNumRedoLabel( lastSession.getNumRedo() ) ;
-                updateNumPigeonLabel( lastSession.getNumPigeon() ) ;
+                updateNumSkippedLabel( ls.getNumSkipped() ) ;
+                updateNumSolvedLabel( ls.getNumSolved() ) ;
+                updateNumRedoLabel( ls.getNumRedo() ) ;
+                updateNumPigeonLabel( ls.getNumPigeon() ) ;
                 
                 loadUnsolvedProblems() ;
                 setNextProblem() ;
             }
             else {
-                setBook( lastSession.getBook() ) ;
-                session.setLastProblem( lastSession.getLastProblem() ) ;
+                setBook( ls.getBook() ) ;
+                currentSession.setLastProblem( ls.getLastProblem() ) ;
             }
         }
         
@@ -181,22 +205,22 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void setSessionType( String sessionType ) {
-        session.setSessionType( sessionType ) ;
+        currentSession.setSessionType( sessionType ) ;
         setSessionTypeIcon( sessionType ) ;
     }
     
     private void setTopic( Topic topic ) {
-        session.setTopic( topic ) ;
-        setTopicLabel( session.getTopic().getTopicName() ) ;
+        currentSession.setTopic( topic ) ;
+        setTopicLabel( currentSession.getTopic() ) ;
     }
     
     private void setBook( Book book ) {
-        session.setBook( book ) ;
+        currentSession.setBook( book ) ;
         setBookLabel( book ) ;
     }
     
     private void setProblem( Problem problem ) {
-        session.setLastProblem( problem ) ;
+        currentSession.setLastProblem( problem ) ;
         setProblemLabel( problem ) ;
     }
     
@@ -215,8 +239,8 @@ public class SessionControlTile extends SessionControlTileUI
     private void loadUnsolvedProblems() {
         
         ArrayList<Problem> problems = new ArrayList<>() ;
-        Integer topicId = session.getTopic().getId() ;
-        Integer bookId  = session.getBook().getId() ;
+        Integer topicId = currentSession.getTopic().getId() ;
+        Integer bookId  = currentSession.getBook().getId() ;
         
         problems.addAll( problemRepo.findUnsolvedProblems( topicId, bookId ) ) ;
         unsolvedProblems.clear() ;
@@ -238,7 +262,7 @@ public class SessionControlTile extends SessionControlTileUI
             // Second pass - find all the questions whose id is greater than
             // or equal to the the sessions problem and which are not skipped
             int refProblemId = -1 ;
-            Problem currentProblem = session.getLastProblem() ;
+            Problem currentProblem = currentSession.getLastProblem() ;
             if( currentProblem != null ) {
                 refProblemId = currentProblem.getId() ;
             }
@@ -294,7 +318,7 @@ public class SessionControlTile extends SessionControlTileUI
             runTime++ ;
             lapTime++ ;
             updateSessionTimeLabel( runTime ) ;
-            if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            if( currentSession.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
                 updateLapTimeLabel( lapTime ) ;
             }
         }
@@ -343,7 +367,7 @@ public class SessionControlTile extends SessionControlTileUI
         saveSession() ;
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
         screenlet.setCurrentRunState( STOPPED ) ;
-        populateLastSessionDetails( session.clone() ) ;
+        populateLastSessionDetails( currentSession.clone() ) ;
     }
     
     @Override public void handleLeftNavKey() {}
@@ -358,7 +382,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Starting the session" ) ;
         
         if( getCurrentUseCase() == UseCase.CHANGE_SESSION ) {
-            session = changeSelection.createSession() ;
+            currentSession = changeSelection.createSession() ;
             changeSelection = null ;
             deactivateControlPanelForChange() ;
         }
@@ -366,10 +390,11 @@ public class SessionControlTile extends SessionControlTileUI
         resume() ;
         
         Date now = new Date() ;
-        session.setStartTime( new Timestamp( now.getTime() ) ) ;
+        currentSession.setStartTime( new Timestamp( now.getTime() ) ) ;
         saveSession() ;
+        this.lastSession = currentSession ;
 
-        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+        if( currentSession.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
             updateNumSkippedLabel( 0 ) ;
             updateNumSolvedLabel( 0 ) ;
             updateNumRedoLabel( 0 ) ;
@@ -378,7 +403,7 @@ public class SessionControlTile extends SessionControlTileUI
         }
         
         lapStartTime = new Timestamp( now.getTime() ) ;
-        lastSessionRepo.update( getScreenlet().getDisplayName(), session.getId() ) ;
+        lastSessionRepo.update( getScreenlet().getDisplayName(), currentSession.getId() ) ;
     }
     
     private void pause() {
@@ -403,7 +428,7 @@ public class SessionControlTile extends SessionControlTileUI
         keyProcessor.disableAllKeys() ;
         
         // If session type = Exercise, enable the lap buttons
-        if( session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+        if( currentSession.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
             activateProblemOutcomeButtons( true ) ;
         }
         
@@ -422,7 +447,7 @@ public class SessionControlTile extends SessionControlTileUI
         else if( skipped ) outcome = ProblemAttempt.OUTCOME_SKIP ;
         else if( pigeoned ) outcome = ProblemAttempt.OUTCOME_PIGEON ;
         
-        Problem p = session.getLastProblem() ;
+        Problem p = currentSession.getLastProblem() ;
         p.setSolved( solved ) ;
         p.setRedo( redo ) ;
         p.setSkipped( skipped ) ;
@@ -431,8 +456,8 @@ public class SessionControlTile extends SessionControlTileUI
         problemRepo.save( p ) ;
         
         ProblemAttempt attempt = new ProblemAttempt() ;
-        attempt.setSession( session ) ;
-        attempt.setProblem( session.getLastProblem() ) ;
+        attempt.setSession( currentSession ) ;
+        attempt.setProblem( currentSession.getLastProblem() ) ;
         attempt.setStartTime( lapStartTime ) ;
         attempt.setEndTime( new Timestamp( new Date().getTime() ) ) ;
         attempt.setDuration( lapTime ) ;
@@ -447,17 +472,17 @@ public class SessionControlTile extends SessionControlTileUI
     private void saveSession() {
         
         Date now = new Date() ;
-        session.setEndTime( new Timestamp( now.getTime() ) ) ;
-        session.setDuration( runTime ) ;
-        session.setAbsoluteDuration( runTime + totalPauseTime ) ;
-        session = sessionRepo.save( session ) ;
+        currentSession.setEndTime( new Timestamp( now.getTime() ) ) ;
+        currentSession.setDuration( runTime ) ;
+        currentSession.setAbsoluteDuration( runTime + totalPauseTime ) ;
+        currentSession = sessionRepo.save( currentSession ) ;
     }
     
     private void skipProblem() {
         log.debug( "Skipping the problem" ) ;
         saveProblem( false, false, true, false ) ;
         lapTime = 0 ;
-        updateNumSkippedLabel( session.incrementNumSkipped() ) ;
+        updateNumSkippedLabel( currentSession.incrementNumSkipped() ) ;
         setNextProblem() ;
     }
     
@@ -465,7 +490,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Solved the problem" ) ;
         saveProblem( true, false, false, false ) ;
         lapTime = 0 ;
-        updateNumSolvedLabel( session.incrementNumSolved() ) ;
+        updateNumSolvedLabel( currentSession.incrementNumSolved() ) ;
         setNextProblem() ;
         
         numProblemsLeftInChapter-- ;
@@ -476,7 +501,7 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Redo the problem" ) ;
         saveProblem( false, true, false, false ) ;
         lapTime = 0 ;
-        updateNumRedoLabel( session.incrementNumRedo() ) ;
+        updateNumRedoLabel( currentSession.incrementNumRedo() ) ;
         setNextProblem() ;
     }
     
@@ -484,13 +509,13 @@ public class SessionControlTile extends SessionControlTileUI
         log.debug( "Set a pigeon" ) ;
         saveProblem( false, false, false, true ) ;
         lapTime = 0 ;
-        updateNumPigeonLabel( session.incrementNumPigeon() ) ;
+        updateNumPigeonLabel( currentSession.incrementNumPigeon() ) ;
         setNextProblem() ;
     }
     
     private void setStarred() {
         log.debug( "Un/starring the problem" ) ;
-        Problem p = session.getLastProblem() ;
+        Problem p = currentSession.getLastProblem() ;
         p.setStarred( !p.getStarred() ) ;
         problemRepo.save( p ) ;
         super.setProblemLabel( p ) ;
@@ -558,8 +583,22 @@ public class SessionControlTile extends SessionControlTileUI
     protected void executeChangeSessionDetailsUseCase() {
         log.debug( "Executing change session details." ) ;
         
-        changeSelection = new ChangeSelection() ;
-        activateControlPanelForChange( changeSelection.sessionType ) ;
+        Integer lsId = null ;
+        Session sessionBefore = lastSession ;
+        
+        if( lastSession != null ) {
+            lsId = lastSessionRepo.findSessionBefore( lastSession.getId(), 
+                                                      screenlet.getDisplayName() ) ;
+            if( lsId != null ) {
+                sessionBefore = sessionRepo.findById( lsId ).get() ;
+            }
+        }
+        
+        changeSelection = new ChangeSelection( sessionBefore ) ;
+        activateControlPanelForChange( changeSelection.getSessionType() ) ;
+        
+        validateSessionDetailsAndActivatePlay() ;
+        
         setCurrentUseCase( UseCase.CHANGE_SESSION ) ;
     }
     
@@ -579,8 +618,7 @@ public class SessionControlTile extends SessionControlTileUI
         
         log.debug( "New session type chosen = " + type ) ;
         if( type != null ) {
-            changeSelection.sessionType = type ;
-            setSessionTypeIcon( type ) ;
+            changeSelection.setSessionType( type ) ;
             
             // If the new session is of type Theory or Lecture,
             // we need to blank out the following :
@@ -590,17 +628,9 @@ public class SessionControlTile extends SessionControlTileUI
             
             activateControlPanelForChange( type ) ;
             
-            if( type.equals( Session.TYPE_EXERCISE ) ) {
-//                clearOutcomeStatusAndControls( false ) ;
-            }
-            else {
-                changeSelection.problem = null ;
-                changeSelection.book = null ;
-                
-                setProblemLabel( null ) ;
-                setBookLabel( null ) ;
-                
-//                clearOutcomeStatusAndControls( true ) ;
+            if( !type.equals( Session.TYPE_EXERCISE ) ) {
+                changeSelection.setProblem( null ) ;
+                changeSelection.setBook( null ) ;
             }
         }
         
@@ -623,12 +653,30 @@ public class SessionControlTile extends SessionControlTileUI
         
         log.debug( "New topic chosen = " + selectedTopic ) ;
         if( selectedTopic != null ) {
-            changeSelection.topic = selectedTopic ;
-            setTopicLabel( selectedTopic.getTopicName() ) ;
+            changeSelection.setTopic( selectedTopic ) ;
+            if( changeSelection.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+                populatePredictionsForBookAndProblem( selectedTopic.getId() ) ;
+            }
         }
         
-        // TODO: Change the book and the problems intelligently
         validateSessionDetailsAndActivatePlay() ;
+    }
+    
+    private void populatePredictionsForBookAndProblem( Integer topicId ) {
+        
+        Integer lastSessionId = lastSessionRepo.findLastSessionForTopic( topicId ) ;
+        
+        if( lastSessionId != null ) {
+            Session session = sessionRepo.findById( lastSessionId ).get() ;
+            
+            changeSelection.setBook( session.getBook() ) ;
+            changeSelection.setProblem( session.getLastProblem() ) ;
+            
+            int numProblemsLeft = problemRepo.findUnsolvedProblemCount( 
+                                            changeSelection.getTopic().getId(), 
+                                            changeSelection.getBook().getId() ) ;
+            updateNumProblemsLeftInChapterLabel( numProblemsLeft ) ;
+        }
     }
     
     private void changeBook() {
@@ -646,7 +694,7 @@ public class SessionControlTile extends SessionControlTileUI
         setBtn2( Btn2Type.CHANGE ) ;
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
         deactivateControlPanelForChange() ;
-        populateLastSessionDetails( session.clone() ) ;
+        populateLastSessionDetails( lastSession.clone() ) ;
     }
     
     private void validateSessionDetailsAndActivatePlay() {
@@ -680,16 +728,16 @@ public class SessionControlTile extends SessionControlTileUI
         Problem problem = null ;
         
         if( changeSelection != null ) {
-            sessionType = changeSelection.sessionType ;
-            topic = changeSelection.topic ;
-            book = changeSelection.book ;
-            problem = changeSelection.problem ;
+            sessionType = changeSelection.getSessionType() ;
+            topic = changeSelection.getTopic() ;
+            book = changeSelection.getBook() ;
+            problem = changeSelection.getProblem() ;
         }
-        else if( session != null ){
-            sessionType = session.getSessionType() ;
-            topic = session.getTopic() ;
-            book = session.getBook() ;
-            problem = session.getLastProblem() ;
+        else if( currentSession != null ){
+            sessionType = currentSession.getSessionType() ;
+            topic = currentSession.getTopic() ;
+            book = currentSession.getBook() ;
+            problem = currentSession.getLastProblem() ;
         }
         
         if( sessionType == null ) {
@@ -726,10 +774,10 @@ public class SessionControlTile extends SessionControlTileUI
         String sessionType = null ;
         
         if( changeSelection != null ) {
-            sessionType = changeSelection.sessionType ;
+            sessionType = changeSelection.getSessionType() ;
         }
-        else if( session != null ){
-            sessionType = session.getSessionType() ;
+        else if( currentSession != null ){
+            sessionType = currentSession.getSessionType() ;
         }
 
         sTimeLbl.setText( "00:00:00" ) ;
@@ -745,8 +793,7 @@ public class SessionControlTile extends SessionControlTileUI
         numPigeonLbl.setText( "" ) ;
         
         lTimeLbl.setText( "" ) ;
-        sumsLeftLbl.setText( "" ) ;
-
+        
         if( sessionType != null && 
             sessionType.equals( Session.TYPE_EXERCISE ) ) {
             
@@ -761,6 +808,15 @@ public class SessionControlTile extends SessionControlTileUI
             numPigeonLbl.setText( "0" ) ;
             
             lTimeLbl.setText( "00:00" ) ;
+            updateNumProblemsLeftInChapterLabel( 0 ) ;
         }
+    }
+
+    public Topic getChangeSelectionTopic() {
+        if( this.changeSelection != null ) {
+            return this.changeSelection.getTopic() ;
+        }
+        
+        return null ;
     }
 }

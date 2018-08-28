@@ -14,7 +14,6 @@ import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
-import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.screenlet.daytime.DayTimeScreenlet ;
 import com.sandy.sconsole.screenlet.dummy.DummyScreenlet ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
@@ -107,12 +106,6 @@ public class SConsole implements ApplicationContextAware {
     }
     
     public void testJPA() {
-        
-        BookRepository bookRepo = APP_CTX.getBean( BookRepository.class ) ;
-        List<Integer> bookIds = bookRepo.findProblemBooksForTopic( 149 ) ;
-        for( Integer bookId : bookIds ) {
-            log.debug( bookRepo.findById( bookId ) ) ;
-        }
     }
     
     @Override
@@ -149,7 +142,7 @@ public class SConsole implements ApplicationContextAware {
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
         
-//        log.debug( "----------- Test JPA ------------------" ) ;
+        log.debug( "----------- Test JPA ------------------" ) ;
 //        app.testJPA() ;
     }
 }

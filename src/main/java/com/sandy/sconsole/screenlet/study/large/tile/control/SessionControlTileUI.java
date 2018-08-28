@@ -49,7 +49,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     private static final int NUM_COL = 12 ;
     
     protected static Color TYPE_LBL_FG       = Color.GRAY ;
-    protected static Color TOPIC_LBL_FG      = Color.GRAY ;
+    protected static Color TOPIC_LBL_FG      = Color.LIGHT_GRAY ;
     protected static Color BOOK_LBL_FG       = Color.GRAY ;
     protected static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
     protected static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
@@ -138,7 +138,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         pmMap.put( typePnl,      new LabelMeta( typePnl,      typeLbl,      "0,0,1,2",  25F, TYPE_LBL_FG,       true  ) ) ;
         pmMap.put( topicPnl,     new LabelMeta( topicPnl,     topicLbl,     "2,0,11,1", 50F, TOPIC_LBL_FG,      false ) ) ;
         pmMap.put( bookPnl,      new LabelMeta( bookPnl,      bookLbl,      "2,2,9,2",  40F, BOOK_LBL_FG,       false ) ) ;
-        pmMap.put( sumsLeftPnl,  new LabelMeta( sumsLeftPnl,  sumsLeftLbl,  "10,2,11,2",30F, SUMS_LEFT_LBL_FG,  false ) ) ;
+        pmMap.put( sumsLeftPnl,  new LabelMeta( sumsLeftPnl,  sumsLeftLbl,  "10,2,11,2",35F, SUMS_LEFT_LBL_FG,  false ) ) ;
         pmMap.put( problemPnl,   new LabelMeta( problemPnl,   problemLbl,   "0,3,7,4",  40F, PROBLEM_LBL_FG,    true  ) ) ;
         pmMap.put( sTimePnl,     new LabelMeta( sTimePnl,     sTimeLbl,     "8,3,11,4", 60F, STIME_LBL_FG,      true  ) ) ;
         pmMap.put( numSkipPnl,   new LabelMeta( numSkipPnl,   numSkipLbl,   "0,5,1,6",  60F, NUM_SKIP_LBL_FG,   true  ) ) ;
@@ -241,7 +241,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     protected void setSessionTypeIcon( String type ) {
         
-        if( type.equals( Session.TYPE_EXERCISE ) ) {
+        if( type == null ) {
+            typeLbl.setIcon( null ) ;
+        }
+        else if( type.equals( Session.TYPE_EXERCISE ) ) {
             typeLbl.setIcon( exerciseIcon ) ;
         }
         else if( type.equals( Session.TYPE_THEORY ) ) {
@@ -252,8 +255,13 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
 
-    protected void setTopicLabel( String name ) {
-        topicLbl.setText( name ) ;
+    protected void setTopicLabel( Topic topic ) {
+        if( topic == null ) {
+            topicLbl.setText( "" ) ;
+        }
+        else {
+            topicLbl.setText( topic.getTopicName() ) ;
+        }
     }
     
     protected void highlightPanelValidity( JPanel panel, boolean valid ) {

@@ -113,6 +113,7 @@ public class Session {
     
     public Session clone() {
         Session clone = new Session() ;
+        clone.setId( id ) ;
         clone.setTopic( topic ) ;
         clone.setBook( book ) ;
         clone.setLastProblem( lastProblem ) ;
