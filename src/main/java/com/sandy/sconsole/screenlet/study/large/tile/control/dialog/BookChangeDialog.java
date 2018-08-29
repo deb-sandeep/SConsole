@@ -18,12 +18,12 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     private BookRepository bookRepo = null ;
     
-    private SessionControlTile controlTile = null ;
+    private SessionControlTile control = null ;
     
     public BookChangeDialog( SessionControlTile controlTile ) {
         super( "Choose book", new BookChangeListCellRenderer() ) ;
 
-        this.controlTile = controlTile ;
+        this.control = controlTile ;
         bookRepo = SConsole.getAppContext().getBean( BookRepository.class ) ;
     }
 
@@ -31,7 +31,7 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
     protected List<Book> getListItems() {
         List<Book> books = new ArrayList<Book>() ;
         
-        Topic selectedTopic = controlTile.getChangeSelectionTopic() ;
+        Topic selectedTopic = control.getChangeSelectionTopic() ;
         if( selectedTopic != null ) {
             List<Integer> bookIds = bookRepo.findProblemBooksForTopic( selectedTopic.getId() ) ;
             bookRepo.findAllById( bookIds ).forEach( e -> books.add( e )) ;
@@ -41,6 +41,12 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     @Override
     protected Book getDefaultSelectedEntity() {
-        return controlTile.getChangeSelectionBook() ;
+        return control.getChangeSelectionBook() ;
+    }
+    
+    @Override
+    public void handleSelectNavKey() {
+        super.handleSelectNavKey() ;
+        control.handleNewBookSelection( (Book)getReturnValue() ) ;
     }
 }

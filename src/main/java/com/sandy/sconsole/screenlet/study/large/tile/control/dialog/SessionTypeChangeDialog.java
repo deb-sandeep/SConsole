@@ -13,6 +13,7 @@ import org.apache.log4j.* ;
 
 import com.sandy.sconsole.core.frame.* ;
 import com.sandy.sconsole.core.remote.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
 @SuppressWarnings( "serial" )
 public class SessionTypeChangeDialog extends AbstractDialogPanel {
@@ -26,9 +27,13 @@ public class SessionTypeChangeDialog extends AbstractDialogPanel {
     private Icon lectureIcon  = null ;
     private Icon cancelIcon   = null ;
     
+    private SessionControlTile control = null ;
+    
 
-    public SessionTypeChangeDialog() {
+    public SessionTypeChangeDialog( SessionControlTile control ) {
         super( "Session Type Change" ) ;
+        
+        this.control = control ;
         
         setUpUI() ;
         keyProcessor.disableAllKeys() ;
@@ -50,6 +55,7 @@ public class SessionTypeChangeDialog extends AbstractDialogPanel {
     private void setSessionType( String type ) {
         this.sessionType = type ;
         super.hideDialog() ;
+        control.handleNewSessionTypeSelection( type ) ;
     }
      
     private void setUpUI() {

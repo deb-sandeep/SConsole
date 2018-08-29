@@ -19,12 +19,12 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
 
     private ProblemRepository problemRepo = null ;
     
-    private SessionControlTile controlTile = null ;
+    private SessionControlTile control = null ;
     
     public ProblemChangeDialog( SessionControlTile controlTile ) {
         super( "Choose problem", new ProblemChangeListCellRenderer() ) ;
 
-        this.controlTile = controlTile ;
+        this.control = controlTile ;
         problemRepo = SConsole.getAppContext().getBean( ProblemRepository.class ) ;
     }
 
@@ -32,8 +32,8 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
     protected List<Problem> getListItems() {
         List<Problem> problems = new ArrayList<>() ;
         
-        Topic topic = controlTile.getChangeSelectionTopic() ;
-        Book book = controlTile.getChangeSelectionBook() ;
+        Topic topic = control.getChangeSelectionTopic() ;
+        Book book = control.getChangeSelectionBook() ;
         
         if( (topic != null) && (book != null) ) {
             problems = problemRepo.findUnsolvedProblems( topic.getId(), book.getId() ) ;
@@ -43,6 +43,12 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
 
     @Override
     protected Problem getDefaultSelectedEntity() {
-        return controlTile.getChangeSelectionProblem() ;
+        return control.getChangeSelectionProblem() ;
+    }
+    
+    @Override
+    public void handleSelectNavKey() {
+        super.handleSelectNavKey() ;
+        control.handleNewProblemSelection( (Problem)getReturnValue() ) ;
     }
 }

@@ -1,6 +1,8 @@
 package com.sandy.sconsole.api.remote;
 
-import java.util.* ;
+import java.util.HashMap ;
+import java.util.Map ;
+import java.util.Stack ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.http.HttpStatus ;
@@ -45,11 +47,11 @@ public class RemoteController {
         }
     }
 
-    private ResponseEntity<String> processKeyEvent( KeyEvent event ) 
+    public ResponseEntity<String> processKeyEvent( KeyEvent event ) 
         throws Exception {
         
-        log.debug( "\n--------------------------------------------------" );
-        log.debug( "Key " + event.getKeyId() + " received at " + new Date() );
+        log.debug( "\n\n--------------------------------------------------" );
+        log.debug( "KeyEvent received " + event.getKeyId() ) ;
         
         if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
             SConsole.getApp()
@@ -66,7 +68,7 @@ public class RemoteController {
             else {
                 RemoteKeyEventProcessor processor = null ;
                 processor = processors.peek() ;
-                log.debug( "Routing key to - " + processor.getName() ) ;
+                log.debug( "Routing to key processor - " + processor.getName() ) ;
                 processor.processRemoteKeyEvent( event ) ;
             }
         }
@@ -96,6 +98,8 @@ public class RemoteController {
     private String getFnLabelsJSON() 
         throws Exception {
         
+        log.debug( "Activated function keys for next interaction:" ) ;
+        
         ObjectMapper mapper = new ObjectMapper() ;
         
         RemoteKeyEventProcessor processor = null ;
@@ -119,9 +123,12 @@ public class RemoteController {
             
             if( !keyId.equals( RemoteKeyCode.FN_CANCEL ) ) {
                 fnLabels.put( keyId.substring( keyId.indexOf( '@' )+1 ), label ) ; 
+                
+                if( processor.isKeyEnabled( keyId ) ) {
+                    log.debug( "\t" + keyId + " -> " + label ) ;
+                }
             }
         }
-        
         return mapper.writeValueAsString( fnLabels ) ;
     }
 }

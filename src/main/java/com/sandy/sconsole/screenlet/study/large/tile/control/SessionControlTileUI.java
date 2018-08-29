@@ -238,6 +238,26 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     protected void setCurrentUseCase( UseCase uc ) {
         this.currentUseCase = uc ;
     }
+
+    // ----------------- Panel content manipulation [Starts] -------------------
+    
+    protected void cleanControlPanel() {
+        setSessionTypeIcon( null ) ;
+        setTopicLabel( null ) ;
+        setBookLabel( null ) ;
+        setProblemLabel( null ) ;
+        
+        updateNumProblemsLeftInBookLabel( -1 ) ;
+        updateSessionTimeLabel( -1 ) ;
+        updateLapTimeLabel( -1 ) ;
+        updateNumSkippedLabel( -1 ) ;
+        updateNumSolvedLabel( -1 ) ;
+        updateNumRedoLabel( -1 ) ;
+        updateNumPigeonLabel( -1 ) ;
+        
+        setBtn1( Btn1Type.CLEAR ) ;
+        setBtn2( Btn2Type.CANCEL ) ;    
+    }
     
     protected void setSessionTypeIcon( String type ) {
         
@@ -264,18 +284,12 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
-    protected void highlightPanelValidity( JPanel panel, boolean valid ) {
-        if( !valid ) {
-            panel.setBorder( INVALID_PANEL_BORDER ) ;
+    protected void setBookLabel( Book book ) {
+        if( book != null ) {
+            bookLbl.setText( book.getBookShortName() ) ;
         }
         else {
-            LabelMeta meta = pmMap.get( panel ) ;
-            if( meta.border ) {
-                panel.setBorder( TILE_BORDER ) ;
-            }
-            else {
-                panel.setBorder( null ) ;
-            }
+            bookLbl.setText( "" ) ;
         }
     }
     
@@ -299,48 +313,66 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
 
-    protected void setBookLabel( Book book ) {
-        if( book != null ) {
-            bookLbl.setText( book.getBookShortName() ) ;
+    protected void updateNumProblemsLeftInBookLabel( int num ) {
+        if( num < 0 ) {
+            sumsLeftLbl.setText( "" ) ;
         }
         else {
-            bookLbl.setText( "" ) ;
+            sumsLeftLbl.setText( "[" + Integer.toString( num ) + "]" ) ;
         }
     }
     
-    protected void activateProblemOutcomeButtons( boolean activate ) {
-        
-        if( activate ) {
-            btnSkipPnl.setBackground( FN_A_COLOR ) ;
-            btnSolvedPnl.setBackground( FN_B_COLOR ) ;
-            btnRedoPnl.setBackground( FN_C_COLOR ) ;
-            btnPigeonPnl.setBackground( FN_D_COLOR ) ;
-
-            btnSkipLbl.setForeground( Color.WHITE ) ;
-            btnSolvedLbl.setForeground( Color.WHITE ) ;
-            btnRedoLbl.setForeground( Color.WHITE ) ;
-            btnPigeonLbl.setForeground( Color.WHITE ) ;
-
-            btnSkipLbl.setText( "Skip [A]" ) ;
-            btnSolvedLbl.setText( "Solved [B]" ) ;
-            btnRedoLbl.setText( "Redo [C]" ) ;
-            btnPigeonLbl.setText( "Pigeon [D]" ) ;
+    protected void updateSessionTimeLabel( long seconds ) {
+        if( seconds < 0 ) {
+            sTimeLbl.setText( "" ) ;
         }
         else {
-            btnSkipPnl.setBackground( BG_COLOR ) ;
-            btnSolvedPnl.setBackground( BG_COLOR ) ;
-            btnRedoPnl.setBackground( BG_COLOR ) ;
-            btnPigeonPnl.setBackground( BG_COLOR ) ;
-
-            btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
-            btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
-            btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
-            btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
-
-            btnSkipLbl.setText( "Skip" ) ;
-            btnSolvedLbl.setText( "Solved" ) ;
-            btnRedoLbl.setText( "Redo" ) ;
-            btnPigeonLbl.setText( "Pigeon" ) ;
+            sTimeLbl.setText( getElapsedTimeLabel( seconds, true ) ) ;
+        }
+    }
+    
+    protected void updateLapTimeLabel( long seconds ) {
+        if( seconds < 0 ) {
+            lTimeLbl.setText( "" ) ;
+        }
+        else {
+            lTimeLbl.setText( getElapsedTimeLabel( seconds, false ) ) ;
+        }
+    }
+    
+    protected void updateNumSkippedLabel( int num ) {
+        if( num < 0 ) {
+            numSkipLbl.setText( "" ) ;
+        }
+        else {
+            numSkipLbl.setText( Integer.toString( num ) ) ;
+        }
+    }
+    
+    protected void updateNumSolvedLabel( int num ) {
+        if( num < 0 ) {
+            numSolvedLbl.setText( "" ) ;
+        }
+        else {
+            numSolvedLbl.setText( Integer.toString( num ) ) ;
+        }
+    }
+    
+    protected void updateNumRedoLabel( int num ) {
+        if( num < 0 ) {
+            numRedoLbl.setText( "" ) ;
+        }
+        else {
+            numRedoLbl.setText( Integer.toString( num ) ) ;
+        }
+    }
+    
+    protected void updateNumPigeonLabel( int num ) {
+        if( num < 0 ) {
+            numPigeonLbl.setText( "" ) ;
+        }
+        else {
+            numPigeonLbl.setText( Integer.toString( num ) ) ;
         }
     }
     
@@ -393,6 +425,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
+    // ----------------- Panel content manipulation [Ends] -------------------
+    
     private String getElapsedTimeLabel( long seconds, boolean longFormat ) {
         int secs    = (int)(seconds) % 60 ;
         int minutes = (int)((seconds / 60) % 60) ;
@@ -404,36 +438,55 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         return String.format("%02d:%02d", minutes, secs ) ;
     }
     
-    protected void updateSessionTimeLabel( long seconds ) {
-        sTimeLbl.setText( getElapsedTimeLabel( seconds, true ) ) ;
-    }
-    
-    protected void updateLapTimeLabel( long seconds ) {
-        lTimeLbl.setText( getElapsedTimeLabel( seconds, false ) ) ;
-    }
-    
-    protected void updateNumSkippedLabel( int num ) {
-        numSkipLbl.setText( Integer.toString( num ) ) ;
-    }
-    
-    protected void updateNumSolvedLabel( int num ) {
-        numSolvedLbl.setText( Integer.toString( num ) ) ;
-    }
-    
-    protected void updateNumRedoLabel( int num ) {
-        numRedoLbl.setText( Integer.toString( num ) ) ;
-    }
-    
-    protected void updateNumPigeonLabel( int num ) {
-        numPigeonLbl.setText( Integer.toString( num ) ) ;
-    }
-    
-    protected void updateNumProblemsLeftInChapterLabel( int num ) {
-        if( num < 0 ) {
-            sumsLeftLbl.setText( "" ) ;
+    protected void activateProblemOutcomeButtons( boolean activate ) {
+        
+        if( activate ) {
+            btnSkipPnl.setBackground( FN_A_COLOR ) ;
+            btnSolvedPnl.setBackground( FN_B_COLOR ) ;
+            btnRedoPnl.setBackground( FN_C_COLOR ) ;
+            btnPigeonPnl.setBackground( FN_D_COLOR ) ;
+
+            btnSkipLbl.setForeground( Color.WHITE ) ;
+            btnSolvedLbl.setForeground( Color.WHITE ) ;
+            btnRedoLbl.setForeground( Color.WHITE ) ;
+            btnPigeonLbl.setForeground( Color.WHITE ) ;
+
+            btnSkipLbl.setText( "Skip [A]" ) ;
+            btnSolvedLbl.setText( "Solved [B]" ) ;
+            btnRedoLbl.setText( "Redo [C]" ) ;
+            btnPigeonLbl.setText( "Pigeon [D]" ) ;
         }
         else {
-            sumsLeftLbl.setText( "[" + Integer.toString( num ) + "]" ) ;
+            btnSkipPnl.setBackground( BG_COLOR ) ;
+            btnSolvedPnl.setBackground( BG_COLOR ) ;
+            btnRedoPnl.setBackground( BG_COLOR ) ;
+            btnPigeonPnl.setBackground( BG_COLOR ) ;
+
+            btnSkipLbl.setForeground( Color.DARK_GRAY ) ;
+            btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
+            btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
+            btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
+
+            btnSkipLbl.setText( "Skip" ) ;
+            btnSolvedLbl.setText( "Solved" ) ;
+            btnRedoLbl.setText( "Redo" ) ;
+            btnPigeonLbl.setText( "Pigeon" ) ;
         }
     }
+    
+    protected void highlightPanelValidity( JPanel panel, boolean valid ) {
+        if( !valid ) {
+            panel.setBorder( INVALID_PANEL_BORDER ) ;
+        }
+        else {
+            LabelMeta meta = pmMap.get( panel ) ;
+            if( meta.border ) {
+                panel.setBorder( TILE_BORDER ) ;
+            }
+            else {
+                panel.setBorder( null ) ;
+            }
+        }
+    }
+    
 }

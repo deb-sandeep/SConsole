@@ -2,12 +2,13 @@ package com.sandy.sconsole.core.remote;
 
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
 
-import java.util.* ;
+import java.util.Date ;
+import java.util.HashMap ;
+import java.util.Map ;
 
-import org.apache.log4j.* ;
-import org.jfree.util.* ;
+import org.apache.log4j.Logger ;
 
-import com.sandy.sconsole.api.remote.* ;
+import com.sandy.sconsole.api.remote.KeyEvent ;
 
 public class RemoteKeyEventProcessor {
 
@@ -17,6 +18,7 @@ public class RemoteKeyEventProcessor {
     private Map<String, Boolean> activationMap = null ;
     private Map<String, Handler> fnHandlers = new HashMap<>() ;
     private RemoteKeyListener listener = null ;
+    private Date lastKeyReceivedTime = null ;
     
     public RemoteKeyEventProcessor( String name, RemoteKeyListener listener ) {
         if( name != null ) {
@@ -104,13 +106,14 @@ public class RemoteKeyEventProcessor {
     }
     
     public final void processRemoteKeyEvent( KeyEvent event ) {
+        
+        this.lastKeyReceivedTime = new Date() ;
 
         if( !isKeyEnabled( event.getKeyId() ) ) {
             log.debug( "Key " + event.getKeyId() + " deactivated. Ignoring." ) ;
             return ;
         }
         
-        log.debug( "Processing key " + event.getKeyId() ) ;
         String type = event.getBtnType() ;
         String code = event.getBtnCode() ;
         
@@ -154,13 +157,14 @@ public class RemoteKeyEventProcessor {
     
     public void processFunctionKey( String keyId ) {
         
-        Log.debug( "Processing function key " + keyId ) ;
+        log.debug( "Processing function key " + keyId ) ;
         if( !activationMap.containsKey( keyId ) ) {
             throw new IllegalArgumentException( "No function key by ID : " + keyId ) ;
         }
         
         Handler listener = fnHandlers.get( keyId ) ;
         if( listener != null ) {
+            log.debug( "Function is mapped to - " + listener.getBtnHint() + "\n" ) ;
             listener.handle() ;
         }
     }
@@ -178,5 +182,16 @@ public class RemoteKeyEventProcessor {
             }
         }
         return buffer.toString() ;
+    }
+    
+    public long getTimeSinceLastKeyReceived() {
+        if( this.lastKeyReceivedTime == null ) {
+            return -1 ;
+        }
+        return ( new Date().getTime() - lastKeyReceivedTime.getTime() )/1000 ;
+    }
+
+    public void clearLastKeyReceivedTime() {
+        this.lastKeyReceivedTime = null ;
     }
 }

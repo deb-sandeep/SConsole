@@ -91,9 +91,14 @@ public class ScreenletContainer extends JPanel {
     
     public void handleScreenletSelectionEvent( String screenId ) {
         
+        log.debug( "Trying to maximize screenlet at index " + screenId ) ;
+        
         int index = Integer.parseInt( screenId ) ;
         if( screenlets.size() >= index ) {
-            maximizeScreenlet( screenlets.get( index - 1 ) ) ;
+            Screenlet screenlet = screenlets.get( index-1 ) ;
+            
+            log.debug( "Maximizing screenlet " + screenlet.getDisplayName() ) ;
+            maximizeScreenlet( screenlet ) ;
         }
     }
 }

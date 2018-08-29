@@ -1,20 +1,19 @@
 package com.sandy.sconsole.core.frame;
 
 import java.awt.* ;
-import java.awt.image.* ;
+import java.awt.image.BufferedImage ;
 
-import javax.swing.* ;
+import javax.swing.JFrame ;
 
-import org.apache.log4j.* ;
+import org.apache.log4j.Logger ;
 
-import com.sandy.common.ui.* ;
-import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.common.ui.SwingUtils ;
+import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 
 @SuppressWarnings( "serial" )
 public class SConsoleFrame extends JFrame {
     
-    @SuppressWarnings( "unused" )
-    private static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
+    static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
     
     private Container contentPane = null ;
     private ScreenletContainer screenletPanel = null ;
@@ -48,7 +47,7 @@ public class SConsoleFrame extends JFrame {
         contentPane.add( screenletPanel, BorderLayout.WEST ) ;
         
         if( SwingUtils.getScreenWidth() > 1920 ) {
-            SwingUtils.centerOnScreen( this, 1920, 1080 ) ;
+            this.setBounds( 0, 0, 1920, 1080 ) ;
         }
         else {
             SwingUtils.setMaximized( this ) ;
@@ -93,6 +92,9 @@ public class SConsoleFrame extends JFrame {
     }
 
     public void handleScreenletSelectionEvent( String btnCode ) {
+        
+        log.debug( "Handling screen selection - " + btnCode ) ;
+        
         switch( btnCode ) {
             case "ShowHide":
                 toggleScreenletPanelVisibility() ;
@@ -104,6 +106,8 @@ public class SConsoleFrame extends JFrame {
     }
     
     private void toggleScreenletPanelVisibility() {
+        
+        log.debug( "\tToggling screenlet visibility" ) ;
         
         BorderLayout layout = (BorderLayout)contentPane.getLayout() ;
         if( layout.getLayoutComponent( BorderLayout.WEST ) == null ) {

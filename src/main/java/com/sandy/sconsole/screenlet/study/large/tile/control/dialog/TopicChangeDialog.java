@@ -17,12 +17,12 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
     private String subjectName = null ;
     private TopicRepository topicRepo = null ;
     
-    private SessionControlTile controlTile = null ;
+    private SessionControlTile control = null ;
     
     public TopicChangeDialog( SessionControlTile controlTile ) {
         super( "Choose topic", new TopicChangeListCellRenderer() ) ;
 
-        this.controlTile = controlTile ;
+        this.control = controlTile ;
         this.subjectName = controlTile.getScreenlet().getDisplayName() ;
         
         topicRepo = SConsole.getAppContext().getBean( TopicRepository.class ) ;
@@ -35,6 +35,12 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
 
     @Override
     protected Topic getDefaultSelectedEntity() {
-        return controlTile.getChangeSelectionTopic() ;
+        return control.getChangeSelectionTopic() ;
+    }
+    
+    @Override
+    public void handleSelectNavKey() {
+        super.handleSelectNavKey() ;
+        control.handleNewTopicSelection( (Topic)getReturnValue() ) ;
     }
 }

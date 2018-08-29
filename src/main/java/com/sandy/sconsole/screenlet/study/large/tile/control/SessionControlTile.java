@@ -81,6 +81,8 @@ public class SessionControlTile extends SessionControlTileUI
     
     private RemoteController controller = null ;
     
+    protected Date onScreenStartTime = null ;
+    
     class ChangeSelection {
         
         private String sessionType = null ;
@@ -147,7 +149,7 @@ public class SessionControlTile extends SessionControlTileUI
         remoteController = ctx.getBean( RemoteController.class ) ;
 
         pauseDialog         = new PauseDialog( this ) ;
-        typeChangeDialog    = new SessionTypeChangeDialog() ;
+        typeChangeDialog    = new SessionTypeChangeDialog( this ) ;
         bookChangeDialog    = new BookChangeDialog( this ) ;
         topicChangeDialog   = new TopicChangeDialog( this ) ;
         problemChangeDialog = new ProblemChangeDialog( this ) ;
@@ -160,11 +162,14 @@ public class SessionControlTile extends SessionControlTileUI
     protected void screenletMaximized() {
         super.screenletMaximized() ;
         remoteController.pushKeyProcessor( keyProcessor ) ; 
+        this.onScreenStartTime = new Date() ;
     }
     
     protected void screenletMinimized() {
         super.screenletMinimized() ;
         remoteController.popKeyProcessor() ;
+        this.onScreenStartTime = null ;
+        keyProcessor.clearLastKeyReceivedTime() ;
     }
     
     protected void screenletRunStateChanged( Screenlet screenlet ) {
@@ -174,10 +179,19 @@ public class SessionControlTile extends SessionControlTileUI
     
     public void populateLastSessionDetails( Session ls ) {
         
+        log.debug( "Populating last session details" ) ;
+        log.debug( ls ) ;
+        
+        log.debug( "Disabled all keys" ) ;
         keyProcessor.disableAllKeys() ;
         
+        log.debug( "Cleaning the control panel" ) ;
+        cleanControlPanel() ;
+        
+        log.debug( "Deactivating problem outcome buttoms" ) ;
         activateProblemOutcomeButtons( false ) ;
         
+        log.debug( "Setting button 2 to CHANGE" ) ;
         setBtn2( Btn2Type.CHANGE ) ;
         
         this.runTime = 0 ;
@@ -187,11 +201,13 @@ public class SessionControlTile extends SessionControlTileUI
         
         // Note that current session does not have an identifier till it
         // is first played.
+        log.debug( "Creating a new (unsaved) session." ) ;
         currentSession = new Session() ;
         
         if( ls == null ) {
             // There has been no last session. Keep everything blank and
             // enable only the change button.
+            log.debug( "Last session is null. Clearing the control tile." ) ;
             setBtn1( Btn1Type.CLEAR ) ;
             
             setSessionType( null ) ;
@@ -199,16 +215,20 @@ public class SessionControlTile extends SessionControlTileUI
             setBook( null ) ;
             setProblem( null ) ;
             
-            updateNumProblemsLeftInChapterLabel( -1 ) ;
+            updateNumProblemsLeftInBookLabel( -1 ) ;
         }
         else {
             // Use the last session as a template for this session.
             String sessionType = ls.getSessionType() ;
+            
+            log.debug( "Copying values of session type, topic and session time" ) ;
             setSessionType( ls.getSessionType() ) ;
             setTopic( ls.getTopic() ) ;
             updateSessionTimeLabel( ls.getDuration() ) ;
             
             if( sessionType.equals( Session.TYPE_EXERCISE ) ) {
+                
+                log.debug( "Last sesion was an exercise. Populate exercise details." );
                 setBook( ls.getBook() ) ;
                 setProblem( ls.getLastProblem() ) ;
                 
@@ -220,13 +240,12 @@ public class SessionControlTile extends SessionControlTileUI
                 loadUnsolvedProblems() ;
                 setNextProblem() ;
             }
-            else {
-                setBook( ls.getBook() ) ;
-                currentSession.setLastProblem( ls.getLastProblem() ) ;
-            }
         }
-        
+
+        log.debug( "The session is in a stopped state" ) ;
         setCurrentUseCase( UseCase.STOP_SESSION ) ;
+        
+        log.debug( "Validating session details and activating play button" ) ;
         validateSessionDetailsAndActivatePlay() ;
     }
     
@@ -323,7 +342,7 @@ public class SessionControlTile extends SessionControlTileUI
         
         log.debug( "Session has " + unsolvedProblems.size() + " unsolved problems." ) ;
         numProblemsLeftInChapter = unsolvedProblems.size() ;
-        updateNumProblemsLeftInChapterLabel( unsolvedProblems.size() ) ;
+        updateNumProblemsLeftInBookLabel( unsolvedProblems.size() ) ;
     }
 
     protected void activateProblemOutcomeButtons( boolean activate ) {
@@ -354,6 +373,29 @@ public class SessionControlTile extends SessionControlTileUI
         }
         else if( runState == PAUSED ) {
             totalPauseTime++ ;
+        }
+        else if( runState == STOPPED ) {
+            
+            if( onScreenStartTime != null ) {
+                long idleTime = keyProcessor.getTimeSinceLastKeyReceived() ;
+                
+                if( idleTime < 0 ) {
+                    idleTime = ( new Date().getTime() - onScreenStartTime.getTime() )/1000 ;
+                }
+                
+                if(  idleTime > 60*5 ) {
+                    log.debug( "\n\n5 minutes of inactivity detected." ) ;
+                    log.debug( "Reverting to calendar screenlet." ) ;
+                    try {
+                        SConsole.getApp()
+                                .getFrame()
+                                .handleScreenletSelectionEvent( "1" ) ;
+                    }
+                    catch( Exception e ) {
+                        log.error( "Could not process key", e ) ;
+                    }
+                }
+            }
         }
     }
     
@@ -409,24 +451,57 @@ public class SessionControlTile extends SessionControlTileUI
     // --------------- Remote key processing [End] -----------------------------
 
     private void play() {
+        
         log.debug( "Starting the session" ) ;
         
         if( getCurrentUseCase() == UseCase.CHANGE_SESSION ) {
+            
+            log.debug( "Play is being executed from CHANGE_SESSION use case" ) ;
+            log.debug( "Creating a new session from the change selection data" ) ;
+            
             currentSession = changeSelection.createSession() ;
+            log.debug( "Current session = " ) ;
+            log.debug( currentSession ) ;
+            
             changeSelection = null ;
-            loadUnsolvedProblems() ;
-            setNextProblem() ;
+            
+            if( currentSession.getSessionType()
+                              .equals( Session.TYPE_EXERCISE ) ) {
+                
+                log.debug( "An exercise is chosen. Loading unsolved problems" ) ;
+                loadUnsolvedProblems() ;
+                
+                log.debug( "Setting the next problem" ) ;
+                setNextProblem() ;
+            }
+            
+            log.debug( "CHANGE_SESSION use case ending. " + 
+                       "Deactivating control panel for change" ) ;
             deactivateControlPanelForChange() ;
         }
         
-        resume() ;
+        log.debug( "Disabling all the keys" ) ;
+        keyProcessor.disableAllKeys() ;
         
+        if( currentSession.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            log.debug( "Session is of type Exercise. " + 
+                       "Activating problem outcome buttons" ) ;
+            activateProblemOutcomeButtons( true ) ;
+        }
+        
+        log.debug( "Enabling pause and stop buttons" ) ;
+        setBtn1( Btn1Type.PAUSE ) ;
+        setBtn2( Btn2Type.STOP ) ;
+        
+        log.debug( "Creating the session in the database" ) ;
         Date now = new Date() ;
         currentSession.setStartTime( new Timestamp( now.getTime() ) ) ;
         saveSession() ;
+        
         this.lastSession = currentSession ;
 
         if( currentSession.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            log.debug( "Session is of exercise type. Setting the problem stats to 0" ) ;
             updateNumSkippedLabel( 0 ) ;
             updateNumSolvedLabel( 0 ) ;
             updateNumRedoLabel( 0 ) ;
@@ -459,6 +534,7 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void resume() {
+        
         log.debug( "Resuming the session" ) ;
         keyProcessor.disableAllKeys() ;
         
@@ -529,7 +605,7 @@ public class SessionControlTile extends SessionControlTileUI
         setNextProblem() ;
         
         numProblemsLeftInChapter-- ;
-        updateNumProblemsLeftInChapterLabel( numProblemsLeftInChapter ) ;
+        updateNumProblemsLeftInBookLabel( numProblemsLeftInChapter ) ;
     }
     
     private void redoProblem() {
@@ -557,6 +633,7 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     protected void deactivateControlPanelForChange() {
+        
         log.debug( "De-activating control panel for change." ) ;
         
         typePnl.setBackground( BG_COLOR ) ;
@@ -577,7 +654,27 @@ public class SessionControlTile extends SessionControlTileUI
         highlightPanelValidity( bookPnl, true ) ;
         highlightPanelValidity( problemPnl, true ) ;
     }
-
+    
+    private void refreshUnsolvedProblemCount() {
+        
+        int numProblemsLeft = -1 ;
+        if( changeSelection.getTopic() != null &&
+            changeSelection.getBook() != null ) {
+            
+            log.debug( "Finding num unsolved problems for " ) ;
+            log.debug( "\tTopic = " + changeSelection.getTopic().getId() ) ;
+            log.debug( "\tBook = " + changeSelection.getBook().getId() ) ;
+            
+            numProblemsLeft = problemRepo.findUnsolvedProblemCount( 
+                                            changeSelection.getTopic().getId(), 
+                                            changeSelection.getBook().getId() ) ;
+            
+            log.debug( "Num unsolved problems found = " + numProblemsLeft );
+        }
+        
+        updateNumProblemsLeftInBookLabel( numProblemsLeft ) ;
+    }
+    
     protected void activateControlPanelForChange( String sessionType ) {
         
         log.debug( "Activating control panel for change." ) ;
@@ -630,6 +727,7 @@ public class SessionControlTile extends SessionControlTileUI
         }
         
         changeSelection = new ChangeSelection( sessionBefore ) ;
+        
         activateControlPanelForChange( changeSelection.getSessionType() ) ;
         
         validateSessionDetailsAndActivatePlay() ;
@@ -637,24 +735,25 @@ public class SessionControlTile extends SessionControlTileUI
         setCurrentUseCase( UseCase.CHANGE_SESSION ) ;
     }
     
+    // --------------- Dialog interactions [Start] ---------------------------
+
     private void changeSessionType() {
+        
         log.debug( "Executing changeSessionType" ) ;
         
         controller.pushKeyProcessor( typeChangeDialog.getKeyProcessor() ) ;
         
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                invokeChangeSessionTypeAsync() ;
-            }
-        });
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( typeChangeDialog ) ;
+        }});
     }
     
-    private void invokeChangeSessionTypeAsync() {
-        
-        SConsoleFrame frame = SConsole.getApp().getFrame() ;
-        String type = ( String )frame.showDialog( typeChangeDialog ) ;
+    public void handleNewSessionTypeSelection( String type ) {
         
         log.debug( "New session type chosen = " + type ) ;
+        
         if( type != null ) {
             changeSelection.setSessionType( type ) ;
             
@@ -671,34 +770,35 @@ public class SessionControlTile extends SessionControlTileUI
                 changeSelection.setBook( null ) ;
             }
         }
-        
         validateSessionDetailsAndActivatePlay() ;
     }
     
     private void changeTopic() {
+        
         log.debug( "Executing changeTopic" ) ;
+        
         controller.pushKeyProcessor( topicChangeDialog.getKeyProcessor() ) ;
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                invokeChangeTopicAsync() ;
-            }
-        });
+        
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( topicChangeDialog ) ;
+        }});
     }
     
-    private void invokeChangeTopicAsync() {
-        
-        SConsoleFrame frame = SConsole.getApp().getFrame() ;
-        Topic selectedTopic = ( Topic )frame.showDialog( topicChangeDialog ) ;
+    public void handleNewTopicSelection( Topic selectedTopic ) {
         
         log.debug( "New topic chosen = " + selectedTopic ) ;
         
         if( selectedTopic != null ) {
+            
             changeSelection.setTopic( selectedTopic ) ;
+            changeSelection.setProblem( null ) ;
+            
             if( changeSelection.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
                 populatePredictionsForBookAndProblem( selectedTopic.getId() ) ;
             }
         }
-        
         validateSessionDetailsAndActivatePlay() ;
     }
     
@@ -738,42 +838,23 @@ public class SessionControlTile extends SessionControlTileUI
         refreshUnsolvedProblemCount() ;
     }
     
-    private void refreshUnsolvedProblemCount() {
-        
-        int numProblemsLeft = -1 ;
-        if( changeSelection.getTopic() != null &&
-                changeSelection.getBook() != null ) {
-            log.debug( "Finding num unsolved problems for " ) ;
-            log.debug( "\tTopic = " + changeSelection.getTopic().getId() ) ;
-            log.debug( "\tBook = " + changeSelection.getBook().getId() ) ;
-            
-            numProblemsLeft = problemRepo.findUnsolvedProblemCount( 
-                    changeSelection.getTopic().getId(), 
-                    changeSelection.getBook().getId() ) ;
-            
-            log.debug( "Num unsolved problems found = " + numProblemsLeft );
-        }
-        updateNumProblemsLeftInChapterLabel( numProblemsLeft ) ;
-    }
-    
     private void changeBook() {
+        
         log.debug( "Executing changeBook" ) ;
         
         controller.pushKeyProcessor( bookChangeDialog.getKeyProcessor() ) ;
         
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                invokeChangeBookAsync() ;
-            }
-        });
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( bookChangeDialog ) ;
+        }});
     }
     
-    private void invokeChangeBookAsync() {
-
-        SConsoleFrame frame = SConsole.getApp().getFrame() ;
-        Book selectedBook = ( Book )frame.showDialog( bookChangeDialog ) ;
+    public void handleNewBookSelection( Book selectedBook ) {
         
         log.debug( "New Book chosen = " + selectedBook ) ;
+        
         if( selectedBook != null ) {
             changeSelection.setBook( selectedBook ) ;
             
@@ -795,29 +876,30 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void changeProblem() {
+        
         log.debug( "Executing changeProblem" ) ;
         
         controller.pushKeyProcessor( problemChangeDialog.getKeyProcessor() ) ;
         
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                invokeChangeProblemAsync() ;
-            }
-        });
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+                SConsole.getApp()
+                        .getFrame()
+                        .showDialog( problemChangeDialog ) ;
+        }});
     }
     
-    private void invokeChangeProblemAsync() {
-        
-        SConsoleFrame frame = SConsole.getApp().getFrame() ;
-        Problem selectedProblem = ( Problem )frame.showDialog( problemChangeDialog ) ;
+    public void handleNewProblemSelection( Problem selectedProblem ) {
         
         log.debug( "New Problem chosen = " + selectedProblem ) ;
+        
         if( selectedProblem != null ) {
             changeSelection.setProblem( selectedProblem ) ;
         }
         validateSessionDetailsAndActivatePlay() ;
     }
     
+    // --------------- Dialog interactions [Ends] ---------------------------
+
     private void cancelChange() {
         log.debug( "Executing cancelChange" ) ;
         

@@ -125,4 +125,19 @@ public class Session {
         clone.setDuration( duration ) ;
         return clone ;
     }
+    
+    public String toString() {
+        StringBuffer buffer = new StringBuffer() ;
+        buffer.append( "   Id          = " ).append( getId()          ).append( "\n" )
+            .append( "   Topic       = " ).append( getTopic()       ).append( "\n" )
+            .append( "   Book        = " ).append( getBook()        ).append( "\n" )
+            .append( "   LastProblem = " ).append( getLastProblem() ).append( "\n" )
+            .append( "   SessionType = " ).append( getSessionType() ).append( "\n" )
+            .append( "   NumSkipped  = " ).append( getNumSkipped()  ).append( "\n" )
+            .append( "   NumSolved   = " ).append( getNumSolved()   ).append( "\n" )
+            .append( "   NumRedo     = " ).append( getNumRedo()     ).append( "\n" )
+            .append( "   NumPigeon   = " ).append( getNumPigeon()   ).append( "\n" )
+            .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) ;        
+        return buffer.toString() ;
+    }
 }
