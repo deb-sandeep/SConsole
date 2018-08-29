@@ -67,10 +67,12 @@ a {
 }
 
 .button.screenlet {
-    width: 25%;
+    height:75px;
+    line-height:75px;
+    padding:0px;
     background: #44775E;
-    padding:5px;
     border-radius:20px;
+    color: #C6C6C6;
 }
 
 .button.screenlet:hover {

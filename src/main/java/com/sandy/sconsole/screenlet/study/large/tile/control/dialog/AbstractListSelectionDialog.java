@@ -2,7 +2,7 @@ package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
 import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_CANCEL ;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER ;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED ;
 import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.* ;
@@ -11,6 +11,7 @@ import java.util.List ;
 import javax.swing.* ;
 import javax.swing.border.EmptyBorder ;
 import javax.swing.border.LineBorder ;
+import javax.swing.plaf.basic.BasicScrollBarUI ;
 
 import org.apache.log4j.Logger ;
 
@@ -71,10 +72,34 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         entityList.setCellRenderer( renderer ) ;
         entityList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION ) ;
         
-        JScrollPane sp = new JScrollPane( entityList, VERTICAL_SCROLLBAR_NEVER, 
+        JScrollPane sp = new JScrollPane( entityList, VERTICAL_SCROLLBAR_AS_NEEDED, 
                                                       HORIZONTAL_SCROLLBAR_NEVER ) ;
         sp.setBackground( UIConstant.BG_COLOR ) ;
         sp.getVerticalScrollBar().setBackground( UIConstant.BG_COLOR ) ;
+        sp.getVerticalScrollBar().setUI( new BasicScrollBarUI(){
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = Color.GRAY ;
+                this.thumbDarkShadowColor = Color.DARK_GRAY ;
+                this.thumbHighlightColor = Color.LIGHT_GRAY.brighter() ;
+                this.thumbLightShadowColor = Color.LIGHT_GRAY ;
+                this.trackColor = UIConstant.BG_COLOR ;
+            }
+
+            @Override
+            protected JButton createDecreaseButton( int orientation ) {
+                JButton btn = super.createDecreaseButton( orientation ) ;
+                btn.setBackground( Color.DARK_GRAY ) ;
+                return btn ;
+            }
+
+            @Override
+            protected JButton createIncreaseButton( int orientation ) {
+                JButton btn = super.createIncreaseButton( orientation ) ;
+                btn.setBackground( Color.DARK_GRAY ) ;
+                return btn ;
+            }
+        });
         
         JPanel panel = new JPanel() ;
         panel.setBackground( UIConstant.BG_COLOR ) ;
@@ -107,21 +132,38 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         return panel ;
     }
     
+    private void selectIndex( int index ) {
+        
+        int finalIndex = index ;
+        
+        if( finalIndex < -1 ) {
+            finalIndex = 0 ;
+        }
+        else if( finalIndex > listModel.size() ) {
+            finalIndex = listModel.size()-1 ;
+        }
+        
+        entityList.setSelectedIndex( finalIndex ) ;
+        entityList.ensureIndexIsVisible( finalIndex ) ;
+        entityList.repaint() ;
+    }
+    
     @Override 
     public void handleUpNavKey() {
-        int nextSelIndex = entityList.getSelectedIndex()-1 ;
-        if( nextSelIndex >= 0 ) {
-            entityList.setSelectedIndex( nextSelIndex ) ;
-            entityList.ensureIndexIsVisible( nextSelIndex ) ;
-        }
+        selectIndex( entityList.getSelectedIndex()-1 ) ;
     }
     
     @Override public void handleDownNavKey() {
-        int nextSelIndex = entityList.getSelectedIndex()+1 ;
-        if( nextSelIndex <= listModel.getSize()-1 ) {
-            entityList.setSelectedIndex( nextSelIndex ) ;
-            entityList.ensureIndexIsVisible( nextSelIndex ) ;
-        }
+        selectIndex( entityList.getSelectedIndex()+1 ) ;
+    }
+    
+    @Override 
+    public void handleLeftNavKey() {
+        selectIndex( entityList.getSelectedIndex()-10 ) ;
+    }
+    
+    @Override public void handleRightNavKey() {
+        selectIndex( entityList.getSelectedIndex()+10 ) ;
     }
 
     @Override

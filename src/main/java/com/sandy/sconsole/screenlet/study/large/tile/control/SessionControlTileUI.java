@@ -54,10 +54,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     protected static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
     protected static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
     protected static Color STIME_LBL_FG      = Color.decode( "#75BAF9" ) ;
-    protected static Color NUM_SKIP_LBL_FG   = Color.GRAY ;
-    protected static Color NUM_SOLVED_LBL_FG = Color.GRAY ;
-    protected static Color NUM_REDO_LBL_FG   = Color.GRAY ;
-    protected static Color NUM_PIGEON_LBL_FG = Color.GRAY ;
+    protected static Color NUM_SKIP_LBL_FG   = UIConstant.FN_A_COLOR ;
+    protected static Color NUM_SOLVED_LBL_FG = UIConstant.FN_B_COLOR ;
+    protected static Color NUM_REDO_LBL_FG   = UIConstant.FN_C_COLOR ;
+    protected static Color NUM_PIGEON_LBL_FG = UIConstant.FN_D_COLOR ;
     protected static Color LTIME_LBL_FG      = Color.decode( "#F98BCC" ) ;
     protected static Color BTN_SKIP_LBL_FG   = Color.WHITE ;
     protected static Color BTN_SOLVED_LBL_FG = Color.WHITE ;
