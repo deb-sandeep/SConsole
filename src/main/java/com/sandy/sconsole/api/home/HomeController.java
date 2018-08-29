@@ -15,4 +15,9 @@ public class HomeController {
     public String mdmProblemMaster() {
         return "mdm-problem-master" ;
     }
+    
+    @RequestMapping( "/add-session" )
+    public String addSession() {
+        return "add-session" ;
+    }
 }

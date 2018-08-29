@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SConsole</title>
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/jquery-2.1.1.min.js"></script>
+    <script src="js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="js/lib/moment.min.js"></script>
+    <script src="js/lib/bootstrap/transition.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/bootstrap/bootstrap-datetimepicker.js"></script>
+    
+    <link rel="stylesheet" href="css/app/app.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap-datetimepicker.css"/>
+
+    <script src="js/app/ng/app-ng.js"></script>
+    <script src="js/app/ng/add-session/controller.js"></script>
+</head>
+<body ng-controller="AddSessionController">
+
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container"
+       style="font-size:25px;color: #888888;">
+     Capture an offline session
+  </div>
+</nav>
+
+<div style="padding:10px">
+ <div class="panel panel-primary">
+   <div class="panel-heading">
+     <h3 class="panel-title">{{title}}</h3>
+   </div>
+   <div class="panel-body">
+   
+     <!-- First screen - Choose Date -->
+     <div ng-show="currentScreen == 'ChooseDate'">
+       <div style="overflow:hidden;">
+           <div class="form-group">
+               <div class="row">
+                   <div class="col-md-6">
+                       <div id="datetimepicker"></div>
+                   </div>
+               </div>
+           </div>
+           <script type="text/javascript">
+               $(function () {
+                   $('#datetimepicker').datetimepicker({
+                       inline: true,
+                       sideBySide: true
+                   });
+               });
+           </script>
+       </div>
+     </div>     
+     
+     <!-- Second screen. Choose session type, subject and topic -->  
+     <div ng-show="currentStep == 'ChooseSessionType'">
+     </div>
+     
+     <!-- Third screen. Only if session type is exercise -->  
+     <div ng-show="currentStep == 'ChooseBookAndProblems'">
+     </div>
+     
+     <!-- Fourth screen. Only if session type is exercise -->  
+     <div ng-show="currentStep == 'AddProblemOutcome'">
+     </div>
+     
+     <!-- Fifth screen. Only if session type is !exercise -->  
+     <div ng-show="currentStep == 'EnterSessionTime'">
+     </div>
+     
+     <!-- Sixth screen -->  
+     <div ng-show="currentStep == 'ReviewAndSubmit'">
+     </div>
+     
+   </div>
+   <div class="panel-footer text-right">
+     <button type="button" class="btn btn-info btn-lg"
+             ng-click="moveToPrevScreen(currentScreen)"
+             ng-show="currentScreen != 'ChooseDate' && currentScreen != null">
+        Back
+     </button>
+     <button type="button" class="btn btn-success btn-lg "
+             ng-click="moveToNextScreen(currentScreen)"
+             ng-show="currentScreen != null">
+        Next
+     </button>
+   </div>
+ </div>
+</div>
+
+</body>
+</html>

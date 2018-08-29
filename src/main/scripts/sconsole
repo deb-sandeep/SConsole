@@ -6,5 +6,5 @@ cd -
 
 CP="$SCRIPTDIR/config:$SCRIPTDIR/lib/*"
 
-java -Djava.awt.headless=false -classpath $CP com.sandy.sconsole.SConsole
+java -Djava.awt.headless=false -classpath $CP com.sandy.sconsole.SConsole > /home/pi/temp/sconsole_log.txt
 
