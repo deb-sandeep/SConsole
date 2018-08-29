@@ -44,7 +44,7 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         keyProcessor.disableAllKeys() ;
         keyProcessor.enableNavKeys( true ) ;
         keyProcessor.setKeyEnabled( true, FN_CANCEL ) ;
-        keyProcessor.setFnHandler( FN_CANCEL, new Handler() {
+        keyProcessor.setFnHandler( FN_CANCEL, new Handler( "" ) {
             public void handle() { cancelPressed() ; }
         } ) ;
     }

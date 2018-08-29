@@ -113,7 +113,11 @@ a {
 }
 
 .button.fn {
-    border-radius:5px;
+  border-radius:5px;
+  font-size: 17px;
+  height: 75px;
+  padding: 0px ;
+  line-height: 75px ;
 }
 
 .button.fn:hover {

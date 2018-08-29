@@ -24,10 +24,10 @@ public class DummyDialog extends AbstractDialogPanel {
         setUpUI() ;
         keyProcessor.disableAllKeys() ;
         keyProcessor.setKeyEnabled( true, FN_A, FN_B ) ;
-        keyProcessor.setFnHandler( FN_A, new Handler() {
+        keyProcessor.setFnHandler( FN_A, new Handler( "Exit" ) {
             public void handle() { System.exit( -1 ) ; }
         } ) ;
-        keyProcessor.setFnHandler( FN_B, new Handler() {
+        keyProcessor.setFnHandler( FN_B, new Handler( "Hide" ) {
             public void handle() { hideDialog() ; }
         } ) ;
     }

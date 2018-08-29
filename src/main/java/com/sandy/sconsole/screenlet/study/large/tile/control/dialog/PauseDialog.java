@@ -15,6 +15,7 @@ import org.apache.log4j.* ;
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.core.frame.* ;
 import com.sandy.sconsole.core.util.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
 @SuppressWarnings( "serial" )
 public class PauseDialog extends AbstractDialogPanel
@@ -33,9 +34,13 @@ public class PauseDialog extends AbstractDialogPanel
     
     private int pauseTime = 0 ;
     
-    public PauseDialog() {
+    private SessionControlTile control = null ;
+    
+    public PauseDialog( SessionControlTile control ) {
         super( "Session Paused" ) ;
 
+        this.control = control ;
+        
         loadIcons() ;
         setUpUI() ;
         
@@ -100,11 +105,13 @@ public class PauseDialog extends AbstractDialogPanel
     public void handlePlayPauseResumeKey() {
         userAction = PLAY_ACTION ;
         super.hideDialog() ;
+        control.handlePlayPauseResumeKey() ;
     } ;
     
     @Override public void handleStopKey() {
         userAction = STOP_ACTION ;
         super.hideDialog() ;
+        control.handleStopKey() ;
     } ;
 
     @Override

@@ -374,7 +374,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
                 btn2Pnl.setBackground( FN_A_COLOR ) ;
                 btn2Lbl.setIcon( null ) ;
                 btn2Lbl.setText( "Change [A]" ) ;
-                keyProcessor.setFnHandler( FN_A, new Handler() {
+                keyProcessor.setFnHandler( FN_A, new Handler( "Change" ) {
                     public void handle() {
                         executeChangeSessionDetailsUseCase() ;
                     }

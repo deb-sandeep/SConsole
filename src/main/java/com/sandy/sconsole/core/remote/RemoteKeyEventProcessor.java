@@ -165,6 +165,10 @@ public class RemoteKeyEventProcessor {
         }
     }
     
+    public Map<String, Handler> getFnHandlers() {
+        return this.fnHandlers ;
+    }
+    
     public String getDebugState() {
         StringBuffer buffer = new StringBuffer() ;
         buffer.append( "Processor = " + getName() + ". Activated keys:\n" ) ;

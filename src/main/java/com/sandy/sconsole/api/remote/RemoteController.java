@@ -1,76 +1,84 @@
 package com.sandy.sconsole.api.remote;
 
 import java.util.* ;
-import java.util.concurrent.* ;
 
-import org.apache.log4j.* ;
-import org.springframework.http.* ;
+import org.apache.log4j.Logger ;
+import org.springframework.http.HttpStatus ;
+import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.api.* ;
-import com.sandy.sconsole.core.remote.* ;
+import com.fasterxml.jackson.databind.ObjectMapper ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.remote.Handler ;
+import com.sandy.sconsole.core.remote.RemoteKeyCode ;
+import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
 
 @RestController
-public class RemoteController implements Runnable {
+public class RemoteController {
     
     private static final Logger log = Logger.getLogger( RemoteController.class ) ;
     
-    private LinkedBlockingDeque<KeyEvent> eventQueue = new LinkedBlockingDeque<>() ;
     private Stack<RemoteKeyEventProcessor> processors = new Stack<>() ;
     
-    public RemoteController() {
-        Thread t = new Thread( this ) ;
-        t.setDaemon( true ) ;
-        t.start() ;
-    }
-    
     @PostMapping( "/RemoteControl" )
-    public ResponseEntity<APIResponse> buttonPressed( @RequestBody KeyEvent event ) {
+    public ResponseEntity<String> buttonPressed( @RequestBody KeyEvent event ) {
         
         try {
-            eventQueue.putLast( event ) ;
-            return ResponseEntity.ok().body( new APIResponse( "Success" ) ) ;
+            ResponseEntity<String> response = processKeyEvent( event ) ;
+            return response ;
         }
-        catch( InterruptedException e ) {
+        catch( Exception e ) {
             return ResponseEntity.status( 500 )
-                                 .body( new APIResponse( e.getMessage() ) ) ;
+                                 .body( e.getMessage() ) ;
+        }
+    }
+    
+    @GetMapping( "/RemoteControl/FnKeyLabels" )
+    public ResponseEntity<String> getFnKeyLabels() {
+        try {
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( getFnLabelsJSON() ) ;
+        }
+        catch( Exception e ) {
+            return ResponseEntity.status( 500 )
+                                 .body( e.getMessage() ) ;
         }
     }
 
-    public void run() {
+    private ResponseEntity<String> processKeyEvent( KeyEvent event ) 
+        throws Exception {
         
-        while( true ) {
-            try {
-                KeyEvent event = eventQueue.takeFirst() ;
-                
-                log.debug( "\n--------------------------------------------------" );
-                log.debug( "Key " + event.getKeyId() + " received at " + new Date() );
-                
-                if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
-                    SConsole.getApp()
-                            .getFrame()
-                            .handleScreenletSelectionEvent( event.getBtnCode() ) ;
-                }
-                else {
-                    if( processors.isEmpty() ) {
-                        log.warn( "No key processors found. Ignoring the key." ) ;
-                    }
-                    else {
-                        RemoteKeyEventProcessor processor = null ;
-                        processor = processors.peek() ;
-                        log.debug( "Routing key to - " + processor.getName() ) ;
-                        processor.processRemoteKeyEvent( event ) ;
-                    }
-                }
+        log.debug( "\n--------------------------------------------------" );
+        log.debug( "Key " + event.getKeyId() + " received at " + new Date() );
+        
+        if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
+            SConsole.getApp()
+                    .getFrame()
+                    .handleScreenletSelectionEvent( event.getBtnCode() ) ;
+        }
+        else {
+            if( processors.isEmpty() ) {
+                log.warn( "No key processors found. Ignoring the key." ) ;
+                return ResponseEntity.status( HttpStatus.NOT_ACCEPTABLE )
+                                     .body( "No key processors registered. " + 
+                                            "Ignoring key stroke" ) ;
             }
-            catch( InterruptedException e ) {
-                log.debug( "Event pump interrupted." ) ;
+            else {
+                RemoteKeyEventProcessor processor = null ;
+                processor = processors.peek() ;
+                log.debug( "Routing key to - " + processor.getName() ) ;
+                processor.processRemoteKeyEvent( event ) ;
             }
         }
+        
+        return ResponseEntity.status( HttpStatus.OK )
+                             .body( getFnLabelsJSON() ) ;
     }
     
     public void pushKeyProcessor( RemoteKeyEventProcessor processor ) {
+        log.debug( "Pushing key processor - " ) ;
+        log.debug( processor.getDebugState() ) ;
+        
         processors.push( processor ) ;
     }
     
@@ -83,5 +91,37 @@ public class RemoteController implements Runnable {
             log.error( "No more processors left." ) ;
         }
         return processor ;
+    }
+    
+    private String getFnLabelsJSON() 
+        throws Exception {
+        
+        ObjectMapper mapper = new ObjectMapper() ;
+        
+        RemoteKeyEventProcessor processor = null ;
+        Map<String, Handler> fnHandlers = null ;
+        Map<String, String> fnLabels = new HashMap<String, String>() ;
+        
+        if( !processors.isEmpty() ) {
+            processor = processors.peek() ;
+            fnHandlers = processor.getFnHandlers() ;
+        }
+        
+        String[] fnKeyIds = RemoteKeyCode.getsKeysOfType( RemoteKeyCode.KEY_TYPE_FN ) ;
+        for( String keyId : fnKeyIds ) {
+            String label = "" ;
+            if( processor != null && processor.isKeyEnabled( keyId ) ) {
+                Handler handler = fnHandlers.get( keyId ) ;
+                if( handler != null ) {
+                    label = handler.getBtnHint() ;
+                }
+            }
+            
+            if( !keyId.equals( RemoteKeyCode.FN_CANCEL ) ) {
+                fnLabels.put( keyId.substring( keyId.indexOf( '@' )+1 ), label ) ; 
+            }
+        }
+        
+        return mapper.writeValueAsString( fnLabels ) ;
     }
 }

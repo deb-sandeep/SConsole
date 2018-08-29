@@ -46,8 +46,8 @@ public class DummyScreenlet extends AbstractScreenlet {
         
         keyProcessor.disableAllKeys() ;
         keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP, FN_A ) ;
-        keyProcessor.setFnHandler( FN_A, new Handler() {
-            public void handle() { handleFnA(); } 
+        keyProcessor.setFnHandler( FN_A, new Handler( "Exit" ) {
+            public void handle() { System.exit( -1 ) ; } 
         } ) ;
     }
     
@@ -92,6 +92,11 @@ public class DummyScreenlet extends AbstractScreenlet {
     }
     
     public void play() {
+        
+        SConsole.getAppContext()
+                .getBean( RemoteController.class )
+                .pushKeyProcessor( dialog.getKeyProcessor() ) ;
+        
         SwingUtilities.invokeLater( new Runnable() {
             @Override
             public void run() {
@@ -112,9 +117,5 @@ public class DummyScreenlet extends AbstractScreenlet {
     
     public void stop() {
         log.debug( "Stopping dummy screenlet" ) ;
-    }
-
-    public void handleFnA() {
-        System.exit( -1 ) ;
     }
 }

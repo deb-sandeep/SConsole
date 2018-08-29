@@ -112,7 +112,6 @@ class SConsoleDialog extends JDialog {
             if( visible ) {
                 log.debug( "Dialog is getting visible. Pushing key processor." ) ;
                 panel.isBeingMadeVisible() ;
-                controller.pushKeyProcessor( panel.getKeyProcessor() ) ;
             }
             else {
                 log.debug( "Dialog is getting hidden. Popping key processor." ) ;

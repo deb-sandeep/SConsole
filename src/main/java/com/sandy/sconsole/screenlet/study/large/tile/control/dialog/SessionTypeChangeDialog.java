@@ -33,16 +33,16 @@ public class SessionTypeChangeDialog extends AbstractDialogPanel {
         setUpUI() ;
         keyProcessor.disableAllKeys() ;
         keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_CANCEL ) ;
-        keyProcessor.setFnHandler( FN_A, new Handler() {
+        keyProcessor.setFnHandler( FN_A, new Handler( "Exercise" ) {
             public void handle() { setSessionType( TYPE_EXERCISE ) ; }
         } ) ;
-        keyProcessor.setFnHandler( FN_B, new Handler() {
+        keyProcessor.setFnHandler( FN_B, new Handler( "Theory" ) {
             public void handle() { setSessionType( TYPE_THEORY ) ; }
         } ) ;
-        keyProcessor.setFnHandler( FN_C, new Handler() {
+        keyProcessor.setFnHandler( FN_C, new Handler( "Lecture" ) {
             public void handle() { setSessionType( TYPE_LECTURE ) ; }
         } ) ;
-        keyProcessor.setFnHandler( FN_CANCEL, new Handler() {
+        keyProcessor.setFnHandler( FN_CANCEL, new Handler( "" ) {
             public void handle() { setSessionType( null ) ; }
         } ) ;
     }

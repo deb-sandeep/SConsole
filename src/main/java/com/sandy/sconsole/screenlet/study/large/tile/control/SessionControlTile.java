@@ -78,7 +78,9 @@ public class SessionControlTile extends SessionControlTileUI
     private TopicChangeDialog       topicChangeDialog   = null ;
     private ProblemChangeDialog     problemChangeDialog = null ;
     private SessionTypeChangeDialog typeChangeDialog    = null ;
-
+    
+    private RemoteController controller = null ;
+    
     class ChangeSelection {
         
         private String sessionType = null ;
@@ -144,11 +146,13 @@ public class SessionControlTile extends SessionControlTileUI
         
         remoteController = ctx.getBean( RemoteController.class ) ;
 
-        pauseDialog         = new PauseDialog() ;
+        pauseDialog         = new PauseDialog( this ) ;
         typeChangeDialog    = new SessionTypeChangeDialog() ;
         bookChangeDialog    = new BookChangeDialog( this ) ;
         topicChangeDialog   = new TopicChangeDialog( this ) ;
         problemChangeDialog = new ProblemChangeDialog( this ) ;
+        
+        controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
 
         SConsole.addSecTimerTask( this ) ;
     }
@@ -329,11 +333,11 @@ public class SessionControlTile extends SessionControlTileUI
             keyProcessor.clearFnHandler( FN_A, FN_B, FN_C, FN_D, FN_E );
         }
         else {
-            keyProcessor.setFnHandler( FN_A, new Handler() { public void handle() { skipProblem() ; } } ) ;
-            keyProcessor.setFnHandler( FN_B, new Handler() { public void handle() { problemSolved() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_C, new Handler() { public void handle() { redoProblem() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_D, new Handler() { public void handle() { setPigeon() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_E, new Handler() { public void handle() { setStarred() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_A, new Handler( "Skip"   ) { public void handle() { skipProblem() ; } } ) ;
+            keyProcessor.setFnHandler( FN_B, new Handler( "Solved" ) { public void handle() { problemSolved() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_C, new Handler( "Redo"   ) { public void handle() { redoProblem() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_D, new Handler( "Pigeon" ) { public void handle() { setPigeon() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_E, new Handler( "Star"   ) { public void handle() { setStarred() ; } }  ) ;
             keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_D, FN_E ) ;
         }
     }
@@ -436,16 +440,19 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void pause() {
         log.debug( "Pausing the session" ) ;
+        
+        controller.pushKeyProcessor( pauseDialog.getKeyProcessor() ) ;
+        
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 SConsoleFrame frame = SConsole.getApp().getFrame() ;
                 Integer userAction = ( Integer )frame.showDialog( pauseDialog ) ;
                 
                 if( userAction == PauseDialog.PLAY_ACTION ) {
-                    handlePlayPauseResumeKey() ;
+                    log.debug( "User selected resume from the pause dialog" ) ;
                 }
                 else {
-                    handleStopKey() ;
+                    log.debug( "User selected stop from the pause dialog" ) ;
                 }
             }
         });
@@ -584,9 +591,9 @@ public class SessionControlTile extends SessionControlTileUI
         topicPnl.setBackground( FN_B_COLOR ) ;
         topicLbl.setForeground( Color.WHITE ) ;
 
-        keyProcessor.setFnHandler( FN_A,      new Handler() { public void handle(){ changeSessionType() ; } } ) ;
-        keyProcessor.setFnHandler( FN_B,      new Handler() { public void handle(){ changeTopic() ; } }  ) ;
-        keyProcessor.setFnHandler( FN_CANCEL, new Handler() { public void handle(){ cancelChange() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_A,      new Handler( "Type"  ) { public void handle(){ changeSessionType() ; } } ) ;
+        keyProcessor.setFnHandler( FN_B,      new Handler( "Topic" ) { public void handle(){ changeTopic() ; } }  ) ;
+        keyProcessor.setFnHandler( FN_CANCEL, new Handler( ""      ) { public void handle(){ cancelChange() ; } }  ) ;
         keyProcessor.setKeyEnabled( true, FN_A, FN_B ) ;
         
         if( sessionType != null && 
@@ -598,8 +605,8 @@ public class SessionControlTile extends SessionControlTileUI
             problemPnl.setBackground( FN_D_COLOR ) ;
             problemLbl.setForeground( Color.WHITE ) ;
             
-            keyProcessor.setFnHandler( FN_C, new Handler() { public void handle(){ changeBook() ; } }  ) ;
-            keyProcessor.setFnHandler( FN_D, new Handler() { public void handle(){ changeProblem() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_C, new Handler( "Book"    ) { public void handle(){ changeBook() ; } }  ) ;
+            keyProcessor.setFnHandler( FN_D, new Handler( "Problem" ) { public void handle(){ changeProblem() ; } }  ) ;
             keyProcessor.setKeyEnabled( true, FN_C, FN_D ) ;
         }
         
@@ -632,6 +639,9 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeSessionType() {
         log.debug( "Executing changeSessionType" ) ;
+        
+        controller.pushKeyProcessor( typeChangeDialog.getKeyProcessor() ) ;
+        
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 invokeChangeSessionTypeAsync() ;
@@ -667,6 +677,7 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeTopic() {
         log.debug( "Executing changeTopic" ) ;
+        controller.pushKeyProcessor( topicChangeDialog.getKeyProcessor() ) ;
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 invokeChangeTopicAsync() ;
@@ -747,6 +758,9 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeBook() {
         log.debug( "Executing changeBook" ) ;
+        
+        controller.pushKeyProcessor( bookChangeDialog.getKeyProcessor() ) ;
+        
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 invokeChangeBookAsync() ;
@@ -755,7 +769,7 @@ public class SessionControlTile extends SessionControlTileUI
     }
     
     private void invokeChangeBookAsync() {
-        
+
         SConsoleFrame frame = SConsole.getApp().getFrame() ;
         Book selectedBook = ( Book )frame.showDialog( bookChangeDialog ) ;
         
@@ -782,6 +796,9 @@ public class SessionControlTile extends SessionControlTileUI
     
     private void changeProblem() {
         log.debug( "Executing changeProblem" ) ;
+        
+        controller.pushKeyProcessor( problemChangeDialog.getKeyProcessor() ) ;
+        
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
                 invokeChangeProblemAsync() ;
