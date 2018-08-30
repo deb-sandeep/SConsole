@@ -1,3 +1,15 @@
-<div>
-Create a new session ?
+<div ng-show="serverResponseStatus=='success'">
+  Session successfully created.
+  <p>
+  <button type="button" class="btn btn-success btn-lg "
+          ng-click="createNewSession()">
+     Create new session
+  </button>
+</div>
+
+<div ng-show="serverResponseStatus=='failure'">
+  <div class="alert alert-danger">
+    Something has gone terribly wrong at the server. Inform the server
+    admin.
+  </div>
 </div>

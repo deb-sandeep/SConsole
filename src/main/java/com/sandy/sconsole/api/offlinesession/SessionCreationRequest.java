@@ -9,7 +9,14 @@ public class SessionCreationRequest {
         private Integer problemId = null ;
         private String  outcome   = null ;
         private Integer duration  = null ;
+        private Boolean starred   = null ;
         
+        public Boolean getStarred() {
+            return starred ;
+        }
+        public void setStarred( Boolean starred ) {
+            this.starred = starred ;
+        }
         public Integer getProblemId() {
             return problemId ;
         }

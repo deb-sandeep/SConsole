@@ -1,5 +1,8 @@
 package com.sandy.sconsole.api.offlinesession;
 
+import static com.sandy.sconsole.dao.entity.ProblemAttempt.* ;
+
+import java.sql.Timestamp ;
 import java.util.* ;
 
 import org.apache.log4j.Logger ;
@@ -8,9 +11,16 @@ import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
+import com.sandy.sconsole.api.offlinesession.SessionCreationRequest.ProblemOutcome ;
+import com.sandy.sconsole.dao.entity.LastSession ;
+import com.sandy.sconsole.dao.entity.ProblemAttempt ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.repository.LastSessionRepository ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
+import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
@@ -21,13 +31,22 @@ public class OfflineSessionCreationController {
     static final Logger log = Logger.getLogger( OfflineSessionCreationController.class ) ;
     
     @Autowired
-    private TopicRepository topicRepository = null ;
+    private TopicRepository topicRepo = null ;
     
     @Autowired
-    private BookRepository bookRepository = null ;
+    private BookRepository bookRepo = null ;
     
     @Autowired
-    private ProblemRepository problemRepository = null ;
+    private ProblemRepository problemRepo = null ;
+    
+    @Autowired
+    private SessionRepository sessionRepo = null ;
+    
+    @Autowired
+    private LastSessionRepository lsRepo = null ;
+    
+    @Autowired
+    private ProblemAttemptRepository paRepo = null ;
     
     @GetMapping( "/Topic" )
     public ResponseEntity<Map<String, List<Topic>>> getTopics() {
@@ -44,8 +63,8 @@ public class OfflineSessionCreationController {
     public ResponseEntity<List<Book>> getBooks(
             @RequestParam( "topicId" ) Integer topicId ) {
         try {
-            List<Integer> ids = bookRepository.findProblemBooksForTopic( topicId ) ;
-            Iterable<Book> booksIter = bookRepository.findAllById( ids ) ;
+            List<Integer> ids = bookRepo.findProblemBooksForTopic( topicId ) ;
+            Iterable<Book> booksIter = bookRepo.findAllById( ids ) ;
             List<Book> books = new ArrayList<Book>() ;
             
             booksIter.forEach( books::add ) ;
@@ -65,7 +84,7 @@ public class OfflineSessionCreationController {
         List<Problem> problems = null ;
         
         try {
-            problems = problemRepository.findUnsolvedProblems( topicId, bookId ) ;
+            problems = problemRepo.findUnsolvedProblems( topicId, bookId ) ;
             return ResponseEntity.status( HttpStatus.OK ).body( problems ) ;
         }
         catch( Exception e ) {
@@ -73,15 +92,8 @@ public class OfflineSessionCreationController {
         }
     }
     
-    @PostMapping( "/Session" )
-    public ResponseEntity<String> createOfflineSession( 
-                                   @RequestBody SessionCreationRequest input ) {
-
-        return ResponseEntity.status( HttpStatus.OK ).body( "Burrahh" ) ;
-    }
-    
     private Map<String, List<Topic>> getTopicsMap() {
-        Iterable<Topic> topics = topicRepository.findAll() ;
+        Iterable<Topic> topics = topicRepo.findAll() ;
         Map<String, List<Topic>> topicMap = new HashMap<String, List<Topic>>() ;
         
         for( Topic topic : topics ) {
@@ -94,5 +106,134 @@ public class OfflineSessionCreationController {
         }
         
         return topicMap ;
+    }
+
+    @PostMapping( "/Session" )
+    public ResponseEntity<String> createOfflineSession( 
+                                   @RequestBody SessionCreationRequest input ) {
+        
+        log.debug( "\n\n-------------------------------------" ) ;
+        log.debug( "Saving an offline session." ) ;
+        
+        Session session = new Session() ;
+        session.setSessionType( input.getSessionType() ) ;
+        session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
+        session.setDuration( input.getDuration() ) ;
+        session.setAbsoluteDuration( input.getDuration() ) ;
+        session.setStartTime( new Timestamp( input.getStartTime().getTime() ) ) ;
+        session.setEndTime( new Timestamp( session.getStartTime().getTime() + 
+                                           input.getDuration()*60*1000 ) );
+        
+        log.debug( "Basic session details - " ) ;
+        log.debug( session.toString() ) ;
+        
+        log.debug( "Saving the session in DB" ) ;
+        sessionRepo.save( session ) ;
+        log.debug( "New session created. ID = " + session.getId() ) ;
+        
+        saveExerciseDetails( session, input ) ;
+        updateLastSession( session, input ) ;
+        
+        return ResponseEntity.status( HttpStatus.OK ).body( "{\"message\":\"Success\"}" ) ;
+    }
+    
+    private void saveExerciseDetails( Session session, SessionCreationRequest input ) {
+        
+        if( !session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+            return ;
+        }
+        
+        log.debug( "Saving exercise details" ) ;
+            
+        List<ProblemOutcome> outcomes = input.getOutcome() ;
+        
+        Integer lastProblemId = outcomes.get( outcomes.size()-1 ).getProblemId() ;
+        Problem lastProblem = problemRepo.findById( lastProblemId ).get() ;
+        Book book = bookRepo.findById( input.getBookId() ).get() ;
+        
+        long startTime = session.getStartTime().getTime() ;
+        int numSkipped = 0 ;
+        int numSolved = 0 ;
+        int numRedo = 0 ;
+        int numPigeon = 0 ;
+        
+        for( ProblemOutcome outcome : outcomes ) {
+            
+            Integer problemId = outcome.getProblemId() ;
+            Problem problem = problemRepo.findById( problemId ).get() ;
+            
+            ProblemAttempt attempt = new ProblemAttempt() ;
+            attempt.setSession( session ) ;
+            attempt.setProblem( problem ) ;
+            attempt.setDuration( outcome.getDuration() ) ;
+            attempt.setOutcome( outcome.getOutcome() ) ;
+            attempt.setStartTime( new Timestamp( startTime ) ) ;
+            
+            startTime += outcome.getDuration()*60*1000 ;
+            
+            attempt.setEndTime( new Timestamp( startTime ) ) ;
+            
+            String outcomeVal = outcome.getOutcome() ;
+            if( outcomeVal.equals( OUTCOME_SKIP ) ) {
+                numSkipped++ ;
+                problem.setSkipped( true ) ;
+            }
+            else if( outcomeVal.equals( OUTCOME_SOLVED ) ) {
+                numSolved++ ;
+                problem.setSolved( true ) ;
+            }
+            else if( outcomeVal.equals( OUTCOME_REDO ) ) {
+                numRedo++ ;
+                problem.setRedo( true ) ;
+            }
+            else if( outcomeVal.equals( OUTCOME_PIGEON ) ) {
+                numPigeon++ ;
+                problem.setPigeoned( true ) ;
+            }
+            
+            problem.setStarred( outcome.getStarred() ) ;
+            
+            log.debug( "Updating problem master" ) ;
+            problemRepo.save( problem ) ;
+            
+            log.debug( "Saving problem attempt - " ) ;
+            log.debug( attempt.toString() ) ;
+            paRepo.save( attempt ) ;
+        }
+        
+        session.setBook( book ) ;
+        session.setLastProblem( lastProblem ) ;
+        session.setNumSkipped( numSkipped ) ;
+        session.setNumSolved( numSolved ) ;
+        session.setNumRedo( numRedo ) ;
+        session.setNumPigeon( numPigeon ) ;
+        
+        log.debug( "Updating session details with remaining info." ) ;
+        log.debug( session.toString() ) ;
+        
+        sessionRepo.save( session ) ;
+    }
+    
+    private void updateLastSession( Session session, SessionCreationRequest input ) {
+        
+        log.debug( "Updating last session information" ) ;
+        
+        LastSession ls = new LastSession() ;
+        ls.setSubjectName( input.getSubject() ) ;
+        ls.setSession( session ) ;
+        
+        LastSession lsInDB = lsRepo.findLastSessionForSubject( input.getSubject() ) ;
+        if( lsInDB != null ) {
+            
+            if( session.getStartTime().getTime() > 
+                lsInDB.getSession().getStartTime().getTime() ) {
+                
+                log.debug( "Setting this session as the last session" ) ;
+                lsRepo.save( ls ) ;
+            }
+        }
+        else {
+            lsRepo.save( ls ) ;
+        }
     }
 }

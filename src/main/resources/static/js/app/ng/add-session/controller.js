@@ -5,7 +5,8 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     const SCR_CHOOSE_BOOK_AND_PROBLEMS = "ChooseBookAndProblems" ;
     const SCR_ADD_PROBLEM_OUTCOME      = "AddProblemOutcome" ;
     const SCR_ENTER_SESSION_TIME       = "EnterSessionTime" ;
-    const SCR_REIVEW_AND_SUBMIT        = "ReviewAndSubmit" ;    
+    const SCR_REIVEW_AND_SUBMIT        = "ReviewAndSubmit" ;
+    const SCR_SERVER_RESPONSE          = "SessionCreationServerResponse" ;
     
     var SCR_TITLE_MAP = new Map([ 
         [ SCR_CHOOSE_DATE             , "Step-1) Enter date"               ],
@@ -33,6 +34,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     $scope.displayBooks = [] ;
     $scope.displayProblems = [] ;
     $scope.message = null ;
+    $scope.serverResponseStatus = null ;
     
     $scope.sessionDetails = {
         sessionType : "Exercise",
@@ -85,7 +87,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     
     $scope.moveToPrevScreen = function( currentScreen ) {
         if( currentScreen == SCR_CHOOSE_DATE ) {
-            setCurrentScreen( "SessionCreationServerResponse" ) ;
+            setCurrentScreen( SCR_SERVER_RESPONSE ) ;
         }
         else if( currentScreen == SCR_REIVEW_AND_SUBMIT ) {
             if( $scope.sessionDetails.sessionType != "Exercise" ) {
@@ -125,6 +127,10 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
         return "" ;
     }
     
+    $scope.createNewSession = function() {
+        setCurrentScreen( SCR_CHOOSE_DATE ) ;
+    }
+    
     function setCurrentScreen( currentScreen ) {
         $scope.currentScreen = currentScreen ;
         
@@ -159,6 +165,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     function createNewSessionOnServer() {
         
         var problemOutcome = [] ;
+        var bookId = -1 ;
         
         if( $scope.sessionDetails.sessionType == 'Exercise' ) {
             var duration = 0 ;
@@ -167,12 +174,17 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
                 problemOutcome.push( {
                     problemId : problem.id,
                     outcome : problem.outcome,
+                    starred : problem.starred,
                     duration : problem.duration
                 }) ;
                 duration += problem.duration ;
             }
             
             $scope.sessionDetails.duration = duration ;
+            bookId = $scope.sessionDetails.book.id ;
+        }
+        else {
+            bookId = -1 ;
         }
         
         console.log( "Posting new session to server." ) ;
@@ -180,7 +192,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
             sessionType : $scope.sessionDetails.sessionType,
             subject     : $scope.sessionDetails.subject,
             topicId     : $scope.sessionDetails.topic.id,
-            bookId      : $scope.sessionDetails.book.id,
+            bookId      : bookId,
             duration    : $scope.sessionDetails.duration,
             startTime   : $scope.sessionDetails.startTime,
             outcome     : problemOutcome
@@ -189,10 +201,18 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
             function( data ){
                 console.log( "Response from Create Session received.." ) ;
                 console.log( data ) ;
+                $scope.currentScreen = SCR_SERVER_RESPONSE ;
+                if( data.status == 200 ) {
+                    $scope.serverResponseStatus = "success" ;
+                }
+                else {
+                    $scope.serverResponseStatus = "failure" ;
+                }
             }, 
             function( error ){
                 console.log( "Error creating session." + error ) ;
-                $scope.currentScreen = "SessionCreationServerResponse" ;
+                $scope.currentScreen = SCR_SERVER_RESPONSE ;
+                $scope.serverResponseStatus = "failure" ;
             }
         ) ;
     }

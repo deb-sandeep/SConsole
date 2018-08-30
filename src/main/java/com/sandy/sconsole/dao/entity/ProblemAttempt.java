@@ -66,4 +66,16 @@ public class ProblemAttempt {
     public void setOutcome( String outcome ) {
         this.outcome = outcome ;
     }
+    
+    public String toString() {
+        StringBuffer buffer = new StringBuffer() ;
+        buffer.append( "id        = " ).append( id              ).append( "\n" ) 
+              .append( "session   = " ).append( session.getId() ).append( "\n" ) 
+              .append( "problem   = " ).append( problem         ).append( "\n" ) 
+              .append( "startTime = " ).append( startTime       ).append( "\n" ) 
+              .append( "endTime   = " ).append( endTime         ).append( "\n" ) 
+              .append( "duration  = " ).append( duration        ).append( "\n" ) 
+              .append( "outcome   = " ).append( outcome         ).append( "\n" ) ;
+        return buffer.toString() ;
+    }
 }

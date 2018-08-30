@@ -3,6 +3,7 @@
     <tr class="success">
       <th>Problem</th>
       <th>Outcome</th>
+      <th>*</th>
       <th>Time</th>
     </tr>
   </thead>
@@ -21,6 +22,10 @@
              <option value="Redo">Redo</option>
              <option value="Pigeon">Pigeon</option>
          </select>
+      </td>
+      <td style="width: 20px">
+         <input type="checkbox" 
+                ng-model="problem.starred" />
       </td>
       <td style="width: 100px">
         <input type="number" 

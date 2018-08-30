@@ -31,6 +31,7 @@
             <tr class="success">
               <th>Problem</th>
               <th>Outcome</th>
+              <th>*</th>
               <th>Time</th>
             </tr>
           </thead>
@@ -41,6 +42,11 @@
                     Ch {{problem.chapterId}} / {{problem.exerciseName}} - {{problem.problemTag}}
               </td>
               <td style="width: 150px"> {{problem.outcome}} </td>
+              <td style="width: 20px"> 
+                 <input type="checkbox" 
+                        ng-model="problem.starred" 
+                        ng-disabled="true"/>
+              </td>
               <td style="width: 150px"> {{problem.duration}} </td>
             </tr>
           </tbody>

@@ -27,6 +27,7 @@ import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.dao.entity.LastSession ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.master.Book ;
@@ -163,6 +164,13 @@ public class SessionControlTile extends SessionControlTileUI
         super.screenletMaximized() ;
         remoteController.pushKeyProcessor( keyProcessor ) ; 
         this.onScreenStartTime = new Date() ;
+        
+        if( this.runState == STOPPED ) {
+            Optional<LastSession> lsOpt = lastSessionRepo.findById( screenlet.getDisplayName() ) ;
+            if( lsOpt.isPresent() ) {
+                populateLastSessionDetails( lsOpt.get().getSession() ) ;
+            }
+        }
     }
     
     protected void screenletMinimized() {

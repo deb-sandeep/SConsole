@@ -48,4 +48,13 @@ public interface LastSessionRepository extends CrudRepository<LastSession, Strin
               + "LIMIT 1 "
             , nativeQuery=true )
     Integer findLastSessionForTopic( @Param("topicId") Integer topicId ) ;
+
+    @Query( value = 
+            "SELECT "
+          + "    ls "
+          + "FROM "
+          + "    LastSession ls "
+          + "WHERE "
+          + "    ls.subjectName = ?1 " )
+    LastSession findLastSessionForSubject( String subject ) ;
 }

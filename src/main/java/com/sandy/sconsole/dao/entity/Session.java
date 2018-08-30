@@ -137,7 +137,9 @@ public class Session {
             .append( "   NumSolved   = " ).append( getNumSolved()   ).append( "\n" )
             .append( "   NumRedo     = " ).append( getNumRedo()     ).append( "\n" )
             .append( "   NumPigeon   = " ).append( getNumPigeon()   ).append( "\n" )
-            .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) ;        
+            .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) 
+            .append( "   Start time  = " ).append( new Date( getStartTime().getTime() ) ).append( "\n" )
+            .append( "   End time    = " ).append( new Date( getEndTime().getTime() ) ).append( "\n" ) ;
         return buffer.toString() ;
     }
 }
