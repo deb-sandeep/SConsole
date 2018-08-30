@@ -141,3 +141,19 @@ a {
 .ota-idle {
     color: #E2E2E2; 
 }
+
+.outcome_skip {
+    background-color: #A1DEE3 !important;
+}
+
+.outcome_solved {
+    background-color: #D4EC9E !important;
+}
+
+.outcome_redo {
+    background-color: #DEC3A4 !important;
+}
+
+.outcome_pigeon {
+    background-color: #4AB1B9 !important;
+}

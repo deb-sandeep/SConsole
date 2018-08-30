@@ -21,8 +21,10 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
                     "    tm.subject_name = bm.subject_name and " + 
                     "    tm.id = ?1 and " +
                     "    pm.topic_id = tm.id and " + 
-                    "    pm.book_id = bm.id",
+                    "    pm.book_id = bm.id and " +
+                    "    pm.active = 1 and " +
+                    "    pm.solved = 0",
             nativeQuery = true
-          )
+    )
     List<Integer> findProblemBooksForTopic( Integer topicId ) ;
 }

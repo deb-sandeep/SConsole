@@ -1,0 +1,51 @@
+<table class="table table-bordered table-striped table-compact">
+  <tbody>
+    <tr>
+      <td style="width: 200px">Session Type</td>
+      <td>{{sessionDetails.sessionType}}</td>
+    </tr>
+    <tr>
+      <td style="width: 200px">Subject</td>
+      <td>{{sessionDetails.subject}}</td>
+    </tr>
+    <tr>
+      <td style="width: 200px">Topic</td>
+      <td>{{sessionDetails.topic.topicName}}</td>
+    </tr>
+    <tr>
+      <td style="width: 200px">Start time</td>
+      <td>{{sessionDetails.startTime}}</td>
+    </tr>
+    <tr>
+      <td style="width: 200px">Duration (min)</td>
+      <td>{{sessionDetails.duration}}</td>
+    </tr>
+    <tr ng-show="sessionDetails.sessionType == 'Exercise'">
+      <td style="width: 200px">Book</td>
+      <td>{{sessionDetails.book.bookShortName}}</td>
+    </tr>
+    <tr ng-show="sessionDetails.sessionType == 'Exercise'">
+      <td colspan="2">
+        <table class="table table-bordered table-striped table-compact">
+          <thead>
+            <tr class="success">
+              <th>Problem</th>
+              <th>Outcome</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="problem in sessionDetails.selectedProblems track by $index"
+                ng-class="getProblemOutcomeClass(problem)">
+              <td>
+                    Ch {{problem.chapterId}} / {{problem.exerciseName}} - {{problem.problemTag}}
+              </td>
+              <td style="width: 150px"> {{problem.outcome}} </td>
+              <td style="width: 150px"> {{problem.duration}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

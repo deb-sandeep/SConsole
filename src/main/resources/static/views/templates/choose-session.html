@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group pad-10px">
+          <label for="sType">Session type:</label>
+          <select id="sType" class="form-control" ng-model="sessionDetails.sessionType">
+              <option value="Exercise">Exercise</option>
+              <option value="Theory">Theory</option>
+              <option value="Lecture">Lecture</option>
+          </select>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group pad-10px">
+          <label for="subject">Subject:</label>
+          <select id="subject" class="form-control" 
+                  ng-model="sessionDetails.subject"
+                  ng-change="subjectSelected()">
+              <option value="IIT - Physics">IIT - Physics</option>
+              <option value="IIT - Chemistry">IIT - Chemistry</option>
+              <option value="IIT - Maths">IIT - Maths</option>
+          </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group pad-10px">
+         <label for="topic">Topic:</label>
+         <select id="topic" 
+                 class="form-control"  
+                 ng-model="sessionDetails.topic"
+                 ng-options="item as item.topicName for item in displayTopics track by item.id"
+                 ng-change="topicSelected()">
+         </select>
+      </div>
+    </div>
+  </div>
+</div>

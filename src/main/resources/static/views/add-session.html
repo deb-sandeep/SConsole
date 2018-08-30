@@ -29,14 +29,19 @@
 </nav>
 
 <div style="padding:10px">
+ <div class="alert alert-danger"
+      ng-show="message != null">
+   {{message}}
+ </div>
+ 
  <div class="panel panel-primary">
    <div class="panel-heading">
-     <h3 class="panel-title">{{title}}</h3>
+     <h3 class="panel-title">{{title}} - {{currentScreen}}</h3>
    </div>
    <div class="panel-body">
    
      <!-- First screen - Choose Date -->
-     <div ng-show="currentScreen == 'ChooseDate'">
+     <div ng-show="currentScreen == 'ChooseDate'"">
        <div style="overflow:hidden;">
            <div class="form-group">
                <div class="row">
@@ -54,38 +59,54 @@
                });
            </script>
        </div>
-     </div>     
+     </div>
      
      <!-- Second screen. Choose session type, subject and topic -->  
-     <div ng-show="currentStep == 'ChooseSessionType'">
+     <div ng-include="'views/templates/choose-session.html'"
+          ng-show="currentScreen == 'ChooseSessionType'">
      </div>
      
      <!-- Third screen. Only if session type is exercise -->  
-     <div ng-show="currentStep == 'ChooseBookAndProblems'">
+     <div ng-include="'views/templates/choose-book-problems.html'"
+          ng-show="currentScreen == 'ChooseBookAndProblems'">
      </div>
      
      <!-- Fourth screen. Only if session type is exercise -->  
-     <div ng-show="currentStep == 'AddProblemOutcome'">
+     <div ng-include="'views/templates/add-problem-outcome.html'"
+          ng-show="currentScreen == 'AddProblemOutcome'">
      </div>
      
      <!-- Fifth screen. Only if session type is !exercise -->  
-     <div ng-show="currentStep == 'EnterSessionTime'">
+     <div ng-show="currentScreen == 'EnterSessionTime'">
+       <input type="number" 
+              class="form-control"
+              ng-model="sessionDetails.duration" 
+              ng-pattern="/^-?[0-9][^\.]*$/"/>
      </div>
      
      <!-- Sixth screen -->  
-     <div ng-show="currentStep == 'ReviewAndSubmit'">
+     <div ng-include="'views/templates/review-and-submit.html'"
+          ng-show="currentScreen == 'ReviewAndSubmit'">
+     </div>
+     
+     <!-- Seventh screen -->  
+     <div ng-include="'views/templates/session-creation-response.html'"
+          ng-show="currentScreen == 'SessionCreationServerResponse'">
      </div>
      
    </div>
    <div class="panel-footer text-right">
      <button type="button" class="btn btn-info btn-lg"
              ng-click="moveToPrevScreen(currentScreen)"
-             ng-show="currentScreen != 'ChooseDate' && currentScreen != null">
+             ng-show="currentScreen != 'ChooseDate' && 
+                      currentScreen != null &&
+                      currentScreen != 'SessionCreationServerResponse'">
         Back
      </button>
      <button type="button" class="btn btn-success btn-lg "
              ng-click="moveToNextScreen(currentScreen)"
-             ng-show="currentScreen != null">
+             ng-show="currentScreen != null && 
+                      currentScreen != 'SessionCreationServerResponse'">
         Next
      </button>
    </div>

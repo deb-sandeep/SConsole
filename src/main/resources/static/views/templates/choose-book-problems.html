@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group pad-10px">
+         <label for="book">Book:</label>
+         <select id="book" 
+                 class="form-control"  
+                 ng-model="sessionDetails.book"
+                 ng-options="item as item.bookShortName for item in displayBooks track by item.id"
+                 ng-change="bookSelected()">
+         </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group pad-10px">
+         <label for="problems">Problems:</label>
+         <select id="problems" 
+                 class="form-control"  
+                 multiple="true" 
+                 size="10" 
+                 ng-model="sessionDetails.selectedProblems"
+                 ng-options="item as 'Chapter ' + item.chapterId + ' / Exercise ' + item.exerciseName + ' :: ' + item.problemTag for item in displayProblems track by item.id">
+         </select>
+      </div>
+    </div>
+  </div>
+</div>

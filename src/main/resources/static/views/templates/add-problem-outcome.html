@@ -1,0 +1,33 @@
+<table class="table table-bordered table-striped table-compact">
+  <thead>
+    <tr class="success">
+      <th>Problem</th>
+      <th>Outcome</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="problem in sessionDetails.selectedProblems track by $index"
+        ng-class="getProblemOutcomeClass(problem)">
+      <td>
+            Ch {{problem.chapterId}} / {{problem.exerciseName}} - {{problem.problemTag}}
+      </td>
+      <td style="width: 150px">
+         <select id="maxTime" 
+                 class="form-control" 
+                 ng-model="problem.outcome">
+             <option value="Skip">Skip</option>
+             <option value="Solved">Solved</option>
+             <option value="Redo">Redo</option>
+             <option value="Pigeon">Pigeon</option>
+         </select>
+      </td>
+      <td style="width: 100px">
+        <input type="number" 
+               class="form-control"
+               ng-model="problem.duration" 
+               ng-pattern="/^-?[0-9][^\.]*$/"/>
+      </td>
+    </tr>
+  </tbody>
+</table>
