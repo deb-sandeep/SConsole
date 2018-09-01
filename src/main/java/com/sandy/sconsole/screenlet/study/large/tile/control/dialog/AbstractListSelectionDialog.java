@@ -1,6 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.FN_CANCEL ;
+import static com.sandy.sconsole.core.remote.RemoteKeyUtil.FN_CANCEL ;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED ;
 import static javax.swing.SwingConstants.CENTER ;

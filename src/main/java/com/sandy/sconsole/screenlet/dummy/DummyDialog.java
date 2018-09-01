@@ -1,7 +1,7 @@
 package com.sandy.sconsole.screenlet.dummy;
 
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyUtil.* ;
 import static javax.swing.SwingConstants.* ;
 
 import java.awt.* ;

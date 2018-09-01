@@ -1,6 +1,6 @@
 package com.sandy.sconsole.screenlet.dummy;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyUtil.* ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.* ;
 
 import java.awt.* ;
@@ -19,7 +19,7 @@ public class DummyScreenlet extends AbstractScreenlet {
     static final Logger log = Logger.getLogger( DummyScreenlet.class ) ;
     
     private DummyDialog dialog = null ;
-    private RemoteKeyEventProcessor keyProcessor = null ;
+    private KeyProcessor keyProcessor = null ;
     private RemoteController controller = null ;
     
     public DummyScreenlet( String name ) {
@@ -28,8 +28,8 @@ public class DummyScreenlet extends AbstractScreenlet {
         controller = SConsole.getAppContext()
                              .getBean( RemoteController.class ) ;
         
-        keyProcessor = new RemoteKeyEventProcessor( "Dummy Screenlet", 
-            new RemoteKeyListenerAdapter() {
+        keyProcessor = new KeyProcessor( "Dummy Screenlet", 
+            new KeyListenerAdapter() {
                 public void handlePlayPauseResumeKey() {
                     if( getRunState() == RUNNING ) { pause() ; }
                     else if( getRunState() == STOPPED ) { play() ; }

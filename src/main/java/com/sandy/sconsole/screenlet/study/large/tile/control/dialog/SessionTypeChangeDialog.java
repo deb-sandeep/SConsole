@@ -1,7 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyUtil.* ;
 import static com.sandy.sconsole.dao.entity.Session.* ;
 import static javax.swing.SwingConstants.* ;
 

@@ -8,16 +8,16 @@ import com.sandy.sconsole.core.remote.* ;
 
 @SuppressWarnings("serial")
 public abstract class AbstractDialogPanel extends JPanel 
-    implements RemoteKeyListener {
+    implements KeyListener {
 
     public static final Font  FNBTN_FONT   = new Font( "Courier", Font.PLAIN, 20 ) ;
     
     private SConsoleDialog parentDialog = null ;
-    protected RemoteKeyEventProcessor keyProcessor = null ;
+    protected KeyProcessor keyProcessor = null ;
     
     protected AbstractDialogPanel( String title ) {
         super.setName( title ) ;
-        keyProcessor = new RemoteKeyEventProcessor( "Dialog" + title , this ) ;
+        keyProcessor = new KeyProcessor( "Dialog" + title , this ) ;
         setLayout( new BorderLayout() ) ;
         setBackground( SConsoleDialog.BG_COLOR ) ;
     }
@@ -44,7 +44,7 @@ public abstract class AbstractDialogPanel extends JPanel
         this.parentDialog.setVisible( false ) ;
     }
 
-    public RemoteKeyEventProcessor getKeyProcessor() {
+    public KeyProcessor getKeyProcessor() {
         return keyProcessor ;
     }
 }

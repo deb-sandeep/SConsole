@@ -7,11 +7,11 @@ import com.sandy.sconsole.core.screenlet.* ;
 
 public class DayTimeScreenlet extends AbstractScreenlet {
 
-    private RemoteKeyEventProcessor keyProcessor = null ;
+    private KeyProcessor keyProcessor = null ;
     
     public DayTimeScreenlet() {
         super( "DayTime" ) ;
-        keyProcessor = new RemoteKeyEventProcessor( "DayTime", new RemoteKeyListenerAdapter() ) ;
+        keyProcessor = new KeyProcessor( "DayTime", new KeyListenerAdapter() ) ;
         keyProcessor.disableAllKeys() ;
     }
     

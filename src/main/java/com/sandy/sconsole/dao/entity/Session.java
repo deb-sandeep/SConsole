@@ -10,15 +10,28 @@ import com.sandy.sconsole.dao.entity.master.* ;
 @Table( name = "session" )
 public class Session {
     
-    public static final String TYPE_LECTURE = "Lecture" ;
-    public static final String TYPE_EXERCISE = "Exercise" ;
-    public static final String TYPE_THEORY = "Theory" ;
-
+    public static enum SessionType {
+        LECTURE( "Lecture" ),
+        EXERCISE( "Exercise" ),
+        THEORY( "Theory" ) ;
+        
+        private String value = null ;
+        
+        private SessionType( String value ) {
+            this.value = value ;
+        }
+        
+        public String toString() {
+            return this.value ;
+        }
+    }
+    
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
     
-    private String sessionType ;
+    @Enumerated( EnumType.STRING )
+    private SessionType sessionType ;
     
     @ManyToOne
     @JoinColumn( name="topic_id" )
@@ -71,9 +84,9 @@ public class Session {
         this.topic = topic ; 
     }
     
-    public String getSessionType() { return sessionType ; }
-    public void setSessionType( String sessionType ) {
-        this.sessionType = sessionType ;
+    public SessionType getSessionType() { return sessionType ; }
+    public void setSessionType( SessionType type ) {
+        this.sessionType = type ;
     }
     
     public Book getBook() { return book ; }

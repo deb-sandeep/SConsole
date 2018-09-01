@@ -1,7 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
-import static com.sandy.sconsole.core.remote.RemoteKeyCode.* ;
+import static com.sandy.sconsole.core.remote.RemoteKeyUtil.* ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.PAUSED ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.RUNNING ;
 import static com.sandy.sconsole.core.screenlet.Screenlet.RunState.STOPPED ;
@@ -20,8 +20,8 @@ import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.remote.Handler ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
-import com.sandy.sconsole.core.remote.RemoteKeyListener ;
+import com.sandy.sconsole.core.remote.KeyProcessor ;
+import com.sandy.sconsole.core.remote.KeyListener ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenlet ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
@@ -43,7 +43,7 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI 
-    implements SecondTickListener, RemoteKeyListener {
+    implements SecondTickListener, KeyListener {
     
     static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
@@ -137,7 +137,7 @@ public class SessionControlTile extends SessionControlTileUI
     public SessionControlTile( ScreenletPanel parent ) {
         super( parent ) ;
         screenlet = ( StudyScreenlet )parent.getScreenlet() ;
-        keyProcessor = new RemoteKeyEventProcessor( "Study Control", this ) ;
+        keyProcessor = new KeyProcessor( "Study Control", this ) ;
         
         ctx = SConsole.getAppContext() ;
         

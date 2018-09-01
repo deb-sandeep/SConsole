@@ -11,16 +11,16 @@ import org.springframework.http.ResponseEntity ;
 import com.fasterxml.jackson.databind.ObjectMapper ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.remote.Handler ;
-import com.sandy.sconsole.core.remote.RemoteKeyCode ;
-import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
+import com.sandy.sconsole.core.remote.RemoteKeyUtil ;
+import com.sandy.sconsole.core.remote.KeyProcessor ;
 
 public class KeyProcessingHelper {
     
     static final Logger log = Logger.getLogger( KeyProcessingHelper.class ) ;
 
-    private Stack<RemoteKeyEventProcessor> processors = null ;
+    private Stack<KeyProcessor> processors = null ;
     
-    public KeyProcessingHelper( Stack<RemoteKeyEventProcessor> processors ) {
+    public KeyProcessingHelper( Stack<KeyProcessor> processors ) {
         this.processors = processors ;
     }
 
@@ -30,7 +30,7 @@ public class KeyProcessingHelper {
         log.debug( "\n\n--------------------------------------------------" );
         log.debug( "KeyEvent received " + event.getKeyId() ) ;
         
-        if( event.getBtnType().equals( RemoteKeyCode.KEY_TYPE_SCR_SEL ) ) {
+        if( event.getBtnType().equals( RemoteKeyUtil.KEY_TYPE_SCR_SEL ) ) {
             SConsole.getApp()
                     .getFrame()
                     .handleScreenletSelectionEvent( event.getBtnCode() ) ;
@@ -43,7 +43,7 @@ public class KeyProcessingHelper {
                                             "Ignoring key stroke" ) ;
             }
             else {
-                RemoteKeyEventProcessor processor = null ;
+                KeyProcessor processor = null ;
                 processor = processors.peek() ;
                 log.debug( "Routing to key processor - " + processor.getName() ) ;
                 processor.processRemoteKeyEvent( event ) ;
@@ -61,7 +61,7 @@ public class KeyProcessingHelper {
         
         ObjectMapper mapper = new ObjectMapper() ;
         
-        RemoteKeyEventProcessor processor = null ;
+        KeyProcessor processor = null ;
         Map<String, Handler> fnHandlers = null ;
         Map<String, String> fnLabels = new HashMap<String, String>() ;
         
@@ -70,7 +70,7 @@ public class KeyProcessingHelper {
             fnHandlers = processor.getFnHandlers() ;
         }
         
-        String[] fnKeyIds = RemoteKeyCode.getsKeysOfType( RemoteKeyCode.KEY_TYPE_FN ) ;
+        String[] fnKeyIds = RemoteKeyUtil.getsKeysOfType( RemoteKeyUtil.KEY_TYPE_FN ) ;
         for( String keyId : fnKeyIds ) {
             String label = "" ;
             if( processor != null && processor.isKeyEnabled( keyId ) ) {
@@ -80,7 +80,7 @@ public class KeyProcessingHelper {
                 }
             }
             
-            if( !keyId.equals( RemoteKeyCode.FN_CANCEL ) ) {
+            if( !keyId.equals( RemoteKeyUtil.FN_CANCEL ) ) {
                 fnLabels.put( keyId.substring( keyId.indexOf( '@' )+1 ), label ) ; 
                 
                 if( processor.isKeyEnabled( keyId ) ) {

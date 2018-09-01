@@ -1,31 +1,20 @@
 package com.sandy.sconsole.api.remote;
 
+import com.sandy.sconsole.core.remote.Key ;
+
 public class KeyEvent {
     
-    private String btnType = null ;
-    private String btnCode = null ;
+    private Key key = null ;
     
-    public String getKeyId() {
-        return btnType + "@" + btnCode ;
+    public KeyEvent( String type, String code ) {
+        key = Key.valueOf( type + "@" + code ) ;
     }
     
-    public String getBtnType() {
-        return btnType;
-    }
-    
-    public void setBtnType( String btnType ) {
-        this.btnType = btnType;
-    }
-    
-    public String getBtnCode() {
-        return btnCode;
-    }
-    
-    public void setBtnCode( String btnCode ) {
-        this.btnCode = btnCode;
+    public Key getKey() {
+        return this.key ;
     }
     
     public String toString() {
-        return "KeyEvent [" + btnType + ", " + btnCode + "]" ;
+        return key.toString() ;
     }
 }

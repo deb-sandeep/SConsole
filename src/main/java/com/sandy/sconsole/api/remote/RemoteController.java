@@ -7,14 +7,14 @@ import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
-import com.sandy.sconsole.core.remote.RemoteKeyEventProcessor ;
+import com.sandy.sconsole.core.remote.KeyProcessor ;
 
 @RestController
 public class RemoteController {
     
     private static final Logger log = Logger.getLogger( RemoteController.class ) ;
     
-    private Stack<RemoteKeyEventProcessor> processors = new Stack<>() ;
+    private Stack<KeyProcessor> processors = new Stack<>() ;
     private KeyProcessingHelper keyProcessingHelper = new KeyProcessingHelper( processors ) ;
     
     @PostMapping( "/RemoteControl" )
@@ -41,15 +41,15 @@ public class RemoteController {
         }
     }
     
-    public void pushKeyProcessor( RemoteKeyEventProcessor processor ) {
+    public void pushKeyProcessor( KeyProcessor processor ) {
         log.debug( "Pushing key processor - " ) ;
         log.debug( processor.getDebugState() ) ;
         
         processors.push( processor ) ;
     }
     
-    public RemoteKeyEventProcessor popKeyProcessor() {
-        RemoteKeyEventProcessor processor = null ;
+    public KeyProcessor popKeyProcessor() {
+        KeyProcessor processor = null ;
         try {
             processor = processors.pop() ;
         }
