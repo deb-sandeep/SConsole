@@ -6,11 +6,12 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
-import com.sandy.sconsole.core.statemc.StateMachine ;
 import com.sandy.sconsole.dao.entity.LastSession ;
 import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn1Type ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn2Type ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.OutcomeButtonsState ;
 
 public class HomeState extends BaseControlTileState {
@@ -19,13 +20,17 @@ public class HomeState extends BaseControlTileState {
     
     private Session sessionBlank = null ;
     
-    protected HomeState( String stateName, StateMachine sm, 
-                         SessionControlTile tile ) {
-        super( stateName, sm, tile ) ;
+    public HomeState( String stateName, SessionControlTile tile ) {
+        super( stateName, tile ) ;
+    }
+    
+    @Override
+    public void resetState() {
+        this.sessionBlank = null ;
     }
 
     @Override
-    public boolean preActivate( State fromState, Key key ) {
+    public boolean preActivate( Object payload, State fromState, Key key ) {
         
         tile.cleanControlPanel() ;
         
@@ -123,6 +128,10 @@ public class HomeState extends BaseControlTileState {
         }
         
         if( readyToPlay ) {
+            tile.setBtn1( Btn1Type.PLAY ) ;
+            super.enableTransition( Key.PLAYPAUSE ) ;
         }
+        
+        tile.setBtn2( Btn2Type.CHANGE ) ;
     }
 }

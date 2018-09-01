@@ -35,12 +35,13 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
 
     @Override
     protected Topic getDefaultSelectedEntity() {
-        return control.getChangeSelectionTopic() ;
+//        return control.getChangeSelectionTopic() ;
+        return null ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        control.handleNewTopicSelection( (Topic)getReturnValue() ) ;
+//        control.handleNewTopicSelection( (Topic)getReturnValue() ) ;
     }
 }

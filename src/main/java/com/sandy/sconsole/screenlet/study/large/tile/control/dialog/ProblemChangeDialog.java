@@ -32,23 +32,24 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
     protected List<Problem> getListItems() {
         List<Problem> problems = new ArrayList<>() ;
         
-        Topic topic = control.getChangeSelectionTopic() ;
-        Book book = control.getChangeSelectionBook() ;
-        
-        if( (topic != null) && (book != null) ) {
-            problems = problemRepo.findUnsolvedProblems( topic.getId(), book.getId() ) ;
-        }
+//        Topic topic = control.getChangeSelectionTopic() ;
+//        Book book = control.getChangeSelectionBook() ;
+//        
+//        if( (topic != null) && (book != null) ) {
+//            problems = problemRepo.findUnsolvedProblems( topic.getId(), book.getId() ) ;
+//        }
         return problems ;
     }
 
     @Override
     protected Problem getDefaultSelectedEntity() {
-        return control.getChangeSelectionProblem() ;
+//        return control.getChangeSelectionProblem() ;
+        return null ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        control.handleNewProblemSelection( (Problem)getReturnValue() ) ;
+//        control.handleNewProblemSelection( (Problem)getReturnValue() ) ;
     }
 }

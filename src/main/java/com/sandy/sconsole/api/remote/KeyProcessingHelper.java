@@ -1,18 +1,13 @@
 package com.sandy.sconsole.api.remote;
 
-import java.util.HashMap ;
-import java.util.Map ;
 import java.util.Stack ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 
-import com.fasterxml.jackson.databind.ObjectMapper ;
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.remote.Handler ;
-import com.sandy.sconsole.core.remote.RemoteKeyUtil ;
-import com.sandy.sconsole.core.remote.KeyProcessor ;
+import com.sandy.sconsole.core.remote.* ;
 
 public class KeyProcessingHelper {
     
@@ -24,16 +19,16 @@ public class KeyProcessingHelper {
         this.processors = processors ;
     }
 
-    public ResponseEntity<String> processKeyEvent( KeyEvent event ) 
+    public ResponseEntity<String> processKey( Key key ) 
             throws Exception {
             
         log.debug( "\n\n--------------------------------------------------" );
-        log.debug( "KeyEvent received " + event.getKeyId() ) ;
+        log.debug( "Key received " + key ) ;
         
-        if( event.getBtnType().equals( RemoteKeyUtil.KEY_TYPE_SCR_SEL ) ) {
+        if( key.getKeyType() == KeyType.SCREEN_SEL ) {
             SConsole.getApp()
                     .getFrame()
-                    .handleScreenletSelectionEvent( event.getBtnCode() ) ;
+                    .handleScreenletSelectionEvent( key.getKeyCode() ) ;
         }
         else {
             if( processors.isEmpty() ) {
@@ -46,7 +41,7 @@ public class KeyProcessingHelper {
                 KeyProcessor processor = null ;
                 processor = processors.peek() ;
                 log.debug( "Routing to key processor - " + processor.getName() ) ;
-                processor.processRemoteKeyEvent( event ) ;
+                processor.processKey( key ) ;
             }
         }
         
@@ -58,36 +53,7 @@ public class KeyProcessingHelper {
         throws Exception {
         
         log.debug( "Activated function keys for next interaction:" ) ;
-        
-        ObjectMapper mapper = new ObjectMapper() ;
-        
-        KeyProcessor processor = null ;
-        Map<String, Handler> fnHandlers = null ;
-        Map<String, String> fnLabels = new HashMap<String, String>() ;
-        
-        if( !processors.isEmpty() ) {
-            processor = processors.peek() ;
-            fnHandlers = processor.getFnHandlers() ;
-        }
-        
-        String[] fnKeyIds = RemoteKeyUtil.getsKeysOfType( RemoteKeyUtil.KEY_TYPE_FN ) ;
-        for( String keyId : fnKeyIds ) {
-            String label = "" ;
-            if( processor != null && processor.isKeyEnabled( keyId ) ) {
-                Handler handler = fnHandlers.get( keyId ) ;
-                if( handler != null ) {
-                    label = handler.getBtnHint() ;
-                }
-            }
-            
-            if( !keyId.equals( RemoteKeyUtil.FN_CANCEL ) ) {
-                fnLabels.put( keyId.substring( keyId.indexOf( '@' )+1 ), label ) ; 
-                
-                if( processor.isKeyEnabled( keyId ) ) {
-                    log.debug( "\t" + keyId + " -> " + label ) ;
-                }
-            }
-        }
-        return mapper.writeValueAsString( fnLabels ) ;
+        log.error( "TODO: Have to implement this method." ) ;
+        return "" ;
     }
 }

@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext ;
 
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.statemc.State ;
-import com.sandy.sconsole.core.statemc.StateMachine ;
 import com.sandy.sconsole.dao.repository.LastSessionRepository ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
@@ -24,9 +23,8 @@ public class BaseControlTileState extends State {
     protected LastSessionRepository    lastSessionRepo = null ;
     protected ProblemAttemptRepository problemAttemptRepo = null ;
 
-    protected BaseControlTileState( String stateName, StateMachine sm,
-                                    SessionControlTile tile ) {
-        super( stateName, sm ) ;
+    protected BaseControlTileState( String stateName, SessionControlTile tile ) {
+        super( stateName ) ;
         this.tile = tile ;
         
         ctx = SConsole.getAppContext() ;
@@ -42,6 +40,4 @@ public class BaseControlTileState extends State {
     protected String getSubject() {
         return tile.getScreenlet().getDisplayName() ;
     }
-    
-    
 }

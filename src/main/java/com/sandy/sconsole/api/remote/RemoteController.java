@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
+import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
+import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.remote.KeyProcessor ;
 
 @RestController
@@ -21,7 +23,8 @@ public class RemoteController {
     public ResponseEntity<String> buttonPressed( @RequestBody KeyEvent event ) {
         
         try {
-            return keyProcessingHelper.processKeyEvent( event ) ;
+            Key key = Key.valueOf( event.getKeyId() ) ;
+            return keyProcessingHelper.processKey( key ) ;
         }
         catch( Exception e ) {
             return ResponseEntity.status( 500 )

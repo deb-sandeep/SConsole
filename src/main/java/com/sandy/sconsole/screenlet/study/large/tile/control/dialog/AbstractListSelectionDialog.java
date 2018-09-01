@@ -1,6 +1,5 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyUtil.FN_CANCEL ;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER ;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED ;
 import static javax.swing.SwingConstants.CENTER ;
@@ -17,7 +16,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.frame.UIConstant ;
-import com.sandy.sconsole.core.remote.Handler ;
+import com.sandy.sconsole.core.remote.Key ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel {
@@ -42,11 +41,8 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         setUpUI() ;
         
         keyProcessor.disableAllKeys() ;
-        keyProcessor.enableNavKeys( true ) ;
-        keyProcessor.setKeyEnabled( true, FN_CANCEL ) ;
-        keyProcessor.setFnHandler( FN_CANCEL, new Handler( "" ) {
-            public void handle() { cancelPressed() ; }
-        } ) ;
+        keyProcessor.enableNavKeys() ;
+        keyProcessor.enableKey( Key.CANCEL ) ;
     }
 
     private void loadIcons() {
@@ -172,7 +168,8 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         super.hideDialog() ;
     }
     
-    private void cancelPressed() {
+    @Override
+    public void handleCancelNavKey() {
         selectedEntity = null ;
         super.hideDialog() ;
     }

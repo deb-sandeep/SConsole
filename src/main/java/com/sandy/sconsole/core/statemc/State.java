@@ -47,12 +47,14 @@ public abstract class State implements KeyListener {
     private Map<Key, TransitionState> transitionMap = null ;
     
     protected String stateName = null ;
-    protected StateMachine stateMachine = null ;
     
-    protected State( String stateName, StateMachine sm ) {
+    protected State( String stateName ) {
         this.stateName = stateName ;
-        this.stateMachine = sm ;
         this.transitionMap = new HashMap<Key, TransitionState>() ;
+    }
+    
+    public void resetState() {
+        enableAllTransitions() ;
     }
     
     public void addTransition( Key key, State nextState ) {
@@ -72,6 +74,12 @@ public abstract class State implements KeyListener {
     public void disableAllTransitions() {
         for( TransitionState transitions : transitionMap.values() ) {
             transitions.setActive( false ) ;
+        }
+    }
+    
+    public void enableAllTransitions() {
+        for( TransitionState transitions : transitionMap.values() ) {
+            transitions.setActive( true ) ;
         }
     }
     
@@ -104,7 +112,7 @@ public abstract class State implements KeyListener {
      * This method will be called right before the from state's 
      * {@link #deactivate(State, Key)} * method is involved.
      */
-    public void activate( State fromState, Key key ) {
+    public void activate( Object payload, State fromState, Key key ) {
         
         if( fromState == null && key == null ) {
             log.debug( "Transitioning in " + stateName + " as the state state." ) ;
@@ -114,29 +122,29 @@ public abstract class State implements KeyListener {
         log.debug( "TransitionIn => " + 
                    stateName + " <--" + key + "-- " + fromState.stateName ) ;
         
-        boolean processFurther = preActivate( fromState, key ) ;
+        boolean processFurther = preActivate( payload, fromState, key ) ;
         if( !processFurther ) {
             log.debug( "Pre-activation logic prevented further dispath of key" ) ;
             return ;
         }
         
         switch( key ) {
-            case UP     : handleUpNavKey()           ; break ;
-            case LEFT   : handleLeftNavKey()         ; break ;
-            case RIGHT  : handleRightNavKey()        ; break ;
-            case DOWN   : handleDownNavKey()         ; break ;
-            case SELECT : handleSelectNavKey()       ; break ;
-            case CANCEL : handleCancelNavKey()       ; break ;
-            case PLAYPAUSE      : handlePlayPauseResumeKey() ; break ;
-            case STOP           : handleStopKey()            ; break ;
-            case FN_A               : handleFnAKey()             ; break ;
-            case FN_B               : handleFnBKey()             ; break ;
-            case FN_C               : handleFnCKey()             ; break ;
-            case FN_D               : handleFnDKey()             ; break ;
-            case FN_E               : handleFnEKey()             ; break ;
-            case FN_F               : handleFnFKey()             ; break ;
-            case FN_G               : handleFnGKey()             ; break ;
-            case FN_H               : handleFnHKey()             ; break ;
+            case UP        : handleUpNavKey()           ; break ;
+            case LEFT      : handleLeftNavKey()         ; break ;
+            case RIGHT     : handleRightNavKey()        ; break ;
+            case DOWN      : handleDownNavKey()         ; break ;
+            case SELECT    : handleSelectNavKey()       ; break ;
+            case CANCEL    : handleCancelNavKey()       ; break ;
+            case PLAYPAUSE : handlePlayPauseResumeKey() ; break ;
+            case STOP      : handleStopKey()            ; break ;
+            case FN_A      : handleFnAKey()             ; break ;
+            case FN_B      : handleFnBKey()             ; break ;
+            case FN_C      : handleFnCKey()             ; break ;
+            case FN_D      : handleFnDKey()             ; break ;
+            case FN_E      : handleFnEKey()             ; break ;
+            case FN_F      : handleFnFKey()             ; break ;
+            case FN_G      : handleFnGKey()             ; break ;
+            case FN_H      : handleFnHKey()             ; break ;
             
             case SCR_SEL_SHOWHIDE:
                 throw new IllegalStateException( "Key processor should not"
@@ -192,7 +200,7 @@ public abstract class State implements KeyListener {
      * 
      * If this method returns a false, further processing of the key is ignored.
      */
-    public boolean preActivate( State fromState, Key key ) {
+    public boolean preActivate( Object payload, State fromState, Key key ) {
         return true ;
     }
     

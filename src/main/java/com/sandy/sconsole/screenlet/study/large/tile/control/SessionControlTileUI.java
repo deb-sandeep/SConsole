@@ -14,7 +14,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.core.frame.UIConstant ;
-import com.sandy.sconsole.core.remote.KeyProcessor ;
+import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
@@ -35,7 +35,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         float fontSize = -1F ;
         Color fgColor = null ;
         boolean border = true ;
-        boolean initialized = false ;
         
         LabelMeta( JLabel l, String con, float fSz, Color color, boolean bdr ) {
             constraint = con ;
@@ -99,7 +98,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public Icon stopIcon     = null ;
     public Icon cancelIcon   = null ;
     
-    public KeyProcessor keyProcessor = null ;
+    public DemuxKeyProcessor keyProcessor = null ;
     
     private LabelMeta[] labelMetaArray = {
         new LabelMeta( typeLbl,      "0,0,1,2",  25F, TYPE_LBL_FG,       true  ), 

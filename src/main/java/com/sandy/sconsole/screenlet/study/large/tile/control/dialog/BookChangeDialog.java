@@ -31,7 +31,8 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
     protected List<Book> getListItems() {
         List<Book> books = new ArrayList<Book>() ;
         
-        Topic selectedTopic = control.getChangeSelectionTopic() ;
+//        Topic selectedTopic = control.getChangeSelectionTopic() ;
+        Topic selectedTopic = null ;
         if( selectedTopic != null ) {
             List<Integer> bookIds = bookRepo.findProblemBooksForTopic( selectedTopic.getId() ) ;
             bookRepo.findAllById( bookIds ).forEach( e -> books.add( e )) ;
@@ -41,12 +42,13 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     @Override
     protected Book getDefaultSelectedEntity() {
-        return control.getChangeSelectionBook() ;
+//        return control.getChangeSelectionBook() ;
+        return null ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        control.handleNewBookSelection( (Book)getReturnValue() ) ;
+//        control.handleNewBookSelection( (Book)getReturnValue() ) ;
     }
 }

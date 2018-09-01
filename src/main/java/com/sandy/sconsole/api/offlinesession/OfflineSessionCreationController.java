@@ -15,6 +15,7 @@ import com.sandy.sconsole.api.offlinesession.SessionCreationRequest.ProblemOutco
 import com.sandy.sconsole.dao.entity.LastSession ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -116,7 +117,7 @@ public class OfflineSessionCreationController {
         log.debug( "Saving an offline session." ) ;
         
         Session session = new Session() ;
-        session.setSessionType( input.getSessionType() ) ;
+        session.setSessionType( SessionType.valueOf( input.getSessionType() ) ) ;
         session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
         session.setDuration( input.getDuration() ) ;
         session.setAbsoluteDuration( input.getDuration() ) ;
@@ -139,7 +140,7 @@ public class OfflineSessionCreationController {
     
     private void saveExerciseDetails( Session session, SessionCreationRequest input ) {
         
-        if( !session.getSessionType().equals( Session.TYPE_EXERCISE ) ) {
+        if( session.getSessionType() != SessionType.EXERCISE ) {
             return ;
         }
         

@@ -1,6 +1,6 @@
 package com.sandy.sconsole.core.remote;
 
-public enum RemoteKeyType {
+public enum KeyType {
     
     SCREEN_SEL  ( "ScreenletSelection" ),
     NAV_CONTROL ( "NavControl"         ),
@@ -9,7 +9,7 @@ public enum RemoteKeyType {
     
     private String value = null ;
     
-    private RemoteKeyType( String value ) {
+    private KeyType( String value ) {
         this.value = value ;
     }
     

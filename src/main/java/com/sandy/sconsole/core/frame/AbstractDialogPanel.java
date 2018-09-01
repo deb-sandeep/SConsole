@@ -13,11 +13,11 @@ public abstract class AbstractDialogPanel extends JPanel
     public static final Font  FNBTN_FONT   = new Font( "Courier", Font.PLAIN, 20 ) ;
     
     private SConsoleDialog parentDialog = null ;
-    protected KeyProcessor keyProcessor = null ;
+    protected DemuxKeyProcessor keyProcessor = null ;
     
     protected AbstractDialogPanel( String title ) {
         super.setName( title ) ;
-        keyProcessor = new KeyProcessor( "Dialog" + title , this ) ;
+        keyProcessor = new DemuxKeyProcessor( "Dialog" + title , this ) ;
         setLayout( new BorderLayout() ) ;
         setBackground( SConsoleDialog.BG_COLOR ) ;
     }
@@ -34,6 +34,16 @@ public abstract class AbstractDialogPanel extends JPanel
     @Override public void handlePlayPauseResumeKey() {} ;
     @Override public void handleStopKey() {} ;
     
+    @Override public void handleCancelNavKey() {}
+    @Override public void handleFnAKey() {}
+    @Override public void handleFnBKey() {}
+    @Override public void handleFnCKey() {}
+    @Override public void handleFnDKey() {}
+    @Override public void handleFnEKey() {}
+    @Override public void handleFnFKey() {}
+    @Override public void handleFnGKey() {}
+    @Override public void handleFnHKey() {}    
+    
     public abstract Object getReturnValue() ;
     
     public void setParentDialog( SConsoleDialog dialog ) {
@@ -44,7 +54,7 @@ public abstract class AbstractDialogPanel extends JPanel
         this.parentDialog.setVisible( false ) ;
     }
 
-    public KeyProcessor getKeyProcessor() {
+    public DemuxKeyProcessor getKeyProcessor() {
         return keyProcessor ;
     }
 }

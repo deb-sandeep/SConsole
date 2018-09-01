@@ -1,20 +1,20 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
-import static com.sandy.sconsole.core.remote.RemoteKeyUtil.* ;
-import static javax.swing.SwingConstants.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
+import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.* ;
-import java.util.* ;
+import java.util.Calendar ;
 
 import javax.swing.* ;
-import javax.swing.border.* ;
+import javax.swing.border.LineBorder ;
 
-import org.apache.log4j.* ;
+import org.apache.log4j.Logger ;
 
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.frame.* ;
-import com.sandy.sconsole.core.util.* ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
+import com.sandy.sconsole.core.remote.Key ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
 @SuppressWarnings( "serial" )
@@ -45,7 +45,7 @@ public class PauseDialog extends AbstractDialogPanel
         setUpUI() ;
         
         keyProcessor.disableAllKeys() ;
-        keyProcessor.setKeyEnabled( true, RUN_PLAYPAUSE, RUN_STOP ) ;
+        keyProcessor.enableKey( Key.PLAYPAUSE, Key.STOP ) ;
     }
     
     private void loadIcons() {
@@ -105,13 +105,13 @@ public class PauseDialog extends AbstractDialogPanel
     public void handlePlayPauseResumeKey() {
         userAction = PLAY_ACTION ;
         super.hideDialog() ;
-        control.handlePlayPauseResumeKey() ;
+//        control.handlePlayPauseResumeKey() ;
     } ;
     
     @Override public void handleStopKey() {
         userAction = STOP_ACTION ;
         super.hideDialog() ;
-        control.handleStopKey() ;
+//        control.handleStopKey() ;
     } ;
 
     @Override

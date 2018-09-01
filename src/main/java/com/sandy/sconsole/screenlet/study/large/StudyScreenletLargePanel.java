@@ -1,12 +1,11 @@
 package com.sandy.sconsole.screenlet.study.large;
 
-import com.sandy.sconsole.core.screenlet.* ;
-import com.sandy.sconsole.dao.entity.* ;
-import com.sandy.sconsole.screenlet.study.* ;
+import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.* ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 
-import info.clearthought.layout.* ;
+import info.clearthought.layout.TableLayout ;
 
 @SuppressWarnings( "serial" )
 public class StudyScreenletLargePanel extends ScreenletLargePanel {
@@ -101,9 +100,5 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         add( dayTotalTile, DAY_TOTAL_PC ) ;
         add( dayRelativeHoursTile, DAY_RELATIVE_PC ) ;
         add( last30DaysHoursTile, LAST_30D_PC ) ;
-    }
-
-    public void populateLastSessionDetails( Session session ) {
-        sessionControlTile.populateLastSessionDetails( session ) ;
     }
 }

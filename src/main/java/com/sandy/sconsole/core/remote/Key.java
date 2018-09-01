@@ -1,8 +1,8 @@
 package com.sandy.sconsole.core.remote;
 
-import static com.sandy.sconsole.core.remote.RemoteKeyType.FUNCTION ;
-import static com.sandy.sconsole.core.remote.RemoteKeyType.NAV_CONTROL ;
-import static com.sandy.sconsole.core.remote.RemoteKeyType.RUN ;
+import static com.sandy.sconsole.core.remote.KeyType.FUNCTION ;
+import static com.sandy.sconsole.core.remote.KeyType.NAV_CONTROL ;
+import static com.sandy.sconsole.core.remote.KeyType.RUN ;
 
 import java.util.* ;
 
@@ -26,7 +26,7 @@ public enum Key {
     FN_G             ( "Function@G"                 , "G" ),
     FN_H             ( "Function@H"                 , "H" );
     
-    private static Map<RemoteKeyType, Key[]> keyTypeCodeMap = new HashMap<>() ;
+    private static Map<KeyType, Key[]> keyTypeCodeMap = new HashMap<>() ;
     private static List<Key> validKeys = new ArrayList<>() ;
     
     static {
@@ -73,7 +73,7 @@ public enum Key {
         validKeys.add( FN_H ) ;
     }
     
-    public static Key[] getsKeysOfType( RemoteKeyType type ) {
+    public static Key[] getsKeysOfType( KeyType type ) {
         if( !keyTypeCodeMap.containsKey( type ) ) {
             throw new IllegalArgumentException( "Invalid key type - " + type ) ;
         }
@@ -102,23 +102,36 @@ public enum Key {
     
     // ----------------- Instance methods start --------------------------------
 
-    private String value = null ;
+    private String id = null ;
     private String label = null ;
     
-    private Key( String value ) {
-        this( value, null ) ;
+    private KeyType keyType = null ;
+    private String keyCode = null ;
+    
+    private Key( String id ) {
+        this( id, null ) ;
     }
     
     private Key( String value, String label ) {
-        this.value = value ;
+        this.id = value ;
         this.label = label ;
+        this.keyType = KeyType.valueOf( value.split( "@" )[0] ) ;
+        this.keyCode = value.split( "@" )[1] ;
     }
     
     public String getDefaultLabel() {
         return this.label ;
     }
     
+    public KeyType getKeyType() {
+        return this.keyType ;
+    }
+    
+    public String getKeyCode() {
+        return this.keyCode ;
+    }
+    
     public String toString() {
-        return this.value ;
+        return this.id ;
     }
 }
