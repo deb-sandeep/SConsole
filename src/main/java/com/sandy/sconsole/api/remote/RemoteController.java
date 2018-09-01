@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
-import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.remote.KeyProcessor ;
 
@@ -23,10 +22,11 @@ public class RemoteController {
     public ResponseEntity<String> buttonPressed( @RequestBody KeyEvent event ) {
         
         try {
-            Key key = Key.valueOf( event.getKeyId() ) ;
+            Key key = Key.decode( event.getKeyId() ) ;
             return keyProcessingHelper.processKey( key ) ;
         }
         catch( Exception e ) {
+            log.error( "Exception while processing key. " + event.getKeyId(), e );
             return ResponseEntity.status( 500 )
                                  .body( e.getMessage() ) ;
         }
@@ -39,6 +39,7 @@ public class RemoteController {
                     .body( keyProcessingHelper.getFnLabelsJSON() ) ;
         }
         catch( Exception e ) {
+            log.error( "Exception while getting fn labels.", e );
             return ResponseEntity.status( 500 )
                     .body( e.getMessage() ) ;
         }

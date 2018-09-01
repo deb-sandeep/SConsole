@@ -57,8 +57,8 @@ public abstract class State implements KeyListener {
         enableAllTransitions() ;
     }
     
-    public void addTransition( Key key, State nextState ) {
-        addTransition( key, null, nextState ) ;
+    public State addTransition( Key key, State nextState ) {
+        return addTransition( key, null, nextState ) ;
     }
     
     public State addTransition( Key key, String keyLabel, State nextState ) {
@@ -112,17 +112,19 @@ public abstract class State implements KeyListener {
      * This method will be called right before the from state's 
      * {@link #deactivate(State, Key)} * method is involved.
      */
+    @SuppressWarnings( "incomplete-switch" )
     public void activate( Object payload, State fromState, Key key ) {
         
+        boolean processFurther = preActivate( payload, fromState, key ) ;
+        
         if( fromState == null && key == null ) {
-            log.debug( "Transitioning in " + stateName + " as the state state." ) ;
+            log.debug( "Transitioning in " + stateName + " as the home state." ) ;
             return ;
         }
         
         log.debug( "TransitionIn => " + 
-                   stateName + " <--" + key + "-- " + fromState.stateName ) ;
+                    stateName + " <--" + key + "-- " + fromState.stateName ) ;
         
-        boolean processFurther = preActivate( payload, fromState, key ) ;
         if( !processFurther ) {
             log.debug( "Pre-activation logic prevented further dispath of key" ) ;
             return ;
@@ -146,7 +148,7 @@ public abstract class State implements KeyListener {
             case FN_G      : handleFnGKey()             ; break ;
             case FN_H      : handleFnHKey()             ; break ;
             
-            case SCR_SEL_SHOWHIDE:
+            case SCR_SHOWHIDE:
                 throw new IllegalStateException( "Key processor should not"
                         + "be receiving screenlet show/hide key event." ) ;
         }

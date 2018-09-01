@@ -30,7 +30,7 @@ public class Session {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
     
-    @Enumerated( EnumType.STRING )
+    @Convert( converter = SessionTypeConverter.class )
     private SessionType sessionType ;
     
     @ManyToOne
@@ -136,12 +136,14 @@ public class Session {
         clone.setNumRedo( numRedo ) ;
         clone.setNumPigeon( numPigeon ) ;
         clone.setDuration( duration ) ;
+        clone.setStartTime( startTime ) ;
+        clone.setEndTime( endTime ) ;
         return clone ;
     }
     
     public String toString() {
-        StringBuffer buffer = new StringBuffer() ;
-        buffer.append( "   Id          = " ).append( getId()          ).append( "\n" )
+        StringBuffer sbuf = new StringBuffer() ;
+        sbuf.append( "   Id          = " ).append( getId()          ).append( "\n" )
             .append( "   Topic       = " ).append( getTopic()       ).append( "\n" )
             .append( "   Book        = " ).append( getBook()        ).append( "\n" )
             .append( "   LastProblem = " ).append( getLastProblem() ).append( "\n" )
@@ -150,9 +152,27 @@ public class Session {
             .append( "   NumSolved   = " ).append( getNumSolved()   ).append( "\n" )
             .append( "   NumRedo     = " ).append( getNumRedo()     ).append( "\n" )
             .append( "   NumPigeon   = " ).append( getNumPigeon()   ).append( "\n" )
-            .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) 
-            .append( "   Start time  = " ).append( new Date( getStartTime().getTime() ) ).append( "\n" )
-            .append( "   End time    = " ).append( new Date( getEndTime().getTime() ) ).append( "\n" ) ;
-        return buffer.toString() ;
+            .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) ;
+        
+        
+        sbuf.append( "   Start time  = " ) ;
+        if( getStartTime() != null ) {
+            sbuf.append( new Date( getStartTime().getTime() ) ) ;
+        }
+        else {
+            sbuf.append( "null" ) ;
+        }
+        sbuf.append( "\n" ) ;
+        
+        sbuf.append( "   End time    = " ) ;
+        if( getEndTime() != null ) {
+            sbuf.append( new Date( getEndTime().getTime() ) ) ;
+        }
+        else {
+            sbuf.append( "null" ) ;
+        }
+        sbuf.append( "\n" ) ;
+        
+        return sbuf.toString() ;
     }
 }

@@ -20,8 +20,8 @@ public class HomeState extends BaseControlTileState {
     
     private Session sessionBlank = null ;
     
-    public HomeState( String stateName, SessionControlTile tile ) {
-        super( stateName, tile ) ;
+    public HomeState( SessionControlTile tile ) {
+        super( "Home", tile ) ;
     }
     
     @Override
@@ -42,29 +42,31 @@ public class HomeState extends BaseControlTileState {
         // session blank - prepopulated with the details of the last session.
         // This way, the user can start a new session with the details of the
         // previous one.
-        sessionBlank = new Session() ;
         
         Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubject() ) ;
         if( lsOpt.isPresent() ) {
-            Session ls = lsOpt.get().getSession().clone() ;
+            sessionBlank = lsOpt.get().getSession().clone() ;
             
             // At this point the session still has information which is not
             // suited for the blank - like last lap details, session details,
             // outcome details etc. We use the information for display and
             // then dis-embowel them out.
-            populateUILastSessionDetails( ls ) ;
+            populateUILastSessionDetails( sessionBlank ) ;
             
             // Disemboweling out the unnecessary details. Note that the following
             // attributes are not cleared - sessionType, topic, book, problem
-            ls.setId( null ) ;
-            ls.setStartTime( null ) ;
-            ls.setEndTime( null ) ;
-            ls.setDuration( 0 ) ;
-            ls.setAbsoluteDuration( 0 );
-            ls.setNumSkipped( 0 );
-            ls.setNumSolved( 0 );
-            ls.setNumRedo( 0 );
-            ls.setNumPigeon( 0 );
+            sessionBlank.setId( null ) ;
+            sessionBlank.setStartTime( null ) ;
+            sessionBlank.setEndTime( null ) ;
+            sessionBlank.setDuration( 0 ) ;
+            sessionBlank.setAbsoluteDuration( 0 );
+            sessionBlank.setNumSkipped( 0 );
+            sessionBlank.setNumSolved( 0 );
+            sessionBlank.setNumRedo( 0 );
+            sessionBlank.setNumPigeon( 0 );
+        }
+        else {
+            sessionBlank = new Session() ;
         }
         
         log.debug( "Validating session details and activating play button" ) ;

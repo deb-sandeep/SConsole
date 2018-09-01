@@ -6,11 +6,13 @@ import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.remote.KeyProcessor ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
+import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI {
@@ -47,6 +49,9 @@ public class SessionControlTile extends SessionControlTileUI {
     }
     
     private HomeState homeState = null ;
+    private PlayState playState = null ;
+    private ChangeState changeState = null ;
+    
     private State currentState = null ;
     
     private State[] states = null ;
@@ -61,16 +66,24 @@ public class SessionControlTile extends SessionControlTileUI {
         controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
         
         initializeStateMachine() ;
-        startStateMachine() ;
     }
     
     private void initializeStateMachine() {
         
-        homeState = new HomeState( "Home", this ) ;
+        homeState = new HomeState( this ) ;
+        playState = new PlayState( this ) ;
+        changeState = new ChangeState( this ) ;
         
-        states = new State[]{ homeState } ;
+        homeState.addTransition( Key.PLAYPAUSE, playState )
+                 .addTransition( Key.FN_A, "Change", changeState ) ;
+        
+        states = new State[]{ homeState, playState, changeState } ;
     }
     
+    // Note that the state machine is started on maximization of the screenlet
+    // and only if the screenlet is currently in the stopped state. This
+    // ensures that the screenlet is refreshed with fresh data every time it
+    // is visited in a neutral state.
     private void startStateMachine() {
         resetAllStates() ;
         currentState = homeState ;

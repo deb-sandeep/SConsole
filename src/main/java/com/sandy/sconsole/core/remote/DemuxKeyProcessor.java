@@ -110,6 +110,7 @@ public class DemuxKeyProcessor extends KeyProcessor {
         return actInfo.getActive() ;
     }
 
+    @SuppressWarnings( "incomplete-switch" )
     @Override
     public void processKey( Key key ) {
         
@@ -168,7 +169,7 @@ public class DemuxKeyProcessor extends KeyProcessor {
             case FN_H:
                 listener.handleFnHKey() ;
                 break ;
-            case SCR_SEL_SHOWHIDE:
+            case SCR_SHOWHIDE:
                 throw new IllegalStateException( "Key processor should not"
                         + "be receiving screenlet show/hide key event." ) ;
         }

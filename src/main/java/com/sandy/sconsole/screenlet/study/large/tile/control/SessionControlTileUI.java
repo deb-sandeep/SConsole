@@ -70,7 +70,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public enum Btn2Type { STOP, CHANGE, CLEAR, CANCEL } ;
     public enum OutcomeButtonsState { HIDDEN, INACTIVE, ACTIVE } ;
     
-    public static Border INVALID_BORDER = new LineBorder( Color.RED, 2 ) ;
+    public static Border INVALID_BORDER = new LineBorder( Color.RED, 1 ) ;
     
     public JLabel typeLbl      = createDefaultLabel( "" ) ;
     public JLabel topicLbl     = createDefaultLabel( "" ) ;

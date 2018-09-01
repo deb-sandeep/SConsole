@@ -7,6 +7,23 @@ public enum KeyType {
     RUN         ( "Run"                ),
     FUNCTION    ( "Function"           );
     
+    public static KeyType decode( String str ) {
+        if( str.equals( "ScreenletSelection" ) ) {
+            return SCREEN_SEL;
+        }
+        if( str.equals( "NavControl" ) ) {
+            return NAV_CONTROL;
+        }    
+        if( str.equals( "Run" ) ) {
+            return RUN;
+        }    
+        if( str.equals( "Function" ) ) {
+            return FUNCTION;
+        }
+        
+        throw new IllegalArgumentException( "String " + str + " is not a valid key type." ) ;
+    }
+    
     private String value = null ;
     
     private KeyType( String value ) {
