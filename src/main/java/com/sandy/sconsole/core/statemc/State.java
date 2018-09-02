@@ -96,20 +96,24 @@ public abstract class State implements KeyListener {
         }
     }
     
-    public void enableTransition( Key key ) {
-        if( !transitionMap.containsKey( key ) ) {
-            throw new IllegalStateException( "Key " + key + " is absent in "
-                    + "the transition map." ) ;
+    public void enableTransition( Key... keys ) {
+        for( Key key : keys ) {
+            if( !transitionMap.containsKey( key ) ) {
+                throw new IllegalStateException( "Key " + key + " is absent in "
+                        + "the transition map." ) ;
+            }
+            transitionMap.get( key ).setActive( true ) ;
         }
-        transitionMap.get( key ).setActive( true ) ;
     }
     
-    public void disableTransition( Key key ) {
-        if( !transitionMap.containsKey( key ) ) {
-            throw new IllegalStateException( "Key " + key + " is absent in "
-                                           + "the transition map." ) ;
+    public void disableTransition( Key... keys ) {
+        for( Key key : keys ) {
+            if( !transitionMap.containsKey( key ) ) {
+                throw new IllegalStateException( "Key " + key + " is absent in "
+                                               + "the transition map." ) ;
+            }
+            transitionMap.get( key ).setActive( false ) ;
         }
-        transitionMap.get( key ).setActive( false ) ;
     }
     
     /**

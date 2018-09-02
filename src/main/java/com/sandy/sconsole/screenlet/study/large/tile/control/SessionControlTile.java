@@ -12,9 +12,7 @@ import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.* ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI {
@@ -76,12 +74,17 @@ public class SessionControlTile extends SessionControlTileUI {
     
     private void initializeStateMachine() {
         
-        homeState = new HomeState( this, (StudyScreenletLargePanel)parent ) ;
-        playState = new PlayState( this, (StudyScreenletLargePanel)parent ) ;
-        changeState = new ChangeState( this, (StudyScreenletLargePanel)parent ) ;
+        StudyScreenletLargePanel largePanel = (StudyScreenletLargePanel)parent ;
+        
+        homeState = new HomeState( this, largePanel ) ;
+        playState = new PlayState( this, largePanel ) ;
+        changeState = new ChangeState( this, largePanel ) ;
         
         homeState.addTransition( Key.PLAYPAUSE, playState )
                  .addTransition( Key.FN_A, "Change", changeState ) ;
+        
+        changeState.addTransition( Key.CANCEL, homeState )
+                   .addTransition( Key.PLAYPAUSE, playState ) ;
         
         states = new State[]{ homeState, playState, changeState } ;
     }

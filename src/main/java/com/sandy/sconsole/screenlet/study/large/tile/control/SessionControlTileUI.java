@@ -8,7 +8,6 @@ import java.awt.Color ;
 
 import javax.swing.* ;
 import javax.swing.border.Border ;
-import javax.swing.border.LineBorder ;
 
 import org.apache.log4j.Logger ;
 
@@ -50,7 +49,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     public static Color TYPE_LBL_FG       = Color.GRAY ;
     public static Color TOPIC_LBL_FG      = Color.LIGHT_GRAY ;
-    public static Color BOOK_LBL_FG       = Color.GRAY ;
+    public static Color BOOK_LBL_FG       = Color.GRAY.brighter() ;
     public static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
     public static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
     public static Color STIME_LBL_FG      = Color.decode( "#75BAF9" ) ;
@@ -185,6 +184,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         
         JPanel panel = new JPanel() ;
         panel.setLayout( new BorderLayout() ) ;
+        panel.setBackground( UIConstant.BG_COLOR ) ;
         return panel ;
     }
 
@@ -216,6 +216,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         setProblemLabel( null ) ;
         
         clearInvalidationBorders() ;
+        clearChangeUIActivations() ;
         
         updateNumProblemsLeftInBookLabel( -1 ) ;
         updateSessionTimeLabel( -1 ) ;
@@ -234,6 +235,13 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         topicLbl.setBorder( null ) ;
         bookLbl.setBorder( null ) ;
         problemLbl.setBorder( null ) ;
+    }
+    
+    public void clearChangeUIActivations() {
+        typeLbl.setBackground( UIConstant.BG_COLOR ) ;
+        topicLbl.setBackground( UIConstant.BG_COLOR ) ;
+        bookLbl.setBackground( UIConstant.BG_COLOR ) ;
+        problemLbl.setBackground( UIConstant.BG_COLOR ) ;
     }
     
     public void invalidateSessionTypePanel() {

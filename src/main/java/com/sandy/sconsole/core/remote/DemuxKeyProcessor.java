@@ -114,7 +114,7 @@ public class DemuxKeyProcessor extends KeyProcessor {
     public Map<Key, String> getActivatedKeyInfo() {
         
         Map<Key, String> activatedKeyMap = new HashMap<>() ;
-        for( Key key : activatedKeyMap.keySet() ) {
+        for( Key key : activationMap.keySet() ) {
             KeyActivationInfo activation = activationMap.get( key ) ;
             if( activation.getActive() ) {
                 activatedKeyMap.put( key, activation.getKeyLabel() ) ;

@@ -10,49 +10,52 @@ import javax.swing.* ;
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.core.remote.Key ;
+import com.sandy.sconsole.dao.entity.Session.SessionType ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
 public class SessionTypeChangeDialog extends AbstractDialogPanel {
     
     static final Logger log = Logger.getLogger( SessionTypeChangeDialog.class ) ;
     
-    private String sessionType = null ;
+    private SessionType sessionType = null ;
     
     private Icon exerciseIcon = null ;
     private Icon theoryIcon   = null ;
     private Icon lectureIcon  = null ;
     private Icon cancelIcon   = null ;
     
-    private SessionControlTile control = null ;
-    
+    private ChangeState changeState = null ;
 
-    public SessionTypeChangeDialog( SessionControlTile control ) {
+    public SessionTypeChangeDialog( ChangeState changeState ) {
         super( "Session Type Change" ) ;
         
-        this.control = control ;
-        
+        this.changeState = changeState ;
         setUpUI() ;
         keyProcessor.disableAllKeys() ;
-//        keyProcessor.setKeyEnabled( true, FN_A, FN_B, FN_C, FN_CANCEL ) ;
-//        keyProcessor.setFnHandler( FN_A, new Handler( "Exercise" ) {
-//            public void handle() { setSessionType( TYPE_EXERCISE ) ; }
-//        } ) ;
-//        keyProcessor.setFnHandler( FN_B, new Handler( "Theory" ) {
-//            public void handle() { setSessionType( TYPE_THEORY ) ; }
-//        } ) ;
-//        keyProcessor.setFnHandler( FN_C, new Handler( "Lecture" ) {
-//            public void handle() { setSessionType( TYPE_LECTURE ) ; }
-//        } ) ;
-//        keyProcessor.setFnHandler( FN_CANCEL, new Handler( "" ) {
-//            public void handle() { setSessionType( null ) ; }
-//        } ) ;
+        keyProcessor.enableKey( Key.FN_A, "Exercise" ) ;
+        keyProcessor.enableKey( Key.FN_B, "Theory" ) ;
+        keyProcessor.enableKey( Key.FN_C, "Lecture" ) ;
+        keyProcessor.enableKey( Key.CANCEL ) ;
     }
     
-    private void setSessionType( String type ) {
+    @Override
+    public void handleFnAKey() { setSessionType( SessionType.EXERCISE ) ; }
+
+    @Override
+    public void handleFnBKey() { setSessionType( SessionType.THEORY ) ; }
+
+    @Override
+    public void handleFnCKey() { setSessionType( SessionType.LECTURE ) ; }
+
+    @Override
+    public void handleCancelNavKey() { setSessionType( null ) ; }
+
+    private void setSessionType( SessionType type ) {
         this.sessionType = type ;
         super.hideDialog() ;
-//        control.handleNewSessionTypeSelection( type ) ;
+        changeState.handleNewSessionTypeSelection( type ) ;
     }
      
     private void setUpUI() {

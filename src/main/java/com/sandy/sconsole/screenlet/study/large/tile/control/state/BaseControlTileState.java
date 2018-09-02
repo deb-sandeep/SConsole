@@ -7,7 +7,10 @@ import org.apache.log4j.Logger ;
 import org.springframework.context.ApplicationContext ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
+import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -18,6 +21,9 @@ import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn1Type ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.OutcomeButtonsState ;
 
 public class BaseControlTileState extends State {
     
@@ -63,6 +69,66 @@ public class BaseControlTileState extends State {
         screenletPanel.hideMessage() ;
     }
 
+    protected void populateUIBasedOnSessionInfo( SessionInformation si ) {
+        
+        Session ls = si.sessionBlank ;
+        
+        log.debug( "Populating last session details" ) ;
+        log.debug( ls ) ;
+        
+        SessionType sessionType = ls.getSessionType() ;
+        
+        log.debug( "Copying values of session type, topic and session time" ) ;
+        tile.setSessionTypeIcon( sessionType ) ;
+        tile.setTopicLabel( ls.getTopic() ) ;
+        tile.updateSessionTimeLabel( ls.getDuration() ) ;
+        
+        if( sessionType == SessionType.EXERCISE ) {
+            
+            log.debug( "Last sesion was an exercise. Populate exercise details." );
+            tile.setBookLabel( ls.getBook() ) ;
+            tile.updateNumSkippedLabel( ls.getNumSkipped() ) ;
+            tile.updateNumSolvedLabel( ls.getNumSolved() ) ;
+            tile.updateNumRedoLabel( ls.getNumRedo() ) ;
+            tile.updateNumPigeonLabel( ls.getNumPigeon() ) ;
+            
+            populateProblem( si ) ;
+            
+            tile.setOutcomeButtonsState( OutcomeButtonsState.INACTIVE ) ;
+        }
+        else {
+            tile.setBookLabel( null ) ;
+            tile.setProblemLabel( null ) ;
+            tile.updateNumProblemsLeftInBookLabel( -1 ) ;
+            tile.updateSessionTimeLabel( -1 ) ;
+            tile.updateLapTimeLabel( -1 ) ;
+            tile.updateNumSkippedLabel( -1 ) ;
+            tile.updateNumSolvedLabel( -1 ) ;
+            tile.updateNumRedoLabel( -1 ) ;
+            tile.updateNumPigeonLabel( -1 ) ;
+            
+            tile.setOutcomeButtonsState( OutcomeButtonsState.HIDDEN ) ;
+        }
+    }
+    
+    protected void populateProblem( SessionInformation si ) {
+        
+        Topic topic = si.sessionBlank.getTopic() ;
+        Book book = si.sessionBlank.getBook() ;
+        Problem lastProblem = si.sessionBlank.getLastProblem() ;
+        
+        si.unsolvedProblems = loadUnsolvedProblems( topic, book, lastProblem ) ;
+        if( !si.unsolvedProblems.isEmpty() ) {
+            si.sessionBlank.setLastProblem( si.unsolvedProblems.get( 0 ) ) ;
+        }
+        else {
+            si.sessionBlank.setLastProblem( null ) ;
+        }
+        
+        tile.updateNumProblemsLeftInBookLabel( si.unsolvedProblems.size() ) ;
+        tile.setProblemLabel( si.sessionBlank.getLastProblem() ) ;
+    }
+    
     protected List<Problem> loadUnsolvedProblems( Topic topic, Book book, 
                                                   Problem lastProblem ) {
         
@@ -119,5 +185,40 @@ public class BaseControlTileState extends State {
         
         log.debug( unsolvedProblems.size() + " unsolved problems found" ) ;
         return unsolvedProblems ;
+    }
+
+    protected void processPlayReadiness( SessionInformation si ) {
+        
+        boolean readyToPlay = true ;
+        
+        if( si.sessionBlank.getSessionType() == null ) {
+            readyToPlay = false ;
+            tile.invalidateSessionTypePanel() ;
+        }
+        if( si.sessionBlank.getTopic() == null ) {
+            readyToPlay = false ;
+            tile.invalidateTopicPanel() ;
+        }
+        
+        if( si.sessionBlank.getSessionType() == SessionType.EXERCISE ) {
+            if( si.sessionBlank.getBook() == null ) {
+                readyToPlay = false ;
+                tile.invalidateBookPanel() ; 
+            }
+            if( si.sessionBlank.getLastProblem() == null ) {
+                readyToPlay = false ;
+                tile.invalidateProblemPanel() ; 
+            }
+        }
+        
+        if( readyToPlay ) {
+            tile.setBtn1UI( Btn1Type.PLAY ) ;
+            super.enableTransition( Key.PLAYPAUSE ) ;
+            hideMessage() ;
+        }
+        else {
+            showMessage( "Play will be enabled after the required attributes (" + 
+                         "highlighted with red border) are changed." ) ;
+        }
     }
 }
