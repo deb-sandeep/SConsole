@@ -76,6 +76,8 @@ public class ScreenletContainer extends JPanel {
     private void maximizeScreenlet( Screenlet screenlet ) {
         
         if( currentlyMaximizedScreenlet == screenlet ) {
+            log.debug( "Screenlet " + screenlet.getDisplayName() + 
+                       " is already maximized." );
             return ;
         }
         

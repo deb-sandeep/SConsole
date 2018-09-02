@@ -1,5 +1,15 @@
 package com.sandy.sconsole.screenlet.study.large;
 
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Component ;
+
+import javax.swing.JLabel ;
+import javax.swing.JPanel ;
+import javax.swing.SwingConstants ;
+import javax.swing.border.EmptyBorder ;
+
+import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.* ;
@@ -25,7 +35,8 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private static final String DAY_RELATIVE_PC    = "7,6,9,7" ;
     private static final String LAST_30D_PC        = "5,8,9,9" ;
     
-    private TableLayout layout = null ;
+    private TableLayout centerPanelLayout = null ;
+    private BorderLayout borderLayout = null ;
     
     private TimeTile             timeTile             = null ;
     private TitleTile            titleTile            = null ;
@@ -39,8 +50,12 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private DayRelativeHoursTile dayRelativeHoursTile = null ;
     private Last30DaysHoursTile  last30DaysHoursTile  = null ;
     
+    private JLabel messageLabel = null ;
+    
     public StudyScreenletLargePanel( StudyScreenlet screenlet ) {
         super( screenlet ) ;
+        borderLayout = ( BorderLayout )getLayout() ;
+        initializeMessageLabel() ;
         initializeTiles() ;
         setUpUI() ;
     }
@@ -59,15 +74,32 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         last30DaysHoursTile  = new Last30DaysHoursTile( this ) ;
     }
     
-    private void setUpUI() {
-        setLayout() ;
-        layoutHeaderRow() ;
-        layoutDayGanttRow() ;
-        layoutStatRow() ;
-        layoutBurnAndStatRow() ;
+    private void initializeMessageLabel() {
+        messageLabel = new JLabel( "This is a test message." ) ;
+        messageLabel.setOpaque( true ) ;
+        messageLabel.setBackground( Color.YELLOW ) ; 
+        messageLabel.setFont( UIConstant.BASE_FONT.deriveFont( 20F ) ) ;
+        messageLabel.setForeground( Color.BLACK ) ;
+        messageLabel.setVerticalAlignment( SwingConstants.CENTER ) ;
+        messageLabel.setHorizontalAlignment( SwingConstants.LEFT ) ;
+        messageLabel.setBorder( new EmptyBorder( 5, 10, 5, 10 ) );
     }
     
-    private void setLayout() {
+    private void setUpUI() {
+        
+        JPanel panel = new JPanel() ;
+        panel.setBackground( UIConstant.BG_COLOR ) ;
+        
+        setLayout( panel ) ;
+        layoutHeaderRow( panel ) ;
+        layoutDayGanttRow( panel ) ;
+        layoutStatRow( panel ) ;
+        layoutBurnAndStatRow( panel ) ;
+        
+        add( panel, BorderLayout.CENTER ) ;
+    }
+    
+    private void setLayout( JPanel panel ) {
         double[] colSizes = new double[10] ;
         double[] rowSizes = new double[10] ;
         
@@ -75,30 +107,47 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
             colSizes[i] = rowSizes[i] = 0.1D ;
         }
 
-        layout = new TableLayout( colSizes, rowSizes ) ;
-        setLayout( layout ) ;
+        centerPanelLayout = new TableLayout( colSizes, rowSizes ) ;
+        panel.setLayout( centerPanelLayout ) ;
     }
     
-    private void layoutHeaderRow() {
-        add( timeTile, TIME_PC ) ;
-        add( titleTile, TITLE_PC ) ;
-        add( dateTile, DATE_PC ) ;
+    private void layoutHeaderRow( JPanel panel ) {
+        panel.add( timeTile, TIME_PC ) ;
+        panel.add( titleTile, TITLE_PC ) ;
+        panel.add( dateTile, DATE_PC ) ;
     }
     
-    private void layoutDayGanttRow() {
-        add( dayGanttTile, GANTT_PC ) ;
+    private void layoutDayGanttRow( JPanel panel ) {
+        panel.add( dayGanttTile, GANTT_PC ) ;
     }
     
-    private void layoutStatRow() {
-        add( sessionStatTile, SESSION_STAT_PC ) ;
-        add( sessionControlTile, SESSION_CONTROL_PC ) ;
-        add( dayStatTile, DAY_STAT_PC ) ;
+    private void layoutStatRow( JPanel panel ) {
+        panel.add( sessionStatTile, SESSION_STAT_PC ) ;
+        panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
+        panel.add( dayStatTile, DAY_STAT_PC ) ;
     }
     
-    private void layoutBurnAndStatRow() {
-        add( burnTile, BURN_PC ) ;
-        add( dayTotalTile, DAY_TOTAL_PC ) ;
-        add( dayRelativeHoursTile, DAY_RELATIVE_PC ) ;
-        add( last30DaysHoursTile, LAST_30D_PC ) ;
+    private void layoutBurnAndStatRow( JPanel panel ) {
+        panel.add( burnTile, BURN_PC ) ;
+        panel.add( dayTotalTile, DAY_TOTAL_PC ) ;
+        panel.add( dayRelativeHoursTile, DAY_RELATIVE_PC ) ;
+        panel.add( last30DaysHoursTile, LAST_30D_PC ) ;
+    }
+    
+    public void showMessage( String msg ) {
+        Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
+        if( comp == null ) {
+            add( messageLabel, BorderLayout.SOUTH ) ;
+            revalidate() ;
+        }
+        messageLabel.setText( msg ) ;
+    }
+    
+    public void hideMessage() {
+        Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
+        if( comp != null ) {
+            remove( messageLabel ) ;
+            revalidate() ;
+        }
     }
 }

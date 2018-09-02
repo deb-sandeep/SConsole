@@ -7,9 +7,9 @@ import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.remote.KeyProcessor ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
-import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
+import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
@@ -60,7 +60,7 @@ public class SessionControlTile extends SessionControlTileUI {
     
     private RemoteController controller = null ;
     
-    public SessionControlTile( ScreenletPanel parent ) {
+    public SessionControlTile( StudyScreenletLargePanel parent ) {
         super( parent ) ;
         keyProcessor = new ControlTileKeyProcessor() ;
         controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
@@ -70,9 +70,9 @@ public class SessionControlTile extends SessionControlTileUI {
     
     private void initializeStateMachine() {
         
-        homeState = new HomeState( this ) ;
-        playState = new PlayState( this ) ;
-        changeState = new ChangeState( this ) ;
+        homeState = new HomeState( this, (StudyScreenletLargePanel)parent ) ;
+        playState = new PlayState( this, (StudyScreenletLargePanel)parent ) ;
+        changeState = new ChangeState( this, (StudyScreenletLargePanel)parent ) ;
         
         homeState.addTransition( Key.PLAYPAUSE, playState )
                  .addTransition( Key.FN_A, "Change", changeState ) ;
