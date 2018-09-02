@@ -1,19 +1,45 @@
 package com.sandy.sconsole.api.remote;
 
+import java.util.HashMap ;
+import java.util.Map ;
 import java.util.Stack ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 
+import com.fasterxml.jackson.databind.ObjectMapper ;
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.core.remote.* ;
+import com.sandy.sconsole.core.remote.Key ;
+import com.sandy.sconsole.core.remote.KeyProcessor ;
+import com.sandy.sconsole.core.remote.KeyType ;
+
+import static com.sandy.sconsole.core.remote.Key.* ;
 
 public class KeyProcessingHelper {
     
     static final Logger log = Logger.getLogger( KeyProcessingHelper.class ) ;
 
     private Stack<KeyProcessor> processors = null ;
+    
+    private static Key KEYS[] = {
+            UP,
+            LEFT,
+            RIGHT,
+            DOWN,
+            SELECT,
+            CANCEL,
+            PLAYPAUSE,
+            STOP,
+            FN_A,
+            FN_B,
+            FN_C,
+            FN_D,
+            FN_E,
+            FN_F,
+            FN_G,
+            FN_H
+    } ;
     
     public KeyProcessingHelper( Stack<KeyProcessor> processors ) {
         this.processors = processors ;
@@ -46,14 +72,36 @@ public class KeyProcessingHelper {
         }
         
         return ResponseEntity.status( HttpStatus.OK )
-                             .body( getFnLabelsJSON() ) ;
+                             .body( getKeyActivationJSON() ) ;
     }
     
-    public String getFnLabelsJSON() 
+    public String getKeyActivationJSON() 
         throws Exception {
         
         log.debug( "Activated function keys for next interaction:" ) ;
-        log.error( "TODO: Have to implement this method." ) ;
-        return "" ;
+        
+        ObjectMapper mapper = new ObjectMapper() ;
+        Map<String, String> keyActivationInfo = new HashMap<String, String>() ;
+        
+        KeyProcessor processor = null ;
+        Map<Key, String> info = null ;
+        if( !processors.isEmpty() ) {
+            processor = processors.peek() ;
+            info = processor.getActivatedKeyInfo() ;
+        }
+        else {
+            info = new HashMap<>() ;
+        }
+        
+        for( Key key : KEYS ) {
+            String value = null ;
+            if( info.containsKey( key ) ) {
+                String label = info.get( key ) ;
+                value = ( label == null )? "" : label ;
+            }
+            keyActivationInfo.put( key.name(), value ) ;
+        }
+        
+        return mapper.writeValueAsString( keyActivationInfo ) ;
     }
 }

@@ -53,39 +53,48 @@
   <div class="remote-nav-row">
     <div class="button nav-blank"></div>
     <div class="button nav"
-         ng-click="btnPressed('NavControl', 'Up')">
+         ng-click="btnPressed('NavControl', 'Up')"
+         ng-style="{'visibility':keyActivationInfo.UP == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-chevron-up"></span>
     </div>
     <div class="button nav-blank"></div>
   </div>
   <div class="remote-nav-row">
     <div class="button nav"
-         ng-click="btnPressed('NavControl', 'Left')">
+         ng-click="btnPressed('NavControl', 'Left')"         
+         ng-style="{'visibility':keyActivationInfo.LEFT == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-chevron-left"></span>
     </div>
     <div class="button nav"
          ng-click="btnPressed('NavControl', 'Select')"
-         style="color:#00FF00">
+         style="color:#00FF00"
+         ng-style="{'visibility':keyActivationInfo.SELECT == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-ok-sign"></span>
     </div>
     <div class="button nav"
-         ng-click="btnPressed('NavControl', 'Right')">
+         ng-click="btnPressed('NavControl', 'Right')"
+         ng-style="{'visibility':keyActivationInfo.RIGHT == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-chevron-right"></span>
     </div>
   </div>
   <div class="remote-nav-row">
+    <div class="button nav-blank"></div>
+    <!-- 
     <div class="button nav"
          ng-click="btnPressed('ScreenletSelection', 'ShowHide')"
          style="color:#BB545F">
         <span class="glyphicon glyphicon-transfer"></span>
     </div>
+    -->
     <div class="button nav"
-         ng-click="btnPressed('NavControl', 'Down')">
+         ng-click="btnPressed('NavControl', 'Down')"
+         ng-style="{'visibility':keyActivationInfo.DOWN == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-chevron-down"></span>
     </div>
     <div class="button nav"
          ng-click="btnPressed('Function', 'Cancel')"
-         style="color:#BB545F">
+         style="color:#BB545F"
+         ng-style="{'visibility':keyActivationInfo.CANCEL == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-remove-sign"></span>
     </div>
   </div>
@@ -94,12 +103,14 @@
 
   <div class="remote-button-row">
     <div class="button start-stop"
-         ng-click="btnPressed('Run', 'PlayPause')">
+         ng-click="btnPressed('Run', 'PlayPause')"
+         ng-style="{'visibility':keyActivationInfo.PLAYPAUSE == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-play"></span>/
         <span class="glyphicon glyphicon-pause"></span>
     </div>
     <div class="button start-stop"
-         ng-click="btnPressed('Run', 'Stop')">
+         ng-click="btnPressed('Run', 'Stop')"
+         ng-style="{'visibility':keyActivationInfo.STOP == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-stop"></span>
     </div>
   </div>
@@ -110,45 +121,45 @@
   <div class="remote-button-row">
     <div class="button fn" style="background-color:#3C979E"
          ng-click="btnPressed('Function', 'A')"
-         ng-style="{'visibility':fnLabels.A == ''?'hidden':'visible'}">
-        {{fnLabels.A}}
+         ng-style="{'visibility':keyActivationInfo.FN_A == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_A}}
     </div>
     <div class="button fn" style="background-color:#7A9B2E"
          ng-click="btnPressed('Function', 'B')"
-         ng-style="{'visibility':fnLabels.B == ''?'hidden':'visible'}">
-        {{fnLabels.B}}
+         ng-style="{'visibility':keyActivationInfo.FN_B == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_B}}
     </div>
     <div class="button fn" style="background-color:#B96F1B"
          ng-click="btnPressed('Function', 'C')"
-         ng-style="{'visibility':fnLabels.C == ''?'hidden':'visible'}">
-        {{fnLabels.C}}
+         ng-style="{'visibility':keyActivationInfo.FN_C == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_C}}
     </div>
     <div class="button fn" style="background-color:#007C85"
          ng-click="btnPressed('Function', 'D')"
-         ng-style="{'visibility':fnLabels.D == ''?'hidden':'visible'}">
-        {{fnLabels.D}}
+         ng-style="{'visibility':keyActivationInfo.FN_D == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_D}}
     </div>
   </div>
   <div class="remote-button-row">
     <div class="button fn" style="background-color:#95ADBE"
          ng-click="btnPressed('Function', 'E')"
-         ng-style="{'visibility':fnLabels.E == ''?'hidden':'visible'}">
-        {{fnLabels.E}}
+         ng-style="{'visibility':keyActivationInfo.FN_E == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_E}}
     </div>
     <div class="button fn" style="background-color:#BB545F"
          ng-click="btnPressed('Function', 'F')"
-         ng-style="{'visibility':fnLabels.F == ''?'hidden':'visible'}">
-        {{fnLabels.F}}
+         ng-style="{'visibility':keyActivationInfo.FN_F == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_F}}
     </div>
     <div class="button fn" style="background-color:#428131"
          ng-click="btnPressed('Function', 'G')"
-         ng-style="{'visibility':fnLabels.G == ''?'hidden':'visible'}">
-        {{fnLabels.G}}
+         ng-style="{'visibility':keyActivationInfo.FN_G == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_G}}
     </div>
     <div class="button fn" style="background-color:#C5852F"
          ng-click="btnPressed('Function', 'H')"
-         ng-style="{'visibility':fnLabels.H == ''?'hidden':'visible'}">
-        {{fnLabels.H}}
+         ng-style="{'visibility':keyActivationInfo.FN_H == null?'hidden':'visible'}">
+        {{keyActivationInfo.FN_H}}
     </div>
   </div>
 

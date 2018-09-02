@@ -1,5 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
+import java.util.Map ;
+
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.SConsole ;
@@ -44,7 +46,11 @@ public class SessionControlTile extends SessionControlTileUI {
                 log.error( "Error processing key " + key + " in state " + 
                            currentState.getName(), e ) ;
             }
-            
+        }
+
+        @Override
+        public Map<Key, String> getActivatedKeyInfo() {
+            return currentState.getActivatedKeyInfo() ;
         }
     }
     

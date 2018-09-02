@@ -16,7 +16,7 @@ public abstract class State implements KeyListener {
 
         private String keyLabel = null ;
         private State targetState = null ;
-        private boolean active = true ;
+        private boolean active = false ;
         
         public TransitionState( State tgtState ) {
             this( tgtState, null ) ;
@@ -51,6 +51,19 @@ public abstract class State implements KeyListener {
     protected State( String stateName ) {
         this.stateName = stateName ;
         this.transitionMap = new HashMap<Key, TransitionState>() ;
+    }
+    
+    public Map<Key, String> getActivatedKeyInfo() {
+        
+        Map<Key, String> activatedKeyMap = new HashMap<>() ;
+        for( Key key : transitionMap.keySet() ) {
+            TransitionState transition = transitionMap.get( key ) ;
+            if( transition.isActive() ) {
+                activatedKeyMap.put( key, transition.keyLabel ) ;
+            }
+        }
+        
+        return activatedKeyMap ;
     }
     
     public void resetState() {

@@ -1,15 +1,23 @@
 sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
     
     $scope.otaStatus = "ota-idle" ;
-    $scope.fnLabels = {
-        A : "",
-        B : "",
-        C : "",
-        D : "",
-        E : "",
-        F : "",
-        G : "",
-        H : ""
+    $scope.keyActivationInfo = {
+        UP        : null,
+        LEFT      : null,
+        RIGHT     : null,
+        DOWN      : null,
+        SELECT    : null,
+        CANCEL    : null,
+        PLAYPAUSE : null,
+        STOP      : null,
+        FN_A      : null,
+        FN_B      : null,
+        FN_C      : null,
+        FN_D      : null,
+        FN_E      : null,
+        FN_F      : null,
+        FN_G      : null,
+        FN_H      : null
     }
     
     loadInitialFnBtnLabels() ;
@@ -32,14 +40,7 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
                 $scope.otaStatus = "ota-idle" ;
                 console.log( data ) ;
                 if( data.status == 200 ) {
-                    $scope.fnLabels.A = data.data.A ;
-                    $scope.fnLabels.B = data.data.B ;
-                    $scope.fnLabels.C = data.data.C ;
-                    $scope.fnLabels.D = data.data.D ;
-                    $scope.fnLabels.E = data.data.E ;
-                    $scope.fnLabels.F = data.data.F ;
-                    $scope.fnLabels.G = data.data.G ;
-                    $scope.fnLabels.H = data.data.H ;                
+                    $scope.keyActivationInfo = data.data ;
                }
             }, 
             function( error ){
@@ -61,14 +62,7 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
                 $scope.otaStatus = "ota-idle" ;
                 console.log( data ) ;
                 if( data.status == 200 ) {
-                    $scope.fnLabels.A = data.data.A ;
-                    $scope.fnLabels.B = data.data.B ;
-                    $scope.fnLabels.C = data.data.C ;
-                    $scope.fnLabels.D = data.data.D ;
-                    $scope.fnLabels.E = data.data.E ;
-                    $scope.fnLabels.F = data.data.F ;
-                    $scope.fnLabels.G = data.data.G ;
-                    $scope.fnLabels.H = data.data.H ;                
+                    $scope.keyActivationInfo = data.data ;
                }
             }, 
             function( error ){

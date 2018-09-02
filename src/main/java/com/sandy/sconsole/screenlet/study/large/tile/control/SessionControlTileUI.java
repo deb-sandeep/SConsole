@@ -223,8 +223,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         updateNumRedoLabel( -1 ) ;
         updateNumPigeonLabel( -1 ) ;
         
-        setBtn1( Btn1Type.CLEAR ) ;
-        setBtn2( Btn2Type.CLEAR ) ;
+        setBtn1UI( Btn1Type.CLEAR ) ;
+        setBtn2UI( Btn2Type.CLEAR ) ;
     }
     
     public void clearInvalidationBorders() {
@@ -360,7 +360,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         numPigeonLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
     }
     
-    public void setBtn1( Btn1Type btnType ) {
+    public void setBtn1UI( Btn1Type btnType ) {
         
         if( btnType == Btn1Type.PLAY ) {
             btn1Lbl.setIcon( playIcon ) ;
@@ -373,7 +373,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
     }
     
-    public void setBtn2( Btn2Type btnType ) {
+    public void setBtn2UI( Btn2Type btnType ) {
         
         btn2Lbl.setBackground( UIConstant.BG_COLOR ) ;
         btn2Lbl.setText( null ) ;

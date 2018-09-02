@@ -1,6 +1,7 @@
 package com.sandy.sconsole.core.remote;
 
 import java.util.Date ;
+import java.util.HashMap ;
 import java.util.Map ;
 
 import org.apache.commons.lang.StringUtils ;
@@ -110,6 +111,19 @@ public class DemuxKeyProcessor extends KeyProcessor {
         return actInfo.getActive() ;
     }
 
+    public Map<Key, String> getActivatedKeyInfo() {
+        
+        Map<Key, String> activatedKeyMap = new HashMap<>() ;
+        for( Key key : activatedKeyMap.keySet() ) {
+            KeyActivationInfo activation = activationMap.get( key ) ;
+            if( activation.getActive() ) {
+                activatedKeyMap.put( key, activation.getKeyLabel() ) ;
+            }
+        }
+        
+        return activatedKeyMap ;
+    }
+    
     @SuppressWarnings( "incomplete-switch" )
     @Override
     public void processKey( Key key ) {

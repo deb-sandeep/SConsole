@@ -36,7 +36,7 @@ public class RemoteController {
     public ResponseEntity<String> getFnKeyLabels() {
         try {
             return ResponseEntity.status( HttpStatus.OK )
-                    .body( keyProcessingHelper.getFnLabelsJSON() ) ;
+                    .body( keyProcessingHelper.getKeyActivationJSON() ) ;
         }
         catch( Exception e ) {
             log.error( "Exception while getting fn labels.", e );

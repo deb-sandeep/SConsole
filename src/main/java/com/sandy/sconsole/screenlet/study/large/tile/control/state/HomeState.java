@@ -42,9 +42,7 @@ public class HomeState extends BaseControlTileState {
         tile.cleanControlPanel() ;
         hideMessage() ;
         
-        // Deactivate the play transition out. We will enable if only if
-        // the critical session data is available and valid.
-        super.disableTransition( Key.PLAYPAUSE ) ;
+        // Note that by default all transitions are deactivated to start with.
         
         // Every time we transition to the home screen, we populate a fresh
         // session blank - prepopulated with the details of the last session.
@@ -152,14 +150,16 @@ public class HomeState extends BaseControlTileState {
         }
         
         if( readyToPlay ) {
-            tile.setBtn1( Btn1Type.PLAY ) ;
+            tile.setBtn1UI( Btn1Type.PLAY ) ;
             super.enableTransition( Key.PLAYPAUSE ) ;
+            hideMessage() ;
         }
         else {
             showMessage( "Play will be enabled after the required attributes (" + 
                          "highlighted with red border) are changed." ) ;
         }
         
-        tile.setBtn2( Btn2Type.CHANGE ) ;
+        tile.setBtn2UI( Btn2Type.CHANGE ) ;
+        super.enableTransition( Key.FN_A ) ;
     }
 }
