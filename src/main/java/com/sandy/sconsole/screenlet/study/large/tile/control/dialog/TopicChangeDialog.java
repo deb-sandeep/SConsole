@@ -7,7 +7,7 @@ import org.apache.log4j.Logger ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
 public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
@@ -17,13 +17,13 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
     private String subjectName = null ;
     private TopicRepository topicRepo = null ;
     
-    private SessionControlTile control = null ;
+    private ChangeState changeState = null ;
     
-    public TopicChangeDialog( SessionControlTile controlTile ) {
+    public TopicChangeDialog( ChangeState changeState ) {
         super( "Choose topic", new TopicChangeListCellRenderer() ) ;
 
-        this.control = controlTile ;
-        this.subjectName = controlTile.getScreenlet().getDisplayName() ;
+        this.changeState = changeState;
+        this.subjectName = changeState.getSubjectName() ;
         
         topicRepo = SConsole.getAppContext().getBean( TopicRepository.class ) ;
     }
@@ -35,13 +35,12 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
 
     @Override
     protected Topic getDefaultSelectedEntity() {
-//        return control.getChangeSelectionTopic() ;
-        return null ;
+        return changeState.getSessionInfo().sessionBlank.getTopic() ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-//        control.handleNewTopicSelection( (Topic)getReturnValue() ) ;
+        changeState.handleNewTopicSelection( (Topic)getReturnValue() ) ;
     }
 }

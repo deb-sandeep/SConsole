@@ -10,6 +10,7 @@ import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn2Type ;
@@ -24,7 +25,6 @@ public class ChangeState extends BaseControlTileState {
     
     private RemoteController controller = null ;
     
-    private PauseDialog             pauseDialog         = null ;
     private BookChangeDialog        bookChangeDialog    = null ;
     private TopicChangeDialog       topicChangeDialog   = null ;
     private ProblemChangeDialog     problemChangeDialog = null ;
@@ -42,6 +42,11 @@ public class ChangeState extends BaseControlTileState {
         controller = ctx.getBean( RemoteController.class ) ;
 
         typeChangeDialog    = new SessionTypeChangeDialog( this ) ;
+        topicChangeDialog   = new TopicChangeDialog( this ) ;
+    }
+    
+    public SessionInformation getSessionInfo() {
+        return this.si ;
     }
     
     @Override
@@ -147,6 +152,31 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnBKey() {
         log.debug( "FN_B key received in change state. Changing topic." ) ;
+        
+        controller.pushKeyProcessor( topicChangeDialog.getKeyProcessor() ) ;
+        
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( topicChangeDialog ) ;
+        }});
+    }
+    
+    /**
+     * This method is called asynchronous by {@link TopicChangeDialog}
+     * when the user finishes his interaction with the dialog.
+     */
+    public void handleNewTopicSelection( Topic topic ) {
+        
+        log.debug( "New topic chosen = " + topic ) ;
+        
+        if( topic != null ) {
+            si.sessionBlank.setTopic( topic ) ;
+            si.sessionBlank.setAbsoluteDuration( 0 ) ;
+            si.sessionBlank.setDuration( 0 ) ;
+        }
+        super.populateUIBasedOnSessionInfo( si ) ;
+        highlightKeyPanelsAndActivateTransitions() ;
     }
     
     /**

@@ -16,7 +16,6 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.frame.UIConstant ;
-import com.sandy.sconsole.core.remote.Key ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel {
@@ -42,7 +41,6 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         
         keyProcessor.disableAllKeys() ;
         keyProcessor.enableNavKeys() ;
-        keyProcessor.enableKey( Key.CANCEL ) ;
     }
 
     private void loadIcons() {

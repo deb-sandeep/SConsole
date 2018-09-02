@@ -68,6 +68,10 @@ public class BaseControlTileState extends State {
     protected void hideMessage() {
         screenletPanel.hideMessage() ;
     }
+    
+    public String getSubjectName() {
+        return screenletPanel.getScreenlet().getDisplayName() ;
+    }
 
     protected void populateUIBasedOnSessionInfo( SessionInformation si ) {
         
