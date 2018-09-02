@@ -95,8 +95,8 @@ public class Session {
     }
     
     public Problem getLastProblem() { return lastProblem ; }
-    public void setLastProblem( Problem lastProblem ) {
-        this.lastProblem = lastProblem ;
+    public void setLastProblem( Problem problem ) {
+        this.lastProblem = problem ;
     }
     
     public Integer getNumSkipped() { return numSkipped ; }

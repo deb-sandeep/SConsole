@@ -7,6 +7,7 @@ import org.apache.log4j.Logger ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer.TopicChangeListCellRenderer ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )

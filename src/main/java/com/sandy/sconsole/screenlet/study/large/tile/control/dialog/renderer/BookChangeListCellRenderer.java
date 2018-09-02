@@ -1,23 +1,23 @@
-package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
+package com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer;
 
 import java.awt.Component ;
 
 import javax.swing.JList ;
 
-import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.entity.master.Book ;
 
 @SuppressWarnings( "serial" )
-public class TopicChangeListCellRenderer 
-    extends AbstractChangeListCellRenderer<Topic> {
+public class BookChangeListCellRenderer 
+    extends AbstractChangeListCellRenderer<Book> {
 
     @Override
-    public Component getListCellRendererComponent( JList<? extends Topic> list,
-                                                   Topic value, 
+    public Component getListCellRendererComponent( JList<? extends Book> list,
+                                                   Book value, 
                                                    int index, 
                                                    boolean isSelected, 
                                                    boolean cellHasFocus ) {
         super.doBaseDecoration( list, value, index, isSelected, cellHasFocus ) ;
-        setText( "  " + value.getTopicName() ) ;
+        setText( "  " + value.getBookShortName() ) ;
         return this ;
     }
 }

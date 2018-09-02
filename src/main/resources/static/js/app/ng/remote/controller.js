@@ -20,7 +20,9 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
         FN_H      : null
     }
     
-    loadInitialFnBtnLabels() ;
+    setInterval( function() {
+        loadKeyActivationInfo() ;
+    }, 5000 ) ;
     
     $scope.btnPressed = function( btnType, btnCode ) {
         console.log( btnType + " - " + btnCode ) ;
@@ -31,8 +33,10 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
         return $scope.otaStatus ;
     }
     
-    function loadInitialFnBtnLabels() {
+    function loadKeyActivationInfo() {
 
+        console.log( "Loading key activation info." ) ;
+        
         $scope.otaStatus = "ota-req-sent" ;
         $http.get( '/RemoteControl/FnKeyLabels' )
              .then( 

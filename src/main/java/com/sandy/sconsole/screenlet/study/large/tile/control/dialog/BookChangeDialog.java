@@ -9,7 +9,8 @@ import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer.BookChangeListCellRenderer ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
 public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
@@ -18,12 +19,11 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     private BookRepository bookRepo = null ;
     
-    private SessionControlTile control = null ;
+    private ChangeState changeState = null ;
     
-    public BookChangeDialog( SessionControlTile controlTile ) {
+    public BookChangeDialog( ChangeState changeState ) {
         super( "Choose book", new BookChangeListCellRenderer() ) ;
-
-        this.control = controlTile ;
+        this.changeState = changeState ;
         bookRepo = SConsole.getAppContext().getBean( BookRepository.class ) ;
     }
 
@@ -31,8 +31,7 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
     protected List<Book> getListItems() {
         List<Book> books = new ArrayList<Book>() ;
         
-//        Topic selectedTopic = control.getChangeSelectionTopic() ;
-        Topic selectedTopic = null ;
+        Topic selectedTopic = changeState.getSessionInfo().sessionBlank.getTopic() ;
         if( selectedTopic != null ) {
             List<Integer> bookIds = bookRepo.findProblemBooksForTopic( selectedTopic.getId() ) ;
             bookRepo.findAllById( bookIds ).forEach( e -> books.add( e )) ;
@@ -42,13 +41,12 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     @Override
     protected Book getDefaultSelectedEntity() {
-//        return control.getChangeSelectionBook() ;
-        return null ;
+        return changeState.getSessionInfo().sessionBlank.getBook() ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-//        control.handleNewBookSelection( (Book)getReturnValue() ) ;
+        changeState.handleNewBookSelection( (Book)getReturnValue() ) ;
     }
 }

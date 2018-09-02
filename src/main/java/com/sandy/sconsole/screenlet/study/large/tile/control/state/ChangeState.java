@@ -10,6 +10,8 @@ import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
+import com.sandy.sconsole.dao.entity.master.Book ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
@@ -25,10 +27,10 @@ public class ChangeState extends BaseControlTileState {
     
     private RemoteController controller = null ;
     
-    private BookChangeDialog        bookChangeDialog    = null ;
-    private TopicChangeDialog       topicChangeDialog   = null ;
-    private ProblemChangeDialog     problemChangeDialog = null ;
     private SessionTypeChangeDialog typeChangeDialog    = null ;
+    private TopicChangeDialog       topicChangeDialog   = null ;
+    private BookChangeDialog        bookChangeDialog    = null ;
+    private ProblemChangeDialog     problemChangeDialog = null ;
     
     private SessionInformation si = null ;
     
@@ -43,6 +45,8 @@ public class ChangeState extends BaseControlTileState {
 
         typeChangeDialog    = new SessionTypeChangeDialog( this ) ;
         topicChangeDialog   = new TopicChangeDialog( this ) ;
+        bookChangeDialog    = new BookChangeDialog( this ) ;
+        problemChangeDialog = new ProblemChangeDialog( this ) ;
     }
     
     public SessionInformation getSessionInfo() {
@@ -69,6 +73,8 @@ public class ChangeState extends BaseControlTileState {
             }
             
             this.si = ( SessionInformation )payload ;
+            this.si.sessionBlank.setDuration( 0 ) ;
+            this.si.sessionBlank.setAbsoluteDuration( 0 ) ;
             
             highlightKeyPanelsAndActivateTransitions() ;
             
@@ -83,6 +89,11 @@ public class ChangeState extends BaseControlTileState {
     
     private void highlightKeyPanelsAndActivateTransitions() {
         
+        hideMessage() ;
+        
+        // Enabling play pause by default. 
+        enableTransition( Key.PLAYPAUSE ) ;
+        
         // 1. Session Type and Topic change transitions
         tile.typeLbl.setBackground( UIConstant.FN_A_COLOR ) ;
         tile.topicLbl.setBackground( UIConstant.FN_B_COLOR ) ;
@@ -90,9 +101,22 @@ public class ChangeState extends BaseControlTileState {
         
         // 2. Book and Problem change transitions
         if( this.si.sessionBlank.getSessionType() == SessionType.EXERCISE ) {
+            
             tile.bookLbl.setBackground( UIConstant.FN_C_COLOR ) ;
             tile.problemLbl.setBackground( UIConstant.FN_D_COLOR ) ;
-            enableTransition( Key.FN_C, Key.FN_D ) ;
+            
+            if( si.sessionBlank.getTopic() == null ) {
+                disableTransition( Key.FN_C, Key.FN_D ) ;
+            }
+            else {
+                enableTransition( Key.FN_C ) ;
+                if( si.sessionBlank.getBook() == null ) {
+                    disableTransition( Key.FN_D ) ;
+                }
+                else {
+                    enableTransition( Key.FN_D ) ;
+                }
+            }
         }
         else {
             tile.bookLbl.setBackground( UIConstant.BG_COLOR ) ;
@@ -134,8 +158,6 @@ public class ChangeState extends BaseControlTileState {
         
         if( type != null ) {
             si.sessionBlank.setSessionType( type ) ;
-            si.sessionBlank.setAbsoluteDuration( 0 ) ;
-            si.sessionBlank.setDuration( 0 ) ;
             
             if( type != SessionType.EXERCISE ) {
                 si.sessionBlank.setBook( null ) ;
@@ -172,8 +194,6 @@ public class ChangeState extends BaseControlTileState {
         
         if( topic != null ) {
             si.sessionBlank.setTopic( topic ) ;
-            si.sessionBlank.setAbsoluteDuration( 0 ) ;
-            si.sessionBlank.setDuration( 0 ) ;
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;
@@ -186,6 +206,29 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnCKey() {
         log.debug( "FN_C key received in change state. Changing book" ) ;
+        
+        controller.pushKeyProcessor( bookChangeDialog.getKeyProcessor() ) ;
+        
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( bookChangeDialog ) ;
+        }});
+    }
+    
+    /**
+     * This method is called asynchronous by {@link BookChangeDialog}
+     * when the user finishes his interaction with the dialog.
+     */
+    public void handleNewBookSelection( Book book ) {
+        
+        log.debug( "New book chosen = " + book ) ;
+        
+        if( book != null ) {
+            si.sessionBlank.setBook( book ) ;
+        }
+        super.populateUIBasedOnSessionInfo( si ) ;
+        highlightKeyPanelsAndActivateTransitions() ;
     }
     
     /**
@@ -195,5 +238,29 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnDKey() {
         log.debug( "FN_D key received in change state. Changing problem" ) ;
+        
+        controller.pushKeyProcessor( problemChangeDialog.getKeyProcessor() ) ;
+        
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( problemChangeDialog ) ;
+        }});
     }
+    
+    /**
+     * This method is called asynchronous by {@link ProblemChangeDialog}
+     * when the user finishes his interaction with the dialog.
+     */
+    public void handleNewProblemSelection( Problem problem ) {
+        
+        log.debug( "New problem chosen = " + problem ) ;
+        
+        if( problem != null ) {
+            si.sessionBlank.setLastProblem( problem ) ;
+        }
+        super.populateUIBasedOnSessionInfo( si ) ;
+        highlightKeyPanelsAndActivateTransitions() ;
+    }
+    
 }

@@ -1,4 +1,4 @@
-package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
+package com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer;
 
 import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
 

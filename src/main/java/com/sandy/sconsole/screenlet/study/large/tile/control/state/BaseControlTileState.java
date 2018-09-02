@@ -223,6 +223,7 @@ public class BaseControlTileState extends State {
         else {
             showMessage( "Play will be enabled after the required attributes (" + 
                          "highlighted with red border) are changed." ) ;
+            super.disableTransition( Key.PLAYPAUSE ) ;
         }
     }
 }
