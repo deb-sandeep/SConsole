@@ -79,6 +79,25 @@ public class ChangeState extends BaseControlTileState {
         }
     }
     
+    /**
+     * This function is called before transitioning to the next state for 
+     * collecting the payload. 
+     * 
+     * Change state can transition to either the Play state or Home state.
+     * In case we are transitioning ot the play state, we pass the session 
+     * information as the payload.
+     * 
+     * Also note that it is guaranteed that the PLAY transition will not be 
+     * activated till the session information is valid and complete for
+     * starting a session.
+     */
+    public Object getTransitionOutPayload( State nextState, Key key ) {
+        if( nextState.getName().equals( PlayState.NAME ) ) {
+            return this.si ;
+        }
+        return null ;
+    }
+    
     private void highlightKeyPanelsAndActivateTransitions() {
         
         hideMessage() ;

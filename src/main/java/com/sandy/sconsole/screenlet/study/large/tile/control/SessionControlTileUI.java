@@ -54,15 +54,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public static Color SUMS_LEFT_LBL_FG  = Color.GRAY ;
     public static Color PROBLEM_LBL_FG    = Color.decode( "#C2E880" ) ;
     public static Color STIME_LBL_FG      = Color.decode( "#75BAF9" ) ;
-    public static Color NUM_SKIP_LBL_FG   = UIConstant.FN_A_COLOR ;
-    public static Color NUM_SOLVED_LBL_FG = UIConstant.FN_B_COLOR ;
-    public static Color NUM_REDO_LBL_FG   = UIConstant.FN_C_COLOR ;
-    public static Color NUM_PIGEON_LBL_FG = UIConstant.FN_D_COLOR ;
     public static Color LTIME_LBL_FG      = Color.decode( "#F98BCC" ) ;
-    public static Color BTN_SKIP_LBL_FG   = Color.WHITE ;
-    public static Color BTN_SOLVED_LBL_FG = Color.WHITE ;
-    public static Color BTN_REDO_LBL_FG   = Color.WHITE ;
-    public static Color BTN_PIGEON_LBL_FG = Color.WHITE ;
     public static Color BTN1_LBL_FG       = Color.GRAY ;
     public static Color BTN2_LBL_FG       = Color.WHITE ;
     
@@ -90,10 +82,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public JLabel numPigeonLbl = createDefaultLabel( "" ) ;
     public JLabel numIgnoreLbl = createDefaultLabel( "" ) ;
     
-    public JLabel btnSkipLbl   = createDefaultLabel( "Skip" ) ;
     public JLabel btnSolvedLbl = createDefaultLabel( "Solved" ) ;
     public JLabel btnRedoLbl   = createDefaultLabel( "Redo" ) ;
     public JLabel btnPigeonLbl = createDefaultLabel( "Pigeon" ) ;
+    public JLabel btnSkipLbl   = createDefaultLabel( "Skip" ) ;
     public JLabel btnIgnoreLbl = createDefaultLabel( "Ignore" ) ;
     
     public Icon exerciseIcon = null ;
@@ -202,6 +194,12 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         numSkipLbl.setFont   ( BASE_FONT.deriveFont( 60F ) ) ;
         numIgnoreLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
 
+        numSolvedLbl.setForeground ( UIConstant.FN_A_COLOR ) ;
+        numRedoLbl.setForeground   ( UIConstant.FN_B_COLOR ) ;
+        numPigeonLbl.setForeground ( UIConstant.FN_C_COLOR ) ;
+        numSkipLbl.setForeground   ( UIConstant.FN_D_COLOR ) ;
+        numIgnoreLbl.setForeground ( UIConstant.FN_F_COLOR ) ;
+        
         btnSolvedLbl.setFont ( BASE_FONT.deriveFont( 30F ) ) ;
         btnRedoLbl.setFont   ( BASE_FONT.deriveFont( 30F ) ) ;
         btnPigeonLbl.setFont ( BASE_FONT.deriveFont( 30F ) ) ;
@@ -332,10 +330,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         }
         else if( state == OutcomeButtonsState.ACTIVE ) {
             
-            btnSkipLbl.setBackground( FN_A_COLOR ) ; 
-            btnSolvedLbl.setBackground( FN_B_COLOR ) ;
-            btnRedoLbl.setBackground( FN_C_COLOR ) ;
-            btnPigeonLbl.setBackground( FN_D_COLOR ) ;
+            btnSolvedLbl.setBackground( FN_A_COLOR ) ;
+            btnRedoLbl.setBackground( FN_B_COLOR ) ;
+            btnPigeonLbl.setBackground( FN_C_COLOR ) ;
+            btnSkipLbl.setBackground( FN_D_COLOR ) ; 
             btnIgnoreLbl.setBackground( FN_F_COLOR ) ;
 
             btnSkipLbl.setForeground( Color.WHITE ) ; 

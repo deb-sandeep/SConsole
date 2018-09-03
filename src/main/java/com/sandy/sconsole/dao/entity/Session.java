@@ -138,10 +138,11 @@ public class Session {
         clone.setBook( book ) ;
         clone.setLastProblem( lastProblem ) ;
         clone.setSessionType( sessionType ) ;
-        clone.setNumSkipped( numSkipped ) ;
         clone.setNumSolved( numSolved ) ;
         clone.setNumRedo( numRedo ) ;
         clone.setNumPigeon( numPigeon ) ;
+        clone.setNumSkipped( numSkipped ) ;
+        clone.setNumIgnored( numIgnored ) ;
         clone.setDuration( duration ) ;
         clone.setStartTime( startTime ) ;
         clone.setEndTime( endTime ) ;
@@ -155,12 +156,12 @@ public class Session {
             .append( "   Book        = " ).append( getBook()        ).append( "\n" )
             .append( "   LastProblem = " ).append( getLastProblem() ).append( "\n" )
             .append( "   SessionType = " ).append( getSessionType() ).append( "\n" )
-            .append( "   NumSkipped  = " ).append( getNumSkipped()  ).append( "\n" )
             .append( "   NumSolved   = " ).append( getNumSolved()   ).append( "\n" )
             .append( "   NumRedo     = " ).append( getNumRedo()     ).append( "\n" )
             .append( "   NumPigeon   = " ).append( getNumPigeon()   ).append( "\n" )
+            .append( "   NumSkipped  = " ).append( getNumSkipped()  ).append( "\n" )
+            .append( "   NumIgnored  = " ).append( getNumIgnored()  ).append( "\n" )
             .append( "   Duration    = " ).append( getDuration()    ).append( "\n" ) ;
-        
         
         sbuf.append( "   Start time  = " ) ;
         if( getStartTime() != null ) {

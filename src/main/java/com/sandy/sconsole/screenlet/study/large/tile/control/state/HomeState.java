@@ -47,6 +47,8 @@ public class HomeState extends BaseControlTileState {
         Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubjectName() ) ;
         if( lsOpt.isPresent() ) {
             si.session = lsOpt.get().getSession().clone() ;
+            log.debug( "Populating UI based on last session" ) ;
+            log.debug( si.session.toString() ) ;
             
             // At this point the session still has information which is not
             // suited for the blank - like last lap details, session details,
@@ -64,7 +66,8 @@ public class HomeState extends BaseControlTileState {
             si.session.setNumSkipped( 0 );
             si.session.setNumSolved( 0 );
             si.session.setNumRedo( 0 );
-            si.session.setNumPigeon( 0 );
+            si.session.setNumPigeon( 0 ) ;
+            si.session.setNumIgnored( 0 ) ;
         }
         else {
             si.session = new Session() ;
