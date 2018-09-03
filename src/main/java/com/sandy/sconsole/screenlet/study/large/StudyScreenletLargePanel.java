@@ -2,12 +2,13 @@ package com.sandy.sconsole.screenlet.study.large;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
-import java.awt.Component ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
 import javax.swing.SwingConstants ;
 import javax.swing.border.EmptyBorder ;
+
+import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
@@ -19,6 +20,8 @@ import info.clearthought.layout.TableLayout ;
 
 @SuppressWarnings( "serial" )
 public class StudyScreenletLargePanel extends ScreenletLargePanel {
+    
+    private static final Logger log = Logger.getLogger( StudyScreenletLargePanel.class ) ;
 
     private static final String TIME_PC            = "0,0,2,0" ;
     private static final String TITLE_PC           = "3,0,6,0" ;
@@ -36,7 +39,6 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private static final String LAST_30D_PC        = "5,8,9,9" ;
     
     private TableLayout centerPanelLayout = null ;
-    private BorderLayout borderLayout = null ;
     
     private TimeTile             timeTile             = null ;
     private TitleTile            titleTile            = null ;
@@ -54,7 +56,6 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     public StudyScreenletLargePanel( StudyScreenlet screenlet ) {
         super( screenlet ) ;
-        borderLayout = ( BorderLayout )getLayout() ;
         initializeMessageLabel() ;
         initializeTiles() ;
         setUpUI() ;
@@ -135,19 +136,25 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     }
     
     public void showMessage( String msg ) {
+        log.debug( "Feature commented out. Message = " + msg ) ;
+        /*
+        BorderLayout borderLayout = ( BorderLayout )getLayout() ;
         Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
         if( comp == null ) {
             add( messageLabel, BorderLayout.SOUTH ) ;
             revalidate() ;
         }
         messageLabel.setText( msg ) ;
+        */
     }
     
     public void hideMessage() {
+        /*
         Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
         if( comp != null ) {
             remove( messageLabel ) ;
             revalidate() ;
         }
+        */
     }
 }

@@ -64,6 +64,8 @@ public class PlayState extends BaseControlTileState
     private int pauseTime = 0 ;
     private int lapTime = 0 ;
     
+    private int numProblemsLeftInBook = 0 ;
+    
     public PlayState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
         
@@ -118,6 +120,7 @@ public class PlayState extends BaseControlTileState
             // problem and create a problem attempt to track the outcome of
             // the problem
             if( si.session.getSessionType() == SessionType.EXERCISE ) {
+                numProblemsLeftInBook = si.unsolvedProblems.size() ;
                 problemAttempt = createNewProblemAttempt() ;
             }
             
@@ -154,6 +157,8 @@ public class PlayState extends BaseControlTileState
             enableTransition( Key.FN_A, Key.FN_B, Key.FN_C, 
                               Key.FN_D, Key.FN_E, Key.FN_F );
         }
+        
+        tile.updateSessionTimeLabel( runTime ) ;
         
         // If the transition is happening from Change, replace the buttons 
         // pause and stop and clear any change trigger highlights
@@ -210,6 +215,7 @@ public class PlayState extends BaseControlTileState
         if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
             problem.setSolved( true ) ;
             session.incrementNumSolved() ;
+            tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
         if( outcome.equals( ProblemAttempt.OUTCOME_REDO   ) ) {
             problem.setRedo( true ) ;
@@ -218,6 +224,7 @@ public class PlayState extends BaseControlTileState
         if( outcome.equals( ProblemAttempt.OUTCOME_PIGEON ) ) {
             problem.setPigeoned( true ) ;
             session.incrementNumPigeon() ;
+            tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
         if( outcome.equals( ProblemAttempt.OUTCOME_SKIP   ) ) {
             problem.setSkipped( true ) ;
@@ -227,6 +234,7 @@ public class PlayState extends BaseControlTileState
             problem.setSolved( true ) ;
             problem.setIgnored( true ) ;
             session.incrementNumIgnored() ;
+            tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
         problemRepo.save( problem ) ;
         tile.updateOutcomeCounts( session ) ;
@@ -260,6 +268,9 @@ public class PlayState extends BaseControlTileState
             SConsole.removeSecTimerTask( this ) ;
             
             updateSession() ;
+            
+            runTime=0 ;
+            lapTime=0 ;
             
             if( si.session.getSessionType() == SessionType.EXERCISE ) {
                 tile.setOutcomeButtonsState( OutcomeButtonsState.INACTIVE ) ;

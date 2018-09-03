@@ -62,4 +62,8 @@ public class RemoteController {
         }
         return processor ;
     }
+    
+    public void enableScreenSwitching( boolean enable) {
+        keyProcessingHelper.enableScreenSwitching( enable ) ;
+    }
 }

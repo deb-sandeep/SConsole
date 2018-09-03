@@ -41,6 +41,8 @@ public class KeyProcessingHelper {
             FN_H
     } ;
     
+    private boolean screenSwitchingEnabled = true ;
+    
     public KeyProcessingHelper( Stack<KeyProcessor> processors ) {
         this.processors = processors ;
     }
@@ -52,9 +54,14 @@ public class KeyProcessingHelper {
         log.debug( "Key received " + key ) ;
         
         if( key.getKeyType() == KeyType.SCREEN_SEL ) {
-            SConsole.getApp()
-                    .getFrame()
-                    .handleScreenletSelectionEvent( key.getKeyCode() ) ;
+            if( screenSwitchingEnabled ) {
+                SConsole.getApp()
+                .getFrame()
+                .handleScreenletSelectionEvent( key.getKeyCode() ) ;
+            }
+            else {
+                log.info( "Screen switching is disabled." ) ;
+            }
         }
         else {
             if( processors.isEmpty() ) {
@@ -101,5 +108,9 @@ public class KeyProcessingHelper {
         }
         
         return mapper.writeValueAsString( keyActivationInfo ) ;
+    }
+
+    public void enableScreenSwitching( boolean enable ) {
+        this.screenSwitchingEnabled = enable ;
     }
 }

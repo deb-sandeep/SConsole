@@ -106,9 +106,10 @@ class SConsoleDialog extends JDialog {
         
         RemoteController controller = null ;
         
+        controller = SConsole.getAppContext()
+                             .getBean( RemoteController.class ) ;
+        controller.enableScreenSwitching( false ) ;
         if( this.panel != null ) {
-            controller = SConsole.getAppContext()
-                                 .getBean( RemoteController.class ) ;
             if( visible ) {
                 log.debug( "Dialog is getting visible. Pushing key processor." ) ;
                 panel.isBeingMadeVisible() ;
@@ -120,5 +121,6 @@ class SConsoleDialog extends JDialog {
             }
         }
         super.setVisible( visible ) ;
+        controller.enableScreenSwitching( true ) ;
     }
 }
