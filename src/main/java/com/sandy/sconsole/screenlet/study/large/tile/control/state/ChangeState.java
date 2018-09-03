@@ -124,6 +124,22 @@ public class ChangeState extends BaseControlTileState {
         super.processPlayReadiness( si ) ;
     }
 
+    /* This method is called when the state machine is about to execute a 
+     * transition from this state. We take this opportunity to do some
+     * cleanup work - for example, removing the change highlights.
+     * 
+     * NOTE that this method is also called during self transitions. Hence
+     * before removing ourselves from the second listener list, we must check
+     * if the next state is not a self transition.
+     */
+    @Override
+    public void deactivate( State nextState, Key key ) {
+        super.deactivate( nextState, key ) ;
+        if( nextState != this ) {
+            tile.clearChangeUIHighlights() ;
+        }
+    }
+
     /**
      * Called for changing SessionType
      */

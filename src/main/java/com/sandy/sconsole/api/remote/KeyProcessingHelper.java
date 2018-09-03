@@ -78,8 +78,6 @@ public class KeyProcessingHelper {
     public String getKeyActivationJSON() 
         throws Exception {
         
-        log.debug( "Activated function keys for next interaction:" ) ;
-        
         ObjectMapper mapper = new ObjectMapper() ;
         Map<String, String> keyActivationInfo = new HashMap<String, String>() ;
         

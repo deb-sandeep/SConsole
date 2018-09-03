@@ -53,6 +53,7 @@ public class Session {
     private Integer numSolved = 0 ;
     private Integer numRedo = 0 ;
     private Integer numPigeon = 0 ;
+    private Integer numIgnored = 0 ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { 
@@ -119,10 +120,16 @@ public class Session {
         this.numPigeon = numPigeon ;
     }
     
+    public Integer getNumIgnored() { return numIgnored ; }
+    public void setNumIgnored( Integer numIgnored ) {
+        this.numIgnored = numIgnored ;
+    }
+    
     public int incrementNumSkipped() { return ++numSkipped; }
     public int incrementNumSolved() { return ++numSolved; }
     public int incrementNumRedo() { return ++numRedo; }
     public int incrementNumPigeon() { return ++numPigeon; }
+    public int incrementNumIgnored() { return ++numIgnored; }
     
     public Session clone() {
         Session clone = new Session() ;

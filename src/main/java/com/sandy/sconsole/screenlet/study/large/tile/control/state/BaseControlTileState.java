@@ -97,10 +97,7 @@ public class BaseControlTileState extends State {
             
             log.debug( "Last sesion was an exercise. Populate exercise details." );
             tile.setBookLabel( ls.getBook() ) ;
-            tile.updateNumSkippedLabel( ls.getNumSkipped() ) ;
-            tile.updateNumSolvedLabel( ls.getNumSolved() ) ;
-            tile.updateNumRedoLabel( ls.getNumRedo() ) ;
-            tile.updateNumPigeonLabel( ls.getNumPigeon() ) ;
+            tile.updateOutcomeCounts( ls ) ;
             
             populateProblem( si ) ;
             
@@ -112,10 +109,7 @@ public class BaseControlTileState extends State {
             tile.updateNumProblemsLeftInBookLabel( -1 ) ;
             tile.updateSessionTimeLabel( -1 ) ;
             tile.updateLapTimeLabel( -1 ) ;
-            tile.updateNumSkippedLabel( -1 ) ;
-            tile.updateNumSolvedLabel( -1 ) ;
-            tile.updateNumRedoLabel( -1 ) ;
-            tile.updateNumPigeonLabel( -1 ) ;
+            tile.updateOutcomeCounts( null ) ;
             
             tile.setOutcomeButtonsState( OutcomeButtonsState.HIDDEN ) ;
         }

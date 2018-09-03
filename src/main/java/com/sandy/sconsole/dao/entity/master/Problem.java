@@ -25,6 +25,7 @@ public class Problem {
     private Boolean redo = false ;
     private Boolean skipped = false ;
     private Boolean starred = false ;
+    private Boolean ignored = false ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -53,22 +54,19 @@ public class Problem {
     public void setActive( Boolean active ) { this.active = active ; }
     
     public Boolean getPigeoned() { return pigeoned ; }
-    public void setPigeoned( Boolean starred ) { this.pigeoned = starred ; }
+    public void setPigeoned( Boolean pigeoned ) { this.pigeoned = pigeoned ; }
+    
+    public Boolean getIgnored() { return ignored ; }
+    public void setIgnored( Boolean ignored ) { this.ignored = ignored ; }
     
     public Boolean getRedo() { return redo ; }
-    public void setRedo( Boolean redo ) {
-        this.redo = redo ;
-    }
+    public void setRedo( Boolean redo ) { this.redo = redo ; }
     
     public Boolean getSkipped() { return skipped ; }
-    public void setSkipped( Boolean skipped ) {
-        this.skipped = skipped ;
-    }
+    public void setSkipped( Boolean skipped ) { this.skipped = skipped ; }
     
     public Boolean getStarred() { return starred ; }
-    public void setStarred( Boolean starred ) {
-        this.starred = starred ;
-    }
+    public void setStarred( Boolean starred ) { this.starred = starred ; }
     
     @Override
     public boolean equals( Object obj ) {

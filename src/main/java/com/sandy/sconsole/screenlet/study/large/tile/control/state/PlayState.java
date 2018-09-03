@@ -1,21 +1,25 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.state;
 
+import java.sql.Timestamp ;
 import java.util.Calendar ;
+
+import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
-import com.sandy.sconsole.dao.entity.LastSession ;
+import com.sandy.sconsole.dao.entity.ProblemAttempt ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn1Type ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn2Type ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.OutcomeButtonsState ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.PauseDialog ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.SessionTypeChangeDialog ;
 
 /**
  * Transition In:
@@ -44,6 +48,8 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.SessionTypeC
 public class PlayState extends BaseControlTileState 
     implements SecondTickListener {
 
+    private static final Logger log = Logger.getLogger( PlayState.class ) ;
+    
     public static final String NAME = "Play" ;
     
     private SessionInformation si = null ;
@@ -51,8 +57,11 @@ public class PlayState extends BaseControlTileState
     
     private PauseDialog pauseDialog = null ;
     
-    private long runTime = 0 ;
-    private long pauseTime = 0 ;
+    private ProblemAttempt problemAttempt = null ;
+    
+    private int runTime = 0 ;
+    private int pauseTime = 0 ;
+    private int lapTime = 0 ;
     
     public PlayState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
@@ -82,11 +91,14 @@ public class PlayState extends BaseControlTileState
         
         // If this activation is not due to a self transition, then only do this
         if( fromState != this ) {
+            log.debug( "Executing preActivation logic for PlayState" ) ;
             if( (payload == null) || !(payload instanceof SessionInformation) ) {
                 throw new IllegalArgumentException( 
                         "PlayState activation payload is null or is not of "
                         + "type SessionInformation" ) ;
             }
+            
+            super.disableAllTransitions() ;
             
             // Note that the session information has been sanitized for starting
             // the session immediately.
@@ -95,13 +107,25 @@ public class PlayState extends BaseControlTileState
             // Save the session in the database. Post this point, the blank
             // session will contain a valid session id and any further saves
             // will end up updating the session instead of creating a new one
+            log.debug( "Creating a new session in database" ) ;
+            this.si.session.setStartTime( new Timestamp( System.currentTimeMillis() ) ) ;
             sessionRepo.save( this.si.session ) ;
+            
+            log.debug( "Saving as the latest session for " + getSubjectName() ) ;
             lastSessionRepo.update( getSubjectName(), si.session.getId() ) ;
+            
+            // If the session is an exercise, we pick the first unsolved 
+            // problem and create a problem attempt to track the outcome of
+            // the problem
+            if( si.session.getSessionType() == SessionType.EXERCISE ) {
+                problemAttempt = createNewProblemAttempt() ;
+            }
             
             // Start the timers and active self transitions
             SConsole.addSecTimerTask( this ) ;
             
             // Initialize the UI. 
+            log.debug( "Initializing play state UI and necessary transitions." ) ;
             initializeUIAndTransitions( fromState ) ;
         }
         
@@ -117,6 +141,7 @@ public class PlayState extends BaseControlTileState
         
         // Doesn't matter where the transition has come from, we have to
         // activate the pause and stop buttons
+        log.debug( "Enabling play/pause and stop buttons and transitions" ) ;
         tile.setBtn1UI( Btn1Type.PAUSE ) ;
         tile.setBtn2UI( Btn2Type.STOP ) ;
         enableTransition( Key.PLAYPAUSE, Key.STOP ) ;
@@ -124,13 +149,96 @@ public class PlayState extends BaseControlTileState
         // If the session is an Exercise, we need to activate the problem
         // outcome controls and transitions
         if( si.session.getSessionType() == SessionType.EXERCISE ) {
+            log.debug( "Session is an exercise. Activating problem outcome UI" ) ;
             tile.setOutcomeButtonsState( OutcomeButtonsState.ACTIVE ) ;
+            enableTransition( Key.FN_A, Key.FN_B, Key.FN_C, 
+                              Key.FN_D, Key.FN_E, Key.FN_F );
         }
         
         // If the transition is happening from Change, replace the buttons 
         // pause and stop and clear any change trigger highlights
         if( fromState.getName().equals( ChangeState.NAME ) ) {
+            log.debug( "Transition has happened from Change. Clearing change UI highlights" ) ;
             tile.clearChangeUIHighlights() ;
+        }
+    }
+    
+    private void updateSession() {
+        si.session.setDuration( this.runTime ) ;
+        si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
+        si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+        sessionRepo.save( si.session ) ;
+    }
+    
+    private ProblemAttempt createNewProblemAttempt() {
+        
+        ProblemAttempt attempt = null ;
+        Problem problem = null ;
+        
+        if( si.unsolvedProblems.isEmpty() ) {
+            log.debug( "No more unsolved problems left." ) ;
+            return null ;
+        }
+        
+        lapTime = 0 ;
+                
+        problem = si.unsolvedProblems.remove( 0 ) ;
+        attempt = new ProblemAttempt() ;
+        attempt.setDuration( lapTime ) ;
+        attempt.setProblem( problem ) ;
+        attempt.setStartTime( new Timestamp( System.currentTimeMillis() ) ) ;
+        attempt.setSession( si.session ) ;
+        
+        tile.setProblemLabel( problem ) ;
+        
+        return attempt ;
+    }
+    
+    private void saveProblemAttemptAndLoadNextProblem( String outcome ) {
+        
+        Session session = si.session ;
+        
+        // Store the current problem attempt outcome in the database.
+        problemAttempt.setOutcome( ProblemAttempt.OUTCOME_SOLVED ) ;
+        problemAttempt.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+        problemAttempt.setDuration( lapTime ) ;
+        problemAttemptRepo.save( problemAttempt ) ;
+        
+        // Update the problem master with the problem outcome details
+        Problem problem = problemAttempt.getProblem() ;
+        if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
+            problem.setSolved( true ) ;
+            session.incrementNumSolved() ;
+        }
+        if( outcome.equals( ProblemAttempt.OUTCOME_REDO   ) ) {
+            problem.setRedo( true ) ;
+            session.incrementNumRedo() ;
+        }
+        if( outcome.equals( ProblemAttempt.OUTCOME_PIGEON ) ) {
+            problem.setPigeoned( true ) ;
+            session.incrementNumPigeon() ;
+        }
+        if( outcome.equals( ProblemAttempt.OUTCOME_SKIP   ) ) {
+            problem.setSkipped( true ) ;
+            session.incrementNumSkipped() ;
+        }
+        if( outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) ) {
+            problem.setSolved( true ) ;
+            problem.setIgnored( true ) ;
+            session.incrementNumIgnored() ;
+        }
+        problemRepo.save( problem ) ;
+        tile.updateOutcomeCounts( session ) ;
+        
+        // Update the session.
+        updateSession() ;
+        
+        // Load the next problem. If there are no more problems, the session 
+        // has to end.
+        problemAttempt = createNewProblemAttempt() ;
+        if( problemAttempt == null ) {
+            showMessage( "No more problems left in this book" ) ;
+            tile.feedIntoStateMachine( Key.STOP ) ;
         }
     }
     
@@ -148,9 +256,17 @@ public class PlayState extends BaseControlTileState
         super.deactivate( nextState, key ) ;
         if( nextState != this ) {
             isRunning = false ;
-            // TODO: Handle lap time.
-            // TODO: Close the lap and session!
             SConsole.removeSecTimerTask( this ) ;
+            
+            updateSession() ;
+            
+            if( si.session.getSessionType() == SessionType.EXERCISE ) {
+                tile.setOutcomeButtonsState( OutcomeButtonsState.INACTIVE ) ;
+                tile.updateLapTimeLabel( -1 ) ;
+                // If there are any problem attempts currently underway,
+                // ignore them. This problem will be picked when a new 
+                // session is started.
+            }
         }
     }
 
@@ -171,45 +287,55 @@ public class PlayState extends BaseControlTileState
         }
     }
 
-    // Mark problem as Solved
     @Override
     public void handleFnAKey() {
+        log.debug( "Current problem marked as Solved." ) ;
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_SOLVED ) ;
     }
 
-    // Mark problem as Redo
     @Override
     public void handleFnBKey() {
+        log.debug( "Current problem marked as Redo." ) ;
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_REDO ) ;
     }
 
-    // Mark problem as Pigeon
     @Override
     public void handleFnCKey() {
+        log.debug( "Current problem marked as Pigeon." ) ;
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_PIGEON ) ;
     }
     
-    // Mark problem as Skip
     @Override
     public void handleFnDKey() {
+        log.debug( "Current problem marked as Skip." ) ;
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_SKIP ) ;
     }
     
-    // Mark problem as Star
     @Override
     public void handleFnEKey() {
+        log.debug( "Current problem marked as Star." ) ;
+        Problem problem = problemAttempt.getProblem() ;
+        
+        problem.setStarred( !problem.getStarred() ) ;
+        tile.setProblemLabel( problem ) ;
+        problemRepo.save( problem ) ;
     }
 
-    // Mark problem as Ignore
-    // TODO: Will need database changes.
     @Override
     public void handleFnFKey() {
+        log.debug( "Current problem marked as Ignore." ) ;
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_IGNORE ) ;
     }
 
-    /* TODO: Handle lap time
-     *
-     */
     @Override
     public void secondTicked( Calendar calendar ) {
         if( isRunning ) {
             runTime++ ;
             tile.updateSessionTimeLabel( runTime ) ;
+            if( problemAttempt != null ) {
+                lapTime++ ;
+                tile.updateLapTimeLabel( lapTime ) ;
+            }
         }
         else {
             pauseTime++ ;

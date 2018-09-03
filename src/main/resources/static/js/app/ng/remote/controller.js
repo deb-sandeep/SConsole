@@ -42,7 +42,6 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
              .then( 
             function( data ){
                 $scope.otaStatus = "ota-idle" ;
-                console.log( data ) ;
                 if( data.status == 200 ) {
                     $scope.keyActivationInfo = data.data ;
                }
@@ -64,7 +63,6 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
         .then( 
             function( data ){
                 $scope.otaStatus = "ota-idle" ;
-                console.log( data ) ;
                 if( data.status == 200 ) {
                     $scope.keyActivationInfo = data.data ;
                }

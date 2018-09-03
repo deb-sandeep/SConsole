@@ -16,6 +16,7 @@ import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
@@ -79,17 +80,21 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public JLabel sumsLeftLbl  = createDefaultLabel( "" ) ;
     public JLabel problemLbl   = createDefaultLabel( "" ) ;
     public JLabel sTimeLbl     = createDefaultLabel( "" ) ;
+    public JLabel lTimeLbl     = createDefaultLabel( "" ) ;
+    public JLabel btn1Lbl      = createDefaultLabel( "" ) ;
+    public JLabel btn2Lbl      = createDefaultLabel( "" ) ;
+    
     public JLabel numSkipLbl   = createDefaultLabel( "" ) ;
     public JLabel numSolvedLbl = createDefaultLabel( "" ) ;
     public JLabel numRedoLbl   = createDefaultLabel( "" ) ;
     public JLabel numPigeonLbl = createDefaultLabel( "" ) ;
-    public JLabel lTimeLbl     = createDefaultLabel( "" ) ;
-    public JLabel btnSkipLbl   = createDefaultLabel( "Solved" ) ;
-    public JLabel btnSolvedLbl = createDefaultLabel( "Redo" ) ;
-    public JLabel btnRedoLbl   = createDefaultLabel( "Pigeon" ) ;
-    public JLabel btnPigeonLbl = createDefaultLabel( "Later" ) ;
-    public JLabel btn1Lbl      = createDefaultLabel( "" ) ;
-    public JLabel btn2Lbl      = createDefaultLabel( "" ) ;
+    public JLabel numIgnoreLbl = createDefaultLabel( "" ) ;
+    
+    public JLabel btnSkipLbl   = createDefaultLabel( "Skip" ) ;
+    public JLabel btnSolvedLbl = createDefaultLabel( "Solved" ) ;
+    public JLabel btnRedoLbl   = createDefaultLabel( "Redo" ) ;
+    public JLabel btnPigeonLbl = createDefaultLabel( "Pigeon" ) ;
+    public JLabel btnIgnoreLbl = createDefaultLabel( "Ignore" ) ;
     
     public Icon exerciseIcon = null ;
     public Icon theoryIcon   = null ;
@@ -108,15 +113,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         new LabelMeta( sumsLeftLbl,  "10,2,11,2",35F, SUMS_LEFT_LBL_FG,  false ), 
         new LabelMeta( problemLbl,   "0,3,7,4",  40F, PROBLEM_LBL_FG,    true  ), 
         new LabelMeta( sTimeLbl,     "8,3,11,4", 60F, STIME_LBL_FG,      true  ), 
-        new LabelMeta( numSkipLbl,   "0,5,1,6",  60F, NUM_SKIP_LBL_FG,   true  ), 
-        new LabelMeta( numSolvedLbl, "2,5,3,6",  60F, NUM_SOLVED_LBL_FG, true  ), 
-        new LabelMeta( numRedoLbl,   "4,5,5,6",  60F, NUM_REDO_LBL_FG,   true  ), 
-        new LabelMeta( numPigeonLbl, "6,5,7,6",  60F, NUM_PIGEON_LBL_FG, true  ), 
         new LabelMeta( lTimeLbl,     "8,5,11,6", 60F, LTIME_LBL_FG,      true  ), 
-        new LabelMeta( btnSkipLbl,   "0,7,1,7",  30F, BTN_SKIP_LBL_FG,   false ), 
-        new LabelMeta( btnSolvedLbl, "2,7,3,7",  30F, BTN_SOLVED_LBL_FG, false ), 
-        new LabelMeta( btnRedoLbl,   "4,7,5,7",  30F, BTN_REDO_LBL_FG,   false ), 
-        new LabelMeta( btnPigeonLbl, "6,7,7,7",  30F, BTN_PIGEON_LBL_FG, false ), 
         new LabelMeta( btn1Lbl,      "8,7,9,7",  25F, BTN1_LBL_FG,       true  ), 
         new LabelMeta( btn2Lbl,      "10,7,11,7",25F, BTN2_LBL_FG,       true  )
     } ;
@@ -144,6 +141,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         for( LabelMeta meta : labelMetaArray ) {
             addPanel( meta ) ;
         }
+        add( createProblemOutcomePanel(), "0,5,7,7" ) ;
         validate() ;
         repaint() ;
     }
@@ -187,6 +185,57 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         panel.setBackground( UIConstant.BG_COLOR ) ;
         return panel ;
     }
+    
+    private JPanel createProblemOutcomePanel() {
+        
+        TableLayout layout = new TableLayout() ;
+        for( int r=0; r<3; r++ ) {
+            layout.insertRow( r, 0.33F ) ;
+        }
+        for( int c=0; c<5; c++ ) {
+            layout.insertColumn( c, 0.20F ) ;
+        }
+        
+        numSolvedLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
+        numRedoLbl.setFont   ( BASE_FONT.deriveFont( 60F ) ) ;
+        numPigeonLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
+        numSkipLbl.setFont   ( BASE_FONT.deriveFont( 60F ) ) ;
+        numIgnoreLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
+
+        btnSolvedLbl.setFont ( BASE_FONT.deriveFont( 30F ) ) ;
+        btnRedoLbl.setFont   ( BASE_FONT.deriveFont( 30F ) ) ;
+        btnPigeonLbl.setFont ( BASE_FONT.deriveFont( 30F ) ) ;
+        btnSkipLbl.setFont   ( BASE_FONT.deriveFont( 30F ) ) ;
+        btnIgnoreLbl.setFont ( BASE_FONT.deriveFont( 30F ) ) ;
+
+        numSolvedLbl.setBorder ( TILE_BORDER ) ;
+        numRedoLbl.setBorder   ( TILE_BORDER ) ;
+        numPigeonLbl.setBorder ( TILE_BORDER ) ;
+        numSkipLbl.setBorder   ( TILE_BORDER ) ;
+        numIgnoreLbl.setBorder ( TILE_BORDER ) ;
+        
+        btnSolvedLbl.setBorder ( TILE_BORDER ) ;
+        btnRedoLbl.setBorder   ( TILE_BORDER ) ;
+        btnPigeonLbl.setBorder ( TILE_BORDER ) ;
+        btnSkipLbl.setBorder   ( TILE_BORDER ) ;
+        btnIgnoreLbl.setBorder ( TILE_BORDER ) ;
+        
+        JPanel panel = new JPanel( layout ) ;
+        panel.setBackground( BG_COLOR ) ;
+        
+        panel.add( numSolvedLbl, "0,0,0,1" ) ;
+        panel.add( numRedoLbl,   "1,0,1,1" ) ;
+        panel.add( numPigeonLbl, "2,0,2,1" ) ;
+        panel.add( numSkipLbl,   "3,0,3,1" ) ;
+        panel.add( numIgnoreLbl, "4,0,4,1" ) ;
+        
+        panel.add( btnSolvedLbl, "0,2,0,2" ) ;
+        panel.add( btnRedoLbl,   "1,2,1,2" ) ;
+        panel.add( btnPigeonLbl, "2,2,2,2" ) ;
+        panel.add( btnSkipLbl,   "3,2,3,2" ) ;
+        panel.add( btnIgnoreLbl, "4,2,4,2" ) ;
+        return panel ;
+    }
 
     private JLabel createDefaultLabel( String defaultText ) {
         
@@ -221,10 +270,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         updateNumProblemsLeftInBookLabel( -1 ) ;
         updateSessionTimeLabel( -1 ) ;
         updateLapTimeLabel( -1 ) ;
-        updateNumSkippedLabel( -1 ) ;
-        updateNumSolvedLabel( -1 ) ;
-        updateNumRedoLabel( -1 ) ;
-        updateNumPigeonLabel( -1 ) ;
+        updateOutcomeCounts( null ) ;
         
         setBtn1UI( Btn1Type.CLEAR ) ;
         setBtn2UI( Btn2Type.CLEAR ) ;
@@ -268,6 +314,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         btnSolvedLbl.setVisible( visibility ) ;
         btnRedoLbl.setVisible( visibility ) ;
         btnPigeonLbl.setVisible( visibility ) ;
+        btnIgnoreLbl.setVisible( visibility ) ;
         
         if( state == OutcomeButtonsState.INACTIVE ) {
             
@@ -275,11 +322,13 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             btnSolvedLbl.setBackground( BG_COLOR ) ;
             btnRedoLbl.setBackground( BG_COLOR ) ;
             btnPigeonLbl.setBackground( BG_COLOR ) ;
+            btnIgnoreLbl.setBackground( BG_COLOR ) ;
 
             btnSkipLbl.setForeground( Color.DARK_GRAY ) ; 
             btnSolvedLbl.setForeground( Color.DARK_GRAY ) ;
             btnRedoLbl.setForeground( Color.DARK_GRAY ) ;
             btnPigeonLbl.setForeground( Color.DARK_GRAY ) ;
+            btnIgnoreLbl.setForeground( Color.DARK_GRAY ) ;
         }
         else if( state == OutcomeButtonsState.ACTIVE ) {
             
@@ -287,11 +336,13 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             btnSolvedLbl.setBackground( FN_B_COLOR ) ;
             btnRedoLbl.setBackground( FN_C_COLOR ) ;
             btnPigeonLbl.setBackground( FN_D_COLOR ) ;
+            btnIgnoreLbl.setBackground( FN_F_COLOR ) ;
 
             btnSkipLbl.setForeground( Color.WHITE ) ; 
             btnSolvedLbl.setForeground( Color.WHITE ) ;
             btnRedoLbl.setForeground( Color.WHITE ) ;
             btnPigeonLbl.setForeground( Color.WHITE ) ;
+            btnIgnoreLbl.setForeground( Color.WHITE ) ;
         }
     }
     
@@ -354,20 +405,41 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         lTimeLbl.setText( seconds < 0 ? "" : getElapsedTimeLabel( seconds, false ) ) ;
     }
     
-    public void updateNumSkippedLabel( int num ) {
-        numSkipLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
+    public void updateOutcomeCounts( Session session ) {
+        if( session != null ) {
+            updateNumSolvedLabel  ( session.getNumSolved()  ) ;
+            updateNumRedoLabel    ( session.getNumRedo()    ) ;
+            updateNumPigeonLabel  ( session.getNumPigeon()  ) ;
+            updateNumSkippedLabel ( session.getNumSkipped() ) ;
+            updateNumIgnoredLabel ( session.getNumIgnored() ) ;
+        }
+        else {
+            updateNumSolvedLabel  ( -1 ) ;
+            updateNumRedoLabel    ( -1 ) ;
+            updateNumPigeonLabel  ( -1 ) ;
+            updateNumSkippedLabel ( -1 ) ;
+            updateNumIgnoredLabel ( -1 ) ;
+        }
     }
     
-    public void updateNumSolvedLabel( int num ) {
+    private void updateNumSolvedLabel( int num ) {
         numSolvedLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
     }
     
-    public void updateNumRedoLabel( int num ) {
+    private void updateNumRedoLabel( int num ) {
         numRedoLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
     }
     
-    public void updateNumPigeonLabel( int num ) {
+    private void updateNumPigeonLabel( int num ) {
         numPigeonLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
+    }
+    
+    private void updateNumSkippedLabel( int num ) {
+        numSkipLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
+    }
+    
+    private void updateNumIgnoredLabel( int num ) {
+        numIgnoreLbl.setText( num < 0 ? "" : Integer.toString( num ) ) ;
     }
     
     public void setBtn1UI( Btn1Type btnType ) {
