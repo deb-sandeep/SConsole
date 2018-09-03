@@ -7,6 +7,6 @@ import com.sandy.sconsole.dao.entity.master.Problem ;
 
 public class SessionInformation {
 
-    public Session sessionBlank = null ;
+    public Session session = null ;
     public List<Problem> unsolvedProblems = null ;
 }

@@ -15,7 +15,7 @@ import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
 
 @SuppressWarnings( "serial" )
 public class PauseDialog extends AbstractDialogPanel
@@ -23,23 +23,19 @@ public class PauseDialog extends AbstractDialogPanel
     
     static final Logger log = Logger.getLogger( PauseDialog.class ) ;
 
-    public static final int PLAY_ACTION = 5 ;
-    public static final int STOP_ACTION = 6 ;
-    
     private Icon playIcon = null ;
     private Icon stopIcon = null ;
     private JLabel timerLabel = null ;
-    private int userAction = PLAY_ACTION ;
     private boolean countTime = false ;
     
     private int pauseTime = 0 ;
     
-    private SessionControlTile control = null ;
+    private PlayState playState = null ;
     
-    public PauseDialog( SessionControlTile control ) {
+    public PauseDialog( PlayState state ) {
         super( "Session Paused" ) ;
 
-        this.control = control ;
+        this.playState = state ;
         
         loadIcons() ;
         setUpUI() ;
@@ -103,15 +99,13 @@ public class PauseDialog extends AbstractDialogPanel
 
     @Override 
     public void handlePlayPauseResumeKey() {
-        userAction = PLAY_ACTION ;
         super.hideDialog() ;
-//        control.handlePlayPauseResumeKey() ;
+        playState.getControlTile().feedIntoStateMachine( Key.PLAYPAUSE ) ;
     } ;
     
     @Override public void handleStopKey() {
-        userAction = STOP_ACTION ;
         super.hideDialog() ;
-//        control.handleStopKey() ;
+        playState.getControlTile().feedIntoStateMachine( Key.STOP ) ;
     } ;
 
     @Override
@@ -138,7 +132,7 @@ public class PauseDialog extends AbstractDialogPanel
     
     @Override
     public Object getReturnValue() {
-        return userAction ;
+        return null ;
     }
     
     private String getElapsedTimeLabel() {

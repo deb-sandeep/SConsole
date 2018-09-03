@@ -83,8 +83,10 @@ public class SessionControlTile extends SessionControlTileUI {
         homeState.addTransition( Key.PLAYPAUSE, playState )
                  .addTransition( Key.FN_A, "Change", changeState ) ;
         
-        changeState.addTransition( Key.CANCEL, homeState )
-                   .addTransition( Key.PLAYPAUSE, playState ) ;
+        changeState.addTransition( Key.PLAYPAUSE, playState )
+                   .addTransition( Key.CANCEL, homeState ) ;
+        
+        playState.addTransition( Key.STOP, homeState ) ;
         
         states = new State[]{ homeState, playState, changeState } ;
     }
@@ -126,5 +128,18 @@ public class SessionControlTile extends SessionControlTileUI {
     protected void screenletMinimized() {
         super.screenletMinimized() ;
         controller.popKeyProcessor() ;
+    }
+    
+    /**
+     * This method can be called upon to programatically feed transition triggers
+     * to the state machine. 
+     * 
+     * By default, the key presses by user are used to drive the state machine,
+     * however there might arrise occasional cases (like resuming or stopping
+     * from a pause screen) which might necessitate driving the state machine
+     * programatically.
+     */
+    public void feedIntoStateMachine( Key key ) {
+        this.keyProcessor.processKey( key ) ;
     }
 }

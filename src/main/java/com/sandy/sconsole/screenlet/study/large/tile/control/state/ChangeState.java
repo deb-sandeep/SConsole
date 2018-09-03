@@ -1,11 +1,7 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.state;
 
-import javax.swing.SwingUtilities ;
-
 import org.apache.log4j.Logger ;
 
-import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
@@ -25,8 +21,6 @@ public class ChangeState extends BaseControlTileState {
     
     public static final String NAME = "Change" ;
     
-    private RemoteController controller = null ;
-    
     private SessionTypeChangeDialog typeChangeDialog    = null ;
     private TopicChangeDialog       topicChangeDialog   = null ;
     private BookChangeDialog        bookChangeDialog    = null ;
@@ -40,8 +34,6 @@ public class ChangeState extends BaseControlTileState {
         addTransition( Key.FN_B, "Topic",   this ) ;
         addTransition( Key.FN_C, "Book",    this ) ;
         addTransition( Key.FN_D, "Problem", this ) ;
-
-        controller = ctx.getBean( RemoteController.class ) ;
 
         typeChangeDialog    = new SessionTypeChangeDialog( this ) ;
         topicChangeDialog   = new TopicChangeDialog( this ) ;
@@ -73,8 +65,8 @@ public class ChangeState extends BaseControlTileState {
             }
             
             this.si = ( SessionInformation )payload ;
-            this.si.sessionBlank.setDuration( 0 ) ;
-            this.si.sessionBlank.setAbsoluteDuration( 0 ) ;
+            this.si.session.setDuration( 0 ) ;
+            this.si.session.setAbsoluteDuration( 0 ) ;
             
             highlightKeyPanelsAndActivateTransitions() ;
             
@@ -100,17 +92,17 @@ public class ChangeState extends BaseControlTileState {
         enableTransition( Key.FN_A, Key.FN_B ) ;
         
         // 2. Book and Problem change transitions
-        if( this.si.sessionBlank.getSessionType() == SessionType.EXERCISE ) {
+        if( this.si.session.getSessionType() == SessionType.EXERCISE ) {
             
             tile.bookLbl.setBackground( UIConstant.FN_C_COLOR ) ;
             tile.problemLbl.setBackground( UIConstant.FN_D_COLOR ) ;
             
-            if( si.sessionBlank.getTopic() == null ) {
+            if( si.session.getTopic() == null ) {
                 disableTransition( Key.FN_C, Key.FN_D ) ;
             }
             else {
                 enableTransition( Key.FN_C ) ;
-                if( si.sessionBlank.getBook() == null ) {
+                if( si.session.getBook() == null ) {
                     disableTransition( Key.FN_D ) ;
                 }
                 else {
@@ -138,14 +130,7 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnAKey() {
         log.debug( "FN_A key received in change state. Changing session type." ) ;
-        
-        controller.pushKeyProcessor( typeChangeDialog.getKeyProcessor() ) ;
-        
-        SwingUtilities.invokeLater( new Runnable() { public void run() {
-            SConsole.getApp()
-                    .getFrame()
-                    .showDialog( typeChangeDialog ) ;
-        }});
+        showDialog( typeChangeDialog ) ;
     }
     
     /**
@@ -157,11 +142,11 @@ public class ChangeState extends BaseControlTileState {
         log.debug( "New session type chosen = " + type ) ;
         
         if( type != null ) {
-            si.sessionBlank.setSessionType( type ) ;
+            si.session.setSessionType( type ) ;
             
             if( type != SessionType.EXERCISE ) {
-                si.sessionBlank.setBook( null ) ;
-                si.sessionBlank.setLastProblem( null ) ;
+                si.session.setBook( null ) ;
+                si.session.setLastProblem( null ) ;
             }
         }
         super.populateUIBasedOnSessionInfo( si ) ;
@@ -174,14 +159,7 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnBKey() {
         log.debug( "FN_B key received in change state. Changing topic." ) ;
-        
-        controller.pushKeyProcessor( topicChangeDialog.getKeyProcessor() ) ;
-        
-        SwingUtilities.invokeLater( new Runnable() { public void run() {
-            SConsole.getApp()
-                    .getFrame()
-                    .showDialog( topicChangeDialog ) ;
-        }});
+        showDialog( topicChangeDialog ) ;
     }
     
     /**
@@ -193,7 +171,7 @@ public class ChangeState extends BaseControlTileState {
         log.debug( "New topic chosen = " + topic ) ;
         
         if( topic != null ) {
-            si.sessionBlank.setTopic( topic ) ;
+            si.session.setTopic( topic ) ;
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;
@@ -206,14 +184,7 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnCKey() {
         log.debug( "FN_C key received in change state. Changing book" ) ;
-        
-        controller.pushKeyProcessor( bookChangeDialog.getKeyProcessor() ) ;
-        
-        SwingUtilities.invokeLater( new Runnable() { public void run() {
-            SConsole.getApp()
-                    .getFrame()
-                    .showDialog( bookChangeDialog ) ;
-        }});
+        showDialog( bookChangeDialog ) ;
     }
     
     /**
@@ -225,7 +196,7 @@ public class ChangeState extends BaseControlTileState {
         log.debug( "New book chosen = " + book ) ;
         
         if( book != null ) {
-            si.sessionBlank.setBook( book ) ;
+            si.session.setBook( book ) ;
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;
@@ -238,14 +209,7 @@ public class ChangeState extends BaseControlTileState {
     @Override
     public void handleFnDKey() {
         log.debug( "FN_D key received in change state. Changing problem" ) ;
-        
-        controller.pushKeyProcessor( problemChangeDialog.getKeyProcessor() ) ;
-        
-        SwingUtilities.invokeLater( new Runnable() { public void run() {
-            SConsole.getApp()
-                    .getFrame()
-                    .showDialog( problemChangeDialog ) ;
-        }});
+        showDialog( problemChangeDialog ) ;
     }
     
     /**
@@ -257,7 +221,7 @@ public class ChangeState extends BaseControlTileState {
         log.debug( "New problem chosen = " + problem ) ;
         
         if( problem != null ) {
-            si.sessionBlank.setLastProblem( problem ) ;
+            si.session.setLastProblem( problem ) ;
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;

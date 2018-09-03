@@ -36,7 +36,7 @@ public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
 
     @Override
     protected Topic getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().sessionBlank.getTopic() ;
+        return changeState.getSessionInfo().session.getTopic() ;
     }
     
     @Override

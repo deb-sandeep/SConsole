@@ -84,10 +84,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public JLabel numRedoLbl   = createDefaultLabel( "" ) ;
     public JLabel numPigeonLbl = createDefaultLabel( "" ) ;
     public JLabel lTimeLbl     = createDefaultLabel( "" ) ;
-    public JLabel btnSkipLbl   = createDefaultLabel( "Skip" ) ;
-    public JLabel btnSolvedLbl = createDefaultLabel( "Solved" ) ;
-    public JLabel btnRedoLbl   = createDefaultLabel( "Redo" ) ;
-    public JLabel btnPigeonLbl = createDefaultLabel( "Pigeon" ) ;
+    public JLabel btnSkipLbl   = createDefaultLabel( "Solved" ) ;
+    public JLabel btnSolvedLbl = createDefaultLabel( "Redo" ) ;
+    public JLabel btnRedoLbl   = createDefaultLabel( "Pigeon" ) ;
+    public JLabel btnPigeonLbl = createDefaultLabel( "Later" ) ;
     public JLabel btn1Lbl      = createDefaultLabel( "" ) ;
     public JLabel btn2Lbl      = createDefaultLabel( "" ) ;
     
@@ -216,7 +216,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         setProblemLabel( null ) ;
         
         clearInvalidationBorders() ;
-        clearChangeUIActivations() ;
+        clearChangeUIHighlights() ;
         
         updateNumProblemsLeftInBookLabel( -1 ) ;
         updateSessionTimeLabel( -1 ) ;
@@ -237,7 +237,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         problemLbl.setBorder( null ) ;
     }
     
-    public void clearChangeUIActivations() {
+    public void clearChangeUIHighlights() {
         typeLbl.setBackground( UIConstant.BG_COLOR ) ;
         topicLbl.setBackground( UIConstant.BG_COLOR ) ;
         bookLbl.setBackground( UIConstant.BG_COLOR ) ;

@@ -3,10 +3,14 @@ package com.sandy.sconsole.screenlet.study.large.tile.control.state;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import javax.swing.SwingUtilities ;
+
 import org.apache.log4j.Logger ;
 import org.springframework.context.ApplicationContext ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.remote.RemoteController ;
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.dao.entity.Session ;
@@ -40,7 +44,8 @@ public class BaseControlTileState extends State {
     protected ProblemAttemptRepository problemAttemptRepo = null ;
     
     private StudyScreenletLargePanel screenletPanel = null ;
-
+    private RemoteController controller = null ;
+    
     protected BaseControlTileState( String stateName, 
                                     SessionControlTile tile,
                                     StudyScreenletLargePanel screenletPanel ) {
@@ -49,16 +54,13 @@ public class BaseControlTileState extends State {
         this.screenletPanel = screenletPanel ;
         
         ctx = SConsole.getAppContext() ;
-        
+        controller = ctx.getBean( RemoteController.class ) ;
+
         bookRepo           = ctx.getBean( BookRepository.class ) ;
         problemRepo        = ctx.getBean( ProblemRepository.class ) ;
         sessionRepo        = ctx.getBean( SessionRepository.class ) ;
         lastSessionRepo    = ctx.getBean( LastSessionRepository.class ) ;
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
-    }
-    
-    protected String getSubject() {
-        return tile.getScreenlet().getDisplayName() ;
     }
     
     protected void showMessage( String msg ) {
@@ -72,10 +74,14 @@ public class BaseControlTileState extends State {
     public String getSubjectName() {
         return screenletPanel.getScreenlet().getDisplayName() ;
     }
+    
+    public SessionControlTile getControlTile() {
+        return this.tile ;
+    }
 
     protected void populateUIBasedOnSessionInfo( SessionInformation si ) {
         
-        Session ls = si.sessionBlank ;
+        Session ls = si.session ;
         
         log.debug( "Populating last session details" ) ;
         log.debug( ls ) ;
@@ -117,20 +123,20 @@ public class BaseControlTileState extends State {
     
     protected void populateProblem( SessionInformation si ) {
         
-        Topic topic = si.sessionBlank.getTopic() ;
-        Book book = si.sessionBlank.getBook() ;
-        Problem lastProblem = si.sessionBlank.getLastProblem() ;
+        Topic topic = si.session.getTopic() ;
+        Book book = si.session.getBook() ;
+        Problem lastProblem = si.session.getLastProblem() ;
         
         si.unsolvedProblems = loadUnsolvedProblems( topic, book, lastProblem ) ;
         if( !si.unsolvedProblems.isEmpty() ) {
-            si.sessionBlank.setLastProblem( si.unsolvedProblems.get( 0 ) ) ;
+            si.session.setLastProblem( si.unsolvedProblems.get( 0 ) ) ;
         }
         else {
-            si.sessionBlank.setLastProblem( null ) ;
+            si.session.setLastProblem( null ) ;
         }
         
         tile.updateNumProblemsLeftInBookLabel( si.unsolvedProblems.size() ) ;
-        tile.setProblemLabel( si.sessionBlank.getLastProblem() ) ;
+        tile.setProblemLabel( si.session.getLastProblem() ) ;
     }
     
     protected List<Problem> loadUnsolvedProblems( Topic topic, Book book, 
@@ -195,21 +201,21 @@ public class BaseControlTileState extends State {
         
         boolean readyToPlay = true ;
         
-        if( si.sessionBlank.getSessionType() == null ) {
+        if( si.session.getSessionType() == null ) {
             readyToPlay = false ;
             tile.invalidateSessionTypePanel() ;
         }
-        if( si.sessionBlank.getTopic() == null ) {
+        if( si.session.getTopic() == null ) {
             readyToPlay = false ;
             tile.invalidateTopicPanel() ;
         }
         
-        if( si.sessionBlank.getSessionType() == SessionType.EXERCISE ) {
-            if( si.sessionBlank.getBook() == null ) {
+        if( si.session.getSessionType() == SessionType.EXERCISE ) {
+            if( si.session.getBook() == null ) {
                 readyToPlay = false ;
                 tile.invalidateBookPanel() ; 
             }
-            if( si.sessionBlank.getLastProblem() == null ) {
+            if( si.session.getLastProblem() == null ) {
                 readyToPlay = false ;
                 tile.invalidateProblemPanel() ; 
             }
@@ -225,5 +231,17 @@ public class BaseControlTileState extends State {
                          "highlighted with red border) are changed." ) ;
             super.disableTransition( Key.PLAYPAUSE ) ;
         }
+    }
+    
+    protected void showDialog( AbstractDialogPanel dialog ) {
+        
+        controller.pushKeyProcessor( dialog.getKeyProcessor() ) ;
+        
+        SwingUtilities.invokeLater( new Runnable() { public void run() {
+            SConsole.getApp()
+                    .getFrame()
+                    .showDialog( dialog ) ;
+        }});
+        
     }
 }

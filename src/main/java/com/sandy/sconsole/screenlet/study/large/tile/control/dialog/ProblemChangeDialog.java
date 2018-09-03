@@ -33,7 +33,7 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
     protected List<Problem> getListItems() {
         List<Problem> problems = new ArrayList<>() ;
         
-        Session session = changeState.getSessionInfo().sessionBlank ;
+        Session session = changeState.getSessionInfo().session ;
         
         Topic topic = session.getTopic() ;
         Book book   = session.getBook() ;
@@ -46,7 +46,7 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
 
     @Override
     protected Problem getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().sessionBlank.getLastProblem() ;
+        return changeState.getSessionInfo().session.getLastProblem() ;
     }
     
     @Override

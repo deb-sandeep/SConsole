@@ -27,7 +27,7 @@ public class HomeState extends BaseControlTileState {
     
     @Override
     public void resetState() {
-        si.sessionBlank = null ;
+        si.session = null ;
         si.unsolvedProblems = null ;
     }
 
@@ -44,9 +44,9 @@ public class HomeState extends BaseControlTileState {
         // This way, the user can start a new session with the details of the
         // previous one.
         
-        Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubject() ) ;
+        Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubjectName() ) ;
         if( lsOpt.isPresent() ) {
-            si.sessionBlank = lsOpt.get().getSession().clone() ;
+            si.session = lsOpt.get().getSession().clone() ;
             
             // At this point the session still has information which is not
             // suited for the blank - like last lap details, session details,
@@ -56,18 +56,18 @@ public class HomeState extends BaseControlTileState {
             
             // Disemboweling out the unnecessary details. Note that the following
             // attributes are not cleared - sessionType, topic, book, problem
-            si.sessionBlank.setId( null ) ;
-            si.sessionBlank.setStartTime( null ) ;
-            si.sessionBlank.setEndTime( null ) ;
-            si.sessionBlank.setDuration( 0 ) ;
-            si.sessionBlank.setAbsoluteDuration( 0 );
-            si.sessionBlank.setNumSkipped( 0 );
-            si.sessionBlank.setNumSolved( 0 );
-            si.sessionBlank.setNumRedo( 0 );
-            si.sessionBlank.setNumPigeon( 0 );
+            si.session.setId( null ) ;
+            si.session.setStartTime( null ) ;
+            si.session.setEndTime( null ) ;
+            si.session.setDuration( 0 ) ;
+            si.session.setAbsoluteDuration( 0 );
+            si.session.setNumSkipped( 0 );
+            si.session.setNumSolved( 0 );
+            si.session.setNumRedo( 0 );
+            si.session.setNumPigeon( 0 );
         }
         else {
-            si.sessionBlank = new Session() ;
+            si.session = new Session() ;
         }
         
         log.debug( "Validating session details and activating play button" ) ;
@@ -86,12 +86,19 @@ public class HomeState extends BaseControlTileState {
 
     /**
      * This function is called before transitioning to the next state for 
-     * collecting the payload. Subclasses can use the parameters to 
-     * decide on the appropriate payload which will be passed to the 
-     * next state.
+     * collecting the payload. 
+     * 
+     * Home state can transition to either the change state or play state.
+     * In either case, we pass the session information as the payload on 
+     * which the next states can operate upon.
+     * 
+     * Also note that it is guaranteed that the PLAY transition will not be 
+     * activated till the session information is valid and complete for
+     * starting a session.
      */
     public Object getTransitionOutPayload( State nextState, Key key ) {
-        if( nextState.getName().equals( ChangeState.NAME ) ) {
+        if( nextState.getName().equals( ChangeState.NAME ) || 
+            nextState.getName().equals( PlayState.NAME ) ) {
             return this.si ;
         }
         return null ;

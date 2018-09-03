@@ -31,7 +31,7 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
     protected List<Book> getListItems() {
         List<Book> books = new ArrayList<Book>() ;
         
-        Topic selectedTopic = changeState.getSessionInfo().sessionBlank.getTopic() ;
+        Topic selectedTopic = changeState.getSessionInfo().session.getTopic() ;
         if( selectedTopic != null ) {
             List<Integer> bookIds = bookRepo.findProblemBooksForTopic( selectedTopic.getId() ) ;
             bookRepo.findAllById( bookIds ).forEach( e -> books.add( e )) ;
@@ -41,7 +41,7 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     @Override
     protected Book getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().sessionBlank.getBook() ;
+        return changeState.getSessionInfo().session.getBook() ;
     }
     
     @Override
