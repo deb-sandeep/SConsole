@@ -20,6 +20,25 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
         FN_H      : null
     }
     
+    var deactivatedKeyInfo = {
+        UP        : null,
+        LEFT      : null,
+        RIGHT     : null,
+        DOWN      : null,
+        SELECT    : null,
+        CANCEL    : null,
+        PLAYPAUSE : null,
+        STOP      : null,
+        FN_A      : null,
+        FN_B      : null,
+        FN_C      : null,
+        FN_D      : null,
+        FN_E      : null,
+        FN_F      : null,
+        FN_G      : null,
+        FN_H      : null
+    } ;
+    
     setInterval( function() {
         loadKeyActivationInfo() ;
     }, 5000 ) ;
@@ -49,6 +68,7 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
             function( error ){
                 $scope.otaStatus = "ota-idle" ;
                 console.log( "Error getting function key labels." + error ) ;
+                $scope.keyActivationInfo = deactivatedKeyInfo ;
             }
         ) ;
     }
@@ -70,6 +90,7 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
             function( error ){
                 $scope.otaStatus = "ota-idle" ;
                 console.log( "Error posting button press." + error ) ;
+                $scope.keyActivationInfo = deactivatedKeyInfo ;
             }
         ) ;
     }

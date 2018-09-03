@@ -35,6 +35,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     $scope.displayProblems = [] ;
     $scope.message = null ;
     $scope.serverResponseStatus = null ;
+    $scope.loading = false ;
     
     $scope.sessionDetails = {
         sessionType : "Exercise",
@@ -73,6 +74,13 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
             }            
             else if( $scope.sessionDetails.selectedProblems.length == 0 ) {
                 $scope.message = "Plese select problems." ;
+            }
+        }
+        else if( currentScreen == SCR_ADD_PROBLEM_OUTCOME ) {
+            $scope.sessionDetails.duration = 0 ;
+            for( var i=0; i<$scope.sessionDetails.selectedProblems.length; i++ ) {
+                var problem = $scope.sessionDetails.selectedProblems[i] ;
+                $scope.sessionDetails.duration += problem.duration ;
             }
         }
         else if( currentScreen == SCR_REIVEW_AND_SUBMIT ) {
@@ -168,7 +176,6 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
         var bookId = -1 ;
         
         if( $scope.sessionDetails.sessionType == 'Exercise' ) {
-            var duration = 0 ;
             for( var i=0; i<$scope.sessionDetails.selectedProblems.length; i++ ) {
                 var problem = $scope.sessionDetails.selectedProblems[i] ;
                 problemOutcome.push( {
@@ -177,10 +184,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
                     starred : problem.starred,
                     duration : problem.duration
                 }) ;
-                duration += problem.duration ;
             }
-            
-            $scope.sessionDetails.duration = duration ;
             bookId = $scope.sessionDetails.book.id ;
         }
         else {
@@ -265,6 +269,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
     function loadProblemsFromServer() {
 
         console.log( "Loading probems from server." ) ;
+        $scope.loading = true ;
         $http( {
             url:'/Problems',
             method:'GET',
@@ -278,9 +283,11 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
                 console.log( "Problems received." ) ;
                 console.log( data ) ;
                 $scope.displayProblems = data.data ;
+                $scope.loading = false ;
             }, 
             function( error ){
                 console.log( "Error getting book details." + error ) ;
+                $scope.loading = false ;
             }
         ) ;
     }

@@ -24,6 +24,19 @@ public class Session {
         public String toString() {
             return this.value ;
         }
+        
+        public static SessionType decode( String input ) {
+            if( input.equals( LECTURE.toString() ) ) {
+                return LECTURE ;
+            }
+            else if( input.equals( EXERCISE.toString() ) ) {
+                return EXERCISE ;
+            }
+            else if( input.equals( THEORY.toString() ) ) {
+                return THEORY ;
+            }
+            throw new IllegalArgumentException( "Illegal session type = " + input ) ;
+        }
     }
     
     @Id

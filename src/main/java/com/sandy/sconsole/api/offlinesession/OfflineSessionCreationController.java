@@ -117,7 +117,7 @@ public class OfflineSessionCreationController {
         log.debug( "Saving an offline session." ) ;
         
         Session session = new Session() ;
-        session.setSessionType( SessionType.valueOf( input.getSessionType() ) ) ;
+        session.setSessionType( SessionType.decode( input.getSessionType() ) ) ;
         session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
         session.setDuration( input.getDuration() ) ;
         session.setAbsoluteDuration( input.getDuration() ) ;
@@ -157,6 +157,7 @@ public class OfflineSessionCreationController {
         int numSolved = 0 ;
         int numRedo = 0 ;
         int numPigeon = 0 ;
+        int numIgnored = 0 ;
         
         for( ProblemOutcome outcome : outcomes ) {
             
@@ -191,6 +192,11 @@ public class OfflineSessionCreationController {
                 numPigeon++ ;
                 problem.setPigeoned( true ) ;
             }
+            else if( outcomeVal.equals( OUTCOME_IGNORE ) ) {
+                numIgnored++ ;
+                problem.setIgnored( true ) ;
+                problem.setSolved( true ) ;
+            }
             
             problem.setStarred( outcome.getStarred() ) ;
             
@@ -208,6 +214,7 @@ public class OfflineSessionCreationController {
         session.setNumSolved( numSolved ) ;
         session.setNumRedo( numRedo ) ;
         session.setNumPigeon( numPigeon ) ;
+        session.setNumIgnored( numIgnored ) ;
         
         log.debug( "Updating session details with remaining info." ) ;
         log.debug( session.toString() ) ;
