@@ -8,6 +8,7 @@ import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.dao.entity.LastSession ;
 import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn2Type ;
@@ -28,6 +29,7 @@ public class HomeState extends BaseControlTileState {
     @Override
     public void resetState() {
         si.session = null ;
+        si.blueprintSession = null ;
         si.unsolvedProblems = null ;
     }
 
@@ -45,39 +47,47 @@ public class HomeState extends BaseControlTileState {
         // previous one.
         
         Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubjectName() ) ;
+        Session session = null ;
         if( lsOpt.isPresent() ) {
-            si.session = lsOpt.get().getSession().clone() ;
-            log.debug( "Populating UI based on last session" ) ;
-            log.debug( si.session.toString() ) ;
-            
-            // At this point the session still has information which is not
-            // suited for the blank - like last lap details, session details,
-            // outcome details etc. We use the information for display and
-            // then dis-embowel them out.
-            super.populateUIBasedOnSessionInfo( si ) ;
-            
-            // Disemboweling out the unnecessary details. Note that the following
-            // attributes are not cleared - sessionType, topic, book, problem
-            si.session.setId( null ) ;
-            si.session.setStartTime( null ) ;
-            si.session.setEndTime( null ) ;
-            si.session.setDuration( 0 ) ;
-            si.session.setAbsoluteDuration( 0 );
-            si.session.setNumSkipped( 0 );
-            si.session.setNumSolved( 0 );
-            si.session.setNumRedo( 0 );
-            si.session.setNumPigeon( 0 ) ;
-            si.session.setNumIgnored( 0 ) ;
+            session = lsOpt.get().getSession() ;
         }
         else {
-            si.session = new Session() ;
-            super.populateUIBasedOnSessionInfo( si ) ;
+            session = new Session() ;
         }
+        createAndRenderSessionInfo( session ) ;
         
         log.debug( "Validating session details and activating play button" ) ;
         highlightKeyPanelsAndActivateTransitions() ;
         
         return false ;
+    }
+    
+    private SessionInformation createAndRenderSessionInfo( Session session ) {
+        
+        log.debug( "Populating UI based on session - \n" + session.toString() ) ;
+        si.blueprintSession = session ;
+        si.session = session.getId() != null ? session.clone() : session ;
+        
+        // At this point the session still has information which is not
+        // suited for the blank - like last lap details, session details,
+        // outcome details etc. We use the information for display and
+        // then dis-embowel them out.
+        super.populateUIBasedOnSessionInfo( si ) ;
+        
+        // Disemboweling out the unnecessary details. Note that the following
+        // attributes are not cleared - sessionType, topic, book, problem
+        si.session.setId( null ) ;
+        si.session.setStartTime( null ) ;
+        si.session.setEndTime( null ) ;
+        si.session.setDuration( 0 ) ;
+        si.session.setAbsoluteDuration( 0 );
+        si.session.setNumSkipped( 0 );
+        si.session.setNumSolved( 0 );
+        si.session.setNumRedo( 0 );
+        si.session.setNumPigeon( 0 ) ;
+        si.session.setNumIgnored( 0 ) ;
+        
+        return this.si ;
     }
 
     private void highlightKeyPanelsAndActivateTransitions() {
@@ -101,10 +111,43 @@ public class HomeState extends BaseControlTileState {
      * starting a session.
      */
     public Object getTransitionOutPayload( State nextState, Key key ) {
-        if( nextState.getName().equals( ChangeState.NAME ) || 
-            nextState.getName().equals( PlayState.NAME ) ) {
-            return this.si ;
+        if( nextState.getName().equals( ChangeState.NAME ) ) {
+            Session quickSwitchSession = getQuickSwitchSession() ;
+            if( quickSwitchSession != null ) {
+                return createAndRenderSessionInfo( quickSwitchSession ) ;
+            }
+            else {
+                return this.si ;
+            }
+        }
+        else if( nextState.getName().equals( PlayState.NAME ) ) {
+            return this.si ; 
         }
         return null ;
+    }
+    
+    private Session getQuickSwitchSession() {
+        
+        Session session = null ;
+        Integer lastSessionId = lastSessionRepo.findSessionBefore( 
+                                                        this.si.blueprintSession.getId(),
+                                                        getSubjectName() ) ;
+        if( lastSessionId != null ) {
+            session = sessionRepo.findById( lastSessionId ).get() ;
+            if( session.getSessionType() == SessionType.EXERCISE ) {
+                
+                Integer topicId = session.getTopic().getId() ;
+                Integer bookId = session.getBook().getId() ;
+                
+                int numProblems = problemRepo.findUnsolvedProblemCount( topicId, bookId ) ;
+                if( numProblems > 0 ) {
+                    return session ;
+                }
+                else {
+                    return null ;
+                }
+            }
+        }
+        return session ;
     }
 }

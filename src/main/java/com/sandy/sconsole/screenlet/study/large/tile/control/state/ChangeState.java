@@ -18,8 +18,6 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileU
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
 
-//TODO: Implement quick switch
-//TODO: Dialog modality even for screen switches
 public class ChangeState extends BaseControlTileState {
 
     private static final Logger log = Logger.getLogger( ChangeState.class ) ;

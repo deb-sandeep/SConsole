@@ -153,6 +153,7 @@ public class PlayState extends BaseControlTileState
         // outcome controls and transitions
         if( si.session.getSessionType() == SessionType.EXERCISE ) {
             log.debug( "Session is an exercise. Activating problem outcome UI" ) ;
+            tile.updateOutcomeCounts( si.session ) ;
             tile.setOutcomeButtonsState( OutcomeButtonsState.ACTIVE ) ;
             enableTransition( Key.FN_A, Key.FN_B, Key.FN_C, 
                               Key.FN_D, Key.FN_E, Key.FN_F );
@@ -205,7 +206,7 @@ public class PlayState extends BaseControlTileState
         Session session = si.session ;
         
         // Store the current problem attempt outcome in the database.
-        problemAttempt.setOutcome( ProblemAttempt.OUTCOME_SOLVED ) ;
+        problemAttempt.setOutcome( outcome ) ;
         problemAttempt.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
         problemAttempt.setDuration( lapTime ) ;
         problemAttemptRepo.save( problemAttempt ) ;
