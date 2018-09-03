@@ -107,7 +107,6 @@ public class BaseControlTileState extends State {
             tile.setBookLabel( null ) ;
             tile.setProblemLabel( null ) ;
             tile.updateNumProblemsLeftInBookLabel( -1 ) ;
-            tile.updateSessionTimeLabel( -1 ) ;
             tile.updateLapTimeLabel( -1 ) ;
             tile.updateOutcomeCounts( null ) ;
             
@@ -194,6 +193,8 @@ public class BaseControlTileState extends State {
     protected void processPlayReadiness( SessionInformation si ) {
         
         boolean readyToPlay = true ;
+        
+        tile.clearInvalidationBorders() ;
         
         if( si.session.getSessionType() == null ) {
             readyToPlay = false ;

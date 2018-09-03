@@ -181,6 +181,7 @@ public class PlayState extends BaseControlTileState
         }
         
         lapTime = 0 ;
+        tile.updateLapTimeLabel( 0 ) ;
                 
         problem = si.unsolvedProblems.remove( 0 ) ;
         attempt = new ProblemAttempt() ;

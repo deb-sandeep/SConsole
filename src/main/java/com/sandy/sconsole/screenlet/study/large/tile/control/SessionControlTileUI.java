@@ -64,7 +64,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     public static Border INVALID_BORDER = BorderFactory.createCompoundBorder( 
                             BorderFactory.createEmptyBorder( 2, 2, 2, 2 ), 
-                            BorderFactory.createLineBorder( Color.RED, 1 ) ) ;
+                            BorderFactory.createLineBorder( Color.RED, 2 ) ) ;
     
     public JLabel typeLbl      = createDefaultLabel( "" ) ;
     public JLabel topicLbl     = createDefaultLabel( "" ) ;
@@ -182,7 +182,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         
         TableLayout layout = new TableLayout() ;
         for( int r=0; r<3; r++ ) {
-            layout.insertRow( r, 0.33F ) ;
+            layout.insertRow( r, 0.333F ) ;
         }
         for( int c=0; c<5; c++ ) {
             layout.insertColumn( c, 0.20F ) ;
@@ -306,15 +306,21 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     
     public void setOutcomeButtonsState( OutcomeButtonsState state ) {
         
-        boolean visibility = (state == OutcomeButtonsState.HIDDEN) ? false : true ;
-        
-        btnSkipLbl.setVisible( visibility ) ;
-        btnSolvedLbl.setVisible( visibility ) ;
-        btnRedoLbl.setVisible( visibility ) ;
-        btnPigeonLbl.setVisible( visibility ) ;
-        btnIgnoreLbl.setVisible( visibility ) ;
-        
-        if( state == OutcomeButtonsState.INACTIVE ) {
+        if( state == OutcomeButtonsState.HIDDEN ) {
+            
+            btnSkipLbl.setBackground( BG_COLOR ) ; 
+            btnSolvedLbl.setBackground( BG_COLOR ) ;
+            btnRedoLbl.setBackground( BG_COLOR ) ;
+            btnPigeonLbl.setBackground( BG_COLOR ) ;
+            btnIgnoreLbl.setBackground( BG_COLOR ) ;
+
+            btnSkipLbl.setForeground( BG_COLOR ) ; 
+            btnSolvedLbl.setForeground( BG_COLOR ) ;
+            btnRedoLbl.setForeground( BG_COLOR ) ;
+            btnPigeonLbl.setForeground( BG_COLOR ) ;
+            btnIgnoreLbl.setForeground( BG_COLOR ) ;
+        }
+        else if( state == OutcomeButtonsState.INACTIVE ) {
             
             btnSkipLbl.setBackground( BG_COLOR ) ; 
             btnSolvedLbl.setBackground( BG_COLOR ) ;
@@ -355,7 +361,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         else if( type == SessionType.THEORY ) {
             typeLbl.setIcon( theoryIcon ) ;
         }
-        else if( type == SessionType.EXERCISE ) {
+        else if( type == SessionType.LECTURE ) {
             typeLbl.setIcon( lectureIcon ) ;
         }
     }

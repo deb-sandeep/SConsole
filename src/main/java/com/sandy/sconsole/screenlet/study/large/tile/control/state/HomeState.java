@@ -71,6 +71,7 @@ public class HomeState extends BaseControlTileState {
         }
         else {
             si.session = new Session() ;
+            super.populateUIBasedOnSessionInfo( si ) ;
         }
         
         log.debug( "Validating session details and activating play button" ) ;

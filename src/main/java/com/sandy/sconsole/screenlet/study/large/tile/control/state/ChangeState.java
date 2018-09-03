@@ -178,7 +178,6 @@ public class ChangeState extends BaseControlTileState {
         
         if( type != null ) {
             si.session.setSessionType( type ) ;
-            
             if( type != SessionType.EXERCISE ) {
                 si.session.setBook( null ) ;
                 si.session.setLastProblem( null ) ;
