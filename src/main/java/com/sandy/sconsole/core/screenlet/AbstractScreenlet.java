@@ -13,6 +13,7 @@ public abstract class AbstractScreenlet implements Screenlet {
     private ScreenletSmallPanel smallPanel = null ;
     private ScreenletLargePanel largePanel = null ;
     private EventBus eventBus = null ;
+    private boolean isVisible = false ;
     
     protected AbstractScreenlet( String displayName ) {
         this.displayName = displayName ;
@@ -58,20 +59,27 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
     
     @Override
+    public void isBeingMaximized() {
+        this.smallPanel.setMaximizedBorder() ;
+        this.isVisible = true ;
+        eventBus.publishEvent( SCREENLET_MAXIMIZED, this ) ;
+    }
+    
+    @Override
     public void isBeingMinimized() {
         this.smallPanel.setPassiveBorder() ;
+        this.isVisible = false ;
         eventBus.publishEvent( SCREENLET_MINIMIZED, this ) ;
     }
 
     @Override
-    public void isBeingMaximized() {
-        this.smallPanel.setMaximizedBorder() ;
-        eventBus.publishEvent( SCREENLET_MAXIMIZED, this ) ;
+    public boolean isVisible() {
+        return this.isVisible ;
     }
 
     @Override
     public RunState getRunState() { return this.runState ; } ;
-
+    
     @Override
     public void setCurrentRunState( RunState state ) {
         this.runState = state ;

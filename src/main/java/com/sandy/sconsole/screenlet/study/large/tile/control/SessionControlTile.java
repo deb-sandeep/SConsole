@@ -1,5 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
+import java.util.Calendar ;
 import java.util.Map ;
 
 import org.apache.log4j.Logger ;
@@ -11,15 +12,21 @@ import com.sandy.sconsole.core.remote.KeyProcessor ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
 
 @SuppressWarnings( "serial" )
-public class SessionControlTile extends SessionControlTileUI {
+public class SessionControlTile extends SessionControlTileUI
+    implements SecondTickListener {
     
     private static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
     class ControlTileKeyProcessor extends KeyProcessor {
+        
+        private long lastKeyReceivedTime = -1 ;
 
         @Override public String getName() {
             return "ControlTileKeyProcessor" ;
@@ -30,6 +37,8 @@ public class SessionControlTile extends SessionControlTileUI {
             log.debug( "StateMachine received key " + key ) ;
             TransitionRequest transition = null ; 
             State nextState = null ;
+            
+            lastKeyReceivedTime = System.currentTimeMillis() ;
             
             try {
                 transition = currentState.acceptKey( key ) ;
@@ -50,6 +59,17 @@ public class SessionControlTile extends SessionControlTileUI {
         public Map<Key, String> getActivatedKeyInfo() {
             return currentState.getActivatedKeyInfo() ;
         }
+        
+        public void setLastKeyReceivedTime( long time ) {
+            this.lastKeyReceivedTime = time ;
+        }
+        
+        public long timeSinceLastKeyProcess() {
+            if( lastKeyReceivedTime == -1 ) {
+                return -1 ;
+            }
+            return (System.currentTimeMillis() - lastKeyReceivedTime)/1000 ;
+        }
     }
     
     private HomeState homeState = null ;
@@ -68,7 +88,7 @@ public class SessionControlTile extends SessionControlTileUI {
         super( parent ) ;
         keyProcessor = new ControlTileKeyProcessor() ;
         controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
-        
+        SConsole.addSecTimerTask( this ) ;
         initializeStateMachine() ;
     }
     
@@ -119,6 +139,8 @@ public class SessionControlTile extends SessionControlTileUI {
         super.screenletMaximized() ;
         controller.pushKeyProcessor( keyProcessor ) ; 
         
+        keyProcessor.setLastKeyReceivedTime( System.currentTimeMillis() ) ;
+        
         if( getScreenlet().getRunState() == RunState.STOPPED ) {
             startStateMachine() ;
         }
@@ -141,5 +163,28 @@ public class SessionControlTile extends SessionControlTileUI {
      */
     public void feedIntoStateMachine( Key key ) {
         this.keyProcessor.processKey( key ) ;
+    }
+
+    @Override
+    public void secondTicked( Calendar calendar ) {
+        
+        if( getScreenlet().isVisible() && ( currentState == homeState ) ) {
+            
+            if( keyProcessor.timeSinceLastKeyProcess() >= 300 ) {
+                log.debug( "\n\n5 minutes of inactivity detected." ) ;
+                log.debug( "Reverting to calendar screenlet." ) ;
+                try {
+                    SConsole.getApp()
+                            .getFrame()
+                            .handleScreenletSelectionEvent( "1" ) ;
+                }
+                catch( Exception e ) {
+                    log.error( "Could not process key", e ) ;
+                }
+            }
+            else {
+//                log.debug( "Inactivity detected = " + keyProcessor.timeSinceLastKeyProcess() ) ;
+            }
+        }
     }
 }

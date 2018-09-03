@@ -14,6 +14,7 @@ public interface Screenlet {
     
     public void isBeingMinimized() ;
     public void isBeingMaximized() ;
+    public boolean isVisible() ;
     
     public EventBus getEventBus() ;
 

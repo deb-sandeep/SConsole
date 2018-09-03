@@ -1,5 +1,8 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.state;
 
+import java.util.ArrayList ;
+import java.util.List ;
+
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.UIConstant ;
@@ -256,8 +259,18 @@ public class ChangeState extends BaseControlTileState {
         
         if( problem != null ) {
             si.session.setLastProblem( problem ) ;
+            int index = si.unsolvedProblems.indexOf( problem ) ;
+            
+            if( index > 0 ) {
+                List<Problem> list = new ArrayList<Problem>() ;
+                for( int i=0; i<index; i++ ) {
+                    list.add( si.unsolvedProblems.get( i ) ) ;
+                }
+                si.unsolvedProblems.removeAll( list ) ;
+                si.unsolvedProblems.addAll( list ) ;
+            }
         }
-        super.populateUIBasedOnSessionInfo( si ) ;
+        tile.setProblemLabel( problem ) ;
         highlightKeyPanelsAndActivateTransitions() ;
     }
     

@@ -7,6 +7,8 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.remote.Key ;
+import com.sandy.sconsole.core.screenlet.Screenlet ;
+import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
@@ -53,7 +55,6 @@ public class PlayState extends BaseControlTileState
     public static final String NAME = "Play" ;
     
     private SessionInformation si = null ;
-    private boolean isRunning = false ;
     
     private PauseDialog pauseDialog = null ;
     
@@ -81,7 +82,6 @@ public class PlayState extends BaseControlTileState
     @Override
     public void resetState() {
         si = null ;
-        isRunning = false ;
         runTime = 0 ;
         pauseTime = 0 ;
     }
@@ -256,7 +256,7 @@ public class PlayState extends BaseControlTileState
     public void deactivate( State nextState, Key key ) {
         super.deactivate( nextState, key ) ;
         if( nextState != this ) {
-            isRunning = false ;
+            tile.getScreenlet().setCurrentRunState( RunState.STOPPED ) ;
             SConsole.removeSecTimerTask( this ) ;
             
             updateSession() ;
@@ -277,13 +277,15 @@ public class PlayState extends BaseControlTileState
      */
     @Override
     public void handlePlayPauseResumeKey() {
-        if( !isRunning ) {
+        
+        Screenlet screenlet = tile.getScreenlet() ;
+        if( screenlet.getRunState() != RunState.RUNNING ) {
             // Set the state to running, so that the next Key.PLAY transition
             // can be treated as intention to pause.
-            this.isRunning = true ;
+            tile.getScreenlet().setCurrentRunState( RunState.RUNNING ) ;
         }
         else {
-            this.isRunning = false ;
+            tile.getScreenlet().setCurrentRunState( RunState.PAUSED ) ;
             showDialog( pauseDialog ) ;
         }
     }
@@ -330,7 +332,7 @@ public class PlayState extends BaseControlTileState
 
     @Override
     public void secondTicked( Calendar calendar ) {
-        if( isRunning ) {
+        if( tile.getScreenlet().getRunState() == RunState.RUNNING ) {
             runTime++ ;
             tile.updateSessionTimeLabel( runTime ) ;
             if( problemAttempt != null ) {
