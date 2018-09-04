@@ -100,6 +100,8 @@ class SConsoleDialog extends JDialog {
             SwingUtils.centerOnScreen( this, (int)prefSize.getWidth(), 
                                              (int)prefSize.getHeight() ) ;
         }
+        
+        super.revalidate() ;
     }
     
     public void setVisible( boolean visible ) {
