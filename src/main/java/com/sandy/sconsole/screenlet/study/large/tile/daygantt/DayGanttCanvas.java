@@ -168,5 +168,6 @@ public class DayGanttCanvas extends JPanel
     public void dayTicked( Calendar instance ) {
         createStartOfDayDate() ;
         todaySessions.clear() ;
+        repaint() ;
     }
 }
