@@ -196,4 +196,12 @@ public class Session {
         
         return sbuf.toString() ;
     }
+    
+    @Override
+    public boolean equals( Object obj ) {
+        if( !(obj instanceof Session) ) {
+            return false ;
+        }
+        return ((Session)obj).getId() == this.getId() ;
+    }
 }

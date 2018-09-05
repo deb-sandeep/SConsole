@@ -10,6 +10,7 @@ import javax.swing.* ;
 
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.core.util.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttCanvas ;
 
 @SuppressWarnings( "serial" )
 public class DatePanel extends JPanel implements DayTickListener {
@@ -32,14 +33,15 @@ public class DatePanel extends JPanel implements DayTickListener {
     }
     
     private void setUpUI( boolean large ) {
-        setLayout( new BorderLayout() ) ;
-        setBackground( BG_COLOR ) ;
-        add( dateLabel, BorderLayout.CENTER ) ;
-        
         dateLabel.setHorizontalAlignment( SwingConstants.CENTER ) ;
         dateLabel.setVerticalAlignment( SwingConstants.TOP ) ;
         dateLabel.setFont( large ? LG_FONT : SM_FONT ) ;
         dateLabel.setForeground( Color.GRAY ) ;
         dateLabel.setText( SDF.format( new Date() ) );
+        
+        setLayout( new BorderLayout() ) ;
+        setBackground( BG_COLOR ) ;
+        add( dateLabel, BorderLayout.CENTER ) ;
+        add( new DayGanttCanvas(), BorderLayout.SOUTH ) ;;
     }
 }

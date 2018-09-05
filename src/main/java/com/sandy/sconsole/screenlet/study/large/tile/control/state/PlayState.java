@@ -111,7 +111,7 @@ public class PlayState extends BaseControlTileState
             // will end up updating the session instead of creating a new one
             log.debug( "Creating a new session in database" ) ;
             this.si.session.setStartTime( new Timestamp( System.currentTimeMillis() ) ) ;
-            sessionRepo.save( this.si.session ) ;
+            updateSession() ;
             
             log.debug( "Saving as the latest session for " + getSubjectName() ) ;
             lastSessionRepo.update( getSubjectName(), si.session.getId() ) ;
@@ -174,6 +174,9 @@ public class PlayState extends BaseControlTileState
         si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
         si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
         sessionRepo.save( si.session ) ;
+        
+        SConsole.GLOBAL_EVENT_BUS
+                .publishEvent( SConsole.GlobalEvent.SESSION_SAVED, si.session ) ;
     }
     
     private ProblemAttempt createNewProblemAttempt() {

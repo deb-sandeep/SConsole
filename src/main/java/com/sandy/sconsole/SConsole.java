@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication ;
 import org.springframework.context.ApplicationContext ;
 import org.springframework.context.ApplicationContextAware ;
 
+import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
@@ -30,6 +31,12 @@ public class SConsole implements ApplicationContextAware {
     private static List<DayTickListener>    dayListeners    = new ArrayList<>() ;
     
     private static Object lock = new Object() ;
+    
+    public static EventBus GLOBAL_EVENT_BUS = new EventBus() ;
+    
+    public static class GlobalEvent {
+        public static final int SESSION_SAVED = 5000 ;
+    }
 
     static {
         SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
@@ -139,8 +146,5 @@ public class SConsole implements ApplicationContextAware {
         log.debug( "Starting SConsole.." ) ;
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
-        
-        log.debug( "----------- Test JPA ------------------" ) ;
-//        app.testJPA() ;
     }
 }

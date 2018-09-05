@@ -13,7 +13,7 @@ public class StudyScreenlet extends AbstractScreenlet {
     private StudyScreenletSmallPanel smallPanel = null ;
     private StudyScreenletLargePanel largePanel = null ;
     
-    public Color getSubjectColor( String subjectName ) {
+    public static Color getSubjectColor( String subjectName ) {
         if( subjectName.contains( "Physics" ) ) {
             return Color.GREEN.darker().darker() ;
         }

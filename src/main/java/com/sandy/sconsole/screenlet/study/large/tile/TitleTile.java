@@ -17,7 +17,8 @@ public class TitleTile extends AbstractScreenletTile {
         super( mother, false ) ;
         StudyScreenlet parent = ( StudyScreenlet )mother.getScreenlet() ;
         String subjectName = parent.getDisplayName() ;
-        Color fgColor = parent.getSubjectColor( subjectName ) ;
+        
+        Color fgColor = StudyScreenlet.getSubjectColor( subjectName ) ;
         setUpUI( fgColor ) ;
     }
     
