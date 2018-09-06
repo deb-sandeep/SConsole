@@ -62,3 +62,6 @@ group by
     tm.topic_name
 order by
     tm.id asc ;
+    
+    
+>> cast( pa.start_time as date ) as date

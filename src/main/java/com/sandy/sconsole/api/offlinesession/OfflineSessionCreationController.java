@@ -167,11 +167,11 @@ public class OfflineSessionCreationController {
             ProblemAttempt attempt = new ProblemAttempt() ;
             attempt.setSession( session ) ;
             attempt.setProblem( problem ) ;
-            attempt.setDuration( outcome.getDuration() ) ;
+            attempt.setDuration( outcome.getDuration()*60 ) ;
             attempt.setOutcome( outcome.getOutcome() ) ;
             attempt.setStartTime( new Timestamp( startTime ) ) ;
             
-            startTime += outcome.getDuration()*60*1000 ;
+            startTime += outcome.getDuration()*1000 ;
             
             attempt.setEndTime( new Timestamp( startTime ) ) ;
             
