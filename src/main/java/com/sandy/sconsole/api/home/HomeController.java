@@ -20,4 +20,9 @@ public class HomeController {
     public String addSession() {
         return "add-session" ;
     }
+    
+    @RequestMapping( "/burn-calibration" )
+    public String burnCalibration() {
+        return "burn" ;
+    }
 }

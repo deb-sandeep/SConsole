@@ -20,6 +20,14 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
             nativeQuery = true ) 
     void saveMetaExercise( @Param("name") String name ) ;
     
+    @Modifying
+    @Transactional
+    @Query( value="UPDATE problem_master " + 
+                  "SET active=?2 " + 
+                  "WHERE id=?1 ",
+            nativeQuery = true ) 
+    void updateActivation( Integer problemId, Boolean active ) ;
+    
     @Query( value="SELECT " + 
                   "    CASE " + 
                   "        WHEN count(name)>0 " + 
@@ -37,6 +45,17 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
     
     List<Problem> findByBookIdAndTopicId( int bookId, int topicId ) ;
     
+    @Query( "SELECT p "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.solved = false and "
+            +   "p.pigeoned = false and "
+            +   "p.active = true and "
+            +   "p.topic.id = ?1 "
+            + "ORDER BY " 
+            +   "p.id asc" )
+    List<Problem> findUnsolvedProblems( int topicId ) ;
+
     @Query( "SELECT p "
           + "FROM Problem p "
           + "WHERE "
@@ -75,4 +94,11 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
             + "LIMIT 1 "
            ,nativeQuery=true )
     Integer findNextUnsolvedProblem( Integer topicId, Integer bookId ) ;
+
+    @Query(   "SELECT p "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.solved = false and "
+            +   "p.topic.id = ?1" )
+    List<Problem> findAllUnsolvedProblemsByTopicId( Integer topicId ) ;
 }

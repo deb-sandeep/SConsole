@@ -85,7 +85,12 @@ public class OfflineSessionCreationController {
         List<Problem> problems = null ;
         
         try {
-            problems = problemRepo.findUnsolvedProblems( topicId, bookId ) ;
+            if( bookId == -1 ) {
+                problems = problemRepo.findUnsolvedProblems( topicId ) ;
+            }
+            else {
+                problems = problemRepo.findUnsolvedProblems( topicId, bookId ) ;
+            }
             return ResponseEntity.status( HttpStatus.OK ).body( problems ) ;
         }
         catch( Exception e ) {

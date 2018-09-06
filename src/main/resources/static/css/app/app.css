@@ -158,6 +158,10 @@ a {
     background-color: #4AB1B9 !important;
 }
 
+.dirty {
+    background-color: #FACAB5;
+}
+
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */

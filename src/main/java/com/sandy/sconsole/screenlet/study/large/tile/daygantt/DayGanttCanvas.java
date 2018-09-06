@@ -147,7 +147,7 @@ public class DayGanttCanvas extends JPanel
         }
         
         String subjectName = s.getTopic().getSubject().getName() ;
-        g.setColor( StudyScreenlet.getSubjectColor( subjectName ).darker() ) ;
+        g.setColor( StudyScreenlet.getSubjectColor( subjectName ) ) ;
         g.fillRect( x1, y1, width, height ) ;
     }
 

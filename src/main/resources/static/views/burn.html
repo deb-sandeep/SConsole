@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SConsole</title>
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/jquery-2.1.1.min.js"></script>
+    <script src="js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="js/lib/moment.min.js"></script>
+    <script src="js/lib/bootstrap/transition.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/bootstrap/bootstrap-datetimepicker.js"></script>
+    
+    <link rel="stylesheet" href="css/app/app.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap-datetimepicker.css"/>
+
+    <script src="js/app/ng/app-ng.js"></script>
+    <script src="js/app/ng/burn/controller.js"></script>
+</head>
+<body ng-controller="BurnController">
+
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container"
+       style="font-size:25px;color: #888888;">
+     Calibrate burn
+  </div>
+</nav>
+
+<div style="padding:10px">
+
+<div class="alert alert-danger"
+     ng-show="message != null">
+  {{message}}
+</div>
+ 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group pad-10px">
+          <label for="subject">Subject:</label>
+          <select id="subject" class="form-control" 
+                  ng-model="userChoice.subject"
+                  ng-change="subjectSelected()">
+              <option value="IIT - Physics">IIT - Physics</option>
+              <option value="IIT - Chemistry">IIT - Chemistry</option>
+              <option value="IIT - Maths">IIT - Maths</option>
+          </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group pad-10px">
+         <label for="topic">Topic:</label>
+         <div class="loader" ng-show="loading"></div>
+         <select id="topic" 
+                 class="form-control"  
+                 ng-model="userChoice.topic"
+                 ng-options="item as item.topicName for item in displayTopics track by item.id"
+                 ng-change="topicSelected()">
+         </select>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+        <table class="table table-bordered table-compact">
+          <tbody>
+            <tr>
+                <td><strong>Num active problems:</strong></td>
+                <td>{{burnStats.numActive}}</td>
+            </tr>
+            <tr>
+                <td><strong>Burn overflow:</strong></td>
+                <td>{{burnStats.burnOverflow | number:0}} problems</td>
+            </tr>
+            <tr>
+                <td><strong>Burn overflow days:</strong></td>
+                <td>{{burnStats.burnExtraDays | number:0}} days</td>
+            </tr>
+            <tr>
+                <td><strong>Projected burn completion date:</strong></td>
+                <td>{{burnStats.projectedBurnCompletionDate | date}}</td>
+            </tr>
+            <tr>
+                <td><strong>Num days projected for burn completion:</strong></td>
+                <td>{{burnStats.numProjectedBurnCompletionDays}} days</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <div class="col-sm-6">
+        <table class="table table-bordered table-compact">
+          <tbody>
+            <tr>
+                <td><strong>Average daily time:</strong></td>
+                <td>{{burnStats.averageDailyTime/60 | number:1 }} min</td>
+            </tr>
+            <tr>
+                <td><strong>Average problems per day:</strong></td>
+                <td>{{burnStats.numProblemsPerDay | number:0 }}</td>
+            </tr>
+            <tr>
+                <td><strong>Average time per problem:</strong></td>
+                <td>{{burnStats.averageProblemTime/60 | number:2 }} min</td>
+            </tr>
+            <tr>
+                <td><strong>Burn completion date:</strong></td>
+                <td>{{burnStats.completionDate | date}}</td>
+            </tr>
+            <tr>
+                <td><strong>Num days for burn completion:</strong></td>
+                <td>{{burnStats.numDaysTillBurnCompletion}} days</td>
+            </tr>
+            <tr>
+                <td><strong>Burn capacity:</strong></td>
+                <td>{{burnStats.burnCapacity | number:0 }} problems</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+<div style="padding:10px">
+
+<div class="container-fluid">
+  <div class="row pull-right">
+    <button type="button" class="btn btn-success"
+            ng-click="toggleSelection()">Toggle selection</button>
+            
+    <button type="button" class="btn btn-info"
+            ng-click="updateServer()">Update on server</button>
+  </div>
+</div> 
+
+<div style="padding:10px">
+
+<table class="table table-bordered table-compact">
+  <thead>
+    <tr class="success">
+      <th>Book</th>
+      <th>Chapter</th>
+      <th>Exercise</th>
+      <th>Tag</th>
+      <th>Active</th>
+    </tr>
+    <tr class="success">
+      <th><input ng-model="search.book.bookShortName"></th>
+      <th><input ng-model="search.chapterId"></th>
+      <th><input ng-model="search.exerciseName"></th>
+      <th><input ng-model="search.problemTag"></th>
+      <th><input type="checkbox" ng-model="search.active"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="problem in displayProblems | filter:search:false as filtered"
+        ng-class="checkDirty(problem)">
+      <td>{{problem.book.bookShortName}}</td>
+      <td>{{problem.chapterId}}</td>
+      <td>{{problem.exerciseName}}</td>
+      <td>{{problem.problemTag}}</td>
+      <td><input type="checkbox" 
+                 ng-model="problem.changedActivation"
+                 ng-change="activationChanged(problem)"></td>
+    </tr>
+  </tbody>
+</table>
+ 
+</div>
+
+</body>
+</html>

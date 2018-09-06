@@ -1,5 +1,7 @@
 package com.sandy.sconsole.dao.entity.master;
 
+import java.sql.Timestamp ;
+
 import javax.persistence.* ;
 
 @Entity
@@ -18,6 +20,7 @@ public class Topic {
     private String topicName ;
     
     private String section ;
+    private Timestamp burnCompletion ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -30,6 +33,11 @@ public class Topic {
 
     public String getSection() { return section ; }
     public void setSection( String section ) { this.section = section ; }
+    
+    public Timestamp getBurnCompletion(){ return burnCompletion ; }
+    public void setBurnCompletion( Timestamp ts ) {
+        this.burnCompletion = ts ;
+    }
     
     public String toString() {
         return id + " / " + subject.getName() + " / " + topicName ;
