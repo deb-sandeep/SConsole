@@ -74,6 +74,29 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
             +   "p.solved = false and "
             +   "p.pigeoned = false and "
             +   "p.active = true and "
+            +   "p.topic.id = ?1 " )
+    Integer findUnsolvedProblemCount( int topicId ) ;
+    
+    @Query(   "SELECT count(p) "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.solved = true and "
+            +   "p.topic.id = ?1 " )
+    Integer findSolvedProblemCount( int topicId ) ;
+    
+    @Query(   "SELECT count(p) "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.active = true and "
+            +   "p.topic.id = ?1 " )
+    Integer findActiveProblemCount( int topicId ) ;
+
+    @Query(   "SELECT count(p) "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.solved = false and "
+            +   "p.pigeoned = false and "
+            +   "p.active = true and "
             +   "p.topic.id = ?1 and "
             +   "p.book.id = ?2" )
     Integer findUnsolvedProblemCount( int topicId, int bookId ) ;

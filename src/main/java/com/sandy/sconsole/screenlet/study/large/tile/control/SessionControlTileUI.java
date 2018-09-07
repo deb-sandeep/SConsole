@@ -12,6 +12,7 @@ import javax.swing.border.Border ;
 import org.apache.log4j.Logger ;
 
 import com.sandy.common.util.StringUtil ;
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
@@ -367,7 +368,15 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     }
 
     public void setTopicLabel( Topic topic ) {
-        topicLbl.setText( topic == null ? "" : topic.getTopicName() ) ;
+        
+        if( topic == null ) {
+            topicLbl.setText( "" ) ;
+        }
+        else {
+            topicLbl.setText( topic.getTopicName() ) ;
+            getScreenlet().getEventBus()
+                          .publishEvent( EventCatalog.TOPIC_CHANGED, topic ) ;
+        }
     }
     
     public void setBookLabel( Book book ) {

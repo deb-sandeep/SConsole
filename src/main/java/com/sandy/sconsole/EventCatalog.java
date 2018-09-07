@@ -4,13 +4,14 @@ import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.Payload ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.Session ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 
 public class EventCatalog {
 
     public static final int CORE_EVENT_RANGE_MIN = 100 ;
     public static final int CORE_EVENT_RANGE_MAX = 200 ;
 
-    // --------------- Core Events [Start] -------------------------------------
+    // =============== Core Events [Start] =====================================
     
     @Payload( type=Screenlet.class )
     public static final int SCREENLET_MAXIMIZED = 100 ;
@@ -23,7 +24,7 @@ public class EventCatalog {
     
     // --------------- Core Events [End] ---------------------------------------
 
-    // --------------- Session Events [Start] ----------------------------------
+    // =============== Session Events [Start] ==================================
     
     @Payload( type=Session.class )
     public static final int SESSION_STARTED = 5001 ;
@@ -39,6 +40,9 @@ public class EventCatalog {
     
     @Payload( type=ProblemAttempt.class )
     public static final int PROBLEM_ATTEMPT_ENDED = 5005 ;
+    
+    @Payload( type=Topic.class )
+    public static final int TOPIC_CHANGED = 5006 ;
     
     // --------------- Session Events [End] ------------------------------------
 }
