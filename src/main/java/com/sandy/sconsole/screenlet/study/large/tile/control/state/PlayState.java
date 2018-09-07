@@ -5,6 +5,7 @@ import java.util.Calendar ;
 
 import org.apache.log4j.Logger ;
 
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
@@ -170,13 +171,18 @@ public class PlayState extends BaseControlTileState
     }
     
     private void updateSession() {
+        
+        boolean publishCreationEvent = si.session.getId() == null ? true : false ;
+                
         si.session.setDuration( this.runTime ) ;
         si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
         si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
         sessionRepo.save( si.session ) ;
         
-        SConsole.GLOBAL_EVENT_BUS
-                .publishEvent( SConsole.GlobalEvent.SESSION_SAVED, si.session ) ;
+        if( publishCreationEvent ) {
+            SConsole.GLOBAL_EVENT_BUS
+                    .publishEvent( EventCatalog.SESSION_STARTED, si.session ) ;
+        }
     }
     
     private ProblemAttempt createNewProblemAttempt() {
@@ -200,6 +206,9 @@ public class PlayState extends BaseControlTileState
         attempt.setSession( si.session ) ;
         
         tile.setProblemLabel( problem ) ;
+        
+        SConsole.GLOBAL_EVENT_BUS
+                .publishEvent( EventCatalog.PROBLEM_ATTEMPT_STARTED, attempt ) ;
         
         return attempt ;
     }
@@ -246,6 +255,10 @@ public class PlayState extends BaseControlTileState
         // Update the session.
         updateSession() ;
         
+        ProblemAttempt attempt = problemAttempt ;
+        SConsole.GLOBAL_EVENT_BUS
+                .publishEvent( EventCatalog.PROBLEM_ATTEMPT_ENDED, attempt ) ;
+        
         // Load the next problem. If there are no more problems, the session 
         // has to end.
         problemAttempt = createNewProblemAttempt() ;
@@ -272,6 +285,9 @@ public class PlayState extends BaseControlTileState
             SConsole.removeSecTimerTask( this ) ;
             
             updateSession() ;
+            
+            SConsole.GLOBAL_EVENT_BUS
+                    .publishEvent( EventCatalog.SESSION_ENDED, si.session ) ;
             
             runTime=0 ;
             lapTime=0 ;
@@ -354,6 +370,11 @@ public class PlayState extends BaseControlTileState
                 lapTime++ ;
                 tile.updateLapTimeLabel( lapTime ) ;
             }
+            
+            this.si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+            SConsole.GLOBAL_EVENT_BUS
+                    .publishEvent( EventCatalog.SESSION_PLAY_HEARTBEAT, 
+                                   this.si.session ) ;
         }
         else {
             pauseTime++ ;

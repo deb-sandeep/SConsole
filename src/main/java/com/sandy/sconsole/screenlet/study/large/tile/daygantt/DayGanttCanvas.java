@@ -12,6 +12,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.common.bus.Event ;
 import com.sandy.common.bus.EventSubscriber ;
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.util.DayTickListener ;
@@ -31,7 +32,7 @@ public class DayGanttCanvas extends JPanel
     private static final int START_HR = 0 ;
     private static final int END_HR = 24 ;
     private static final int NUM_HRS = END_HR - START_HR ;
-    private static final Insets INSET = new Insets( 5, 5, 40, 5 ) ;
+    private static final Insets INSET = new Insets( 0, 0, 40, 0 ) ;
     
     private Rectangle chartArea = new Rectangle() ;
     private float numPixelsPerHour = 0 ;
@@ -52,7 +53,8 @@ public class DayGanttCanvas extends JPanel
         SConsole.addDayTimerTask( this ) ;
         SConsole.GLOBAL_EVENT_BUS
                 .addSubscriberForEventTypes( this, true, 
-                                             SConsole.GlobalEvent.SESSION_SAVED ) ;
+                                             EventCatalog.SESSION_STARTED,
+                                             EventCatalog.SESSION_PLAY_HEARTBEAT ) ;
     }
     
     private void createStartOfDayDate() {
@@ -122,6 +124,8 @@ public class DayGanttCanvas extends JPanel
     
     private void paintSession( Session s, Graphics2D g ) {
         
+        if( g == null )return ;
+        
         int secsSinceStartOfDay = 0 ;
         int sessionDuration = 0 ;
         
@@ -150,16 +154,25 @@ public class DayGanttCanvas extends JPanel
         g.setColor( StudyScreenlet.getSubjectColor( subjectName ) ) ;
         g.fillRect( x1, y1, width, height ) ;
     }
-
+    
     @Override
     public void handleEvent( Event event ) {
+        
+        Session s = null ;
+        
         switch( event.getEventType() ) {
-            case SConsole.GlobalEvent.SESSION_SAVED :
-                Session s = ( Session )event.getValue() ;
+            case EventCatalog.SESSION_STARTED :
+            case EventCatalog.SESSION_ENDED :
+                s = ( Session )event.getValue() ;
                 if( !todaySessions.contains( s ) ) {
                     todaySessions.add( s ) ;
                 }
                 repaint() ;
+                break ;
+                
+            case EventCatalog.SESSION_PLAY_HEARTBEAT :
+                s = ( Session )event.getValue() ;
+                paintSession( s, (Graphics2D)super.getGraphics() ) ;
                 break ;
         }
     }

@@ -34,10 +34,6 @@ public class SConsole implements ApplicationContextAware {
     
     public static EventBus GLOBAL_EVENT_BUS = new EventBus() ;
     
-    public static class GlobalEvent {
-        public static final int SESSION_SAVED = 5000 ;
-    }
-
     static {
         SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
             Calendar lastDate = null ;

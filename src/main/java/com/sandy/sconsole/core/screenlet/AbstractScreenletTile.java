@@ -1,6 +1,5 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.* ;
 import static com.sandy.sconsole.core.frame.UIConstant.* ;
 import static javax.swing.SwingConstants.* ;
 
@@ -11,6 +10,7 @@ import javax.swing.border.* ;
 
 import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
+import com.sandy.sconsole.EventCatalog ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractScreenletTile extends JPanel
@@ -26,7 +26,9 @@ public abstract class AbstractScreenletTile extends JPanel
                                      boolean drawBorder ) {
         this.parent = mother ;
         this.parent.getEventBus()
-                   .addSubscriberForEventRange( this, false, RANGE_MIN, RANGE_MAX );
+                   .addSubscriberForEventRange( this, false, 
+                                                EventCatalog.CORE_EVENT_RANGE_MIN, 
+                                                EventCatalog.CORE_EVENT_RANGE_MAX );
         
         super.setBackground( BG_COLOR ) ;
         
@@ -59,15 +61,15 @@ public abstract class AbstractScreenletTile extends JPanel
         
         switch( event.getEventType() ) {
             
-            case SCREENLET_MINIMIZED:
+            case EventCatalog.SCREENLET_MINIMIZED:
                 screenletMinimized() ;
                 break ;
                 
-            case SCREENLET_MAXIMIZED:
+            case EventCatalog.SCREENLET_MAXIMIZED:
                 screenletMaximized() ;
                 break ;
                 
-            case SCREENLET_RUN_STATE_CHANGED:
+            case EventCatalog.SCREENLET_RUN_STATE_CHANGED:
                 Screenlet screenlet = this.parent.getScreenlet() ;
                 screenletRunStateChanged( screenlet ) ;
                 break ;

@@ -1,19 +1,23 @@
 package com.sandy.sconsole.screenlet.study.large.tile;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
+import static com.sandy.sconsole.core.frame.UIConstant.DF_TIME_LG ;
 
-import java.awt.* ;
-import java.util.* ;
+import java.awt.BorderLayout ;
+import java.awt.Font ;
+import java.util.Calendar ;
+import java.util.Date ;
 
-import javax.swing.* ;
+import javax.swing.JLabel ;
 
-import org.apache.log4j.* ;
+import org.apache.log4j.Logger ;
 
 import com.sandy.common.bus.Event ;
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.* ;
-import com.sandy.sconsole.core.screenlet.* ;
-import com.sandy.sconsole.core.util.* ;
+import com.sandy.sconsole.EventCatalog ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
+import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.core.util.SecondTickListener ;
 
 @SuppressWarnings( "serial" )
 public class TimeTile extends AbstractScreenletTile 
@@ -46,7 +50,7 @@ public class TimeTile extends AbstractScreenletTile
     @Override
     public void handleEvent( Event event ) {
         switch( event.getEventType() ) {
-            case CoreEventID.SCREENLET_MAXIMIZED:
+            case EventCatalog.SCREENLET_MAXIMIZED:
                 refreshTime() ;
                 break ;
         }

@@ -1,10 +1,9 @@
 package com.sandy.sconsole.core.screenlet;
 
-import static com.sandy.sconsole.core.CoreEventID.* ;
-
-import com.sandy.common.bus.* ;
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.frame.* ;
+import com.sandy.common.bus.EventBus ;
+import com.sandy.sconsole.EventCatalog ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 
 public abstract class AbstractScreenlet implements Screenlet {
 
@@ -26,7 +25,9 @@ public abstract class AbstractScreenlet implements Screenlet {
         this.smallPanel = createSmallPanel() ;
         this.largePanel = createLargePanel() ;
         
-        eventBus.addSubscriberForEventRange( smallPanel, false, RANGE_MIN, RANGE_MAX ) ;
+        eventBus.addSubscriberForEventRange( smallPanel, false, 
+                                                EventCatalog.CORE_EVENT_RANGE_MIN, 
+                                                EventCatalog.CORE_EVENT_RANGE_MAX ) ;
         initScreenlet() ;
         return this ;
     }
@@ -62,14 +63,14 @@ public abstract class AbstractScreenlet implements Screenlet {
     public void isBeingMaximized() {
         this.smallPanel.setMaximizedBorder() ;
         this.isVisible = true ;
-        eventBus.publishEvent( SCREENLET_MAXIMIZED, this ) ;
+        eventBus.publishEvent( EventCatalog.SCREENLET_MAXIMIZED, this ) ;
     }
     
     @Override
     public void isBeingMinimized() {
         this.smallPanel.setPassiveBorder() ;
         this.isVisible = false ;
-        eventBus.publishEvent( SCREENLET_MINIMIZED, this ) ;
+        eventBus.publishEvent( EventCatalog.SCREENLET_MINIMIZED, this ) ;
     }
 
     @Override
@@ -83,7 +84,7 @@ public abstract class AbstractScreenlet implements Screenlet {
     @Override
     public void setCurrentRunState( RunState state ) {
         this.runState = state ;
-        eventBus.publishEvent( SCREENLET_RUN_STATE_CHANGED, this ) ;
+        eventBus.publishEvent( EventCatalog.SCREENLET_RUN_STATE_CHANGED, this ) ;
     }
 
     public EventBus getEventBus() { return this.eventBus ; }
