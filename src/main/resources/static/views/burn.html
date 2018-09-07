@@ -164,10 +164,11 @@
       <td>{{problem.book.bookShortName}}</td>
       <td>{{problem.chapterId}}</td>
       <td>{{problem.exerciseName}}</td>
-      <td>{{problem.problemTag}}</td>
+      <td><span class="pull-right" style="font-size:20px">{{problem.problemTag}}</span></td>
       <td><input type="checkbox" 
                  ng-model="problem.changedActivation"
-                 ng-change="activationChanged(problem)"></td>
+                 ng-change="activationChanged(problem)"
+                 style="width: 30px; height: 20px;"></td>
     </tr>
   </tbody>
 </table>
