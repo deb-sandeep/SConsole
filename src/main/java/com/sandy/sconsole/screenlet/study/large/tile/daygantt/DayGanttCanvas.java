@@ -33,6 +33,7 @@ public class DayGanttCanvas extends JPanel
     private static final int END_HR = 24 ;
     private static final int NUM_HRS = END_HR - START_HR ;
     private static final Insets INSET = new Insets( 0, 0, 40, 0 ) ;
+    private static final Font TOTAL_FONT = UIConstant.BASE_FONT.deriveFont( 40F ) ;
     
     private Rectangle chartArea = new Rectangle() ;
     private float numPixelsPerHour = 0 ;
@@ -40,6 +41,8 @@ public class DayGanttCanvas extends JPanel
     
     private Date startOfDay = null ;
     private List<Session> todaySessions = null ;
+    
+    private int totalTimeInSec = 0 ;
     
     public DayGanttCanvas() {
         setBackground( UIConstant.BG_COLOR ) ;
@@ -85,6 +88,7 @@ public class DayGanttCanvas extends JPanel
         
         paintTodaySessions( g ) ;
         paintSwimlane( g ) ;
+        refreshTotalTime( g ) ;
     }
     
     private void initializeYardsticks( Dimension dim ) {
@@ -95,6 +99,8 @@ public class DayGanttCanvas extends JPanel
         
         numPixelsPerHour = chartArea.width / NUM_HRS ;
         numPixelsPerSecond = numPixelsPerHour/3600 ;
+        
+        totalTimeInSec = 0 ;
     }
     
     private void paintSwimlane( Graphics2D g ) {
@@ -119,6 +125,8 @@ public class DayGanttCanvas extends JPanel
     private void paintTodaySessions( Graphics2D g ) {
         for( Session s : todaySessions ) {
             paintSession( s, g ) ;
+            totalTimeInSec += (int)(( s.getEndTime().getTime() - 
+                                      s.getStartTime().getTime() )/1000) ;
         }
     }
     
@@ -171,10 +179,37 @@ public class DayGanttCanvas extends JPanel
                 break ;
                 
             case EventCatalog.SESSION_PLAY_HEARTBEAT :
+                totalTimeInSec++ ;
                 s = ( Session )event.getValue() ;
                 paintSession( s, (Graphics2D)super.getGraphics() ) ;
+                refreshTotalTime( (Graphics2D)super.getGraphics() ) ;
                 break ;
         }
+    }
+    
+    private void refreshTotalTime( Graphics2D g ) {
+        
+        if( g == null )return ;
+        
+        int startSec = 3600*2 + 5 ;
+        int duraction = 3600*3 - 10 ;
+        
+        int x1 = chartArea.x + (int)(startSec * numPixelsPerSecond) ;
+        int y1 = chartArea.y+1 ;
+        int width = (int)(duraction * numPixelsPerSecond) ;
+        int height = chartArea.height-1 ;
+        
+        g.setColor( UIConstant.BG_COLOR ) ;
+        g.fillRect( x1, y1, width, height ) ;
+        g.setColor( Color.DARK_GRAY ) ;
+        g.setFont( TOTAL_FONT ) ;
+        
+        FontMetrics metrics = g.getFontMetrics( TOTAL_FONT ) ;
+        int textHeight = metrics.getHeight() ;
+        
+        g.drawString( getElapsedTimeLabel( totalTimeInSec ), 
+                      x1+10, 
+                      y1+textHeight-5 ) ;
     }
 
     @Override
@@ -182,5 +217,13 @@ public class DayGanttCanvas extends JPanel
         createStartOfDayDate() ;
         todaySessions.clear() ;
         repaint() ;
+    }
+
+    private String getElapsedTimeLabel( long seconds ) {
+        int secs    = (int)(seconds) % 60 ;
+        int minutes = (int)((seconds / 60) % 60) ;
+        int hours   = (int)(seconds / (60*60)) ;
+        
+        return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
     }
 }
