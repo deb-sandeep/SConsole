@@ -26,7 +26,6 @@ import com.sandy.sconsole.api.burn.HistoricBurnStat ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
-import com.sandy.sconsole.dao.entity.master.Topic ;
 
 @SuppressWarnings( "serial" )
 public class BurnTile extends AbstractScreenletTile {
@@ -40,7 +39,7 @@ public class BurnTile extends AbstractScreenletTile {
     private ChartPanel           chartPanel = null ;
     private AbstractRenderer     renderer = null ;
     
-    private TimeSeries cumulativeDailyBurn = null ;
+    private TimeSeries historicBurn = null ;
     private TimeSeries baseBurnProjection = null ;
     private TimeSeries projectedBurnForVelocity = null ;
     
@@ -50,7 +49,8 @@ public class BurnTile extends AbstractScreenletTile {
         
         mother.getScreenlet()
               .getEventBus()
-              .addSubscriberForEventTypes( this, true, EventCatalog.TOPIC_CHANGED ) ;
+              .addSubscriberForEventTypes( this, true, 
+                                           EventCatalog.BURN_INFO_REFRESHED ) ;
         
         createChart() ;
         setUpUI() ;
@@ -67,11 +67,11 @@ public class BurnTile extends AbstractScreenletTile {
     
     private void configureTimeSeries() {
         
-        cumulativeDailyBurn       = new TimeSeries( "Historic daily burn" ) ;
+        historicBurn       = new TimeSeries( "Historic daily burn" ) ;
         baseBurnProjection        = new TimeSeries( "Base burn projection" ) ;
         projectedBurnForVelocity  = new TimeSeries( "Projected burn - velocity" ) ;
     
-        seriesColl.addSeries( cumulativeDailyBurn ) ;
+        seriesColl.addSeries( historicBurn ) ;
         seriesColl.addSeries( baseBurnProjection ) ;
         seriesColl.addSeries( projectedBurnForVelocity ) ;
     }
@@ -119,16 +119,15 @@ public class BurnTile extends AbstractScreenletTile {
     
     private void configureAxes() {
         
-        ValueAxis xAxis = plot.getRangeAxis() ;
-        ValueAxis yAxis = plot.getDomainAxis() ;
+        ValueAxis xAxis = plot.getDomainAxis() ;
+        ValueAxis yAxis = plot.getRangeAxis() ;
         
         xAxis.setLabelFont( UIConstant.CHART_XAXIS_FONT ) ;
-        yAxis.setLabelFont( UIConstant.CHART_YAXIS_FONT ) ;
-        
         xAxis.setTickLabelFont( UIConstant.CHART_XAXIS_FONT ) ;
-        yAxis.setTickLabelFont( UIConstant.CHART_YAXIS_FONT ) ;
-        
         xAxis.setTickLabelPaint( Color.LIGHT_GRAY.darker() ) ;
+        
+        yAxis.setLabelFont( UIConstant.CHART_YAXIS_FONT ) ;
+        yAxis.setTickLabelFont( UIConstant.CHART_YAXIS_FONT ) ;
         yAxis.setTickLabelPaint( Color.LIGHT_GRAY.darker() ) ;
     }
     
@@ -141,7 +140,8 @@ public class BurnTile extends AbstractScreenletTile {
     }
 
     private void clearChartData() {
-        cumulativeDailyBurn.clear() ;
+        
+        historicBurn.clear() ;
         baseBurnProjection.clear() ;
         projectedBurnForVelocity.clear() ;
         
@@ -154,9 +154,9 @@ public class BurnTile extends AbstractScreenletTile {
         super.handleEvent( event ) ;
         
         switch( event.getEventType() ) {
-            case EventCatalog.TOPIC_CHANGED:
+            case EventCatalog.BURN_INFO_REFRESHED:
                 try {
-                    replotBurnChart( (Topic)event.getValue() ) ;
+                    replotBurnChart( (BurnInfo)event.getValue() ) ;
                 }
                 catch( Exception e ) {
                     log.debug( "Exception processing topic change.", e ) ;
@@ -165,31 +165,39 @@ public class BurnTile extends AbstractScreenletTile {
         }
     }
 
-    private synchronized void replotBurnChart( Topic topic ) 
+    private synchronized void replotBurnChart( BurnInfo bi ) 
         throws Exception {
         
-        log.debug( "Replotting burn for topic - " + topic.getTopicName() ) ;
-        BurnInfo bi = new BurnInfo( topic ) ;
+        log.debug( "Plotting burn chart for " + bi.getTopic().getTopicName() ) ;
         
         log.debug( "Burn info = " ) ;
         log.debug( bi ) ;
         
+        chart.setNotify( false ) ;
+        
         clearChartData() ;
+        
         plotMilestoneMarker( bi ) ;
         plotHistoricBurns( bi ) ;
         plotBaseMilestoneBurn( bi ) ;
         plotCurrentVelocityBurn( bi ) ;
+        
+        historicBurn.fireSeriesChanged() ;
+        baseBurnProjection.fireSeriesChanged() ;
+        projectedBurnForVelocity.fireSeriesChanged() ;
+        
+        chart.setNotify( true ) ;
     }
     
     private void plotMilestoneMarker( BurnInfo bi ) 
         throws Exception {
         
         Marker dateMarker = new ValueMarker( bi.getBurnCompletionDate().getTime() );
-        dateMarker.setPaint( Color.GREEN.darker() ) ;
+        dateMarker.setPaint( Color.LIGHT_GRAY ) ;
         plot.addDomainMarker( dateMarker ) ;
         
         Marker qMarker = new ValueMarker( bi.getNumProblems() );
-        qMarker.setPaint( Color.GREEN.darker() ) ;
+        qMarker.setPaint( Color.LIGHT_GRAY ) ;
         plot.addRangeMarker( qMarker ) ;
     }
     
@@ -200,10 +208,8 @@ public class BurnTile extends AbstractScreenletTile {
         for( HistoricBurnStat hb : bi.getHistoricBurns() ) {
             Date date = BurnInfo.DF.parse( hb.getDate() ) ;
             numSolved += hb.getNumQuestionsSolved() ;
-            cumulativeDailyBurn.add( new Day( date ), numSolved, false ) ; 
+            historicBurn.add( new Day( date ), numSolved, false ) ; 
         }
-        
-        cumulativeDailyBurn.fireSeriesChanged() ;
     }
     
     private void plotBaseMilestoneBurn( BurnInfo bi) {
@@ -212,33 +218,34 @@ public class BurnTile extends AbstractScreenletTile {
         Date startDate = bi.getBurnStartDate() ;
         
         int counter = 0 ;
-        Date date = startDate ;
+        Day day = new Day( startDate ) ;
         
         while( numSolved < bi.getNumProblems() ) {
-            baseBurnProjection.add( new Day( date ), numSolved, false ) ;
+            baseBurnProjection.add( day, numSolved, false ) ;
             numSolved += bi.getBaseMilestoneBurnRate() ;
-            date = DateUtils.addDays( date, 1 ) ;
+            day = (Day)day.next() ;
             
             if( ++counter > 180 ) break ;
         }
-        
-        baseBurnProjection.fireSeriesChanged() ;
     }
 
     private void plotCurrentVelocityBurn( BurnInfo bi) {
         
-        int numSolved = bi.getNumProblemsSolved() + bi.getCurrentBurnRate() ;
-        Date date = DateUtils.truncate( new Date(), Calendar.HOUR ) ;
+        int numSolved = bi.getNumProblemsSolved() ;
+        Day day = new Day( DateUtils.truncate( new Date(), Calendar.HOUR ) ) ;
+        
+        if( historicBurn.getDataItem( day ) == null ) {
+            numSolved += bi.getCurrentBurnRate() ;
+        }
         
         int counter = 0 ;
         while( numSolved < bi.getNumProblems() ) {
-            projectedBurnForVelocity.add( new Day( date ), numSolved, false ) ;
+            
+            projectedBurnForVelocity.add( day, numSolved, false ) ;
             numSolved += bi.getCurrentBurnRate() ;
-            date = DateUtils.addDays( date, 1 ) ;
+            day = (Day)day.next() ;
             
             if( ++counter > 180 ) break ;
         }
-        
-        projectedBurnForVelocity.fireSeriesChanged() ;
     }
 }

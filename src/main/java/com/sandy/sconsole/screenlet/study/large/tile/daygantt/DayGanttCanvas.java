@@ -6,6 +6,7 @@ import java.util.Date ;
 import java.util.List ;
 
 import javax.swing.JPanel ;
+import javax.swing.SwingUtilities ;
 
 import org.apache.commons.lang.time.DateUtils ;
 import org.apache.log4j.Logger ;
@@ -166,12 +167,10 @@ public class DayGanttCanvas extends JPanel
     @Override
     public void handleEvent( Event event ) {
         
-        Session s = null ;
-        
         switch( event.getEventType() ) {
             case EventCatalog.SESSION_STARTED :
             case EventCatalog.SESSION_ENDED :
-                s = ( Session )event.getValue() ;
+                Session s = ( Session )event.getValue() ;
                 if( !todaySessions.contains( s ) ) {
                     todaySessions.add( s ) ;
                 }
@@ -180,9 +179,15 @@ public class DayGanttCanvas extends JPanel
                 
             case EventCatalog.SESSION_PLAY_HEARTBEAT :
                 totalTimeInSec++ ;
-                s = ( Session )event.getValue() ;
-                paintSession( s, (Graphics2D)super.getGraphics() ) ;
-                refreshTotalTime( (Graphics2D)super.getGraphics() ) ;
+                
+                SwingUtilities.invokeLater( new Runnable() {
+                    @Override
+                    public void run() {
+                        Session s = ( Session )event.getValue() ;
+                        paintSession( s, (Graphics2D)getGraphics() ) ;
+                        refreshTotalTime( (Graphics2D)getGraphics() ) ;
+                    }
+                } );
                 break ;
         }
     }

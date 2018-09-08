@@ -162,6 +162,10 @@ public class BurnInfo {
         return revisedMilestoneBurnRate ;
     }
     
+    public Topic getTopic() {
+        return this.topic ;
+    }
+    
     public String toString() {
         
         StringBuffer buffer = new StringBuffer( "\n" ) ;
