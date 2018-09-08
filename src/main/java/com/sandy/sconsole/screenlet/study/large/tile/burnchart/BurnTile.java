@@ -106,7 +106,7 @@ public class BurnTile extends AbstractScreenletTile {
         renderer.setSeriesPaint( 1, UIConstant.BASE_BURN_COLOR ) ;
         renderer.setSeriesPaint( 2, UIConstant.PROJECTED_VELOCITY_BURN ) ;
         
-        renderer.setSeriesStroke( 0, new BasicStroke(3.0f) );
+        renderer.setSeriesStroke( 0, new BasicStroke(1.5f) );
         
         renderer.setSeriesStroke( 1, new BasicStroke(
                 1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,

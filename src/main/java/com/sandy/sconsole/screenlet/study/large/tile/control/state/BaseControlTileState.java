@@ -149,8 +149,11 @@ public class BaseControlTileState extends State {
             List<Problem> found = new ArrayList<>() ;
 
             // First pass - go through the problems and collect all redo problems
+            // CR-8-Sep-18: If a redo problem is skipped, don't keep slapping 
+            // it in the face in every session. Treat is like a skipped problem
+            // which needs to be presented at the end
             for( Problem p : problems ) {
-                if( p.getRedo() ) {
+                if( p.getRedo() && !p.getSkipped() ) {
                     found.add( p ) ;
                 }
             }

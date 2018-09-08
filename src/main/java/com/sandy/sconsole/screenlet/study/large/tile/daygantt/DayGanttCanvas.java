@@ -191,8 +191,8 @@ public class DayGanttCanvas extends JPanel
         
         if( g == null )return ;
         
-        int startSec = 3600*2 + 5 ;
-        int duraction = 3600*3 - 10 ;
+        int startSec = 3600*2 + 10*60 ;
+        int duraction = 3600*3 - 20*60 ;
         
         int x1 = chartArea.x + (int)(startSec * numPixelsPerSecond) ;
         int y1 = chartArea.y+1 ;
