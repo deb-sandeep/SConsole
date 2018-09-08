@@ -16,6 +16,8 @@ import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn1Type ;
@@ -259,12 +261,34 @@ public class PlayState extends BaseControlTileState
         SConsole.GLOBAL_EVENT_BUS
                 .publishEvent( EventCatalog.PROBLEM_ATTEMPT_ENDED, attempt ) ;
         
+        if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
+            publishRefreshBurnInfo() ;
+        }        
+        
         // Load the next problem. If there are no more problems, the session 
         // has to end.
         problemAttempt = createNewProblemAttempt() ;
         if( problemAttempt == null ) {
             showMessage( "No more problems left in this book" ) ;
             tile.feedIntoStateMachine( Key.STOP ) ;
+        }
+    }
+
+    private void publishRefreshBurnInfo() {
+        
+        Topic topic = null ;
+        ExerciseBurnInfo burnInfo = null ;
+        
+        try {
+            topic = problemAttempt.getProblem().getTopic() ;
+            burnInfo = new ExerciseBurnInfo( topic ) ;
+            
+            tile.getScreenlet()
+                .getEventBus()
+                .publishEvent( EventCatalog.BURN_INFO_REFRESHED, burnInfo ) ;
+        }
+        catch( Exception e ) {
+            log.error( "BurnInfo could not be created. Topic = " + topic, e ) ;
         }
     }
     

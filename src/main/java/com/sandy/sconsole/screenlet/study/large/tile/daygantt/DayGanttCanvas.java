@@ -124,10 +124,12 @@ public class DayGanttCanvas extends JPanel
     }
     
     private void paintTodaySessions( Graphics2D g ) {
-        for( Session s : todaySessions ) {
-            paintSession( s, g ) ;
-            totalTimeInSec += (int)(( s.getEndTime().getTime() - 
-                                      s.getStartTime().getTime() )/1000) ;
+        synchronized( this ) {
+            for( Session s : todaySessions ) {
+                paintSession( s, g ) ;
+                totalTimeInSec += (int)(( s.getEndTime().getTime() - 
+                                          s.getStartTime().getTime() )/1000) ;
+            }
         }
     }
     
@@ -171,8 +173,10 @@ public class DayGanttCanvas extends JPanel
             case EventCatalog.SESSION_STARTED :
             case EventCatalog.SESSION_ENDED :
                 Session s = ( Session )event.getValue() ;
-                if( !todaySessions.contains( s ) ) {
-                    todaySessions.add( s ) ;
+                synchronized( this ) {
+                    if( !todaySessions.contains( s ) ) {
+                        todaySessions.add( s ) ;
+                    }
                 }
                 repaint() ;
                 break ;
@@ -220,7 +224,9 @@ public class DayGanttCanvas extends JPanel
     @Override
     public void dayTicked( Calendar instance ) {
         createStartOfDayDate() ;
-        todaySessions.clear() ;
+        synchronized( this ) {
+            todaySessions.clear() ;
+        }
         repaint() ;
     }
 

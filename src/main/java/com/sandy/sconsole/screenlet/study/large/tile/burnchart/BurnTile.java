@@ -6,6 +6,8 @@ import java.awt.Color ;
 import java.util.Calendar ;
 import java.util.Date ;
 
+import javax.swing.SwingUtilities ;
+
 import org.apache.commons.lang.time.DateUtils ;
 import org.apache.log4j.Logger ;
 import org.jfree.chart.ChartFactory ;
@@ -51,7 +53,6 @@ public class BurnTile extends AbstractScreenletTile {
               .getEventBus()
               .addSubscriberForEventTypes( this, true, 
                                            EventCatalog.BURN_INFO_REFRESHED ) ;
-        
         createChart() ;
         setUpUI() ;
     }
@@ -155,12 +156,17 @@ public class BurnTile extends AbstractScreenletTile {
         
         switch( event.getEventType() ) {
             case EventCatalog.BURN_INFO_REFRESHED:
-                try {
-                    replotBurnChart( (ExerciseBurnInfo)event.getValue() ) ;
-                }
-                catch( Exception e ) {
-                    log.debug( "Exception processing topic change.", e ) ;
-                }
+                SwingUtilities.invokeLater( new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            replotBurnChart( (ExerciseBurnInfo)event.getValue() ) ;
+                        }
+                        catch( Exception e ) {
+                            log.debug( "Exception processing topic change.", e ) ;
+                        }
+                    }
+                } );
                 break ;
         }
     }
@@ -206,6 +212,7 @@ public class BurnTile extends AbstractScreenletTile {
         
         int numSolved = 0 ;
         for( HistoricBurnStat hb : bi.getHistoricBurns() ) {
+            
             Date date = ExerciseBurnInfo.DF.parse( hb.getDate() ) ;
             numSolved += hb.getNumQuestionsSolved() ;
             historicBurn.add( new Day( date ), numSolved, false ) ; 
@@ -221,6 +228,7 @@ public class BurnTile extends AbstractScreenletTile {
         Day day = new Day( startDate ) ;
         
         while( numSolved < bi.getNumProblems() ) {
+            
             baseBurnProjection.add( day, numSolved, false ) ;
             numSolved += bi.getBaseMilestoneBurnRate() ;
             day = (Day)day.next() ;
