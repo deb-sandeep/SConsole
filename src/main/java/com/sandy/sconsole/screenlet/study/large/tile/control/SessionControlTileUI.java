@@ -22,7 +22,7 @@ import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
-import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnInfo ;
+import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -378,7 +378,7 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             getScreenlet().getEventBus()
                           .publishEvent( EventCatalog.TOPIC_CHANGED, topic ) ;
             try {
-                BurnInfo burnInfo = new BurnInfo( topic ) ;
+                ExerciseBurnInfo burnInfo = new ExerciseBurnInfo( topic ) ;
                 getScreenlet().getEventBus()
                               .publishEvent( EventCatalog.BURN_INFO_REFRESHED, 
                                              burnInfo ) ;

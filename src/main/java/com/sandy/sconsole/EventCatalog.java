@@ -5,7 +5,7 @@ import com.sandy.sconsole.core.util.Payload ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
-import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnInfo ;
+import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
 
 public class EventCatalog {
 
@@ -45,7 +45,7 @@ public class EventCatalog {
     @Payload( type=Topic.class )
     public static final int TOPIC_CHANGED = 5006 ;
     
-    @Payload( type=BurnInfo.class )
+    @Payload( type=ExerciseBurnInfo.class )
     public static final int BURN_INFO_REFRESHED = 5007 ;
     
     // --------------- Session Events [End] ------------------------------------

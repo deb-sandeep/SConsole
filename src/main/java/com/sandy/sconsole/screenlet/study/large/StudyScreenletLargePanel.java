@@ -25,13 +25,14 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     private static final Logger log = Logger.getLogger( StudyScreenletLargePanel.class ) ;
 
+    // PC stands for Panel Constraints
     private static final String TIME_PC            = "0,0,2,0" ;
     private static final String TITLE_PC           = "3,0,6,0" ;
     private static final String DATE_PC            = "7,0,9,0" ;
     
     private static final String GANTT_PC           = "0,1,9,1" ;
     
-    private static final String SESSION_STAT_PC    = "0,2,1,5" ;
+    private static final String TOPIC_BURN_PC      = "0,2,1,5" ;
     private static final String SESSION_CONTROL_PC = "2,2,7,5" ;
     private static final String DAY_STAT_PC        = "8,0,9,5" ;
     
@@ -46,7 +47,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private TitleTile            titleTile            = null ;
     private DateTile             dateTile             = null ;
     private DayGanttTile         dayGanttTile         = null ;
-    private SessionStatTile      sessionStatTile      = null ;
+    private TopicBurnStatTile    topicBurnStatTile    = null ;
     private SessionControlTile   sessionControlTile   = null ;
     private DayStatTile          dayStatTile          = null ;
     private BurnTile             burnTile             = null ;
@@ -68,7 +69,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         titleTile            = new TitleTile( this ) ;
         dateTile             = new DateTile( this ) ;
         dayGanttTile         = new DayGanttTile( this ) ;
-        sessionStatTile      = new SessionStatTile( this ) ;
+        topicBurnStatTile      = new TopicBurnStatTile( this ) ;
         sessionControlTile   = new SessionControlTile( this ) ;
         dayStatTile          = new DayStatTile( this ) ;
         burnTile             = new BurnTile( this ) ;
@@ -125,7 +126,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     }
     
     private void layoutStatRow( JPanel panel ) {
-        panel.add( sessionStatTile, SESSION_STAT_PC ) ;
+        panel.add( topicBurnStatTile, TOPIC_BURN_PC ) ;
         panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
         panel.add( dayStatTile, DAY_STAT_PC ) ;
     }

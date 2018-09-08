@@ -6,5 +6,12 @@ cd -
 
 CP="$SCRIPTDIR/config:$SCRIPTDIR/lib/*"
 
-java -Djava.awt.headless=false -classpath $CP com.sandy.sconsole.SConsole > /home/pi/temp/sconsole_log.txt
+java -Djava.awt.headless=false \
+     -Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=9010 \
+     -Dcom.sun.management.jmxremote.local.only=false \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false \
+     -Djava.rmi.server.hostname=192.168.0.117 \
+     -classpath $CP com.sandy.sconsole.SConsole > /home/pi/temp/sconsole_log.txt
 

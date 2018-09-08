@@ -1,4 +1,4 @@
-package com.sandy.sconsole.screenlet.study.large.tile.burnchart;
+package com.sandy.sconsole.screenlet.study;
 
 import java.text.SimpleDateFormat ;
 import java.util.* ;
@@ -13,7 +13,7 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 
-public class BurnInfo {
+public class ExerciseBurnInfo {
 
     public static final SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd" ) ;
     
@@ -38,7 +38,7 @@ public class BurnInfo {
     private int  baseMilestoneBurnRate     = 0 ;
     private int  revisedMilestoneBurnRate  = 0 ;
     
-    public BurnInfo( Topic topic ) 
+    public ExerciseBurnInfo( Topic topic ) 
         throws Exception {
         
         this.topic = topic ;
