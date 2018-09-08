@@ -261,7 +261,8 @@ public class PlayState extends BaseControlTileState
         SConsole.GLOBAL_EVENT_BUS
                 .publishEvent( EventCatalog.PROBLEM_ATTEMPT_ENDED, attempt ) ;
         
-        if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
+        if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) || 
+            outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) ) {
             publishRefreshBurnInfo() ;
         }        
         

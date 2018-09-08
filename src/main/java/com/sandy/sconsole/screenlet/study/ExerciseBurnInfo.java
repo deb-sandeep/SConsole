@@ -37,6 +37,7 @@ public class ExerciseBurnInfo {
     private int  currentBurnRate           = 0 ;
     private int  baseMilestoneBurnRate     = 0 ;
     private int  revisedMilestoneBurnRate  = 0 ;
+    private int  numOvershootDays          = 0 ;
     
     public ExerciseBurnInfo( Topic topic ) 
         throws Exception {
@@ -115,6 +116,9 @@ public class ExerciseBurnInfo {
             baseMilestoneBurnRate = (int)Math.ceil((float)numProblemCount/totalDuration) ;
             revisedMilestoneBurnRate = (int)Math.ceil((float)numRemainingProblemCount / 
                                              numDaysTillBurnCompletion) ;
+            
+            numOvershootDays = (numRemainingProblemCount/currentBurnRate) - 
+                               numDaysTillBurnCompletion ;
         }
     }
     
@@ -164,6 +168,10 @@ public class ExerciseBurnInfo {
     
     public Topic getTopic() {
         return this.topic ;
+    }
+    
+    public int getOvershootDays() {
+        return numOvershootDays ;
     }
     
     public String toString() {

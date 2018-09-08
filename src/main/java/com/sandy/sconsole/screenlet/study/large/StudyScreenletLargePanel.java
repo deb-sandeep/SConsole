@@ -17,6 +17,7 @@ import com.sandy.sconsole.screenlet.study.large.tile.* ;
 import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStatTile ;
 
 import info.clearthought.layout.TableLayout ;
 
