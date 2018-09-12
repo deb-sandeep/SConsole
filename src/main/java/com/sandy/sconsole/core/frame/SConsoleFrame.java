@@ -2,18 +2,27 @@ package com.sandy.sconsole.core.frame;
 
 import java.awt.* ;
 import java.awt.image.BufferedImage ;
+import java.io.File ;
+import java.io.IOException ;
+import java.text.SimpleDateFormat ;
+import java.util.Date ;
 
+import javax.imageio.ImageIO ;
 import javax.swing.JFrame ;
+import javax.swing.SwingUtilities ;
 
 import org.apache.log4j.Logger ;
 
 import com.sandy.common.ui.SwingUtils ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 
 @SuppressWarnings( "serial" )
 public class SConsoleFrame extends JFrame {
     
     static final Logger log = Logger.getLogger( SConsoleFrame.class ) ;
+    
+    static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd_HH-mm-ss" ) ;
     
     private Container contentPane = null ;
     private ScreenletContainer screenletPanel = null ;
@@ -118,5 +127,45 @@ public class SConsoleFrame extends JFrame {
         }
         contentPane.revalidate() ;
         contentPane.repaint() ;
+    }
+    
+    public void takeScreenshot( SessionInformation si ) {
+        
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                BufferedImage img = new BufferedImage( getWidth(), 
+                                                       getHeight(), 
+                                                       BufferedImage.TYPE_INT_RGB ) ;
+                paint( img.getGraphics() ) ;
+                
+                File file = getImgSaveFile( si ) ;
+                try {
+                    ImageIO.write( img, "png", file ) ;
+                }
+                catch( IOException e ) {
+                    log.error( "Unable to save image - " + 
+                               file.getAbsolutePath(), e ) ;
+                }
+            }
+        } );
+    }
+    
+    private File getImgSaveFile( SessionInformation si ) {
+        
+        StringBuffer fileName = new StringBuffer() ;
+        fileName.append( SDF.format( new Date() ) )
+                .append( "_" )
+                .append( si.session.getTopic().getSubject().getName() )
+                .append( "_" )
+                .append( si.session.getSessionType() )
+                .append( "_" )
+                .append( si.session.getTopic().getTopicName() )
+                .append( ".png" ) ;
+        
+        File dir = new File( System.getProperty( "user.home" ),
+                             "projects/workspace/sconsole/capture/session" ) ;
+        File file = new File( dir, fileName.toString() ) ;
+        return file ;
     }
 }

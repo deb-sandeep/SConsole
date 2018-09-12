@@ -56,6 +56,7 @@ public class PlayState extends BaseControlTileState
     private static final Logger log = Logger.getLogger( PlayState.class ) ;
     
     public static final String NAME = "Play" ;
+    private static final int SCREENSHOT_DELAY = 5 ;
     
     private SessionInformation si = null ;
     
@@ -66,6 +67,8 @@ public class PlayState extends BaseControlTileState
     private int runTime = 0 ;
     private int pauseTime = 0 ;
     private int lapTime = 0 ;
+    
+    private int screenshotDelayTick = 0 ;
     
     private int numProblemsLeftInBook = 0 ;
     
@@ -308,6 +311,7 @@ public class PlayState extends BaseControlTileState
         if( nextState != this ) {
             tile.getScreenlet().setCurrentRunState( RunState.STOPPED ) ;
             SConsole.removeSecTimerTask( this ) ;
+            screenshotDelayTick = 0 ;
             
             updateSession() ;
             
@@ -403,6 +407,14 @@ public class PlayState extends BaseControlTileState
         }
         else {
             pauseTime++ ;
+        }
+        
+        if( screenshotDelayTick == 0 ) {
+            SConsole.getApp().getFrame().takeScreenshot( si ) ;
+        }
+        screenshotDelayTick++ ;
+        if( screenshotDelayTick >= SCREENSHOT_DELAY ) {
+            screenshotDelayTick = 0 ;
         }
     }
 }

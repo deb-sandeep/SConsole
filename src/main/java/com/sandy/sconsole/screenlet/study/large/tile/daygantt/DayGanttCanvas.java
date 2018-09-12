@@ -1,10 +1,15 @@
 package com.sandy.sconsole.screenlet.study.large.tile.daygantt;
 
 import java.awt.* ;
+import java.awt.image.BufferedImage ;
+import java.io.File ;
+import java.io.IOException ;
+import java.text.SimpleDateFormat ;
 import java.util.Calendar ;
 import java.util.Date ;
 import java.util.List ;
 
+import javax.imageio.ImageIO ;
 import javax.swing.JPanel ;
 import javax.swing.SwingUtilities ;
 
@@ -29,6 +34,7 @@ public class DayGanttCanvas extends JPanel
     implements DayTickListener, EventSubscriber {
     
     static final Logger log = Logger.getLogger( DayGanttCanvas.class ) ;
+    static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd" ) ;
     
     private static final int START_HR = 0 ;
     private static final int END_HR = 24 ;
@@ -44,8 +50,12 @@ public class DayGanttCanvas extends JPanel
     private List<Session> todaySessions = null ;
     
     private int totalTimeInSec = 0 ;
+    private boolean takeEODScreenshot = false ;
     
-    public DayGanttCanvas() {
+    public DayGanttCanvas( boolean takeEODScreenshot ) {
+        
+        this.takeEODScreenshot = takeEODScreenshot ;
+        
         setBackground( UIConstant.BG_COLOR ) ;
         setForeground( Color.CYAN ) ;
         setDoubleBuffered( true ) ;
@@ -223,6 +233,12 @@ public class DayGanttCanvas extends JPanel
 
     @Override
     public void dayTicked( Calendar instance ) {
+        
+        if( takeEODScreenshot ) {
+            log.debug( "Taking screenshot of daygantt" );
+            takeScreenshot() ;
+        }
+        
         createStartOfDayDate() ;
         synchronized( this ) {
             todaySessions.clear() ;
@@ -236,5 +252,41 @@ public class DayGanttCanvas extends JPanel
         int hours   = (int)(seconds / (60*60)) ;
         
         return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
+    }
+
+    public void takeScreenshot() {
+        
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                BufferedImage img = new BufferedImage( SConsole.getApp()
+                                                               .getFrame()
+                                                               .getWidth(), 
+                                                       100, 
+                                                       BufferedImage.TYPE_INT_RGB ) ;
+                paint( img.getGraphics() ) ;
+                
+                File file = getImgSaveFile() ;
+                try {
+                    ImageIO.write( img, "png", file ) ;
+                }
+                catch( IOException e ) {
+                    log.error( "Unable to save image - " + 
+                               file.getAbsolutePath(), e ) ;
+                }
+            }
+        } );
+    }
+    
+    private File getImgSaveFile() {
+        
+        StringBuffer fileName = new StringBuffer() ;
+        fileName.append( SDF.format( new Date() ) )
+                .append( ".png" ) ;
+        
+        File dir = new File( System.getProperty( "user.home" ),
+                             "projects/workspace/sconsole/capture/daygantt" ) ;
+        File file = new File( dir, fileName.toString() ) ;
+        return file ;
     }
 }

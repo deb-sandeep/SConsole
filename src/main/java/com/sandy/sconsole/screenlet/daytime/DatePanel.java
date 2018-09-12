@@ -20,10 +20,12 @@ public class DatePanel extends JPanel implements DayTickListener {
     
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, d MMM", Locale.ENGLISH ) ;
 
-    private JLabel dateLabel       = new JLabel() ;
+    private JLabel dateLabel = new JLabel() ;
+    private boolean largePanel = false ;
 
     public DatePanel( boolean large ) {
         super() ;
+        this.largePanel = large;
         SConsole.addDayTimerTask( this ) ;
         setUpUI( large ) ;
     }
@@ -42,6 +44,9 @@ public class DatePanel extends JPanel implements DayTickListener {
         setLayout( new BorderLayout() ) ;
         setBackground( BG_COLOR ) ;
         add( dateLabel, BorderLayout.CENTER ) ;
-        add( new DayGanttCanvas(), BorderLayout.SOUTH ) ;;
+        
+        if( this.largePanel ) {
+            add( new DayGanttCanvas( true ), BorderLayout.SOUTH ) ;;
+        }
     }
 }

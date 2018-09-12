@@ -21,6 +21,6 @@ public class DayGanttTile extends AbstractScreenletTile {
     }
     
     private void setUpUI() {
-        add( new DayGanttCanvas(), BorderLayout.CENTER ) ;
+        add( new DayGanttCanvas( false ), BorderLayout.CENTER ) ;
     }
 }
