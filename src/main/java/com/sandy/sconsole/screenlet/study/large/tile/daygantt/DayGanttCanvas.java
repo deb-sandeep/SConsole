@@ -235,7 +235,6 @@ public class DayGanttCanvas extends JPanel
     public void dayTicked( Calendar instance ) {
         
         if( takeEODScreenshot ) {
-            log.debug( "Taking screenshot of daygantt" );
             takeScreenshot() ;
         }
         
@@ -256,26 +255,21 @@ public class DayGanttCanvas extends JPanel
 
     public void takeScreenshot() {
         
-        SwingUtilities.invokeLater( new Runnable() {
-            @Override
-            public void run() {
-                BufferedImage img = new BufferedImage( SConsole.getApp()
-                                                               .getFrame()
-                                                               .getWidth(), 
-                                                       100, 
-                                                       BufferedImage.TYPE_INT_RGB ) ;
-                paint( img.getGraphics() ) ;
-                
-                File file = getImgSaveFile() ;
-                try {
-                    ImageIO.write( img, "png", file ) ;
-                }
-                catch( IOException e ) {
-                    log.error( "Unable to save image - " + 
-                               file.getAbsolutePath(), e ) ;
-                }
-            }
-        } );
+        BufferedImage img = new BufferedImage( SConsole.getApp()
+                                                       .getFrame()
+                                                       .getWidth(), 
+                                               100, 
+                                               BufferedImage.TYPE_INT_RGB ) ;
+        paint( img.getGraphics() ) ;
+        
+        File file = getImgSaveFile() ;
+        try {
+            ImageIO.write( img, "png", file ) ;
+        }
+        catch( IOException e ) {
+            log.error( "Unable to save image - " + 
+                       file.getAbsolutePath(), e ) ;
+        }
     }
     
     private File getImgSaveFile() {

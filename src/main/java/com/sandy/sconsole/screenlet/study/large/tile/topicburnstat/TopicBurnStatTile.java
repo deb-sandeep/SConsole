@@ -16,7 +16,7 @@ import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.* ;
-import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
+import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -161,13 +161,13 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
         
         switch( event.getEventType() ) {
             case EventCatalog.BURN_INFO_REFRESHED:
-                ExerciseBurnInfo bi = (ExerciseBurnInfo)event.getValue() ;
+                TopicBurnInfo bi = (TopicBurnInfo)event.getValue() ;
                 refreshBurnInfo( bi ) ;
                 break ;
         }
     }
     
-    private void refreshBurnInfo( ExerciseBurnInfo bi ) {
+    private void refreshBurnInfo( TopicBurnInfo bi ) {
         
         numQ.setText             ( String.valueOf( bi.getNumProblems() ) ) ;
         burnStartDt.setText      ( DF.format( bi.getBurnStartDate() ) ) ;
@@ -182,7 +182,7 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
         highlightValues( bi ) ; 
     }
     
-    private void highlightValues( ExerciseBurnInfo bi ) {
+    private void highlightValues( TopicBurnInfo bi ) {
         
         if( bi.getCurrentBurnRate() < bi.getBaseMilestoneBurnRate() ) {
             currentBurnRate.setForeground( Color.RED ) ;

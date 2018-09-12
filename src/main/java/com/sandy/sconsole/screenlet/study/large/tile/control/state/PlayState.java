@@ -17,7 +17,7 @@ import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
-import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
+import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn1Type ;
@@ -281,11 +281,11 @@ public class PlayState extends BaseControlTileState
     private void publishRefreshBurnInfo() {
         
         Topic topic = null ;
-        ExerciseBurnInfo burnInfo = null ;
+        TopicBurnInfo burnInfo = null ;
         
         try {
             topic = problemAttempt.getProblem().getTopic() ;
-            burnInfo = new ExerciseBurnInfo( topic ) ;
+            burnInfo = new TopicBurnInfo( topic ) ;
             
             tile.getScreenlet()
                 .getEventBus()

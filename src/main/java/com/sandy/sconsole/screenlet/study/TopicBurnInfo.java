@@ -13,7 +13,7 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 
-public class ExerciseBurnInfo {
+public class TopicBurnInfo {
 
     public static final SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd" ) ;
     
@@ -38,8 +38,9 @@ public class ExerciseBurnInfo {
     private int  baseMilestoneBurnRate     = 0 ;
     private int  revisedMilestoneBurnRate  = 0 ;
     private int  numOvershootDays          = 0 ;
+    private int  numProblemsSolvedToday    = 0 ;
     
-    public ExerciseBurnInfo( Topic topic ) 
+    public TopicBurnInfo( Topic topic ) 
         throws Exception {
         
         this.topic = topic ;
@@ -56,6 +57,7 @@ public class ExerciseBurnInfo {
         
         numProblemCount          = pRepo.findActiveProblemCount( topic.getId() ) ;
         numSolvedProblemCount    = pRepo.findSolvedProblemCount( topic.getId() ) ;
+        numProblemsSolvedToday   = paRepo.getNumProblemsSolvedToday( topic.getId() ) ;
         numRemainingProblemCount = numProblemCount - numSolvedProblemCount ;
         
         initHistoricBurns() ;
@@ -64,7 +66,6 @@ public class ExerciseBurnInfo {
     }
     
     private void initHistoricBurns() {
-        
         historicBurns = paRepo.getHistoricBurnStats( topic.getId() ) ;
     }
     
@@ -174,6 +175,10 @@ public class ExerciseBurnInfo {
         return numOvershootDays ;
     }
     
+    public int getNumProblemsSolvedToday() {
+        return numProblemsSolvedToday ;
+    }
+    
     public String toString() {
         
         StringBuffer buffer = new StringBuffer( "\n" ) ;
@@ -188,6 +193,7 @@ public class ExerciseBurnInfo {
         buffer.append( "Base burn for milestone  = " ).append( getBaseMilestoneBurnRate() ).append( "\n" ) ;
         buffer.append( "Current daily burn rate  = " ).append( currentBurnRate ).append( "\n" ) ;
         buffer.append( "Revised milestone burn   = " ).append( getRevisedMilestoneBurnRate() ).append( "\n" ) ;
+        buffer.append( "Num problems solved today= " ).append( getNumProblemsSolvedToday() ).append( "\n" ) ;
         
         return buffer.toString() ;
     }

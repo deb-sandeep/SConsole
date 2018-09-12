@@ -2,6 +2,7 @@ package com.sandy.sconsole.screenlet.study.large;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
+import java.awt.GridLayout ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
@@ -38,9 +39,8 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private static final String DAY_STAT_PC        = "8,0,9,5" ;
     
     private static final String BURN_PC            = "0,6,4,9" ;
-    private static final String DAY_TOTAL_PC       = "5,6,6,7" ;
-    private static final String DAY_RELATIVE_PC    = "7,6,9,7" ;
-    private static final String LAST_30D_PC        = "5,8,9,9" ;
+    private static final String DAY_BURN_UPDATE_PC = "5,6,5,9" ;
+    private static final String LAST_30D_PC        = "6,6,9,9" ;
     
     private TableLayout centerPanelLayout = null ;
     
@@ -52,8 +52,8 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private SessionControlTile   sessionControlTile   = null ;
     private DayStatTile          dayStatTile          = null ;
     private BurnTile             burnTile             = null ;
-    private DayTotalTile         dayTotalTile         = null ;
-    private DayRelativeHoursTile dayRelativeHoursTile = null ;
+    private DayBurnUpdateTile    dayBurnUpdateTile    = null ;
+    private Last30DaysNumQTile   last30DaysNumQTile   = null ;
     private Last30DaysHoursTile  last30DaysHoursTile  = null ;
     
     private JLabel messageLabel = null ;
@@ -70,12 +70,12 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         titleTile            = new TitleTile( this ) ;
         dateTile             = new DateTile( this ) ;
         dayGanttTile         = new DayGanttTile( this ) ;
-        topicBurnStatTile      = new TopicBurnStatTile( this ) ;
+        topicBurnStatTile    = new TopicBurnStatTile( this ) ;
         sessionControlTile   = new SessionControlTile( this ) ;
         dayStatTile          = new DayStatTile( this ) ;
         burnTile             = new BurnTile( this ) ;
-        dayTotalTile         = new DayTotalTile( this ) ;
-        dayRelativeHoursTile = new DayRelativeHoursTile( this ) ;
+        dayBurnUpdateTile    = new DayBurnUpdateTile( this ) ;
+        last30DaysNumQTile   = new Last30DaysNumQTile( this ) ;
         last30DaysHoursTile  = new Last30DaysHoursTile( this ) ;
     }
     
@@ -134,9 +134,17 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     private void layoutBurnAndStatRow( JPanel panel ) {
         panel.add( burnTile, BURN_PC ) ;
-        panel.add( dayTotalTile, DAY_TOTAL_PC ) ;
-        panel.add( dayRelativeHoursTile, DAY_RELATIVE_PC ) ;
-        panel.add( last30DaysHoursTile, LAST_30D_PC ) ;
+        panel.add( dayBurnUpdateTile, DAY_BURN_UPDATE_PC ) ;
+        panel.add( getLast30DaysPanel(), LAST_30D_PC ) ;
+    }
+    
+    private JPanel getLast30DaysPanel() {
+        
+        JPanel panel = new JPanel() ;
+        panel.setLayout( new GridLayout( 2, 1 ) ) ;
+        panel.add( last30DaysNumQTile ) ;
+        panel.add( last30DaysHoursTile ) ;
+        return panel ;
     }
     
     public void showMessage( String msg ) {

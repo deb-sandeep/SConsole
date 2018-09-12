@@ -2,14 +2,9 @@ package com.sandy.sconsole.core.frame;
 
 import java.awt.* ;
 import java.awt.image.BufferedImage ;
-import java.io.File ;
-import java.io.IOException ;
 import java.text.SimpleDateFormat ;
-import java.util.Date ;
 
-import javax.imageio.ImageIO ;
 import javax.swing.JFrame ;
-import javax.swing.SwingUtilities ;
 
 import org.apache.log4j.Logger ;
 
@@ -131,26 +126,32 @@ public class SConsoleFrame extends JFrame {
     
     public void takeScreenshot( SessionInformation si ) {
         
+        // For now the functionality is switched off. Raspberry hangs the UI
+        // when taking a screenshot. Performance problems. Will revisit this 
+        // at a later point.
+        /**
         SwingUtilities.invokeLater( new Runnable() {
             @Override
             public void run() {
                 BufferedImage img = new BufferedImage( getWidth(), 
-                                                       getHeight(), 
-                                                       BufferedImage.TYPE_INT_RGB ) ;
+                                                        getHeight(), 
+                                                        BufferedImage.TYPE_INT_RGB ) ;
                 paint( img.getGraphics() ) ;
-                
+                    
                 File file = getImgSaveFile( si ) ;
                 try {
                     ImageIO.write( img, "png", file ) ;
                 }
                 catch( IOException e ) {
                     log.error( "Unable to save image - " + 
-                               file.getAbsolutePath(), e ) ;
+                    file.getAbsolutePath(), e ) ;
                 }
             }
-        } );
+        } ) ;
+        */
     }
     
+    /**
     private File getImgSaveFile( SessionInformation si ) {
         
         StringBuffer fileName = new StringBuffer() ;
@@ -168,4 +169,5 @@ public class SConsoleFrame extends JFrame {
         File file = new File( dir, fileName.toString() ) ;
         return file ;
     }
+    */
 }

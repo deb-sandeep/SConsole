@@ -3,9 +3,9 @@ package com.sandy.sconsole.screenlet.study.large.tile;
 import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
-public class DayTotalTile extends AbstractScreenletTile {
+public class Last30DaysNumQTile extends AbstractScreenletTile {
 
-    public DayTotalTile( ScreenletPanel mother ) {
+    public Last30DaysNumQTile( ScreenletPanel mother ) {
         super( mother ) ;
     }
 }

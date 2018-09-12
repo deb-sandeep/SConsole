@@ -23,6 +23,22 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
                     + "    pm.topic_id = ?1 and "
                     + "    ( pa.outcome = 'Solved' or pa.outcome = 'Ignore' ) "
                     + "GROUP BY "
-                    + "    date" )
-   public List<HistoricBurnStat> getHistoricBurnStats( Integer topicId ) ;
+                    + "    date" 
+    )
+    public List<HistoricBurnStat> getHistoricBurnStats( Integer topicId ) ;
+    
+   
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    COUNT( pa.id ) "
+            + "FROM "
+            + "    problem_attempt pa, "
+            + "    session s "
+            + "WHERE "
+            + "    s.id = pa.session_id AND "
+            + "    s.topic_id = ?1 AND "
+            + "    pa.start_time > current_date() "
+    )
+    public Integer getNumProblemsSolvedToday( Integer topicId ) ;
 }

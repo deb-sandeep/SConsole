@@ -28,7 +28,7 @@ import com.sandy.sconsole.api.burn.HistoricBurnStat ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
-import com.sandy.sconsole.screenlet.study.ExerciseBurnInfo ;
+import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 
 @SuppressWarnings( "serial" )
 public class BurnTile extends AbstractScreenletTile {
@@ -160,7 +160,7 @@ public class BurnTile extends AbstractScreenletTile {
                     @Override
                     public void run() {
                         try {
-                            replotBurnChart( (ExerciseBurnInfo)event.getValue() ) ;
+                            replotBurnChart( (TopicBurnInfo)event.getValue() ) ;
                         }
                         catch( Exception e ) {
                             log.debug( "Exception processing topic change.", e ) ;
@@ -171,7 +171,7 @@ public class BurnTile extends AbstractScreenletTile {
         }
     }
 
-    private synchronized void replotBurnChart( ExerciseBurnInfo bi ) 
+    private synchronized void replotBurnChart( TopicBurnInfo bi ) 
         throws Exception {
         
         log.debug( "Plotting burn chart for " + bi.getTopic().getTopicName() ) ;
@@ -195,7 +195,7 @@ public class BurnTile extends AbstractScreenletTile {
         chart.setNotify( true ) ;
     }
     
-    private void plotMilestoneMarker( ExerciseBurnInfo bi ) 
+    private void plotMilestoneMarker( TopicBurnInfo bi ) 
         throws Exception {
         
         Marker dateMarker = new ValueMarker( bi.getBurnCompletionDate().getTime() );
@@ -207,19 +207,19 @@ public class BurnTile extends AbstractScreenletTile {
         plot.addRangeMarker( qMarker ) ;
     }
     
-    private void plotHistoricBurns( ExerciseBurnInfo bi ) 
+    private void plotHistoricBurns( TopicBurnInfo bi ) 
         throws Exception {
         
         int numSolved = 0 ;
         for( HistoricBurnStat hb : bi.getHistoricBurns() ) {
             
-            Date date = ExerciseBurnInfo.DF.parse( hb.getDate() ) ;
+            Date date = TopicBurnInfo.DF.parse( hb.getDate() ) ;
             numSolved += hb.getNumQuestionsSolved() ;
             historicBurn.add( new Day( date ), numSolved, false ) ; 
         }
     }
     
-    private void plotBaseMilestoneBurn( ExerciseBurnInfo bi) {
+    private void plotBaseMilestoneBurn( TopicBurnInfo bi) {
         
         int numSolved = bi.getBaseMilestoneBurnRate() ;
         Date startDate = bi.getBurnStartDate() ;
@@ -237,7 +237,7 @@ public class BurnTile extends AbstractScreenletTile {
         }
     }
 
-    private void plotCurrentVelocityBurn( ExerciseBurnInfo bi) {
+    private void plotCurrentVelocityBurn( TopicBurnInfo bi) {
         
         int numSolved = bi.getNumProblemsSolved() ;
         Day day = new Day( DateUtils.truncate( new Date(), Calendar.HOUR ) ) ;
