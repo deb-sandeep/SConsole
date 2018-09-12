@@ -165,7 +165,10 @@ public class BaseControlTileState extends State {
             // or equal to the the sessions problem and which are not skipped
             int refProblemId = (lastProblem != null)? lastProblem.getId() : -1 ;
             for( Problem p : problems ) {
-                if( p.getId() >= refProblemId ) {
+                // CR-12-Sep-18 - If there are skipped problems beyond the 
+                // last solved problem, don't include them ahead in the list.
+                // All skipped problems should be presented at the end
+                if( ( p.getId() >= refProblemId ) && !p.getSkipped() ) {
                     found.add( p ) ;
                 }
             }
@@ -185,7 +188,8 @@ public class BaseControlTileState extends State {
             
             
             // Fourth pass - add all the remaining problems to the unsolved
-            // problem list
+            // problem list. The remaining problems are now only the skipped
+            // problems.
             unsolvedProblems.addAll( problems ) ;
         }
         

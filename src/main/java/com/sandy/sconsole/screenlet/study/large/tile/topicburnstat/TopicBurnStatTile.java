@@ -38,8 +38,9 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
     
     private static final SimpleDateFormat DF = new SimpleDateFormat( "dd-MMM-yyyy" ) ;
     
-    private static final Font LBL_FONT = UIConstant.BASE_FONT.deriveFont( 16F ) ;
-    private static final Font VAL_FONT = UIConstant.BASE_FONT.deriveFont( 23F ) ;
+    private static final Font LBL_FONT    = UIConstant.BASE_FONT.deriveFont( 16F ) ;
+    private static final Font VAL_FONT    = UIConstant.BASE_FONT.deriveFont( 30F ) ;
+    private static final Font SM_VAL_FONT = UIConstant.BASE_FONT.deriveFont( 23F ) ;
     
     private JLabel burnEndDtLbl        = createDefaultLabel( "Burn end date" ) ;
     private JLabel burnEndDt           = createDefaultLabel( "" ) ;
@@ -135,6 +136,9 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
             add( titleLbl, "0," + row + ",0," + row ) ;
             add( valLbl,   "1," + row + ",1," + row ) ;
         }
+        
+        burnStartDt.setFont( SM_VAL_FONT ) ;
+        burnEndDt.setFont( SM_VAL_FONT ) ;
     }
     
     private void setLayout() {

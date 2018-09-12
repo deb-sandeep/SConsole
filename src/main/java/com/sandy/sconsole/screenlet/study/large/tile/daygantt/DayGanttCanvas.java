@@ -210,7 +210,7 @@ public class DayGanttCanvas extends JPanel
         
         g.setColor( UIConstant.BG_COLOR ) ;
         g.fillRect( x1, y1, width, height ) ;
-        g.setColor( Color.DARK_GRAY ) ;
+        g.setColor( Color.GRAY ) ;
         g.setFont( TOTAL_FONT ) ;
         
         FontMetrics metrics = g.getFontMetrics( TOTAL_FONT ) ;
