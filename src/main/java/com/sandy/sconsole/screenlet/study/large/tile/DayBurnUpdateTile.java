@@ -70,7 +70,7 @@ public class DayBurnUpdateTile extends AbstractScreenletTile {
         plot.setValuePaint( Color.BLACK ) ;
         plot.setValueFont( UIConstant.BASE_FONT.deriveFont( 40F ) ) ;
         
-        plot.getRangeAxis().setTickLabelPaint( Color.GRAY ) ;
+        plot.getRangeAxis().setTickLabelPaint( Color.GRAY.brighter() ) ;
         plot.getRangeAxis().setTickLabelFont( UIConstant.BASE_FONT.deriveFont( 20F ) ) ;
     }
 

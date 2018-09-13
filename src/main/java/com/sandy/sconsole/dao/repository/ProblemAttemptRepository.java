@@ -38,6 +38,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             + "WHERE "
             + "    s.id = pa.session_id AND "
             + "    s.topic_id = ?1 AND "
+            + "    ( pa.outcome = 'Solved' OR pa.outcome = 'Ignore' ) AND "
             + "    pa.start_time > current_date() "
     )
     public Integer getNumProblemsSolvedToday( Integer topicId ) ;
