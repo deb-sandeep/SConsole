@@ -26,8 +26,8 @@ public class UIConstant {
     public static final Color FN_H_COLOR = Color.decode( "#C5852F" ) ;
     
     public static final Color HISTORIC_BURN_COLOR       = Color.GREEN ;
-    public static final Color BASE_BURN_COLOR           = Color.GRAY ;
-    public static final Color PROJECTED_VELOCITY_BURN   = Color.RED ;
+    public static final Color BASE_BURN_COLOR           = Color.LIGHT_GRAY ;
+    public static final Color PROJECTED_VELOCITY_BURN   = Color.RED.brighter() ;
     
     public static final Color TILE_BORDER_COLOR = Color.DARK_GRAY.darker() ;
     public static final Border TILE_BORDER = new LineBorder( TILE_BORDER_COLOR ) ;

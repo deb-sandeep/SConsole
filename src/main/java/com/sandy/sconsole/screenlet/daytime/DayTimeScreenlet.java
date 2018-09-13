@@ -8,6 +8,8 @@ import com.sandy.sconsole.core.screenlet.* ;
 public class DayTimeScreenlet extends AbstractScreenlet {
 
     private DemuxKeyProcessor keyProcessor = null ;
+    private TimePanel timePanel = null ;
+    private DatePanel datePanel = null ;
     
     public DayTimeScreenlet() {
         super( "DayTime" ) ;
@@ -31,11 +33,17 @@ public class DayTimeScreenlet extends AbstractScreenlet {
     
     private void constructPanel( JPanel basePanel, boolean large ) {
         
-        TimePanel timePanel = new TimePanel( large ) ;
-        DatePanel datePanel = new DatePanel( large ) ;
+        timePanel = new TimePanel( large ) ;
+        datePanel = new DatePanel( large ) ;
         
         basePanel.setLayout( new BoxLayout( basePanel, BoxLayout.Y_AXIS ) ) ;
         basePanel.add( timePanel ) ;
         basePanel.add( datePanel ) ;
+    }
+
+    @Override
+    public void isBeingMaximized() {
+        super.isBeingMaximized() ;
+        datePanel.refreshHistoricValues() ;
     }
 }

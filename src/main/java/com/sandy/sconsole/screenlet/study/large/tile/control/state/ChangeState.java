@@ -20,7 +20,7 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
 
 public class ChangeState extends BaseControlTileState {
 
-    private static final Logger log = Logger.getLogger( ChangeState.class ) ;
+    static final Logger log = Logger.getLogger( ChangeState.class ) ;
     
     public static final String NAME = "Change" ;
     
@@ -167,7 +167,6 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnAKey() {
-        log.debug( "FN_A key received in change state. Changing session type." ) ;
         showDialog( typeChangeDialog ) ;
     }
     
@@ -176,8 +175,6 @@ public class ChangeState extends BaseControlTileState {
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewSessionTypeSelection( SessionType type ) {
-        
-        log.debug( "New session type chosen = " + type ) ;
         
         if( type != null ) {
             si.session.setSessionType( type ) ;
@@ -195,7 +192,6 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnBKey() {
-        log.debug( "FN_B key received in change state. Changing topic." ) ;
         showDialog( topicChangeDialog ) ;
     }
     
@@ -204,8 +200,6 @@ public class ChangeState extends BaseControlTileState {
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewTopicSelection( Topic topic ) {
-        
-        log.debug( "New topic chosen = " + topic ) ;
         
         if( topic != null ) {
             si.session.setTopic( topic ) ;
@@ -220,7 +214,6 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnCKey() {
-        log.debug( "FN_C key received in change state. Changing book" ) ;
         showDialog( bookChangeDialog ) ;
     }
     
@@ -229,8 +222,6 @@ public class ChangeState extends BaseControlTileState {
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewBookSelection( Book book ) {
-        
-        log.debug( "New book chosen = " + book ) ;
         
         if( book != null ) {
             si.session.setBook( book ) ;
@@ -245,7 +236,6 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnDKey() {
-        log.debug( "FN_D key received in change state. Changing problem" ) ;
         showDialog( problemChangeDialog ) ;
     }
     
@@ -254,8 +244,6 @@ public class ChangeState extends BaseControlTileState {
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewProblemSelection( Problem problem ) {
-        
-        log.debug( "New problem chosen = " + problem ) ;
         
         if( problem != null ) {
             si.session.setLastProblem( problem ) ;

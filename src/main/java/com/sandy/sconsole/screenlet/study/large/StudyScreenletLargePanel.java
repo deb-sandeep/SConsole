@@ -18,6 +18,8 @@ import com.sandy.sconsole.screenlet.study.large.tile.* ;
 import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysSubjectHoursTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysNumQTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStatTile ;
 
 import info.clearthought.layout.TableLayout ;
@@ -54,7 +56,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private BurnTile             burnTile             = null ;
     private DayBurnUpdateTile    dayBurnUpdateTile    = null ;
     private Last30DaysNumQTile   last30DaysNumQTile   = null ;
-    private Last30DaysHoursTile  last30DaysHoursTile  = null ;
+    private Last30DaysSubjectHoursTile  last30DaysHoursTile  = null ;
     
     private JLabel messageLabel = null ;
     
@@ -76,7 +78,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         burnTile             = new BurnTile( this ) ;
         dayBurnUpdateTile    = new DayBurnUpdateTile( this ) ;
         last30DaysNumQTile   = new Last30DaysNumQTile( this ) ;
-        last30DaysHoursTile  = new Last30DaysHoursTile( this ) ;
+        last30DaysHoursTile  = new Last30DaysSubjectHoursTile( this ) ;
     }
     
     private void initializeMessageLabel() {

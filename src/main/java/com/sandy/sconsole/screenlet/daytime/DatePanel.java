@@ -1,16 +1,21 @@
 package com.sandy.sconsole.screenlet.daytime;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
 
-import java.awt.* ;
-import java.text.* ;
-import java.util.* ;
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Font ;
+import java.text.SimpleDateFormat ;
+import java.util.Calendar ;
+import java.util.Date ;
+import java.util.Locale ;
 
-import javax.swing.* ;
+import javax.swing.JLabel ;
+import javax.swing.JPanel ;
+import javax.swing.SwingConstants ;
 
-import com.sandy.sconsole.* ;
-import com.sandy.sconsole.core.util.* ;
-import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttCanvas ;
+import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.util.DayTickListener ;
 
 @SuppressWarnings( "serial" )
 public class DatePanel extends JPanel implements DayTickListener {
@@ -21,11 +26,15 @@ public class DatePanel extends JPanel implements DayTickListener {
     private static SimpleDateFormat SDF  = new SimpleDateFormat( "EEE, d MMM", Locale.ENGLISH ) ;
 
     private JLabel dateLabel = new JLabel() ;
-    private boolean largePanel = false ;
+    private boolean largeDisplay = false ;
+    private Last30DaysHoursChart hoursChart = null ;
 
     public DatePanel( boolean large ) {
         super() ;
-        this.largePanel = large;
+        this.largeDisplay = large ;
+        if( this.largeDisplay ) {
+            this.hoursChart = new Last30DaysHoursChart() ;
+        }
         SConsole.addDayTimerTask( this ) ;
         setUpUI( large ) ;
     }
@@ -44,9 +53,13 @@ public class DatePanel extends JPanel implements DayTickListener {
         setLayout( new BorderLayout() ) ;
         setBackground( BG_COLOR ) ;
         add( dateLabel, BorderLayout.CENTER ) ;
-        
-        if( this.largePanel ) {
-            add( new DayGanttCanvas( true ), BorderLayout.SOUTH ) ;;
+
+        if( this.largeDisplay ) {
+            add( hoursChart, BorderLayout.SOUTH ) ;
         }
+    }
+
+    public void refreshHistoricValues() {
+        hoursChart.refreshHistoricValues() ;
     }
 }

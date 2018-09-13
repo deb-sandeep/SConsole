@@ -67,7 +67,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
             "SELECT "
             + "    CAST( pa.start_time as DATE ) as date, "
-            + "    count( pa.id ) "
+            + "    count( pa.id ) as value "
             + "FROM "
             + "    problem_attempt pa, "
             + "    session s "

@@ -67,10 +67,10 @@ public class DayBurnUpdateTile extends AbstractScreenletTile {
         plot.setColumnRadius( 30 ) ;
         
         plot.setValueLocation( ThermometerPlot.BULB );
-        plot.setValuePaint( Color.BLACK ) ;
+        plot.setValuePaint( Color.WHITE ) ;
         plot.setValueFont( UIConstant.BASE_FONT.deriveFont( 40F ) ) ;
         
-        plot.getRangeAxis().setTickLabelPaint( Color.GRAY.brighter() ) ;
+        plot.getRangeAxis().setTickLabelPaint( Color.LIGHT_GRAY ) ;
         plot.getRangeAxis().setTickLabelFont( UIConstant.BASE_FONT.deriveFont( 20F ) ) ;
     }
 
@@ -110,13 +110,13 @@ public class DayBurnUpdateTile extends AbstractScreenletTile {
         
         plot.setRange( 0, upperRange ) ;
         
-        plot.setSubrange( 0, 0, range1UL ) ;
+        plot.setSubrange( 0, 0, range1UL-1 ) ;
         plot.setSubrangePaint( 0, Color.RED.darker() ) ;
         
-        plot.setSubrange( 1, range1UL, range2UL ) ;
+        plot.setSubrange( 1, range1UL-1, range2UL-1 ) ;
         plot.setSubrangePaint( 1, Color.ORANGE.darker() ) ;
         
-        plot.setSubrange( 2, range2UL, upperRange ) ;
+        plot.setSubrange( 2, range2UL-1, upperRange ) ;
         plot.setSubrangePaint( 2, Color.GREEN.darker() ) ;
         
         valueDataset.setValue( bi.getNumProblemsSolvedToday() ) ;

@@ -10,6 +10,7 @@ import javax.swing.* ;
 
 import com.sandy.sconsole.* ;
 import com.sandy.sconsole.core.util.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttCanvas ;
 
 @SuppressWarnings( "serial" )
 public class TimePanel extends JPanel implements SecondTickListener {
@@ -39,6 +40,10 @@ public class TimePanel extends JPanel implements SecondTickListener {
         timeLabel.setFont( large ? LG_FONT : SM_FONT );
         timeLabel.setForeground( Color.GRAY ) ;
         timeLabel.setText( df.format( new Date() ) ) ;
+
+        if( this.largeDisplay ) {
+            add( new DayGanttCanvas( true ), BorderLayout.NORTH ) ;
+        }
     }
 
     @Override
