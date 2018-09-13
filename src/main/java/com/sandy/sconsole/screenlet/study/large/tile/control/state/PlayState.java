@@ -92,6 +92,7 @@ public class PlayState extends BaseControlTileState
         si = null ;
         runTime = 0 ;
         pauseTime = 0 ;
+        lapTime = 0 ;
     }
 
     @Override
@@ -178,6 +179,8 @@ public class PlayState extends BaseControlTileState
     private void updateSession() {
         
         boolean publishCreationEvent = si.session.getId() == null ? true : false ;
+        
+        log.debug( "Saving - runTime = " + runTime + ", pauseTime = " + pauseTime );
                 
         si.session.setDuration( this.runTime ) ;
         si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
@@ -320,6 +323,7 @@ public class PlayState extends BaseControlTileState
             
             runTime=0 ;
             lapTime=0 ;
+            pauseTime=0 ;
             
             if( si.session.getSessionType() == SessionType.EXERCISE ) {
                 tile.setOutcomeButtonsState( OutcomeButtonsState.INACTIVE ) ;

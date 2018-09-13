@@ -124,8 +124,8 @@ public class OfflineSessionCreationController {
         Session session = new Session() ;
         session.setSessionType( SessionType.decode( input.getSessionType() ) ) ;
         session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
-        session.setDuration( input.getDuration() ) ;
-        session.setAbsoluteDuration( input.getDuration() ) ;
+        session.setDuration( input.getDuration()*60 ) ;
+        session.setAbsoluteDuration( input.getDuration()*60 ) ;
         session.setStartTime( new Timestamp( input.getStartTime().getTime() ) ) ;
         session.setEndTime( new Timestamp( session.getStartTime().getTime() + 
                                            input.getDuration()*60*1000 ) );
