@@ -21,6 +21,7 @@ public class Topic {
     
     private String section ;
     private Timestamp burnCompletion ;
+    private Timestamp burnStart ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -37,6 +38,11 @@ public class Topic {
     public Timestamp getBurnCompletion(){ return burnCompletion ; }
     public void setBurnCompletion( Timestamp ts ) {
         this.burnCompletion = ts ;
+    }
+    
+    public Timestamp getBurnStart() { return burnStart ; }
+    public void setBurnStart( Timestamp burnStart ) {
+        this.burnStart = burnStart ;
     }
     
     public String toString() {
