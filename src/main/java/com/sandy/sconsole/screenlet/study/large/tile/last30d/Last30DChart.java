@@ -77,12 +77,6 @@ public class Last30DChart
         valueSeries = new TimeSeries( "Value" ) ;
         mavSeries = new TimeSeries( "MAV" ) ;
         
-        Day day = new Day( new Date() ) ;
-        for( int i=0; i<30; i++ ) {
-            valueSeries.add( day, 0.0 ) ;
-            day = ( Day )day.previous() ;
-        }
-
         mavSeries = MovingAverage.createMovingAverage( valueSeries,
                                                        "Moving average", 
                                                        7, 0 ) ;
@@ -189,7 +183,18 @@ public class Last30DChart
         
         List<DayValue> historicValues = null ;
         synchronized( lock ) {
+            valueSeries.clear() ;
+            mavSeries.clear() ;
+            
+            Day day = new Day( new Date() ) ;
+            for( int i=0; i<30; i++ ) {
+                valueSeries.add( day, 0.0 ) ;
+                mavSeries.add( day, 0.0 ) ;
+                day = ( Day )day.previous() ;
+            }
+
             historicValues = dataProvider.getLast30DaysData() ;
+            
             if( historicValues != null ) {
                 for( DayValue dv : historicValues ) {
                     
