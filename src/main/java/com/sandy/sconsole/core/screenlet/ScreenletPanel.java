@@ -8,6 +8,7 @@ import javax.swing.* ;
 
 import com.sandy.common.bus.* ;
 import com.sandy.common.bus.Event ;
+import com.sandy.sconsole.EventCatalog ;
 
 @SuppressWarnings( "serial" )
 public abstract class ScreenletPanel extends JPanel
@@ -31,5 +32,23 @@ public abstract class ScreenletPanel extends JPanel
 
     @Override
     public void handleEvent( Event event ) {
+        
+        switch( event.getEventType() ) {
+            case EventCatalog.SCREENLET_MINIMIZED:
+                screenletMinimized( parent ) ;
+                break ;
+            case EventCatalog.SCREENLET_MAXIMIZED:
+                screenletMaximized( parent ) ;
+                break ;
+            case EventCatalog.SCREENLET_RUN_STATE_CHANGED:
+                screenletRunStateChanged( parent ) ;
+                break ;
+        }
     }
+
+    private void screenletMaximized( Screenlet screenlet ) {}
+
+    private void screenletRunStateChanged( Screenlet screenlet ) {}
+
+    private void screenletMinimized( Screenlet screenlet ) {}
 }

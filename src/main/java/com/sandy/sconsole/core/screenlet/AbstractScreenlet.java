@@ -26,8 +26,12 @@ public abstract class AbstractScreenlet implements Screenlet {
         this.largePanel = createLargePanel() ;
         
         eventBus.addSubscriberForEventRange( smallPanel, false, 
-                                                EventCatalog.CORE_EVENT_RANGE_MIN, 
-                                                EventCatalog.CORE_EVENT_RANGE_MAX ) ;
+                                             EventCatalog.CORE_EVENT_RANGE_MIN, 
+                                             EventCatalog.CORE_EVENT_RANGE_MAX ) ;
+        
+        eventBus.addSubscriberForEventRange( largePanel, false, 
+                                             EventCatalog.CORE_EVENT_RANGE_MIN, 
+                                             EventCatalog.CORE_EVENT_RANGE_MAX ) ;
         initScreenlet() ;
         return this ;
     }
@@ -79,7 +83,7 @@ public abstract class AbstractScreenlet implements Screenlet {
     }
 
     @Override
-    public RunState getRunState() { return this.runState ; } ;
+    public RunState getRunState() { return this.runState ; }
     
     @Override
     public void setCurrentRunState( RunState state ) {

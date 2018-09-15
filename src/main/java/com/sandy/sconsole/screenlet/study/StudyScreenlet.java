@@ -10,6 +10,10 @@ import com.sandy.sconsole.screenlet.study.small.StudyScreenletSmallPanel ;
 
 public class StudyScreenlet extends AbstractScreenlet {
     
+    public static final String IIT_PHYSICS = "IIT - Physics" ;
+    public static final String IIT_CHEM    = "IIT - Chemistry" ;
+    public static final String IIT_MATHS   = "IIT - Maths" ;
+    
     private StudyScreenletSmallPanel smallPanel = null ;
     private StudyScreenletLargePanel largePanel = null ;
     

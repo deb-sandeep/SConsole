@@ -39,7 +39,7 @@ public class DayGanttCanvas extends JPanel
     private static final int START_HR = 0 ;
     private static final int END_HR = 24 ;
     private static final int NUM_HRS = END_HR - START_HR ;
-    private static final Insets INSET = new Insets( 0, 0, 40, 0 ) ;
+    private static final Insets INSET = new Insets( 0, 0, 30, 0 ) ;
     private static final Font TOTAL_FONT = UIConstant.BASE_FONT.deriveFont( 40F ) ;
     
     private Rectangle chartArea = new Rectangle() ;
@@ -126,10 +126,9 @@ public class DayGanttCanvas extends JPanel
             int y1 = chartArea.y ;
             int y2 = chartArea.y + chartArea.height ;
             
-            g.setColor( Color.GRAY ) ;
-            g.drawLine( x, y1, x, y2 ) ;
             g.setColor( Color.DARK_GRAY ) ;
-            g.drawString( ""+(START_HR+i), x, y2+INSET.bottom-10 ) ;
+            g.drawLine( x, y1, x, y2 ) ;
+            g.drawString( ""+(START_HR+i), x+5, y2+INSET.bottom-6 ) ;
         }
     }
     
@@ -214,7 +213,7 @@ public class DayGanttCanvas extends JPanel
         int duraction = 3600*3 - 20*60 ;
         
         int x1 = chartArea.x + (int)(startSec * numPixelsPerSecond) ;
-        int y1 = chartArea.y+1 ;
+        int y1 = chartArea.y + 1 ;
         int width = (int)(duraction * numPixelsPerSecond) ;
         int height = chartArea.height-1 ;
         
@@ -228,7 +227,7 @@ public class DayGanttCanvas extends JPanel
         
         g.drawString( getElapsedTimeLabel( totalTimeInSec ), 
                       x1+10, 
-                      y1+textHeight-5 ) ;
+                      y1+(height/2)+(textHeight/2)-10 ) ;
     }
 
     @Override

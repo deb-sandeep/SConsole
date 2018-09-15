@@ -28,10 +28,26 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
     private ChartPanel chartPanel = null ;
     private ProblemAttemptRepository paRepo = null ;
     
+    private String subjectName = null ;
+    private Color barColor = null ;
+    
     private long lastRefresh = 0 ;
     
     public Last30DaysSubjectHoursTile( ScreenletPanel mother ) {
+        this( mother, 
+              mother.getScreenlet().getDisplayName(), 
+              Color.decode( "#A24C06" ),
+              false ) ;
+    }
+    
+    public Last30DaysSubjectHoursTile( ScreenletPanel mother, 
+                                       String subjectName,
+                                       Color barColor,
+                                       boolean subtle ) {
         super( mother ) ;
+        
+        this.subjectName = subjectName ;
+        this.barColor = barColor ;
         
         paRepo = SConsole.getAppContext()
                          .getBean( ProblemAttemptRepository.class ) ;
@@ -44,9 +60,9 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
                                            EventCatalog.BURN_INFO_REFRESHED ) ;
   
         chart = new Last30DChart( "Hours", 
-                                  Color.decode( "#A24C06" ),
+                                  this.barColor,
                                   Color.YELLOW,
-                                  this, false ) ;
+                                  this, subtle ) ;
         setUpUI() ;
     }
     
@@ -69,7 +85,7 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
     @Override
     public List<DayValue> getLast30DaysData() {
         lastRefresh = System.currentTimeMillis() ;
-        return paRepo.getLast30DaysTimeSpent( getScreenlet().getDisplayName() ) ;
+        return paRepo.getLast30DaysTimeSpent( this.subjectName ) ;
     }
 
     @Override

@@ -135,6 +135,10 @@ public class Last30DChart
         axis.setTickLabelPaint( color ) ;
         axis.setTickLabelFont( UIConstant.BASE_FONT.deriveFont( 15F ) ) ;
         axis.setLabelPaint( color ) ;
+        
+        if( subtle ) {
+            axis.setLabel( null ) ;
+        }
     }
     
     private void configureValSeriesRenderer() {
