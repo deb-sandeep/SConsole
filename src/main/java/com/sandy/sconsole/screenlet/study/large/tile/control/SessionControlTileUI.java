@@ -107,8 +107,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
         new LabelMeta( bookLbl,      "2,2,9,2",  40F, BOOK_LBL_FG,       false ), 
         new LabelMeta( sumsLeftLbl,  "10,2,11,2",35F, SUMS_LEFT_LBL_FG,  false ), 
         new LabelMeta( problemLbl,   "0,3,7,4",  40F, PROBLEM_LBL_FG,    true  ), 
-        new LabelMeta( sTimeLbl,     "8,3,11,4", 60F, STIME_LBL_FG,      true  ), 
-        new LabelMeta( lTimeLbl,     "8,5,11,6", 60F, LTIME_LBL_FG,      true  ), 
+        new LabelMeta( sTimeLbl,     "8,3,11,4", 72F, STIME_LBL_FG,      true  ), 
+        new LabelMeta( lTimeLbl,     "8,5,11,6", 85F, LTIME_LBL_FG,      true  ), 
         new LabelMeta( btn1Lbl,      "8,7,9,7",  25F, BTN1_LBL_FG,       true  ), 
         new LabelMeta( btn2Lbl,      "10,7,11,7",25F, BTN2_LBL_FG,       true  )
     } ;
@@ -191,11 +191,11 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             layout.insertColumn( c, 0.20F ) ;
         }
         
-        numSolvedLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
-        numRedoLbl.setFont   ( BASE_FONT.deriveFont( 60F ) ) ;
-        numPigeonLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
-        numSkipLbl.setFont   ( BASE_FONT.deriveFont( 60F ) ) ;
-        numIgnoreLbl.setFont ( BASE_FONT.deriveFont( 60F ) ) ;
+        numSolvedLbl.setFont ( BASE_FONT.deriveFont( 70F ) ) ;
+        numRedoLbl.setFont   ( BASE_FONT.deriveFont( 70F ) ) ;
+        numPigeonLbl.setFont ( BASE_FONT.deriveFont( 70F ) ) ;
+        numSkipLbl.setFont   ( BASE_FONT.deriveFont( 70F ) ) ;
+        numIgnoreLbl.setFont ( BASE_FONT.deriveFont( 70F ) ) ;
 
         numSolvedLbl.setForeground ( UIConstant.FN_A_COLOR ) ;
         numRedoLbl.setForeground   ( UIConstant.FN_B_COLOR ) ;

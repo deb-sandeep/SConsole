@@ -52,7 +52,7 @@ public class PauseDialog extends AbstractDialogPanel
     private void setUpUI() {
         setPreferredSize( new Dimension( 700, 250 ) ) ;
         setLayout( new BorderLayout() ) ;
-        setBackground( Color.GRAY ) ;
+        setBackground( Color.GRAY.darker() ) ;
         setBorder( new LineBorder( Color.GRAY, 20 ) ) ;
         
         add( getTimerLabel(), BorderLayout.CENTER ) ;
@@ -62,7 +62,7 @@ public class PauseDialog extends AbstractDialogPanel
     private JPanel getTimerLabel() {
         
         timerLabel = new JLabel() ;
-        timerLabel.setFont( BASE_FONT.deriveFont( 80F ) ) ;
+        timerLabel.setFont( BASE_FONT.deriveFont( 120F ) ) ;
         timerLabel.setForeground( Color.CYAN ) ;
         timerLabel.setVerticalAlignment( SwingConstants.CENTER ) ;
         timerLabel.setHorizontalAlignment( SwingConstants.CENTER ) ;
