@@ -20,8 +20,9 @@ public class Topic {
     private String topicName ;
     
     private String section ;
-    private Timestamp burnCompletion ;
     private Timestamp burnStart ;
+    private Timestamp burnCompletion ;
+    private Integer streamNumber ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -35,14 +36,19 @@ public class Topic {
     public String getSection() { return section ; }
     public void setSection( String section ) { this.section = section ; }
     
+    public Timestamp getBurnStart() { return burnStart ; }
+    public void setBurnStart( Timestamp burnStart ) {
+        this.burnStart = burnStart ;
+    }
+    
     public Timestamp getBurnCompletion(){ return burnCompletion ; }
     public void setBurnCompletion( Timestamp ts ) {
         this.burnCompletion = ts ;
     }
     
-    public Timestamp getBurnStart() { return burnStart ; }
-    public void setBurnStart( Timestamp burnStart ) {
-        this.burnStart = burnStart ;
+    public Integer getStreamNumber() { return streamNumber ; }
+    public void setStreamNumber( Integer streamNumber ) {
+        this.streamNumber = streamNumber ;
     }
     
     public String toString() {
