@@ -46,9 +46,9 @@ public abstract class ScreenletPanel extends JPanel
         }
     }
 
-    private void screenletMaximized( Screenlet screenlet ) {}
+    protected void screenletMaximized( Screenlet screenlet ) {}
 
-    private void screenletRunStateChanged( Screenlet screenlet ) {}
+    protected void screenletRunStateChanged( Screenlet screenlet ) {}
 
-    private void screenletMinimized( Screenlet screenlet ) {}
+    protected void screenletMinimized( Screenlet screenlet ) {}
 }

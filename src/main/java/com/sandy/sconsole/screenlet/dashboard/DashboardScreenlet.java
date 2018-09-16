@@ -44,7 +44,6 @@ public class DashboardScreenlet extends AbstractScreenlet {
     public void isBeingMaximized() {
         super.isBeingMaximized() ;
         controller.pushKeyProcessor( keyProcessor ) ;
-        // TODO: Refresh the historic chart every time the screenlet is maximized
     }
 
     @Override

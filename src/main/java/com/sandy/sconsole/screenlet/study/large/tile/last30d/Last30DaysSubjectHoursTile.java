@@ -70,6 +70,10 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
         chartPanel = new ChartPanel( chart.getJFreeChart() ) ;
         add( chartPanel ) ;
     }
+    
+    public void refreshHistoricValues() {
+        chart.refreshHistoricValues() ;
+    }
 
     @Override
     public void handleEvent( Event event ) {

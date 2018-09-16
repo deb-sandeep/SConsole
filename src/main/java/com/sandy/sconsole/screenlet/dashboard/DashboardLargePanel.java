@@ -87,4 +87,12 @@ public class DashboardLargePanel extends ScreenletLargePanel {
         }
         setLayout( layout ) ;
     }
+
+    @Override
+    protected void screenletMaximized( Screenlet screenlet ) {
+        super.screenletMaximized( screenlet ) ;
+        phyL30DHrsTile.refreshHistoricValues() ;
+        chemL30DHrsTile.refreshHistoricValues() ;
+        mathL30DHrsTile.refreshHistoricValues() ;
+    }
 }

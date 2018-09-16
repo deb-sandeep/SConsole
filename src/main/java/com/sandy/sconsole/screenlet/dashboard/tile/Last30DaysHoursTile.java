@@ -53,7 +53,9 @@ public class Last30DaysHoursTile extends AbstractScreenletTile
         return paRepo.getLast30DaysTimeSpent() ;
     }
     
-    public void refreshHistoricValues() {
+    @Override
+    protected void screenletMaximized() {
+        super.screenletMaximized() ;
         chart.refreshHistoricValues() ;
     }
 }
