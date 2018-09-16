@@ -23,6 +23,7 @@ import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
+import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -514,6 +515,14 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
             return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
         }
         return String.format("%02d:%02d", minutes, secs ) ;
+    }
+    
+    protected void showMessage( String msg ) {
+        (( StudyScreenletLargePanel )parent).showMessage( msg ) ;
+    }
+    
+    protected void hideMessage() {
+        (( StudyScreenletLargePanel )parent).hideMessage() ;
     }
     
     // ----------------- UI Utility methods [End] -------------------

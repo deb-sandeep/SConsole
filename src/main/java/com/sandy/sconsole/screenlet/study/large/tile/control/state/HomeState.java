@@ -98,6 +98,10 @@ public class HomeState extends BaseControlTileState {
         super.enableTransition( Key.FN_A ) ;
     }
 
+    public SessionInformation getSessionInfo() {
+        return this.si ;
+    }
+
     /**
      * This function is called before transitioning to the next state for 
      * collecting the payload. 

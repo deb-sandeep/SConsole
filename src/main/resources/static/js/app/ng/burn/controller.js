@@ -306,7 +306,8 @@ sConsoleApp.controller( 'BurnController', function( $scope, $http ) {
         console.log( "Updating server with user updates." ) ;
         
         $scope.loading = true ;
-        $http.post( '/UpdateProblemActivations', { 
+        $http.post( '/UpdateProblemActivations', {
+            topicId : $scope.userChoice.topic.id,
             problemActivations : updatedProblems
         })
         .then( 

@@ -8,7 +8,7 @@ import org.apache.commons.lang.time.DateUtils ;
 import org.springframework.context.ApplicationContext ;
 
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.api.burn.HistoricBurnStat ;
+import com.sandy.sconsole.api.burncalibration.HistoricBurnStat ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;

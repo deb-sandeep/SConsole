@@ -24,7 +24,7 @@ import org.jfree.data.time.TimeSeriesCollection ;
 
 import com.sandy.common.bus.Event ;
 import com.sandy.sconsole.EventCatalog ;
-import com.sandy.sconsole.api.burn.HistoricBurnStat ;
+import com.sandy.sconsole.api.burncalibration.HistoricBurnStat ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
@@ -44,6 +44,8 @@ public class BurnTile extends AbstractScreenletTile {
     private TimeSeries historicBurn = null ;
     private TimeSeries baseBurnProjection = null ;
     private TimeSeries projectedBurnForVelocity = null ;
+    
+    private TopicBurnInfo currentBurnInfo = null ;
     
     public BurnTile( ScreenletPanel mother ) {
         super( mother ) ;
@@ -68,7 +70,7 @@ public class BurnTile extends AbstractScreenletTile {
     
     private void configureTimeSeries() {
         
-        historicBurn       = new TimeSeries( "Historic daily burn" ) ;
+        historicBurn              = new TimeSeries( "Historic daily burn" ) ;
         baseBurnProjection        = new TimeSeries( "Base burn projection" ) ;
         projectedBurnForVelocity  = new TimeSeries( "Projected burn - velocity" ) ;
     
@@ -155,25 +157,33 @@ public class BurnTile extends AbstractScreenletTile {
         super.handleEvent( event ) ;
         
         switch( event.getEventType() ) {
+                
             case EventCatalog.BURN_INFO_REFRESHED:
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            replotBurnChart( (TopicBurnInfo)event.getValue() ) ;
-                        }
-                        catch( Exception e ) {
-                            log.debug( "Exception processing topic change.", e ) ;
-                        }
-                    }
-                } );
+                currentBurnInfo = (TopicBurnInfo)event.getValue() ;
+                initiateChartReplot() ;
                 break ;
         }
     }
-
-    private synchronized void replotBurnChart( TopicBurnInfo bi ) 
+    
+    private void initiateChartReplot() {
+        
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    replotBurnChart() ;
+                }
+                catch( Exception e ) {
+                    log.debug( "Exception processing topic change.", e ) ;
+                }
+            }
+        } );
+    }
+    
+    private synchronized void replotBurnChart() 
         throws Exception {
         
+        TopicBurnInfo bi = currentBurnInfo ;
         log.debug( "Plotting burn chart for " + bi.getTopic().getTopicName() ) ;
         
         log.debug( "Burn info = " ) ;

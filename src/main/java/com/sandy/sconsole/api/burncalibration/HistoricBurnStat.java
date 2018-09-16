@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.burn;
+package com.sandy.sconsole.api.burncalibration;
 
 public interface HistoricBurnStat {
     public String getDate() ;

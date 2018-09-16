@@ -5,7 +5,7 @@ import java.util.List ;
 import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.* ;
 
-import com.sandy.sconsole.api.burn.HistoricBurnStat ;
+import com.sandy.sconsole.api.burncalibration.HistoricBurnStat ;
 import com.sandy.sconsole.core.util.DayValue ;
 import com.sandy.sconsole.dao.entity.* ;
 

@@ -49,4 +49,11 @@ public class EventCatalog {
     public static final int BURN_INFO_REFRESHED = 5007 ;
     
     // --------------- Session Events [End] ------------------------------------
+
+    // =============== API Generated Events [Start] ============================
+    
+    @Payload( type=TopicBurnInfo.class )
+    public static final int TOPIC_BURN_CALIBRATED = 6001 ;
+    
+    // --------------- API Generated Events [End] ------------------------------
 }

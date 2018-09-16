@@ -1,8 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.GridLayout ;
+import java.awt.* ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
@@ -17,9 +15,10 @@ import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.* ;
 import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysSubjectHoursTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysNumQTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysSubjectHoursTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStatTile ;
 
 import info.clearthought.layout.TableLayout ;
@@ -149,9 +148,12 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         return panel ;
     }
     
+    public SessionInformation getCurrentSessionInfo() {
+        return sessionControlTile.getSessionInfo() ;
+    }
+    
     public void showMessage( String msg ) {
         log.debug( "Feature commented out. Message = " + msg ) ;
-        /*
         BorderLayout borderLayout = ( BorderLayout )getLayout() ;
         Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
         if( comp == null ) {
@@ -159,16 +161,14 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
             revalidate() ;
         }
         messageLabel.setText( msg ) ;
-        */
     }
     
     public void hideMessage() {
-        /*
+        BorderLayout borderLayout = ( BorderLayout )getLayout() ;
         Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
         if( comp != null ) {
             remove( messageLabel ) ;
             revalidate() ;
         }
-        */
     }
 }

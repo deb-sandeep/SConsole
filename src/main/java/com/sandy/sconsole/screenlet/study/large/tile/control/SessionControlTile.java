@@ -5,6 +5,8 @@ import java.util.Map ;
 
 import org.apache.log4j.Logger ;
 
+import com.sandy.common.bus.Event ;
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
@@ -13,6 +15,7 @@ import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
@@ -88,7 +91,12 @@ public class SessionControlTile extends SessionControlTileUI
         super( parent ) ;
         keyProcessor = new ControlTileKeyProcessor() ;
         controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
+        
         SConsole.addSecTimerTask( this ) ;
+        SConsole.GLOBAL_EVENT_BUS
+                .addSubscriberForEventTypes( this, true, 
+                                             EventCatalog.TOPIC_BURN_CALIBRATED ) ;
+        
         initializeStateMachine() ;
     }
     
@@ -126,6 +134,10 @@ public class SessionControlTile extends SessionControlTileUI
             state.resetState() ;
         }
     }
+    
+    public SessionInformation getSessionInfo() {
+        return homeState.getSessionInfo() ;
+    }
 
     /**
      * This method is called when the StudyScreenlet to which this tile belongs
@@ -152,6 +164,56 @@ public class SessionControlTile extends SessionControlTileUI
         controller.popKeyProcessor() ;
     }
     
+    @Override
+    public void handleEvent( Event event ) {
+        super.handleEvent( event ) ;
+        
+        if( event.getEventType() == EventCatalog.TOPIC_BURN_CALIBRATED ) {
+            handleTopicBurnCalibration( (TopicBurnInfo)event.getValue() ) ;
+        }
+    }
+    
+    // A TOPIC_BURN_CALIBRATED event means that problem activations for
+    // a topic have been changed through the control UI. If such an
+    // event happens, we need to reflect the change realtime in the 
+    // study control panel.
+    //
+    // Now, this is a complicated scenario and we have to handle many cases
+    //
+    // 1. The screenlet is not maximized (visible) - 
+    //    We ignore the event. The screenlet will refresh itself with the
+    //    latest changes the next time it gets maximized. 
+    //
+    // 2. The screenlet is not operating on the topic which was calibrated
+    //    Again, we ignore the event. Not this screenlets business
+    //
+    // 3. The screenlet is operating on the topic which was calibrated
+    //    We definitely need to handle this scenario. There are multiple
+    //    sub-scenarios in this.
+    //
+    //  3.1 If we are currently in the middle of a session (run) or we 
+    //      are changing, we can't do anything. Show a message to the user
+    //      to stop the current operation and go to the home page.
+    //
+    //  3.2 If we are idling in the home state, we initiate a faux reload.
+    private void handleTopicBurnCalibration( TopicBurnInfo bi ) {
+        
+        if( getScreenlet().isVisible() ) {
+            SessionInformation si = getSessionInfo() ;
+            if( si.session.getTopic().equals( bi.getTopic() ) ) {
+                
+                if( currentState == playState || 
+                    currentState == changeState ) {
+                    
+                    showMessage( "Topic burn has been recalibrated. Please reload." ) ;
+                }
+                else {
+                    startStateMachine() ;
+                }
+            }
+        }
+    }
+
     /**
      * This method can be called upon to programatically feed transition triggers
      * to the state machine. 

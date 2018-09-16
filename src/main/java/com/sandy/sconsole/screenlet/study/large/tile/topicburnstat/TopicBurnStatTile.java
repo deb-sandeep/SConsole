@@ -15,7 +15,8 @@ import com.sandy.common.bus.Event ;
 import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.core.frame.UIConstant ;
-import com.sandy.sconsole.core.screenlet.* ;
+import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
+import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 
 import info.clearthought.layout.TableLayout ;
@@ -68,6 +69,8 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
     
     private JLabel projectedEndDtLbl   = createDefaultLabel( "Overshoot days" ) ;
     private JLabel projectedEndDt      = createDefaultLabel( "" ) ;
+    
+    private TopicBurnInfo currentBurnInfo = null ;
     
     private JLabel[] labels = {
             burnStartDtLbl,
@@ -161,13 +164,15 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
         
         switch( event.getEventType() ) {
             case EventCatalog.BURN_INFO_REFRESHED:
-                TopicBurnInfo bi = (TopicBurnInfo)event.getValue() ;
-                refreshBurnInfo( bi ) ;
+                currentBurnInfo = (TopicBurnInfo)event.getValue() ;
+                refreshBurnInfo() ;
                 break ;
         }
     }
     
-    private void refreshBurnInfo( TopicBurnInfo bi ) {
+    private void refreshBurnInfo() {
+        
+        TopicBurnInfo bi = currentBurnInfo ;
         
         numQ.setText             ( String.valueOf( bi.getNumProblems() ) ) ;
         burnStartDt.setText      ( DF.format( bi.getBurnStartDate() ) ) ;

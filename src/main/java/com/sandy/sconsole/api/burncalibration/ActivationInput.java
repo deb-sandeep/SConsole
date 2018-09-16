@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.burn;
+package com.sandy.sconsole.api.burncalibration;
 
 import java.util.List ;
 
@@ -15,6 +15,7 @@ public class ActivationInput {
         public void setActive( Boolean active ) { this.active = active ; }
     }
     
+    private Integer topicId = null ;
     private List<ProblemActivation> problemActivations = null ;
 
     public List<ProblemActivation> getProblemActivations() {
@@ -24,5 +25,13 @@ public class ActivationInput {
     public void setProblemActivations(
             List<ProblemActivation> problemActivations ) {
         this.problemActivations = problemActivations ;
+    }
+
+    public Integer getTopicId() {
+        return topicId ;
+    }
+
+    public void setTopicId( Integer topicId ) {
+        this.topicId = topicId ;
     }
 }
