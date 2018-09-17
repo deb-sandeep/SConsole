@@ -27,8 +27,7 @@ public class Last30DaysHoursTile extends AbstractScreenletTile
     private ProblemAttemptRepository paRepo = null ;
     
     public Last30DaysHoursTile( ScreenletPanel mother ) {
-        
-        super( mother, true ) ;
+        super( mother, false ) ;
         
         paRepo = SConsole.getAppContext()
                          .getBean( ProblemAttemptRepository.class ) ;

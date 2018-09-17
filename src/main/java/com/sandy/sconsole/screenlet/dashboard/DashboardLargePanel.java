@@ -4,6 +4,7 @@ import static com.sandy.sconsole.screenlet.study.StudyScreenlet.* ;
 
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
+import com.sandy.sconsole.screenlet.dashboard.tile.ActiveTopicBurnDashboard ;
 import com.sandy.sconsole.screenlet.dashboard.tile.DateTimeTile ;
 import com.sandy.sconsole.screenlet.dashboard.tile.Last30DaysHoursTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
@@ -19,11 +20,13 @@ public class DashboardLargePanel extends ScreenletLargePanel {
     
     private static final String DAY_GANTT_TILE_PC = "0,0,11,0" ;
     private static final String DATE_TIME_TILE_PC = "0,1,11,4" ;
-    private static final String L30HRS_TILE_PC    = "0,10,11,11" ;
+    private static final String ACT_TOPIC_PC      = "0,5,11,6" ;
     
-    private static final String PHY_L30_TILE_PC  = "0,8,3,9" ;
-    private static final String CHEM_L30_TILE_PC = "4,8,7,9" ;
-    private static final String MATHS_TILE_PC    = "8,8,11,9" ;
+    private static final String PHY_L30_TILE_PC   = "0,7,3,8" ;
+    private static final String CHEM_L30_TILE_PC  = "4,7,7,8" ;
+    private static final String MATHS_TILE_PC     = "8,7,11,8" ;
+    
+    private static final String L30HRS_TILE_PC    = "0,9,11,11" ;
     
     private DateTimeTile dateTimeTile = null ;
     private Last30DaysHoursTile l30HrsTile = null ;
@@ -32,6 +35,8 @@ public class DashboardLargePanel extends ScreenletLargePanel {
     private Last30DaysSubjectHoursTile phyL30DHrsTile  = null ;
     private Last30DaysSubjectHoursTile chemL30DHrsTile = null ;
     private Last30DaysSubjectHoursTile mathL30DHrsTile = null ;
+    
+    private ActiveTopicBurnDashboard topicBurnDashboardTile = null ;
     
     public DashboardLargePanel( Screenlet parent ) {
         super( parent ) ;
@@ -48,27 +53,30 @@ public class DashboardLargePanel extends ScreenletLargePanel {
                                             this, 
                                             IIT_PHYSICS, 
                                             getSubjectColor( IIT_PHYSICS ),
-                                            true ) ;
+                                            true, true ) ;
         chemL30DHrsTile = new Last30DaysSubjectHoursTile( 
                                             this, 
                                             IIT_CHEM, 
                                             getSubjectColor( IIT_CHEM ),
-                                            true ) ;
+                                            true, true ) ;
         mathL30DHrsTile = new Last30DaysSubjectHoursTile( 
                                             this, 
                                             IIT_MATHS, 
                                             getSubjectColor( IIT_MATHS ),
-                                            true ) ;
+                                            true, true ) ;
+        
+        topicBurnDashboardTile = new ActiveTopicBurnDashboard( this ) ;
     }
 
     private void setUpUI() {
         setLayout() ;
-        add( dayGanttTile,    DAY_GANTT_TILE_PC ) ;
-        add( dateTimeTile,    DATE_TIME_TILE_PC ) ;
-        add( l30HrsTile,      L30HRS_TILE_PC    ) ;
-        add( phyL30DHrsTile,  PHY_L30_TILE_PC   ) ;
-        add( chemL30DHrsTile, CHEM_L30_TILE_PC  ) ;
-        add( mathL30DHrsTile, MATHS_TILE_PC     ) ;
+        add( dayGanttTile,           DAY_GANTT_TILE_PC ) ;
+        add( dateTimeTile,           DATE_TIME_TILE_PC ) ;
+        add( topicBurnDashboardTile, ACT_TOPIC_PC      ) ;
+        add( phyL30DHrsTile,         PHY_L30_TILE_PC   ) ;
+        add( chemL30DHrsTile,        CHEM_L30_TILE_PC  ) ;
+        add( mathL30DHrsTile,        MATHS_TILE_PC     ) ;
+        add( l30HrsTile,             L30HRS_TILE_PC    ) ;
     }
 
     private void setLayout() {

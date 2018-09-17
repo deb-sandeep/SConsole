@@ -31,7 +31,7 @@ public class DateTimeTile extends AbstractScreenletTile
     private JLabel dateLabel = new JLabel() ;
     
     public DateTimeTile( ScreenletPanel mother ) {
-        super( mother, true ) ;
+        super( mother, false ) ;
         SConsole.addDayTimerTask( this ) ;
         SConsole.addSecTimerTask( this ) ;
         setUpUI() ;

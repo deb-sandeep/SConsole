@@ -37,14 +37,15 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
         this( mother, 
               mother.getScreenlet().getDisplayName(), 
               Color.decode( "#A24C06" ),
-              false ) ;
+              false, true ) ;
     }
     
     public Last30DaysSubjectHoursTile( ScreenletPanel mother, 
                                        String subjectName,
                                        Color barColor,
-                                       boolean subtle ) {
-        super( mother ) ;
+                                       boolean subtle,
+                                       boolean drawBorder ) {
+        super( mother, drawBorder ) ;
         
         this.subjectName = subjectName ;
         this.barColor = barColor ;
