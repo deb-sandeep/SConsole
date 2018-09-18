@@ -82,10 +82,6 @@ public class BaseControlTileState extends State {
     protected void populateUIBasedOnSessionInfo( SessionInformation si ) {
         
         Session ls = si.session ;
-        
-        log.debug( "Populating last session details" ) ;
-        log.debug( ls ) ;
-        
         SessionType sessionType = ls.getSessionType() ;
         
         log.debug( "Copying values of session type, topic and session time" ) ;

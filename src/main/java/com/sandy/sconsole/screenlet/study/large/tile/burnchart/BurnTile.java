@@ -184,10 +184,6 @@ public class BurnTile extends AbstractScreenletTile {
         throws Exception {
         
         TopicBurnInfo bi = currentBurnInfo ;
-        log.debug( "Plotting burn chart for " + bi.getTopic().getTopicName() ) ;
-        
-        log.debug( "Burn info = " ) ;
-        log.debug( bi ) ;
         
         chart.setNotify( false ) ;
         

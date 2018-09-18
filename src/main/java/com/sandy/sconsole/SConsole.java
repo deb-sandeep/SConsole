@@ -1,15 +1,21 @@
 package com.sandy.sconsole ;
 
 import java.io.File ;
+import java.text.ParseException ;
+import java.text.SimpleDateFormat ;
 import java.util.ArrayList ;
 import java.util.Calendar ;
 import java.util.Date ;
+import java.util.HashMap ;
 import java.util.List ;
+import java.util.Map ;
 import java.util.Timer ;
 import java.util.TimerTask ;
 
 import org.apache.log4j.Logger ;
+import org.jfree.data.time.Day ;
 import org.springframework.beans.BeansException ;
+import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.boot.SpringApplication ;
 import org.springframework.boot.autoconfigure.SpringBootApplication ;
 import org.springframework.context.ApplicationContext ;
@@ -23,21 +29,24 @@ import com.sandy.sconsole.core.frame.SConsoleFrame ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.dao.repository.SessionRepository ;
+import com.sandy.sconsole.dao.repository.SessionRepository.SessionSummary ;
 import com.sandy.sconsole.screenlet.dashboard.DashboardScreenlet ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
 public class SConsole 
-    implements ApplicationContextAware, WebMvcConfigurer {
+    implements ApplicationContextAware, WebMvcConfigurer, DayTickListener {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
     
     public static File SCREENSHOT_DIR = new File( System.getProperty( "user.home" ),
                                                   "projects/workspace/sconsole/capture/screenshot" ) ;
 
-    private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER", true ) ;
-    private static ApplicationContext APP_CTX         = null ;
-    private static SConsole           APP             = null ;
+    private static Timer              SEC_TIMER = new Timer( "SEC_TIMER", true ) ;
+    private static SimpleDateFormat   SDF       = new SimpleDateFormat( "yyyy-MM-dd" ) ;
+    private static ApplicationContext APP_CTX   = null ;
+    private static SConsole           APP       = null ;
     
     private static List<SecondTickListener> secondListeners = new ArrayList<>() ;
     private static List<DayTickListener>    dayListeners    = new ArrayList<>() ;
@@ -109,17 +118,21 @@ public class SConsole
 
     private List<Screenlet> screenlets = new ArrayList<Screenlet>() ;
     private SConsoleFrame   frame      = null ;
-
+    
+    @Autowired
+    private SessionRepository sessionRepo = null ;
+    
+    private Map<Day, List<SessionSummary>> l30SessionSummary = 
+                                    new HashMap<Day, List<SessionSummary>>() ;
     public SConsole() {
         APP = this ;
+        SConsole.addDayTimerTask( this ) ;
     }
 
     public void initialize() {
         registerScreenlets() ;
         this.frame = new SConsoleFrame() ;
-    }
-    
-    public void testJPA() {
+        loadL30DaysSessionSummary() ;
     }
     
     @Override
@@ -152,6 +165,37 @@ public class SConsole
                                        "classpath:/static/img/" ) ;
     }
 
+    @Override
+    public void dayTicked( Calendar instance ) {
+        loadL30DaysSessionSummary() ;
+    }
+    
+    private void loadL30DaysSessionSummary() {
+        try {
+            log.debug( "Loading last 30 days session summary" ) ;
+            
+            l30SessionSummary.clear() ;
+            
+            List<SessionSummary> summaryList = sessionRepo.getLast30DSessionSummary() ;
+            for( SessionSummary ss : summaryList ) {
+                Day day = new Day( SDF.parse( ss.getDate() ) ) ;
+                List<SessionSummary> dayList = l30SessionSummary.get( day ) ;
+                if( dayList == null ) {
+                    dayList = new ArrayList<SessionSummary>() ;
+                    l30SessionSummary.put( day, dayList ) ;
+                }
+                dayList.add( ss ) ;
+            }
+            
+            log.debug( "Publishing L30 session info refresh event." ) ;
+            GLOBAL_EVENT_BUS.publishEvent( EventCatalog.L30_SESSION_INFO_REFRESHED, 
+                                           l30SessionSummary ) ;
+        }
+        catch( ParseException e ) {
+            log.error( "Error loading last 30 days sessions", e ) ;
+        }
+    }
+    
     // --------------------- Main method ---------------------------------------
 
     public static void main( String[] args ) {
@@ -162,4 +206,5 @@ public class SConsole
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
     }
+
 }

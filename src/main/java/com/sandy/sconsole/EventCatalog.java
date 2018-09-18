@@ -1,5 +1,7 @@
 package com.sandy.sconsole;
 
+import java.util.HashMap ;
+
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.Payload ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
@@ -56,4 +58,7 @@ public class EventCatalog {
     public static final int TOPIC_BURN_CALIBRATED = 6001 ;
     
     // --------------- API Generated Events [End] ------------------------------
+    
+    @Payload( type=HashMap.class ) 
+    public static final int L30_SESSION_INFO_REFRESHED = 10001 ;
 }

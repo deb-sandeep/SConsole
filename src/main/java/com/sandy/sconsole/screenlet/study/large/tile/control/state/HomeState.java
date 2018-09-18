@@ -69,7 +69,6 @@ public class HomeState extends BaseControlTileState {
     
     private SessionInformation createAndRenderSessionInfo( Session session ) {
         
-        log.debug( "Populating UI based on session - \n" + session.toString() ) ;
         si.blueprintSession = session ;
         si.session = session.getId() != null ? session.clone() : session ;
         

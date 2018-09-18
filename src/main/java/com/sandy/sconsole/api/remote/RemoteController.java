@@ -47,8 +47,6 @@ public class RemoteController {
     
     public void pushKeyProcessor( KeyProcessor processor ) {
         log.debug( "Pushing key processor - " ) ;
-        log.debug( processor.getDebugState() ) ;
-        
         processors.push( processor ) ;
     }
     

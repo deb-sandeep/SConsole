@@ -45,7 +45,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     private static final String TOPIC_BURN_PC      = "0,2,1,5" ;
     private static final String SESSION_CONTROL_PC = "2,2,7,5" ;
-    private static final String DAY_STAT_PC        = "8,0,9,5" ;
+    private static final String DNA_TILE_PC        = "8,2,9,5" ;
     
     private static final String BURN_PC            = "0,6,4,9" ;
     private static final String THERMOMETER_PC     = "5,6,5,9" ;
@@ -138,7 +138,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private void layoutStatRow( JPanel panel ) {
         panel.add( topicBurnStatTile, TOPIC_BURN_PC ) ;
         panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
-        panel.add( l30DNATile, DAY_STAT_PC ) ;
+        panel.add( l30DNATile, DNA_TILE_PC ) ;
     }
     
     private void layoutBurnAndStatRow( JPanel panel ) {
