@@ -22,7 +22,7 @@ import com.sandy.sconsole.core.util.SecondTickListener ;
 public class DateTimeTile extends AbstractScreenletTile 
     implements DayTickListener, SecondTickListener {
 
-    private static Font TIME_FONT = new Font( "Courier", Font.PLAIN, 200 ) ;
+    private static Font TIME_FONT = new Font( "Courier", Font.PLAIN, 180 ) ;
     private static Font DATE_FONT = new Font( "Courier", Font.PLAIN, 80 ) ;
     
     private static SimpleDateFormat TIME_SDF = new SimpleDateFormat( "HH:mm:ss", Locale.ENGLISH ) ; ;
@@ -54,7 +54,7 @@ public class DateTimeTile extends AbstractScreenletTile
         
         add( timeLabel, BorderLayout.CENTER ) ;
         add( dateLabel, BorderLayout.SOUTH ) ;
-        setBorder( BorderFactory.createEmptyBorder( 40, 50, 50, 50 ) ) ;
+        setBorder( BorderFactory.createEmptyBorder( 0, 40, 40, 40 ) ) ;
     }
 
     @Override
