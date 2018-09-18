@@ -19,10 +19,10 @@ import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DChart.Last30DaysDataProvider ;
 
 @SuppressWarnings( "serial" )
-public class Last30DaysSubjectHoursTile extends AbstractScreenletTile 
+public class L30DaysSubjectHrsTile extends AbstractScreenletTile 
     implements Last30DaysDataProvider, SecondTickListener {
 
-    static final Logger log = Logger.getLogger( Last30DaysSubjectHoursTile.class ) ;
+    static final Logger log = Logger.getLogger( L30DaysSubjectHrsTile.class ) ;
     
     private Last30DChart chart = null ;
     private ChartPanel chartPanel = null ;
@@ -33,14 +33,14 @@ public class Last30DaysSubjectHoursTile extends AbstractScreenletTile
     
     private long lastRefresh = 0 ;
     
-    public Last30DaysSubjectHoursTile( ScreenletPanel mother ) {
+    public L30DaysSubjectHrsTile( ScreenletPanel mother ) {
         this( mother, 
               mother.getScreenlet().getDisplayName(), 
               Color.decode( "#A24C06" ),
               false, true ) ;
     }
     
-    public Last30DaysSubjectHoursTile( ScreenletPanel mother, 
+    public L30DaysSubjectHrsTile( ScreenletPanel mother, 
                                        String subjectName,
                                        Color barColor,
                                        boolean subtle,

@@ -25,4 +25,9 @@ public class HomeController {
     public String burnCalibration() {
         return "burn" ;
     }
+    
+    @RequestMapping( "/screenshot" )
+    public String screenshot() {
+        return "screenshot" ;
+    }
 }

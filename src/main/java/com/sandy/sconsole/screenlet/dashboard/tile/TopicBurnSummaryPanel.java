@@ -89,6 +89,9 @@ public class TopicBurnSummaryPanel extends JPanel {
             int x = (int)( BORDER.left + greenThreshold * gridWidth ) ;
             g.setColor( Color.GREEN.brighter() ) ;
             g.drawRect( x, markerY, markerWidth, markerHeight );
+            
+            // TODO: Draw the relative gap marker - difference between
+            // amber and red thresholds.
         }
         
         private void paintCurrentValue( Graphics2D g ) {

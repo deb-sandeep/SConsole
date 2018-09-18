@@ -28,13 +28,13 @@ public interface LastSessionRepository extends CrudRepository<LastSession, Strin
             + "WHERE "
             + "    s.topic_id = tm.id AND "
             + "    tm.subject_name = :subjectName AND "
-            + "    s.id <> :sessionId "
+            + "    tm.id <> :topicId "
             + "ORDER BY "
             + "    s.start_time desc "
             + "LIMIT 1 "
             , nativeQuery=true )
-    Integer findSessionBefore( @Param("sessionId") Integer sessionId,
-                               @Param("subjectName") String subjectName ) ;
+    Integer findQuickChangeSession( @Param("topicId") Integer topicId,
+                                    @Param("subjectName") String subjectName ) ;
     
     @Query( value = 
                 "SELECT "

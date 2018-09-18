@@ -3,9 +3,9 @@ package com.sandy.sconsole.screenlet.study.large.tile;
 import com.sandy.sconsole.core.screenlet.* ;
 
 @SuppressWarnings( "serial" )
-public class DayStatTile extends AbstractScreenletTile {
+public class L30DNATile extends AbstractScreenletTile {
 
-    public DayStatTile( ScreenletPanel mother ) {
+    public L30DNATile( ScreenletPanel mother ) {
         super( mother ) ;
     }
 }

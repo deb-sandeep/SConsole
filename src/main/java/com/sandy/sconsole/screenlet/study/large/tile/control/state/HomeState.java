@@ -41,20 +41,25 @@ public class HomeState extends BaseControlTileState {
         
         // Note that by default all transitions are deactivated to start with.
         
-        // Every time we transition to the home screen, we populate a fresh
-        // session blank - prepopulated with the details of the last session.
-        // This way, the user can start a new session with the details of the
-        // previous one.
-        
-        Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubjectName() ) ;
-        Session session = null ;
-        if( lsOpt.isPresent() ) {
-            session = lsOpt.get().getSession() ;
+        if( payload == null ) {
+            // Every time we transition to the home screen, we populate a fresh
+            // session blank - prepopulated with the details of the last session.
+            // This way, the user can start a new session with the details of the
+            // previous one.
+            
+            Optional<LastSession> lsOpt = lastSessionRepo.findById( getSubjectName() ) ;
+            Session session = null ;
+            if( lsOpt.isPresent() ) {
+                session = lsOpt.get().getSession() ;
+            }
+            else {
+                session = new Session() ;
+            }
+            createAndRenderSessionInfo( session ) ;
         }
         else {
-            session = new Session() ;
+            createAndRenderSessionInfo( ((SessionInformation )si).session ) ;
         }
-        createAndRenderSessionInfo( session ) ;
         
         log.debug( "Validating session details and activating play button" ) ;
         highlightKeyPanelsAndActivateTransitions() ;
@@ -133,9 +138,9 @@ public class HomeState extends BaseControlTileState {
     private Session getQuickSwitchSession() {
         
         Session session = null ;
-        Integer lastSessionId = lastSessionRepo.findSessionBefore( 
-                                                        this.si.blueprintSession.getId(),
-                                                        getSubjectName() ) ;
+        Integer lastSessionId = lastSessionRepo.findQuickChangeSession( 
+                                  this.si.blueprintSession.getTopic().getId(),
+                                  getSubjectName() ) ;
         if( lastSessionId != null ) {
             session = sessionRepo.findById( lastSessionId ).get() ;
             if( session.getSessionType() == SessionType.EXERCISE ) {

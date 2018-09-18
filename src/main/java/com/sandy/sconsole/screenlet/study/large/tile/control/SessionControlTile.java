@@ -112,7 +112,8 @@ public class SessionControlTile extends SessionControlTileUI
                  .addTransition( Key.FN_A, "Change", changeState ) ;
         
         changeState.addTransition( Key.PLAYPAUSE, playState )
-                   .addTransition( Key.CANCEL, homeState ) ;
+                   .addTransition( Key.CANCEL, homeState )
+                   .addTransition( Key.SELECT, homeState ) ;
         
         playState.addTransition( Key.STOP, homeState ) ;
         

@@ -98,6 +98,13 @@ public class ChangeState extends BaseControlTileState {
         if( nextState.getName().equals( PlayState.NAME ) ) {
             return this.si ;
         }
+        else if( nextState.getName().equals( HomeState.NAME ) && 
+                 key == Key.SELECT ) {
+            // If we are returning to the home state, because the user has
+            // selected the change, we show the control panel populated with 
+            // the changed choices.
+            return this.si ;
+        }
         return null ;
     }
     
@@ -142,7 +149,10 @@ public class ChangeState extends BaseControlTileState {
         enableTransition( Key.CANCEL ) ;
         tile.setBtn2UI( Btn2Type.CANCEL ) ;
         
-        // 4. Play transition
+        // 4. Select transition
+        enableTransition( Key.SELECT ) ;
+        
+        // 5. Play transition
         super.processPlayReadiness( si ) ;
     }
 
@@ -203,6 +213,7 @@ public class ChangeState extends BaseControlTileState {
         
         if( topic != null ) {
             si.session.setTopic( topic ) ;
+            //TODO: Intelligently fill the book and problems
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;

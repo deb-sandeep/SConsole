@@ -1,6 +1,9 @@
 package com.sandy.sconsole.screenlet.study.large;
 
-import java.awt.* ;
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Component ;
+import java.awt.GridLayout ;
 
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
@@ -12,21 +15,26 @@ import org.apache.log4j.Logger ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
-import com.sandy.sconsole.screenlet.study.large.tile.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.DayBurnUpdateTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.L30DNATile ;
+import com.sandy.sconsole.screenlet.study.large.tile.TimeTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.TitleTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysNumQTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysSubjectHoursTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.L30DaysNumQTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.L30DaysSubjectHrsTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStatTile ;
 
 import info.clearthought.layout.TableLayout ;
 
+//TODO: Implement DNA tile
 @SuppressWarnings( "serial" )
 public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
-    private static final Logger log = Logger.getLogger( StudyScreenletLargePanel.class ) ;
+    static final Logger log = Logger.getLogger( StudyScreenletLargePanel.class ) ;
 
     // PC stands for Panel Constraints
     private static final String TIME_PC            = "0,0,2,0" ;
@@ -40,22 +48,22 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private static final String DAY_STAT_PC        = "8,0,9,5" ;
     
     private static final String BURN_PC            = "0,6,4,9" ;
-    private static final String DAY_BURN_UPDATE_PC = "5,6,5,9" ;
+    private static final String THERMOMETER_PC     = "5,6,5,9" ;
     private static final String LAST_30D_PC        = "6,6,9,9" ;
     
     private TableLayout centerPanelLayout = null ;
     
-    private TimeTile             timeTile             = null ;
-    private TitleTile            titleTile            = null ;
-    private DateTile             dateTile             = null ;
-    private DayGanttTile         dayGanttTile         = null ;
-    private TopicBurnStatTile    topicBurnStatTile    = null ;
-    private SessionControlTile   sessionControlTile   = null ;
-    private DayStatTile          dayStatTile          = null ;
-    private BurnTile             burnTile             = null ;
-    private DayBurnUpdateTile    dayBurnUpdateTile    = null ;
-    private Last30DaysNumQTile   last30DaysNumQTile   = null ;
-    private Last30DaysSubjectHoursTile  last30DaysHoursTile  = null ;
+    private TimeTile              timeTile            = null ;
+    private TitleTile             titleTile           = null ;
+    private DateTile              dateTile            = null ;
+    private DayGanttTile          dayGanttTile        = null ;
+    private TopicBurnStatTile     topicBurnStatTile   = null ;
+    private SessionControlTile    sessionControlTile  = null ;
+    private L30DNATile            l30DNATile          = null ;
+    private BurnTile              burnTile            = null ;
+    private DayBurnUpdateTile     thermometerTile     = null ;
+    private L30DaysNumQTile       l30DaysNumQTile     = null ;
+    private L30DaysSubjectHrsTile l30DaysHoursTile    = null ;
     
     private JLabel messageLabel = null ;
     
@@ -67,21 +75,21 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     }
     
     private void initializeTiles() {
-        timeTile             = new TimeTile( this ) ;
-        titleTile            = new TitleTile( this ) ;
-        dateTile             = new DateTile( this ) ;
-        dayGanttTile         = new DayGanttTile( this ) ;
-        topicBurnStatTile    = new TopicBurnStatTile( this ) ;
-        sessionControlTile   = new SessionControlTile( this ) ;
-        dayStatTile          = new DayStatTile( this ) ;
-        burnTile             = new BurnTile( this ) ;
-        dayBurnUpdateTile    = new DayBurnUpdateTile( this ) ;
-        last30DaysNumQTile   = new Last30DaysNumQTile( this ) ;
-        last30DaysHoursTile  = new Last30DaysSubjectHoursTile( this ) ;
+        timeTile           = new TimeTile( this ) ;
+        titleTile          = new TitleTile( this ) ;
+        dateTile           = new DateTile( this ) ;
+        dayGanttTile       = new DayGanttTile( this ) ;
+        topicBurnStatTile  = new TopicBurnStatTile( this ) ;
+        sessionControlTile = new SessionControlTile( this ) ;
+        l30DNATile         = new L30DNATile( this ) ;
+        burnTile           = new BurnTile( this ) ;
+        thermometerTile    = new DayBurnUpdateTile( this ) ;
+        l30DaysNumQTile    = new L30DaysNumQTile( this ) ;
+        l30DaysHoursTile   = new L30DaysSubjectHrsTile( this ) ;
     }
     
     private void initializeMessageLabel() {
-        messageLabel = new JLabel( "This is a test message." ) ;
+        messageLabel = new JLabel() ;
         messageLabel.setOpaque( true ) ;
         messageLabel.setBackground( Color.YELLOW ) ; 
         messageLabel.setFont( UIConstant.BASE_FONT.deriveFont( 20F ) ) ;
@@ -130,12 +138,12 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private void layoutStatRow( JPanel panel ) {
         panel.add( topicBurnStatTile, TOPIC_BURN_PC ) ;
         panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
-        panel.add( dayStatTile, DAY_STAT_PC ) ;
+        panel.add( l30DNATile, DAY_STAT_PC ) ;
     }
     
     private void layoutBurnAndStatRow( JPanel panel ) {
         panel.add( burnTile, BURN_PC ) ;
-        panel.add( dayBurnUpdateTile, DAY_BURN_UPDATE_PC ) ;
+        panel.add( thermometerTile, THERMOMETER_PC ) ;
         panel.add( getLast30DaysPanel(), LAST_30D_PC ) ;
     }
     
@@ -143,8 +151,8 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         
         JPanel panel = new JPanel() ;
         panel.setLayout( new GridLayout( 2, 1 ) ) ;
-        panel.add( last30DaysNumQTile ) ;
-        panel.add( last30DaysHoursTile ) ;
+        panel.add( l30DaysNumQTile ) ;
+        panel.add( l30DaysHoursTile ) ;
         return panel ;
     }
     
@@ -153,7 +161,6 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     }
     
     public void showMessage( String msg ) {
-        log.debug( "Feature commented out. Message = " + msg ) ;
         BorderLayout borderLayout = ( BorderLayout )getLayout() ;
         Component comp = borderLayout.getLayoutComponent( BorderLayout.SOUTH ) ;
         if( comp == null ) {

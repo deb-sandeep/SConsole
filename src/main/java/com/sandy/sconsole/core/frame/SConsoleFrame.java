@@ -1,14 +1,26 @@
 package com.sandy.sconsole.core.frame;
 
-import java.awt.* ;
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Container ;
+import java.awt.Cursor ;
+import java.awt.Point ;
+import java.awt.Toolkit ;
 import java.awt.image.BufferedImage ;
+import java.io.File ;
+import java.io.IOException ;
+import java.lang.reflect.InvocationTargetException ;
 import java.text.SimpleDateFormat ;
+import java.util.Date ;
 
+import javax.imageio.ImageIO ;
 import javax.swing.JFrame ;
+import javax.swing.SwingUtilities ;
 
 import org.apache.log4j.Logger ;
 
 import com.sandy.common.ui.SwingUtils ;
+import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 
@@ -50,8 +62,10 @@ public class SConsoleFrame extends JFrame {
         
         contentPane.add( screenletPanel, BorderLayout.WEST ) ;
         
-        if( SwingUtils.getScreenWidth() > 1920 ) {
-            this.setBounds( 0, 0, 1920, 1080 ) ;
+        if( SwingUtils.getScreenWidth() >= 1920 ) {
+            int height = SwingUtils.getScreenHeight() >= 1080 ? 
+                                   1080 : SwingUtils.getScreenHeight() ;
+            this.setBounds( 0, 0, 1920, height ) ;
         }
         else {
             SwingUtils.setMaximized( this ) ;
@@ -124,13 +138,12 @@ public class SConsoleFrame extends JFrame {
         contentPane.repaint() ;
     }
     
-    public void takeScreenshot( SessionInformation si ) {
+    public String captureScreenshot( SessionInformation si ) 
+        throws InterruptedException, InvocationTargetException {
         
-        // For now the functionality is switched off. Raspberry hangs the UI
-        // when taking a screenshot. Performance problems. Will revisit this 
-        // at a later point.
-        /**
-        SwingUtilities.invokeLater( new Runnable() {
+        File file = getImgSaveFile( si ) ;
+        
+        SwingUtilities.invokeAndWait( new Runnable() {
             @Override
             public void run() {
                 BufferedImage img = new BufferedImage( getWidth(), 
@@ -138,7 +151,6 @@ public class SConsoleFrame extends JFrame {
                                                         BufferedImage.TYPE_INT_RGB ) ;
                 paint( img.getGraphics() ) ;
                     
-                File file = getImgSaveFile( si ) ;
                 try {
                     ImageIO.write( img, "png", file ) ;
                 }
@@ -148,26 +160,27 @@ public class SConsoleFrame extends JFrame {
                 }
             }
         } ) ;
-        */
+        
+        return file.getName() ;
     }
     
-    /**
     private File getImgSaveFile( SessionInformation si ) {
         
-        StringBuffer fileName = new StringBuffer() ;
-        fileName.append( SDF.format( new Date() ) )
-                .append( "_" )
-                .append( si.session.getTopic().getSubject().getName() )
-                .append( "_" )
-                .append( si.session.getSessionType() )
-                .append( "_" )
-                .append( si.session.getTopic().getTopicName() )
-                .append( ".png" ) ;
+        StringBuffer fileName = new StringBuffer( "screenshot_" ) ;
+        fileName.append( SDF.format( new Date() ) ) ;
         
-        File dir = new File( System.getProperty( "user.home" ),
-                             "projects/workspace/sconsole/capture/session" ) ;
-        File file = new File( dir, fileName.toString() ) ;
+        if( si != null ) {
+            fileName.append( "_" )
+                    .append( si.session.getTopic().getSubject().getName() )
+                    .append( "_" )
+                    .append( si.session.getSessionType() )
+                    .append( "_" )
+                    .append( si.session.getTopic().getTopicName() ) ;
+        }
+        
+        fileName.append( ".png" ) ;
+        
+        File file = new File( SConsole.SCREENSHOT_DIR, fileName.toString() ) ;
         return file ;
     }
-    */
 }

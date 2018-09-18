@@ -8,6 +8,7 @@ import java.util.Calendar ;
 import java.util.Date ;
 import java.util.Locale ;
 
+import javax.swing.BorderFactory ;
 import javax.swing.JLabel ;
 import javax.swing.SwingConstants ;
 
@@ -21,7 +22,7 @@ import com.sandy.sconsole.core.util.SecondTickListener ;
 public class DateTimeTile extends AbstractScreenletTile 
     implements DayTickListener, SecondTickListener {
 
-    private static Font TIME_FONT = new Font( "Courier", Font.PLAIN, 250 ) ;
+    private static Font TIME_FONT = new Font( "Courier", Font.PLAIN, 200 ) ;
     private static Font DATE_FONT = new Font( "Courier", Font.PLAIN, 80 ) ;
     
     private static SimpleDateFormat TIME_SDF = new SimpleDateFormat( "HH:mm:ss", Locale.ENGLISH ) ; ;
@@ -53,6 +54,7 @@ public class DateTimeTile extends AbstractScreenletTile
         
         add( timeLabel, BorderLayout.CENTER ) ;
         add( dateLabel, BorderLayout.SOUTH ) ;
+        setBorder( BorderFactory.createEmptyBorder( 40, 50, 50, 50 ) ) ;
     }
 
     @Override

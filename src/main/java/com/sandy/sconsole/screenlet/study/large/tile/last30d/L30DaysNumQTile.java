@@ -17,7 +17,7 @@ import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DChart.Last30DaysDataProvider ;
 
 @SuppressWarnings( "serial" )
-public class Last30DaysNumQTile extends AbstractScreenletTile 
+public class L30DaysNumQTile extends AbstractScreenletTile 
     implements Last30DaysDataProvider {
 
     private Last30DChart chart = null ;
@@ -26,7 +26,7 @@ public class Last30DaysNumQTile extends AbstractScreenletTile
     
     private Topic currentTopic = null ;
     
-    public Last30DaysNumQTile( ScreenletPanel mother ) {
+    public L30DaysNumQTile( ScreenletPanel mother ) {
         super( mother ) ;
         
         paRepo = SConsole.getAppContext()

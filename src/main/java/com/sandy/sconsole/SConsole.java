@@ -1,6 +1,12 @@
 package com.sandy.sconsole ;
 
-import java.util.* ;
+import java.io.File ;
+import java.util.ArrayList ;
+import java.util.Calendar ;
+import java.util.Date ;
+import java.util.List ;
+import java.util.Timer ;
+import java.util.TimerTask ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.beans.BeansException ;
@@ -8,6 +14,8 @@ import org.springframework.boot.SpringApplication ;
 import org.springframework.boot.autoconfigure.SpringBootApplication ;
 import org.springframework.context.ApplicationContext ;
 import org.springframework.context.ApplicationContextAware ;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry ;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer ;
 
 import com.sandy.common.bus.EventBus ;
 import com.sandy.sconsole.core.SConsoleConfig ;
@@ -19,9 +27,13 @@ import com.sandy.sconsole.screenlet.dashboard.DashboardScreenlet ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
-public class SConsole implements ApplicationContextAware {
+public class SConsole 
+    implements ApplicationContextAware, WebMvcConfigurer {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
+    
+    public static File SCREENSHOT_DIR = new File( System.getProperty( "user.home" ),
+                                                  "projects/workspace/sconsole/capture/screenshot" ) ;
 
     private static Timer              SEC_TIMER       = new Timer( "SEC_TIMER", true ) ;
     private static ApplicationContext APP_CTX         = null ;
@@ -133,6 +145,13 @@ public class SConsole implements ApplicationContextAware {
         return this.frame ;
     }
     
+    @Override
+    public void addResourceHandlers( ResourceHandlerRegistry registry ) {
+        registry.addResourceHandler("/screenshot/**")
+                .addResourceLocations( "file:" + SCREENSHOT_DIR.getAbsolutePath() + "/",
+                                       "classpath:/static/img/" ) ;
+    }
+
     // --------------------- Main method ---------------------------------------
 
     public static void main( String[] args ) {

@@ -8,7 +8,7 @@ import com.sandy.sconsole.screenlet.dashboard.tile.ActiveTopicBurnDashboard ;
 import com.sandy.sconsole.screenlet.dashboard.tile.DateTimeTile ;
 import com.sandy.sconsole.screenlet.dashboard.tile.Last30DaysHoursTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.last30d.Last30DaysSubjectHoursTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.last30d.L30DaysSubjectHrsTile ;
 
 import info.clearthought.layout.TableLayout ;
 
@@ -32,9 +32,9 @@ public class DashboardLargePanel extends ScreenletLargePanel {
     private Last30DaysHoursTile l30HrsTile = null ;
     private DayGanttTile dayGanttTile = null ;
     
-    private Last30DaysSubjectHoursTile phyL30DHrsTile  = null ;
-    private Last30DaysSubjectHoursTile chemL30DHrsTile = null ;
-    private Last30DaysSubjectHoursTile mathL30DHrsTile = null ;
+    private L30DaysSubjectHrsTile phyL30DHrsTile  = null ;
+    private L30DaysSubjectHrsTile chemL30DHrsTile = null ;
+    private L30DaysSubjectHrsTile mathL30DHrsTile = null ;
     
     private ActiveTopicBurnDashboard topicBurnDashboardTile = null ;
     
@@ -49,17 +49,17 @@ public class DashboardLargePanel extends ScreenletLargePanel {
         l30HrsTile = new Last30DaysHoursTile( this ) ;
         dayGanttTile = new DayGanttTile( this ) ;
         
-        phyL30DHrsTile = new Last30DaysSubjectHoursTile( 
+        phyL30DHrsTile = new L30DaysSubjectHrsTile( 
                                             this, 
                                             IIT_PHYSICS, 
                                             getSubjectColor( IIT_PHYSICS ),
                                             true, true ) ;
-        chemL30DHrsTile = new Last30DaysSubjectHoursTile( 
+        chemL30DHrsTile = new L30DaysSubjectHrsTile( 
                                             this, 
                                             IIT_CHEM, 
                                             getSubjectColor( IIT_CHEM ),
                                             true, true ) ;
-        mathL30DHrsTile = new Last30DaysSubjectHoursTile( 
+        mathL30DHrsTile = new L30DaysSubjectHrsTile( 
                                             this, 
                                             IIT_MATHS, 
                                             getSubjectColor( IIT_MATHS ),
