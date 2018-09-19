@@ -30,7 +30,6 @@ import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStat
 
 import info.clearthought.layout.TableLayout ;
 
-//TODO: Implement DNA tile
 @SuppressWarnings( "serial" )
 public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
