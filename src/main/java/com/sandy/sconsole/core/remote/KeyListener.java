@@ -2,22 +2,22 @@ package com.sandy.sconsole.core.remote;
 
 public interface KeyListener {
 
-    public void handleLeftNavKey() ;
-    public void handleRightNavKey() ;
-    public void handleUpNavKey() ;
-    public void handleDownNavKey() ;
-    public void handleSelectNavKey() ;
-    public void handleCancelNavKey() ;
+    default public void handleLeftNavKey() {} ;
+    default public void handleRightNavKey() {} ;
+    default public void handleUpNavKey() {} ;
+    default public void handleDownNavKey() {} ;
+    default public void handleSelectNavKey() {} ;
+    default public void handleCancelNavKey() {} ;
     
-    public void handlePlayPauseResumeKey() ;
-    public void handleStopKey() ;
+    default public void handlePlayPauseResumeKey() {} ;
+    default public void handleStopKey() {} ;
     
-    public void handleFnAKey() ;
-    public void handleFnBKey() ;
-    public void handleFnCKey() ;
-    public void handleFnDKey() ;
-    public void handleFnEKey() ;
-    public void handleFnFKey() ;
-    public void handleFnGKey() ;
-    public void handleFnHKey() ;    
+    default public void handleFnAKey() {} ;
+    default public void handleFnBKey() {} ;
+    default public void handleFnCKey() {} ;
+    default public void handleFnDKey() {} ;
+    default public void handleFnEKey() {} ;
+    default public void handleFnFKey() {} ;
+    default public void handleFnGKey() {} ;
+    default public void handleFnHKey() {} ;  
 }

@@ -32,6 +32,7 @@ import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository.SessionSummary ;
 import com.sandy.sconsole.screenlet.dashboard.DashboardScreenlet ;
+import com.sandy.sconsole.screenlet.fragmentation.FragmentationScreenlet ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
@@ -148,6 +149,7 @@ public class SConsole
         screenlets.add( new StudyScreenlet( "IIT - Physics" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Chemistry" ).initialize() ) ;
         screenlets.add( new StudyScreenlet( "IIT - Maths" ).initialize() ) ;
+        screenlets.add( new FragmentationScreenlet().initialize() ) ;
     }
 
     public List<Screenlet> getScreenlets() {

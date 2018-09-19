@@ -17,7 +17,7 @@ import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.DayBurnUpdateTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.L30DNATile ;
+import com.sandy.sconsole.screenlet.study.large.tile.FragmentationTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TimeTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TitleTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.burnchart.BurnTile ;
@@ -45,7 +45,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     private static final String TOPIC_BURN_PC      = "0,2,1,5" ;
     private static final String SESSION_CONTROL_PC = "2,2,7,5" ;
-    private static final String DNA_TILE_PC        = "8,2,9,5" ;
+    private static final String FRAG_TILE_PC       = "8,2,9,5" ;
     
     private static final String BURN_PC            = "0,6,4,9" ;
     private static final String THERMOMETER_PC     = "5,6,5,9" ;
@@ -59,7 +59,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private DayGanttTile          dayGanttTile        = null ;
     private TopicBurnStatTile     topicBurnStatTile   = null ;
     private SessionControlTile    sessionControlTile  = null ;
-    private L30DNATile            l30DNATile          = null ;
+    private FragmentationTile     fragTile            = null ;
     private BurnTile              burnTile            = null ;
     private DayBurnUpdateTile     thermometerTile     = null ;
     private L30DaysNumQTile       l30DaysNumQTile     = null ;
@@ -81,7 +81,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         dayGanttTile       = new DayGanttTile( this ) ;
         topicBurnStatTile  = new TopicBurnStatTile( this ) ;
         sessionControlTile = new SessionControlTile( this ) ;
-        l30DNATile         = new L30DNATile( this ) ;
+        fragTile           = new FragmentationTile( this ) ;
         burnTile           = new BurnTile( this ) ;
         thermometerTile    = new DayBurnUpdateTile( this ) ;
         l30DaysNumQTile    = new L30DaysNumQTile( this ) ;
@@ -138,7 +138,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private void layoutStatRow( JPanel panel ) {
         panel.add( topicBurnStatTile, TOPIC_BURN_PC ) ;
         panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
-        panel.add( l30DNATile, DNA_TILE_PC ) ;
+        panel.add( fragTile, FRAG_TILE_PC ) ;
     }
     
     private void layoutBurnAndStatRow( JPanel panel ) {

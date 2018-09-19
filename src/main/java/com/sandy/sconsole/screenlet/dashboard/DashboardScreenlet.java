@@ -3,6 +3,7 @@ package com.sandy.sconsole.screenlet.dashboard;
 import javax.swing.* ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.remote.KeyEvent ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.* ;
@@ -18,8 +19,14 @@ public class DashboardScreenlet extends AbstractScreenlet {
     public DashboardScreenlet() {
         super( "DayTime" ) ;
         controller = SConsole.getAppContext().getBean( RemoteController.class ) ;
-        keyProcessor = new DemuxKeyProcessor( "Dashboard", new KeyListenerAdapter() ) ;
+        keyProcessor = new DemuxKeyProcessor( "Dashboard", new KeyListener() {
+            @Override
+            public void handleFnAKey() {
+                switchToFragmentationScreenlet() ;
+            }
+        }) ;
         keyProcessor.disableAllKeys() ;
+        keyProcessor.enableKey( Key.FN_A, "Frag" ) ;
     }
     
     @Override
@@ -50,5 +57,12 @@ public class DashboardScreenlet extends AbstractScreenlet {
     public void isBeingMinimized() {
         super.isBeingMinimized() ;
         controller.popKeyProcessor() ;
+    }
+    
+    private void switchToFragmentationScreenlet() {
+        KeyEvent event = new KeyEvent() ;
+        event.setBtnType( "ScreenletSelection" ) ; 
+        event.setBtnCode( "5" ) ;
+        controller.buttonPressed( event ) ;
     }
 }
