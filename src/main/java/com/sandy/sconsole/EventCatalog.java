@@ -57,6 +57,9 @@ public class EventCatalog {
     @Payload( type=TopicBurnInfo.class )
     public static final int TOPIC_BURN_CALIBRATED = 6001 ;
     
+    @Payload( type=Session.class ) 
+    public static final int OFFLINE_SESSION_ADDED = 6002 ;
+    
     // --------------- API Generated Events [End] ------------------------------
     
     @Payload( type=HashMap.class ) 

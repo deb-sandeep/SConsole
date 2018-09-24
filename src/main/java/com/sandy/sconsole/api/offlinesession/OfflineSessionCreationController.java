@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.* ;
 
+import com.sandy.sconsole.EventCatalog ;
+import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.offlinesession.SessionCreationRequest.ProblemOutcome ;
 import com.sandy.sconsole.dao.entity.LastSession ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
@@ -225,6 +227,9 @@ public class OfflineSessionCreationController {
         log.debug( session.toString() ) ;
         
         sessionRepo.save( session ) ;
+        
+        SConsole.GLOBAL_EVENT_BUS
+                .publishEvent( EventCatalog.OFFLINE_SESSION_ADDED, session ) ;
     }
     
     private void updateLastSession( Session session, SessionCreationRequest input ) {

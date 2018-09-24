@@ -1,10 +1,22 @@
 package com.sandy.sconsole.dao.entity;
 
-import java.sql.* ;
+import java.sql.Timestamp ;
+import java.util.Date ;
 
-import javax.persistence.* ;
+import javax.persistence.Convert ;
+import javax.persistence.Entity ;
+import javax.persistence.GeneratedValue ;
+import javax.persistence.GenerationType ;
+import javax.persistence.Id ;
+import javax.persistence.JoinColumn ;
+import javax.persistence.ManyToOne ;
+import javax.persistence.Table ;
 
-import com.sandy.sconsole.dao.entity.master.* ;
+import org.jfree.data.time.Day ;
+
+import com.sandy.sconsole.dao.entity.master.Book ;
+import com.sandy.sconsole.dao.entity.master.Problem ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 
 @Entity
 @Table( name = "session" )
@@ -143,6 +155,48 @@ public class Session {
     public int incrementNumRedo() { return ++numRedo; }
     public int incrementNumPigeon() { return ++numPigeon; }
     public int incrementNumIgnored() { return ++numIgnored; }
+    
+    public boolean executedToday() {
+        
+        Day today = new Day( new Date() ) ;
+        
+        long firstMil = today.getFirstMillisecond() ;
+        long lastMil = today.getLastMillisecond() ;
+        
+        long sStart = startTime.getTime() ;
+        long sEnd   = endTime.getTime() ;
+        
+        if( ( sEnd < firstMil ) || ( sStart > lastMil ) ) {
+            return false ;
+        }
+        return true ;
+    }
+    
+    public Timestamp getTodayStartTime() {
+        if( !executedToday() ) { return null ; }
+        
+        Day today = new Day( new Date() ) ;
+        long firstMil = today.getFirstMillisecond() ;
+        long sStart = startTime.getTime() ;
+
+        if( sStart < firstMil ) {
+            return new Timestamp( firstMil ) ;
+        }
+        return startTime ;
+    }
+    
+    public Timestamp getTodayEndTime() {
+        if( !executedToday() ) { return null ; }
+        
+        Day today = new Day( new Date() ) ;
+        long lastMil = today.getLastMillisecond() ;
+        long sEnd = endTime.getTime() ;
+        
+        if( sEnd > lastMil ) {
+            return new Timestamp( lastMil ) ;
+        }
+        return endTime ;
+    }
     
     public Session clone() {
         Session clone = new Session() ;

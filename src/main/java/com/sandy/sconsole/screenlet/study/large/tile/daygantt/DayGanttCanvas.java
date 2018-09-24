@@ -1,6 +1,13 @@
 package com.sandy.sconsole.screenlet.study.large.tile.daygantt;
 
-import java.awt.* ;
+import java.awt.Color ;
+import java.awt.Dimension ;
+import java.awt.Font ;
+import java.awt.FontMetrics ;
+import java.awt.Graphics ;
+import java.awt.Graphics2D ;
+import java.awt.Insets ;
+import java.awt.Rectangle ;
 import java.awt.image.BufferedImage ;
 import java.io.File ;
 import java.io.IOException ;
@@ -68,7 +75,8 @@ public class DayGanttCanvas extends JPanel
         SConsole.GLOBAL_EVENT_BUS
                 .addSubscriberForEventTypes( this, true, 
                                              EventCatalog.SESSION_STARTED,
-                                             EventCatalog.SESSION_PLAY_HEARTBEAT ) ;
+                                             EventCatalog.SESSION_PLAY_HEARTBEAT,
+                                             EventCatalog.OFFLINE_SESSION_ADDED ) ;
     }
     
     private void createStartOfDayDate() {
@@ -149,16 +157,16 @@ public class DayGanttCanvas extends JPanel
         int secsSinceStartOfDay = 0 ;
         int sessionDuration = 0 ;
         
-        long startTime = s.getStartTime().getTime() ;
+        long startTime = s.getTodayStartTime().getTime() ;
         if( startTime < startOfDay.getTime() ) {
             // This implies that the session started late yesterday and the clock 
             // has rolled over.
             secsSinceStartOfDay = 0 ;
-            sessionDuration = (int)((s.getEndTime().getTime() - startOfDay.getTime())/1000) ;
+            sessionDuration = (int)((s.getTodayEndTime().getTime() - startOfDay.getTime())/1000) ;
         }
         else {
-            secsSinceStartOfDay = (int)((s.getStartTime().getTime() - startOfDay.getTime())/1000) ;
-            sessionDuration = (int)((s.getEndTime().getTime() - s.getStartTime().getTime())/1000) ;
+            secsSinceStartOfDay = (int)((s.getTodayStartTime().getTime() - startOfDay.getTime())/1000) ;
+            sessionDuration = (int)((s.getTodayEndTime().getTime() - s.getStartTime().getTime())/1000) ;
         }
         
         int x1 = chartArea.x + (int)(secsSinceStartOfDay * numPixelsPerSecond) ;
@@ -178,13 +186,15 @@ public class DayGanttCanvas extends JPanel
     @Override
     public void handleEvent( Event event ) {
         
+        
         switch( event.getEventType() ) {
+            
             case EventCatalog.SESSION_STARTED :
             case EventCatalog.SESSION_ENDED :
-                Session s = ( Session )event.getValue() ;
+                Session s1 = ( Session )event.getValue() ;
                 synchronized( this ) {
-                    if( !todaySessions.contains( s ) ) {
-                        todaySessions.add( s ) ;
+                    if( !todaySessions.contains( s1 ) ) {
+                        todaySessions.add( s1 ) ;
                     }
                 }
                 repaint() ;
@@ -192,15 +202,26 @@ public class DayGanttCanvas extends JPanel
                 
             case EventCatalog.SESSION_PLAY_HEARTBEAT :
                 totalTimeInSec++ ;
-                
                 SwingUtilities.invokeLater( new Runnable() {
                     @Override
                     public void run() {
-                        Session s = ( Session )event.getValue() ;
-                        paintSession( s, (Graphics2D)getGraphics() ) ;
+                        Session s2 = ( Session )event.getValue() ;
+                        paintSession( s2, (Graphics2D)getGraphics() ) ;
                         refreshTotalTime( (Graphics2D)getGraphics() ) ;
                     }
                 } );
+                break ;
+                
+            case EventCatalog.OFFLINE_SESSION_ADDED :
+                Session s3 = ( Session )event.getValue() ;
+                if( s3.executedToday() ) {
+                    synchronized( this ) {
+                        if( !todaySessions.contains( s3 ) ) {
+                            todaySessions.add( s3 ) ;
+                        }
+                    }
+                    repaint() ;
+                }
                 break ;
         }
     }
