@@ -1,5 +1,21 @@
 Pending log
 --------------------------------------------------------------------------------
+* Intelligent population of book and problem when Topic changes
+
+* Synchronize thermometer logic on study screenlet with that of dashboard
+
+* % remaining marker / progress bar on the topic burn summary in the 
+  dashboard.
+
+* Overflowing sessions - sessions which span beyond the 23:59:59 boundary
+  should be reflected in fragmentation and day burn charts
+  
+* A separate screenlet which should show the problem landscape of the
+  given topic. Which problems are activated, solved, redo ed etc
+  
+* A web UI for burn completion readjustment. Should take care of streams
+  and cascading changes
+
 
 Completed log
 --------------------------------------------------------------------------------
@@ -29,5 +45,11 @@ Completed log
    
 1. Problem needs to be forwarded on skip, solved, redo and pigeon
 
-3. 
+24th Sep 2018
+* There should be no lap time counter in self study and lecture session types
+
+* Paint axis on both sides of L30 time dashboard chart to make reading 
+  of bar values easier
+  
+
 

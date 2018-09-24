@@ -90,6 +90,7 @@ public class PlayState extends BaseControlTileState
         runTime = 0 ;
         pauseTime = 0 ;
         lapTime = 0 ;
+        problemAttempt = null ;
     }
 
     @Override
@@ -395,6 +396,7 @@ public class PlayState extends BaseControlTileState
         if( tile.getScreenlet().getRunState() == RunState.RUNNING ) {
             runTime++ ;
             tile.updateSessionTimeLabel( runTime ) ;
+            
             if( problemAttempt != null ) {
                 lapTime++ ;
                 tile.updateLapTimeLabel( lapTime ) ;

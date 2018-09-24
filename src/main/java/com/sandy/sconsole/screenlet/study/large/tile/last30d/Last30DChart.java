@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities ;
 import org.apache.log4j.Logger ;
 import org.jfree.chart.ChartFactory ;
 import org.jfree.chart.JFreeChart ;
+import org.jfree.chart.axis.AxisLocation ;
 import org.jfree.chart.axis.ValueAxis ;
 import org.jfree.chart.plot.XYPlot ;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter ;
@@ -123,6 +124,9 @@ public class Last30DChart
         
         configurePlotAxes( plot.getDomainAxis() ) ;
         configurePlotAxes( plot.getRangeAxis() ) ;
+        
+        plot.setRangeAxisLocation( AxisLocation.TOP_OR_RIGHT ) ;
+        
         configureValSeriesRenderer() ;
         configureMAVSeriesRenderer() ;
     }
