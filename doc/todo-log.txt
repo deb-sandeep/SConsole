@@ -1,7 +1,5 @@
 Pending log
 --------------------------------------------------------------------------------
-* Intelligent population of book and problem when Topic changes
-
 * Synchronize thermometer logic on study screenlet with that of dashboard
 
 * % remaining marker / progress bar on the topic burn summary in the 
@@ -51,5 +49,7 @@ Completed log
 * Paint axis on both sides of L30 time dashboard chart to make reading 
   of bar values easier
   
+* Intelligent population of book and problem when Topic changes
+
 
 

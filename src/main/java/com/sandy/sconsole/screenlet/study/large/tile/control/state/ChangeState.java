@@ -213,7 +213,16 @@ public class ChangeState extends BaseControlTileState {
         
         if( topic != null ) {
             si.session.setTopic( topic ) ;
-            //TODO: Intelligently fill the book and problems
+            if( si.session.getSessionType() == SessionType.EXERCISE ) {
+                // Get a list of books which has problems for the topic chosen
+                List<Integer> bookIds = bookRepo.findProblemBooksForTopic( topic.getId() ) ;
+                
+                // Pick the first book and fetch problems for that book
+                if( !bookIds.isEmpty() ) {
+                    si.session.setBook( bookRepo.findById( bookIds.get( 0 ) ).get() ) ;
+                    super.populateProblem( si ) ;
+                }
+            }
         }
         super.populateUIBasedOnSessionInfo( si ) ;
         highlightKeyPanelsAndActivateTransitions() ;
