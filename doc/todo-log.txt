@@ -1,10 +1,19 @@
 Pending log
 --------------------------------------------------------------------------------
-* If an offline session for today is added, it should reflect on the 
-  console real time.
+* Offline session adding should refresh the 
+    - burn chart for the study screenlet if the topic is currently being displayed
+    - L30 days chart
+    - Fragmentation chart
   
 * Overflowing sessions - sessions which span beyond the 23:59:59 boundary
   should be reflected in fragmentation and day burn charts
+  
+    - While scooping todays sessions, logic needs to be changed to pick up
+      overflow sessions on both ends
+      
+    - L30 charts now need to start accounting for overflow sessions in both
+      days
+      
   
 * A web UI for burn completion readjustment. Should take care of streams
   and cascading changes
@@ -53,5 +62,6 @@ Completed log
 * % remaining marker / progress bar on the topic burn summary in the 
   dashboard.
 
-
+* If an offline session for today is added, it should reflect on the 
+  console real time.
 
