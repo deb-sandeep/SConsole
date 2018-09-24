@@ -2,6 +2,7 @@ package com.sandy.sconsole.screenlet.dashboard.tile;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
+import java.awt.Dimension ;
 import java.awt.Font ;
 import java.awt.Graphics ;
 import java.awt.Graphics2D ;
@@ -22,6 +23,39 @@ import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 public class TopicBurnSummaryPanel extends JPanel {
 
     private static final Font TITLE_FONT = UIConstant.BASE_FONT.deriveFont( 22F ) ;
+    
+    private class PctCompletionCanvas extends JPanel {
+        
+        private final Insets BORDER = new Insets( 2, 10, 2, 10 ) ;
+        
+        public PctCompletionCanvas() {
+            setPreferredSize( new Dimension( 10, 10 ) ) ;
+            setBackground( UIConstant.BG_COLOR ) ;
+        }
+        
+        @Override
+        public void paint( Graphics g ) {
+            super.paint( g ) ;
+            int width = getWidth() - BORDER.left - BORDER.right ;
+            int height = getHeight() - BORDER.top - BORDER.bottom ;
+            
+            float pixelsPerQuestion = ((float)width)/burnInfo.getNumProblems() ;
+
+            int partition = (int)(pixelsPerQuestion * burnInfo.getNumProblemsSolved()) ; 
+            
+            g.setColor( Color.GREEN.darker() .darker()) ;
+            g.fillRect( BORDER.left, 
+                        BORDER.top, 
+                        partition, 
+                        height ) ;
+            
+            g.setColor( Color.RED.darker().darker() ) ;
+            g.fillRect( BORDER.left + partition + 1, 
+                        BORDER.top, 
+                        width - partition, 
+                        height ) ;
+        }
+    }
     
     private class DailyBurnCanvas extends JPanel {
 
@@ -89,9 +123,6 @@ public class TopicBurnSummaryPanel extends JPanel {
             int x = (int)( BORDER.left + greenThreshold * gridWidth ) ;
             g.setColor( Color.GREEN.brighter() ) ;
             g.drawRect( x, markerY, markerWidth, markerHeight );
-            
-            // TODO: Draw the relative gap marker - difference between
-            // amber and red thresholds.
         }
         
         private void paintCurrentValue( Graphics2D g ) {
@@ -142,16 +173,27 @@ public class TopicBurnSummaryPanel extends JPanel {
         add( getCenterPanel(), BorderLayout.CENTER ) ;
     }
     
-    private JLabel getTitleLabel() {
+    private JPanel getTitleLabel() {
         JLabel label = new JLabel() ;
         label.setFont( TITLE_FONT ) ;
         label.setForeground( StudyScreenlet.getSubjectColor( subjectName ).brighter() ) ;
         label.setText( topicName ) ;
         label.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 0 ) );
-        return label ;
+        
+        JPanel panel = new JPanel() ;
+        panel.setBackground( UIConstant.BG_COLOR ) ; 
+        panel.setLayout( new BorderLayout() ) ;
+        panel.add( label, BorderLayout.CENTER ) ;
+        panel.add( getPctCompletionPanel(), BorderLayout.SOUTH ) ;
+        
+        return panel ;
     }
     
     private JPanel getCenterPanel() {
         return new DailyBurnCanvas() ;
+    }
+    
+    private JPanel getPctCompletionPanel() {
+        return new PctCompletionCanvas() ;
     }
 }

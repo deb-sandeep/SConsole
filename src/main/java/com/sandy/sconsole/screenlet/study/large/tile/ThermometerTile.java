@@ -3,6 +3,7 @@ package com.sandy.sconsole.screenlet.study.large.tile;
 import java.awt.BasicStroke ;
 import java.awt.Color ;
 
+import org.apache.commons.lang.math.NumberUtils ;
 import org.jfree.chart.ChartPanel ;
 import org.jfree.chart.JFreeChart ;
 import org.jfree.chart.plot.ThermometerPlot ;
@@ -17,14 +18,14 @@ import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
 import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 
 @SuppressWarnings( "serial" )
-public class DayBurnUpdateTile extends AbstractScreenletTile {
+public class ThermometerTile extends AbstractScreenletTile {
     
     private DefaultValueDataset valueDataset = null ;
     private ThermometerPlot plot = null ;
     private JFreeChart chart = null ;
     private ChartPanel chartPanel = null ;
 
-    public DayBurnUpdateTile( ScreenletPanel mother ) {
+    public ThermometerTile( ScreenletPanel mother ) {
         super( mother ) ;
         mother.getScreenlet()
               .getEventBus()
@@ -88,37 +89,38 @@ public class DayBurnUpdateTile extends AbstractScreenletTile {
     
     private void refreshPlot( TopicBurnInfo bi ) {
         
-        int numSolved = bi.getNumProblemsSolvedToday() ;
-        int upperRange = Integer.max( bi.getCurrentBurnRate(), 
-                                      bi.getRevisedMilestoneBurnRate() ) + 5 ;
-        int range1UL = 0 ;
-        int range2UL = 0 ;
-        
-        if( bi.getCurrentBurnRate() < bi.getRevisedMilestoneBurnRate() ) {
-            range1UL = bi.getCurrentBurnRate() ;
-            range2UL = bi.getRevisedMilestoneBurnRate() ;
+        int maxValue = 0 ;
+        int amberThreshold = 0 ;
+        int greenThreshold = 0 ;
+        int curVal = 0 ;
+
+        maxValue = NumberUtils.max( new int[]{
+                bi.getRevisedMilestoneBurnRate(), 
+                bi.getCurrentBurnRate(),
+                bi.getNumProblemsSolvedToday()
+        } ) + 2 ;
+           
+        if( bi.getCurrentBurnRate() < 
+            bi.getRevisedMilestoneBurnRate() ) {
+            amberThreshold = bi.getCurrentBurnRate() ;
         }
-        else {
-            range1UL = bi.getRevisedMilestoneBurnRate() ;
-            range2UL = bi.getCurrentBurnRate() ;
+           
+        curVal = bi.getNumProblemsSolvedToday() ;
+        greenThreshold = bi.getRevisedMilestoneBurnRate() ;
+        
+        plot.setRange( 0, maxValue ) ;
+     
+        if( amberThreshold > 0 ) {
+            plot.setSubrange( 0, 0, amberThreshold-1 ) ;
+            plot.setSubrangePaint( 0, Color.RED.darker() ) ;
+            
+            plot.setSubrange( 1, amberThreshold-1, greenThreshold-1 ) ;
+            plot.setSubrangePaint( 1, Color.ORANGE.darker() ) ;
+            
+            plot.setSubrange( 2, greenThreshold-1, maxValue ) ;
+            plot.setSubrangePaint( 2, Color.GREEN.darker() ) ;
         }
 
-        
-        if( numSolved > upperRange ) {
-            upperRange = bi.getNumProblemsSolvedToday() + 2 ;
-        }
-        
-        plot.setRange( 0, upperRange ) ;
-        
-        plot.setSubrange( 0, 0, range1UL-1 ) ;
-        plot.setSubrangePaint( 0, Color.RED.darker() ) ;
-        
-        plot.setSubrange( 1, range1UL-1, range2UL-1 ) ;
-        plot.setSubrangePaint( 1, Color.ORANGE.darker() ) ;
-        
-        plot.setSubrange( 2, range2UL-1, upperRange ) ;
-        plot.setSubrangePaint( 2, Color.GREEN.darker() ) ;
-        
-        valueDataset.setValue( bi.getNumProblemsSolvedToday() ) ;
+        valueDataset.setValue( curVal ) ;
     }
 }

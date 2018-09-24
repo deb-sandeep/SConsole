@@ -16,7 +16,7 @@ import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.screenlet.ScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 import com.sandy.sconsole.screenlet.study.large.tile.DateTile ;
-import com.sandy.sconsole.screenlet.study.large.tile.DayBurnUpdateTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.ThermometerTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.FragmentationTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TimeTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.TitleTile ;
@@ -60,7 +60,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private SessionControlTile    sessionControlTile  = null ;
     private FragmentationTile     fragTile            = null ;
     private BurnTile              burnTile            = null ;
-    private DayBurnUpdateTile     thermometerTile     = null ;
+    private ThermometerTile     thermometerTile     = null ;
     private L30DaysNumQTile       l30DaysNumQTile     = null ;
     private L30DaysSubjectHrsTile l30DaysHoursTile    = null ;
     
@@ -82,7 +82,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         sessionControlTile = new SessionControlTile( this ) ;
         fragTile           = new FragmentationTile( this ) ;
         burnTile           = new BurnTile( this ) ;
-        thermometerTile    = new DayBurnUpdateTile( this ) ;
+        thermometerTile    = new ThermometerTile( this ) ;
         l30DaysNumQTile    = new L30DaysNumQTile( this ) ;
         l30DaysHoursTile   = new L30DaysSubjectHrsTile( this ) ;
     }
