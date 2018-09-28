@@ -207,12 +207,7 @@ public class SConsole
             List<SessionSummary> summaryList = sessionRepo.getLast30DSessionSummary() ;
             for( SessionSummary ss : summaryList ) {
                 Day day = new Day( SDF.parse( ss.getDate() ) ) ;
-                List<SessionSummary> dayList = l30SessionSummary.get( day ) ;
-                if( dayList == null ) {
-                    dayList = new ArrayList<SessionSummary>() ;
-                    l30SessionSummary.put( day, dayList ) ;
-                }
-                dayList.add( ss ) ;
+                addToDayList( day, ss ) ;
             }
             
             GLOBAL_EVENT_BUS.publishEvent( EventCatalog.L30_SESSION_INFO_REFRESHED, 
@@ -220,6 +215,30 @@ public class SConsole
         }
         catch( ParseException e ) {
             log.error( "Error loading last 30 days sessions", e ) ;
+        }
+    }
+
+    private void addToDayList( Day day, SessionSummary ss ) throws ParseException {
+        
+        List<SessionSummary> dayList = l30SessionSummary.get( day ) ;
+        
+        if( dayList == null ) {
+            dayList = new ArrayList<SessionSummary>() ;
+            l30SessionSummary.put( day, dayList ) ;
+        }
+        dayList.add( ss ) ;
+        
+        // If the session has spanned over to the next day, we also add this
+        // session information to the next day.
+        if( (ss.getStartTime().getTime() + ss.getDuration()*1000) > 
+            day.getLastMillisecond() ) {
+            
+            log.debug( "Adding day spanning session - " ) ;
+            log.debug( "\tDate     = " + ss.getDate() ) ;
+            log.debug( "\tSubject  = " + ss.getSubject() ) ;
+            log.debug( "\tStart    = " + ss.getStartTime() ) ;
+            log.debug( "\tDuration = " + ss.getDuration() ) ;
+            addToDayList( (Day)day.next(), ss ) ;
         }
     }
     

@@ -88,35 +88,50 @@ public class FragmentationTile extends AbstractScreenletTile {
             Day day = dayList.get( dayNum ) ;
             List<SessionSummary> ssList = ssMap.get( day ) ;
             if( ssList != null ) {
-                long firstMil =  day.getFirstMillisecond() ;
+                long firstMil = day.getFirstMillisecond() ;
+                long lastMil  = day.getLastMillisecond() ;
                 firstMil += DAY_START_HR * 3600 * 1000 ;
                 
                 for( SessionSummary ss : ssList ) {
-                    paintSessionSummary( dayNum, firstMil, ss, g ) ;
+                    paintSessionSummary( dayNum, firstMil, lastMil, ss, g ) ;
                 }
             }
         }
     }
     
-    private void paintSessionSummary( int dayNum, long firstMil, 
+    private void paintSessionSummary( int dayNum, long dayFirstMil, long dayLastMil,
                                       SessionSummary ss, Graphics2D g ) {
         
+        long sessionStart = ss.getStartTime().getTime() ;
+        long duration = ss.getDuration() ;
+        
+        if( sessionStart < dayFirstMil ) {
+            duration -= ( dayFirstMil - sessionStart )/1000 ;
+            sessionStart = dayFirstMil ;
+        }
+        
+        if( (sessionStart + duration*1000) > dayLastMil ) {
+            duration = ( dayLastMil - sessionStart )/1000 ;
+        }
+        
         int x = (int)(I.left + dayNum*dayWidth) ;
-        float startHr = (float)( ss.getStartTime().getTime() - firstMil )/(1000*60*60) ;
+        float startHr = (float)( sessionStart - dayFirstMil )/(1000*60*60) ;
         
-        int startY = I.top + (int)( startHr * hourHeight ) ;
-        int height = (int)( ((float)ss.getDuration()/3600) * hourHeight ) ;
-        
-        if( this.subjectName == null ) {
-            g.setColor( StudyScreenlet.getSubjectColor( ss.getSubject() ) ) ;
+        if( startHr > 0 ) {
+            int startY = I.top + (int)( startHr * hourHeight ) ;
+            int height = (int)( ((float)duration/3600) * hourHeight ) ;
+            
+            if( this.subjectName == null ) {
+                g.setColor( StudyScreenlet.getSubjectColor( ss.getSubject() ) ) ;
+            }
+            else if( ss.getSubject().equals( this.subjectName ) ) {
+                g.setColor( StudyScreenlet.getSubjectColor( this.subjectName ) ) ;
+            }
+            else {
+                g.setColor( Color.DARK_GRAY.darker() ) ;
+            }
+            g.fillRect( x, startY, (int)dayWidth, height ) ;
         }
-        else if( ss.getSubject().equals( this.subjectName ) ) {
-            g.setColor( StudyScreenlet.getSubjectColor( this.subjectName ) ) ;
-        }
-        else {
-            g.setColor( Color.DARK_GRAY.darker() ) ;
-        }
-        g.fillRect( x, startY, (int)dayWidth, height ) ;
     }
     
     private void drawGrid( Graphics2D g ) {
