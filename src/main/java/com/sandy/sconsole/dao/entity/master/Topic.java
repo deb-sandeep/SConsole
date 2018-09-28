@@ -23,6 +23,7 @@ public class Topic {
     private Timestamp burnStart ;
     private Timestamp burnCompletion ;
     private Integer streamNumber ;
+    private Boolean active = Boolean.FALSE ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -49,6 +50,11 @@ public class Topic {
     public Integer getStreamNumber() { return streamNumber ; }
     public void setStreamNumber( Integer streamNumber ) {
         this.streamNumber = streamNumber ;
+    }
+    
+    public Boolean getActive() { return active ; }
+    public void setActive( Boolean active ) {
+        this.active = active ;
     }
     
     public String toString() {

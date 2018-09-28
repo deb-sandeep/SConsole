@@ -204,11 +204,11 @@ public class BurnTile extends AbstractScreenletTile {
     private void plotMilestoneMarker( TopicBurnInfo bi ) 
         throws Exception {
         
-        Marker dateMarker = new ValueMarker( bi.getBurnCompletionDate().getTime() );
+        Marker dateMarker = new ValueMarker( bi.getBurnCompletionMilestoneDate().getTime() );
         dateMarker.setPaint( Color.LIGHT_GRAY ) ;
         plot.addDomainMarker( dateMarker ) ;
         
-        Marker qMarker = new ValueMarker( bi.getNumProblems() );
+        Marker qMarker = new ValueMarker( bi.getNumActiveProblemCount() );
         qMarker.setPaint( Color.LIGHT_GRAY ) ;
         plot.addRangeMarker( qMarker ) ;
     }
@@ -228,12 +228,12 @@ public class BurnTile extends AbstractScreenletTile {
     private void plotBaseMilestoneBurn( TopicBurnInfo bi) {
         
         int numSolved = bi.getBaseMilestoneBurnRate() ;
-        Date startDate = bi.getBurnStartDate() ;
+        Date startDate = bi.getBurnStartMilestoneDate() ;
         
         int counter = 0 ;
         Day day = new Day( startDate ) ;
         
-        while( numSolved < bi.getNumProblems() ) {
+        while( numSolved < bi.getNumActiveProblemCount() ) {
             
             baseBurnProjection.add( day, numSolved, false ) ;
             numSolved += bi.getBaseMilestoneBurnRate() ;
@@ -245,7 +245,7 @@ public class BurnTile extends AbstractScreenletTile {
 
     private void plotCurrentVelocityBurn( TopicBurnInfo bi) {
         
-        int numSolved = bi.getNumProblemsSolved() ;
+        int numSolved = bi.getNumSolvedProblemCount() ;
         Day day = new Day( DateUtils.truncate( new Date(), Calendar.HOUR ) ) ;
         
         if( historicBurn.getDataItem( day ) == null ) {
@@ -253,7 +253,7 @@ public class BurnTile extends AbstractScreenletTile {
         }
         
         int counter = 0 ;
-        while( numSolved < bi.getNumProblems() ) {
+        while( numSolved < bi.getNumActiveProblemCount() ) {
             
             projectedBurnForVelocity.add( day, numSolved, false ) ;
             numSolved += bi.getCurrentBurnRate() ;

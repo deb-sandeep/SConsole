@@ -108,6 +108,15 @@ public class ThermometerTile extends AbstractScreenletTile {
         curVal = bi.getNumProblemsSolvedToday() ;
         greenThreshold = bi.getRevisedMilestoneBurnRate() ;
         
+        // If completion milestone date has passed, revised milestone burn
+        // rate has no meaning and will be zero. In this case, set the
+        // amber threshold to 0 and green threshold to the max value. This
+        // will ensure that the bar will always be in red.
+        if( bi.hasCompletionMilestoneDatePassed() ) {
+            amberThreshold = 0 ;
+            greenThreshold = maxValue ;
+        }
+        
         plot.setRange( 0, maxValue ) ;
      
         if( amberThreshold > 0 ) {
@@ -119,6 +128,13 @@ public class ThermometerTile extends AbstractScreenletTile {
             
             plot.setSubrange( 2, greenThreshold-1, maxValue ) ;
             plot.setSubrangePaint( 2, Color.GREEN.darker() ) ;
+        }
+        else {
+            plot.setSubrange( 0, 0, greenThreshold-1 ) ;
+            plot.setSubrangePaint( 0, Color.RED.darker() ) ;
+            
+            plot.setSubrange( 1, greenThreshold-1, maxValue ) ;
+            plot.setSubrangePaint( 1, Color.GREEN.darker() ) ;
         }
 
         valueDataset.setValue( curVal ) ;

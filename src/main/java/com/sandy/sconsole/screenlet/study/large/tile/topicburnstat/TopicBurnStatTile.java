@@ -67,11 +67,11 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
     private JLabel requiredBurnRateLbl = createDefaultLabel( "Required burn rate" ) ;
     private JLabel requiredBurnRate    = createDefaultLabel( "" ) ;
     
-    private JLabel projectedEndDtLbl   = createDefaultLabel( "Overshoot days" ) ;
-    private JLabel projectedEndDt      = createDefaultLabel( "" ) ;
+    private JLabel overshootDaysLbl    = createDefaultLabel( "Overshoot days" ) ;
     
     private TopicBurnInfo currentBurnInfo = null ;
     
+    private JLabel overshootDays       = createDefaultLabel( "" ) ;
     private JLabel[] labels = {
             burnStartDtLbl,
             burnStartDt,
@@ -89,8 +89,8 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
             currentBurnRate,
             requiredBurnRateLbl,
             requiredBurnRate,
-            projectedEndDtLbl,
-            projectedEndDt
+            overshootDaysLbl,
+            overshootDays
     } ;
     
     public TopicBurnStatTile( ScreenletPanel mother ) {
@@ -174,20 +174,32 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
         
         TopicBurnInfo bi = currentBurnInfo ;
         
-        numQ.setText             ( String.valueOf( bi.getNumProblems() ) ) ;
-        burnStartDt.setText      ( DF.format( bi.getBurnStartDate() ) ) ;
-        numSolvedQ.setText       ( String.valueOf( bi.getNumProblemsSolved() ) ) ;
-        numRemainingQ.setText    ( String.valueOf( bi.getNumProblemsRemaining() ) ) ;
-        burnEndDt.setText        ( DF.format( bi.getBurnCompletionDate() ) ) ;
+        numQ.setText             ( String.valueOf( bi.getNumActiveProblemCount() ) ) ;
+        burnStartDt.setText      ( DF.format( bi.getBurnStartMilestoneDate() ) ) ;
+        numSolvedQ.setText       ( String.valueOf( bi.getNumSolvedProblemCount() ) ) ;
+        numRemainingQ.setText    ( String.valueOf( bi.getNumRemainingProblemCount() ) ) ;
         baselineBurnRate.setText ( String.valueOf( bi.getBaseMilestoneBurnRate() ) ) ;
-        currentBurnRate.setText  ( String.valueOf( bi.getCurrentBurnRate() ) ) ;
-        requiredBurnRate.setText ( String.valueOf( bi.getRevisedMilestoneBurnRate() ) ) ;
-        projectedEndDt.setText   ( String.valueOf( bi.getOvershootDays() ) ) ; 
         
-        highlightValues( bi ) ; 
+        setBurnEndDateLabel( bi ) ;
+        setCurrentBurnRateLabel( bi ) ;
+        setRequiredBurnRateLabel( bi ) ;
+        setProjectedEndDtLabel( bi ) ;
     }
-    
-    private void highlightValues( TopicBurnInfo bi ) {
+
+    private void setBurnEndDateLabel( TopicBurnInfo bi ) {
+        burnEndDt.setText( DF.format( bi.getBurnCompletionMilestoneDate() ) ) ;
+        if( bi.hasCompletionMilestoneDatePassed() ) {
+            burnEndDt.setBackground( Color.RED ) ; 
+        }
+        else {
+            burnEndDt.setBackground( UIConstant.BG_COLOR ) ;
+        }
+    }
+
+
+    private void setCurrentBurnRateLabel( TopicBurnInfo bi ) {
+        
+        currentBurnRate.setText( String.valueOf( bi.getCurrentBurnRate() ) ) ;
         
         if( bi.getCurrentBurnRate() < bi.getBaseMilestoneBurnRate() ) {
             currentBurnRate.setForeground( Color.RED ) ;
@@ -195,19 +207,33 @@ public class TopicBurnStatTile extends AbstractScreenletTile {
         else {
             currentBurnRate.setForeground( Color.GREEN.darker() ) ;
         }
+    }
+    
+    private void setRequiredBurnRateLabel( TopicBurnInfo bi ) {
         
-        if( bi.getRevisedMilestoneBurnRate() <= bi.getBaseMilestoneBurnRate() ) {
-            requiredBurnRate.setForeground( Color.GREEN.darker() ) ;
+        if( bi.getRevisedMilestoneBurnRate() != 0 ) {
+            requiredBurnRate.setText ( String.valueOf( bi.getRevisedMilestoneBurnRate() ) ) ;
+            if( bi.getRevisedMilestoneBurnRate() <= bi.getBaseMilestoneBurnRate() ) {
+                requiredBurnRate.setForeground( Color.GREEN.darker() ) ;
+            }
+            else {
+                requiredBurnRate.setForeground( Color.RED ) ;
+            }
         }
         else {
-            requiredBurnRate.setForeground( Color.RED ) ;
+            requiredBurnRate.setText( "" ) ;
         }
+    }
+
+    private void setProjectedEndDtLabel( TopicBurnInfo bi ) {
         
-        if( bi.getOvershootDays() <= 0 ) {
-            projectedEndDt.setForeground( Color.GREEN.darker() ) ;
+        overshootDays.setText ( String.valueOf( bi.getNumOvershootDays() ) ) ; 
+        
+        if( bi.getNumOvershootDays() <= 0 ) {
+            overshootDays.setForeground( Color.GREEN.darker() ) ;
         }
         else {
-            projectedEndDt.setForeground( Color.RED ) ;
+            overshootDays.setForeground( Color.RED ) ;
         }
     }
 }

@@ -39,9 +39,9 @@ public class TopicBurnSummaryPanel extends JPanel {
             int width = getWidth() - BORDER.left - BORDER.right ;
             int height = getHeight() - BORDER.top - BORDER.bottom ;
             
-            float pixelsPerQuestion = ((float)width)/burnInfo.getNumProblems() ;
+            float pixelsPerQuestion = ((float)width)/burnInfo.getNumActiveProblemCount() ;
 
-            int partition = (int)(pixelsPerQuestion * burnInfo.getNumProblemsSolved()) ; 
+            int partition = (int)(pixelsPerQuestion * burnInfo.getNumSolvedProblemCount() ) ; 
             
             g.setColor( Color.GREEN.darker() .darker()) ;
             g.fillRect( BORDER.left, 
@@ -87,6 +87,15 @@ public class TopicBurnSummaryPanel extends JPanel {
             
             curVal = burnInfo.getNumProblemsSolvedToday() ;
             greenThreshold = burnInfo.getRevisedMilestoneBurnRate() ;
+            
+            // If completion milestone date has passed, revised milestone burn
+            // rate has no meaning and will be zero. In this case, set the
+            // amber threshold to 0 and green threshold to the max value. This
+            // will ensure that the bar will always be in red.
+            if( burnInfo.hasCompletionMilestoneDatePassed() ) {
+                amberThreshold = 0 ;
+                greenThreshold = maxValue ;
+            }
         }
 
         @Override

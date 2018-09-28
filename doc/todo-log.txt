@@ -1,5 +1,7 @@
 Pending log
 --------------------------------------------------------------------------------
+* What happens when we overshoot a burn completion date?
+
 * Offline session adding should refresh the 
     - burn chart for the study screenlet if the topic is currently being displayed
     - L30 days chart
