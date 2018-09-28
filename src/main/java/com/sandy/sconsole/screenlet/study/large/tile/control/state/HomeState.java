@@ -39,7 +39,7 @@ public class HomeState extends BaseControlTileState {
         tile.cleanControlPanel() ;
         hideMessage() ;
         
-        // Note that by default all transitions are deactivated to start with.
+        super.disableAllTransitions() ;
         
         if( payload == null ) {
             // Every time we transition to the home screen, we populate a fresh

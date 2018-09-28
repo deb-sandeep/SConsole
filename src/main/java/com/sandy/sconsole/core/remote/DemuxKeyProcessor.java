@@ -4,7 +4,6 @@ import java.util.Date ;
 import java.util.HashMap ;
 import java.util.Map ;
 
-import org.apache.commons.lang.StringUtils ;
 import org.apache.log4j.Logger ;
 
 public class DemuxKeyProcessor extends KeyProcessor {
@@ -186,32 +185,6 @@ public class DemuxKeyProcessor extends KeyProcessor {
             case SCR_SHOWHIDE:
                 throw new IllegalStateException( "Key processor should not"
                         + "be receiving screenlet show/hide key event." ) ;
-        }
-    }
-    
-    @Override
-    public String getDebugState() {
-        StringBuffer buffer = new StringBuffer() ;
-        buffer.append( "KeyProcessor = " + getName() + ". Activated keys:\n" ) ;
-        
-        logDebugState( KeyType.NAV_CONTROL, buffer ) ;
-        logDebugState( KeyType.RUN, buffer ) ;
-        logDebugState( KeyType.FUNCTION, buffer ) ;
-        
-        return buffer.toString() ;
-    }
-    
-    private void logDebugState( KeyType keyType, StringBuffer buffer ) {
-        Key[] keys = Key.getsKeysOfType( keyType ) ;
-        for( Key key : keys ) {
-            KeyActivationInfo actInfo = activationMap.get( key ) ;
-            buffer.append( StringUtils.rightPad( key.toString(), 15 ) )
-                  .append( "[" )
-                  .append( StringUtils.rightPad( actInfo.getActive().toString(), 10 ) )
-                  .append( "," )
-                  .append( StringUtils.rightPad( actInfo.getKeyLabel(), 10 ) )
-                  .append( "]" ) ;
-                  
         }
     }
     

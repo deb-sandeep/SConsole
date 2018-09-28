@@ -19,7 +19,10 @@ public class RemoteController {
     private KeyProcessingHelper keyProcessingHelper = new KeyProcessingHelper( processors ) ;
     
     @PostMapping( "/RemoteControl" )
-    public ResponseEntity<String> buttonPressed( @RequestBody KeyEvent event ) {
+    public synchronized ResponseEntity<String> buttonPressed( @RequestBody KeyEvent event ) {
+        
+        log.debug( "\n\n--------------------------------------------------" );
+        log.debug( "Key received " + event ) ;
         
         try {
             Key key = Key.decode( event.getKeyId() ) ;
@@ -46,7 +49,7 @@ public class RemoteController {
     }
     
     public void pushKeyProcessor( KeyProcessor processor ) {
-        log.debug( "Pushing key processor - " ) ;
+        log.debug( "Pushing " + processor.getDebugState() ) ;
         processors.push( processor ) ;
     }
     

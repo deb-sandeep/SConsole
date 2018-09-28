@@ -8,7 +8,16 @@ public abstract class KeyProcessor {
     public abstract Map<Key, String> getActivatedKeyInfo() ;
     
     public String getDebugState() {
-        return getName() ;
+        StringBuffer buffer = new StringBuffer( "KeyProcessor - " + getName() + "[ " ) ;
+        for( Key key : getActivatedKeyInfo().keySet() ) {
+            buffer.append( "\n\t\t" )
+                  .append( key.toString() )
+                  .append( " - " )
+                  .append( getActivatedKeyInfo().get( key ) ) ;
+        }
+        buffer.append( "\n]" ) ;
+        
+        return buffer.toString() ;
     }
     
 }

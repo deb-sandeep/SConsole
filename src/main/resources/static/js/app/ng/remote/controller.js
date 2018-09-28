@@ -41,7 +41,7 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
     
     setInterval( function() {
         loadKeyActivationInfo() ;
-    }, 5000 ) ;
+    }, 2000 ) ;
     
     $scope.btnPressed = function( btnType, btnCode ) {
         console.log( btnType + " - " + btnCode ) ;

@@ -11,6 +11,7 @@ import java.util.List ;
 import java.util.Map ;
 import java.util.Timer ;
 import java.util.TimerTask ;
+import java.util.concurrent.LinkedBlockingQueue ;
 
 import org.apache.log4j.Logger ;
 import org.jfree.data.time.Day ;
@@ -24,8 +25,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer ;
 
 import com.sandy.common.bus.EventBus ;
+import com.sandy.sconsole.api.remote.KeyEvent ;
+import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.core.frame.SConsoleFrame ;
+import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
@@ -120,14 +124,36 @@ public class SConsole
     private List<Screenlet> screenlets = new ArrayList<Screenlet>() ;
     private SConsoleFrame   frame      = null ;
     
+    private LinkedBlockingQueue<KeyEvent> asyncRemoteEventList = new LinkedBlockingQueue<>() ;
+    
     @Autowired
     private SessionRepository sessionRepo = null ;
+    
+    @Autowired
+    private RemoteController remoteController = null ;
     
     private Map<Day, List<SessionSummary>> l30SessionSummary = 
                                     new HashMap<Day, List<SessionSummary>>() ;
     public SConsole() {
         APP = this ;
         SConsole.addDayTimerTask( this ) ;
+        
+        Thread t = new Thread( "Async keyevent postman" ) {
+            public void run() {
+                while( true ) {
+                    try {
+                        KeyEvent event = asyncRemoteEventList.take() ;
+                        log.debug( "Processing async key event." + event );
+                        remoteController.buttonPressed( event ) ;
+                    }
+                    catch( InterruptedException e ) {
+                        log.debug( "Could not process async software key event", e ) ;
+                    }
+                }
+            }
+        } ;
+        t.setDaemon( true ) ;
+        t.start() ;
     }
 
     public void initialize() {
@@ -189,13 +215,21 @@ public class SConsole
                 dayList.add( ss ) ;
             }
             
-            log.debug( "Publishing L30 session info refresh event." ) ;
             GLOBAL_EVENT_BUS.publishEvent( EventCatalog.L30_SESSION_INFO_REFRESHED, 
                                            l30SessionSummary ) ;
         }
         catch( ParseException e ) {
             log.error( "Error loading last 30 days sessions", e ) ;
         }
+    }
+    
+    public void postSoftwareRemoteKeyEvent( Key key ) {
+        
+        KeyEvent event = new KeyEvent() ;
+        event.setBtnType( key.getKeyType().toString() ) ;
+        event.setBtnCode( key.getKeyCode() ) ; 
+        
+        asyncRemoteEventList.add( event ) ;
     }
     
     // --------------------- Main method ---------------------------------------

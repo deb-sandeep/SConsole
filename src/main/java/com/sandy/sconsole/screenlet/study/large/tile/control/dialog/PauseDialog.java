@@ -30,13 +30,9 @@ public class PauseDialog extends AbstractDialogPanel
     
     private int pauseTime = 0 ;
     
-    private PlayState playState = null ;
-    
     public PauseDialog( PlayState state ) {
         super( "Session Paused" ) ;
 
-        this.playState = state ;
-        
         loadIcons() ;
         setUpUI() ;
         
@@ -100,12 +96,12 @@ public class PauseDialog extends AbstractDialogPanel
     @Override 
     public void handlePlayPauseResumeKey() {
         super.hideDialog() ;
-        playState.getControlTile().feedIntoStateMachine( Key.PLAYPAUSE ) ;
+        SConsole.getApp().postSoftwareRemoteKeyEvent( Key.PLAYPAUSE ) ;
     } ;
     
     @Override public void handleStopKey() {
         super.hideDialog() ;
-        playState.getControlTile().feedIntoStateMachine( Key.STOP ) ;
+        SConsole.getApp().postSoftwareRemoteKeyEvent( Key.STOP ) ;
     } ;
 
     @Override

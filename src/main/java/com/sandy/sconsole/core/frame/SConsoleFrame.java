@@ -111,8 +111,6 @@ public class SConsoleFrame extends JFrame {
 
     public void handleScreenletSelectionEvent( String btnCode ) {
         
-        log.debug( "Handling screen selection - " + btnCode ) ;
-        
         switch( btnCode ) {
             case "ShowHide":
                 toggleScreenletPanelVisibility() ;
@@ -124,8 +122,6 @@ public class SConsoleFrame extends JFrame {
     }
     
     private void toggleScreenletPanelVisibility() {
-        
-        log.debug( "\tToggling screenlet visibility" ) ;
         
         BorderLayout layout = (BorderLayout)contentPane.getLayout() ;
         if( layout.getLayoutComponent( BorderLayout.WEST ) == null ) {

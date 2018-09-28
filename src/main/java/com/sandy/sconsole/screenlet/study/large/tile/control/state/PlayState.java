@@ -98,7 +98,6 @@ public class PlayState extends BaseControlTileState
         
         // If this activation is not due to a self transition, then only do this
         if( fromState != this ) {
-            log.debug( "Executing preActivation logic for PlayState" ) ;
             if( (payload == null) || !(payload instanceof SessionInformation) ) {
                 throw new IllegalArgumentException( 
                         "PlayState activation payload is null or is not of "
@@ -275,7 +274,7 @@ public class PlayState extends BaseControlTileState
         problemAttempt = createNewProblemAttempt() ;
         if( problemAttempt == null ) {
             showMessage( "No more problems left in this book" ) ;
-            tile.feedIntoStateMachine( Key.STOP ) ;
+            SConsole.getApp().postSoftwareRemoteKeyEvent( Key.STOP ) ;
         }
     }
 
@@ -309,6 +308,7 @@ public class PlayState extends BaseControlTileState
     @Override
     public void deactivate( State nextState, Key key ) {
         super.deactivate( nextState, key ) ;
+        
         if( nextState != this ) {
             tile.getScreenlet().setCurrentRunState( RunState.STOPPED ) ;
             SConsole.removeSecTimerTask( this ) ;
@@ -318,10 +318,6 @@ public class PlayState extends BaseControlTileState
             SConsole.GLOBAL_EVENT_BUS
                     .publishEvent( EventCatalog.SESSION_ENDED, si.session ) ;
             
-            runTime=0 ;
-            lapTime=0 ;
-            pauseTime=0 ;
-            
             if( si.session.getSessionType() == SessionType.EXERCISE ) {
                 tile.setOutcomeButtonsState( OutcomeButtonsState.INACTIVE ) ;
                 tile.updateLapTimeLabel( -1 ) ;
@@ -329,6 +325,7 @@ public class PlayState extends BaseControlTileState
                 // ignore them. This problem will be picked when a new 
                 // session is started.
             }
+            resetState() ;
         }
     }
 

@@ -38,19 +38,28 @@ public class SessionControlTile extends SessionControlTileUI
         @Override public void processKey( Key key ) {
             
             log.debug( "StateMachine received key " + key ) ;
+            
             TransitionRequest transition = null ; 
             State nextState = null ;
             
             lastKeyReceivedTime = System.currentTimeMillis() ;
             
             try {
-                transition = currentState.acceptKey( key ) ;
-                nextState = transition.getNextState() ;
                 
+                log.debug( "Current state = " + currentState.getName() ) ;
+                transition = currentState.acceptKey( key ) ;
+                
+                nextState = transition.getNextState() ;
+                log.debug( "Next state = " + nextState.getName() ) ;
+                
+                log.debug( "Deactivating state " + currentState.getName() ) ;
                 currentState.deactivate( nextState, key ) ;
+                
+                log.debug( "Activating state = " + nextState.getName() ) ;
                 nextState.activate( transition.getPayload(), currentState, key ) ;
                 
                 currentState = nextState ;
+                log.debug( "Current state is now = " + currentState.getName() ) ;
             }
             catch( Exception e ) {
                 log.error( "Error processing key " + key + " in state " + 
@@ -107,6 +116,7 @@ public class SessionControlTile extends SessionControlTileUI
         homeState = new HomeState( this, largePanel ) ;
         playState = new PlayState( this, largePanel ) ;
         changeState = new ChangeState( this, largePanel ) ;
+        currentState = homeState ;
         
         homeState.addTransition( Key.PLAYPAUSE, playState )
                  .addTransition( Key.FN_A, "Change", changeState ) ;
@@ -213,19 +223,6 @@ public class SessionControlTile extends SessionControlTileUI
                 }
             }
         }
-    }
-
-    /**
-     * This method can be called upon to programatically feed transition triggers
-     * to the state machine. 
-     * 
-     * By default, the key presses by user are used to drive the state machine,
-     * however there might arrise occasional cases (like resuming or stopping
-     * from a pause screen) which might necessitate driving the state machine
-     * programatically.
-     */
-    public void feedIntoStateMachine( Key key ) {
-        this.keyProcessor.processKey( key ) ;
     }
 
     @Override

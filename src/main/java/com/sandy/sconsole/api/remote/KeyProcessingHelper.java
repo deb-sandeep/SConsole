@@ -50,9 +50,6 @@ public class KeyProcessingHelper {
     public ResponseEntity<String> processKey( Key key ) 
             throws Exception {
             
-        log.debug( "\n\n--------------------------------------------------" );
-        log.debug( "Key received " + key ) ;
-        
         if( key.getKeyType() == KeyType.SCREEN_SEL ) {
             if( screenSwitchingEnabled ) {
                 SConsole.getApp()
@@ -73,7 +70,7 @@ public class KeyProcessingHelper {
             else {
                 KeyProcessor processor = null ;
                 processor = processors.peek() ;
-                log.debug( "Routing to key processor - " + processor.getName() ) ;
+                log.debug( "Delegating key processor to - " + processor.getName() ) ;
                 processor.processKey( key ) ;
             }
         }

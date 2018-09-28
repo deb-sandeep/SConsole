@@ -84,7 +84,6 @@ public class BaseControlTileState extends State {
         Session ls = si.session ;
         SessionType sessionType = ls.getSessionType() ;
         
-        log.debug( "Copying values of session type, topic and session time" ) ;
         tile.setSessionTypeIcon( sessionType ) ;
         tile.setTopicLabel( ls.getTopic() ) ;
         tile.updateSessionTimeLabel( ls.getDuration() ) ;

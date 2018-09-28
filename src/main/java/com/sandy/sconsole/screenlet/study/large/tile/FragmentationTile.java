@@ -1,9 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large.tile;
 
-import java.awt.Color ;
-import java.awt.Graphics ;
-import java.awt.Graphics2D ;
-import java.awt.Insets ;
+import java.awt.* ;
 import java.text.SimpleDateFormat ;
 import java.util.ArrayList ;
 import java.util.Date ;
@@ -25,7 +22,7 @@ import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 @SuppressWarnings( "serial" )
 public class FragmentationTile extends AbstractScreenletTile {
     
-    private static final Logger log = Logger.getLogger( FragmentationTile.class ) ;
+    static final Logger log = Logger.getLogger( FragmentationTile.class ) ;
     
     private static final SimpleDateFormat SDF = new SimpleDateFormat( "E" ) ;
     
@@ -68,7 +65,6 @@ public class FragmentationTile extends AbstractScreenletTile {
         
         super.handleEvent( event ) ;
         if( event.getEventType() == EventCatalog.L30_SESSION_INFO_REFRESHED ) {
-            log.debug( "L30 refresh received." ) ;
             ssMap = ( Map<Day, List<SessionSummary>> )event.getValue() ;
             repaint() ;
         }
@@ -79,7 +75,6 @@ public class FragmentationTile extends AbstractScreenletTile {
         
         super.paint( g1D ) ;
         if( ssMap != null && !ssMap.isEmpty() ) {
-            log.debug( "Repaining DNA tile" ) ;
             Graphics2D g = ( Graphics2D )g1D ;
             initMeasures() ;
             drawGrid( g ) ;

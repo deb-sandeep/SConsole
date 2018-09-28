@@ -144,8 +144,7 @@ public class DayGanttCanvas extends JPanel
         synchronized( this ) {
             for( Session s : todaySessions ) {
                 paintSession( s, g ) ;
-                totalTimeInSec += (int)(( s.getEndTime().getTime() - 
-                                          s.getStartTime().getTime() )/1000) ;
+                totalTimeInSec += s.getTodayDuration() ;
             }
         }
     }
@@ -162,11 +161,11 @@ public class DayGanttCanvas extends JPanel
             // This implies that the session started late yesterday and the clock 
             // has rolled over.
             secsSinceStartOfDay = 0 ;
-            sessionDuration = (int)((s.getTodayEndTime().getTime() - startOfDay.getTime())/1000) ;
+            sessionDuration = s.getTodayDuration() ;
         }
         else {
             secsSinceStartOfDay = (int)((s.getTodayStartTime().getTime() - startOfDay.getTime())/1000) ;
-            sessionDuration = (int)((s.getTodayEndTime().getTime() - s.getStartTime().getTime())/1000) ;
+            sessionDuration = s.getTodayDuration() ;
         }
         
         int x1 = chartArea.x + (int)(secsSinceStartOfDay * numPixelsPerSecond) ;

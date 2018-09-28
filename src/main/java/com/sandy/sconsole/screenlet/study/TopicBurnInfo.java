@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit ;
 
 import org.apache.commons.lang.time.DateUtils ;
 import org.apache.log4j.Logger ;
-import org.jfree.util.Log ;
 import org.springframework.context.ApplicationContext ;
 
 import com.sandy.sconsole.SConsole ;
@@ -18,7 +17,7 @@ import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 
 public class TopicBurnInfo {
 
-    private static final Logger log = Logger.getLogger( TopicBurnInfo.class ) ;
+    static final Logger log = Logger.getLogger( TopicBurnInfo.class ) ;
     
     public static final SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd" ) ;
     
@@ -88,8 +87,6 @@ public class TopicBurnInfo {
         // Compute projected values based on static and heuristic data
         computeRevisedMilestoneBurnRate() ;
         computeProjectedCompletion() ;
-        
-        log.debug( this ) ;
     }
     
     private void computeBurnStartDates() 

@@ -198,6 +198,17 @@ public class Session {
         return endTime ;
     }
     
+    public int getTodayDuration() {
+        
+        if( !executedToday() ) { return 0 ; }
+        
+        Day today = new Day( new Date() ) ;
+        if( startTime.getTime() < today.getFirstMillisecond() ) {
+            return (int)( endTime.getTime() - today.getFirstMillisecond() ) / 1000 ;
+        }
+        return getDuration() ;
+    }
+    
     public Session clone() {
         Session clone = new Session() ;
         clone.setId( id ) ;

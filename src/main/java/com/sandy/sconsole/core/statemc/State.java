@@ -102,7 +102,10 @@ public abstract class State implements KeyListener {
                 throw new IllegalStateException( "Key " + key + " is absent in "
                         + "the transition map." ) ;
             }
-            transitionMap.get( key ).setActive( true ) ;
+            TransitionState trnState = transitionMap.get( key ) ;
+            trnState.setActive( true ) ;
+            log.debug( "\t" + getName() + " - Enabling trn. " + 
+                       key + " - " + trnState.getKeyLabel() ) ;
         }
     }
     
@@ -112,7 +115,10 @@ public abstract class State implements KeyListener {
                 throw new IllegalStateException( "Key " + key + " is absent in "
                                                + "the transition map." ) ;
             }
-            transitionMap.get( key ).setActive( false ) ;
+            TransitionState trnState = transitionMap.get( key ) ;
+            trnState.setActive( false ) ;
+            log.debug( "\t" + getName() + " - Disabling trn. " + 
+                       key + " - " + trnState.getKeyLabel() ) ;
         }
     }
     
@@ -132,10 +138,10 @@ public abstract class State implements KeyListener {
     @SuppressWarnings( "incomplete-switch" )
     public void activate( Object payload, State fromState, Key key ) {
         
+        log.debug( "Pre-activating state - " + getName() ) ;
         boolean processFurther = preActivate( payload, fromState, key ) ;
         
         if( fromState == null && key == null ) {
-            log.debug( "Transitioning in " + stateName + " as the home state." ) ;
             return ;
         }
         
