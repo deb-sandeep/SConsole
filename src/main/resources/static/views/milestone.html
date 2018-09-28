@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SConsole</title>
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/jquery-2.1.1.min.js"></script>
+    <script src="js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="js/lib/moment.min.js"></script>
+    <script src="js/lib/bootstrap/transition.js"></script>
+    <script src="js/lib/bootstrap/collapse.js"></script>
+    <script src="js/lib/bootstrap/bootstrap-datetimepicker.js"></script>
+    
+    <link rel="stylesheet" href="css/app/app.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="js/lib/bootstrap/bootstrap-datetimepicker.css"/>
+
+    <script src="js/app/ng/app-ng.js"></script>
+    <script src="js/app/ng/milestone/controller.js"></script>
+</head>
+<body ng-controller="MilestoneController">
+
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container"
+       style="font-size:25px;color: #888888;">
+     Milestone adjustments
+  </div>
+</nav>
+
+<div class="alert alert-danger"
+     ng-show="message != null">
+  {{message}}
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group pad-10px">
+          <label for="subject">Subject:</label>
+          <select id="subject" class="form-control" 
+                  ng-model="subjectName"
+                  ng-change="subjectSelected()">
+              <option value="IIT - Physics">IIT - Physics</option>
+              <option value="IIT - Chemistry">IIT - Chemistry</option>
+              <option value="IIT - Maths">IIT - Maths</option>
+          </select>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group pad-10px">
+          <label for="stream">Stream:</label>
+          <select id="stream" class="form-control" 
+                  ng-model="streamNumber"
+                  ng-change="streamSelected()">
+              <option value="1">1</option>
+              <option value="2">2</option>
+          </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-bordered table-striped table-compact">
+  <thead>
+    <tr class="success">
+      <th>Topic</th>
+      <th>Freeze Duration</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>New duration</th>
+      <th>Original duration</th>
+      <th>Start shift</th>
+      <th>End shift</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="topic in topics track by $index"
+        ng-class="checkDirty(topic)" >
+      <td> {{topic.topicName}} </td>
+      <td> 
+        <input type="checkbox" 
+               ng-model="topic.freezeDuration"
+               style="width: 20px; height: 20px;">        
+      </td>
+      <td> 
+          <div class="form-group">
+              <div class="row">
+                  <div class="col-md-11">
+                     <div class='input-group date' id="datetimepicker_start{{topic.id}}">
+                         <input type='text' class="form-control" />
+                         <span class="input-group-addon">
+                             <span class="glyphicon glyphicon-calendar"></span>
+                         </span>
+                     </div>
+                  </div>
+              </div>
+          </div>
+      </td>
+      <td> 
+          <div class="form-group">
+              <div class="row">
+                  <div class="col-md-11">
+                     <div class='input-group date' id="datetimepicker_end{{topic.id}}">
+                         <input type='text' class="form-control" />
+                         <span class="input-group-addon">
+                             <span class="glyphicon glyphicon-calendar"></span>
+                         </span>
+                     </div>
+                  </div>
+              </div>
+          </div>
+      </td>
+      <td> {{topic.duration}} days </td>
+      <td> {{topic.originalDuration}} days </td>
+      <td> {{topic.startShift}} days </td>
+      <td> {{topic.endShift}} days </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="container-fluid">
+  <div class="row pull-right">
+    <button type="button" class="btn btn-info"
+            ng-click="updateServer()">Update on server</button>
+  </div>
+</div> 
+
+</body>
+</html>

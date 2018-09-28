@@ -159,7 +159,7 @@ a {
 }
 
 .dirty {
-    background-color: #FACAB5;
+    background-color: #FACAB5 !important;
 }
 
 .loader {

@@ -30,4 +30,9 @@ public class HomeController {
     public String screenshot() {
         return "screenshot" ;
     }
+    
+    @RequestMapping( "/milestone" )
+    public String milestone() {
+        return "milestone" ;
+    }
 }
