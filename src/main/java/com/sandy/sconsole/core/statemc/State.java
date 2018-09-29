@@ -104,8 +104,6 @@ public abstract class State implements KeyListener {
             }
             TransitionState trnState = transitionMap.get( key ) ;
             trnState.setActive( true ) ;
-            log.debug( "\t" + getName() + " - Enabling trn. " + 
-                       key + " - " + trnState.getKeyLabel() ) ;
         }
     }
     
@@ -117,8 +115,6 @@ public abstract class State implements KeyListener {
             }
             TransitionState trnState = transitionMap.get( key ) ;
             trnState.setActive( false ) ;
-            log.debug( "\t" + getName() + " - Disabling trn. " + 
-                       key + " - " + trnState.getKeyLabel() ) ;
         }
     }
     

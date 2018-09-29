@@ -1,5 +1,6 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.state;
 
+import java.util.List ;
 import java.util.Optional ;
 
 import org.apache.log4j.Logger ;
@@ -148,11 +149,20 @@ public class HomeState extends BaseControlTileState {
                 Integer bookId = session.getBook().getId() ;
                 
                 int numProblems = problemRepo.findUnsolvedProblemCount( topicId, bookId ) ;
-                if( numProblems > 0 ) {
-                    return session ;
-                }
-                else {
-                    return null ;
+                // If the book used in the last session does not have any 
+                // more problems to solve, we try to find a book for the topic
+                // which does have problems to solve.
+                if( numProblems <= 0 ) {
+                    List<Integer> bookIds = bookRepo.findProblemBooksForTopic( topicId ) ;
+                    if( bookIds.isEmpty() ) {
+                        // If none of the books have any more problems to solve
+                        // then there is no point in switching. Let the user
+                        // make a manual selection for change.
+                        session = null ;
+                    }
+                    else {
+                        session.setBook( bookRepo.findById( bookIds.get( 0 ) ).get() ) ;
+                    }
                 }
             }
         }
