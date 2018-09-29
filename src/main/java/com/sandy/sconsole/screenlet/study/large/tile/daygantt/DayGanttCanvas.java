@@ -59,6 +59,8 @@ public class DayGanttCanvas extends JPanel
     private int totalTimeInSec = 0 ;
     private boolean takeEODScreenshot = false ;
     
+    private long lastSessionHeartbeatPaintTime = 0 ;
+    
     public DayGanttCanvas( boolean takeEODScreenshot ) {
         
         this.takeEODScreenshot = takeEODScreenshot ;
@@ -151,26 +153,28 @@ public class DayGanttCanvas extends JPanel
     
     private void paintSession( Session s, Graphics2D g ) {
         
-        if( g == null )return ;
+        if( g == null ) {
+            return ;
+        }
         
-        int secsSinceStartOfDay = 0 ;
+        int sessionStartTimeMarkerInSecs = 0 ;
         int sessionDuration = 0 ;
         
-        long startTime = s.getTodayStartTime().getTime() ;
+        long startTime = s.getStartTime().getTime() ;
         if( startTime < startOfDay.getTime() ) {
             // This implies that the session started late yesterday and the clock 
             // has rolled over.
-            secsSinceStartOfDay = 0 ;
+            sessionStartTimeMarkerInSecs = 0 ;
             sessionDuration = s.getTodayDuration() ;
         }
         else {
-            secsSinceStartOfDay = (int)((s.getTodayStartTime().getTime() - startOfDay.getTime())/1000) ;
+            sessionStartTimeMarkerInSecs = (int)((startTime - startOfDay.getTime())/1000) ;
             sessionDuration = s.getTodayDuration() ;
         }
         
-        int x1 = chartArea.x + (int)(secsSinceStartOfDay * numPixelsPerSecond) ;
+        int x1 = chartArea.x + (int)(sessionStartTimeMarkerInSecs * numPixelsPerSecond) ;
         int y1 = chartArea.y+1 ;
-        int width = (int)(sessionDuration * numPixelsPerSecond) ;
+        int width = (int)Math.ceil( sessionDuration * numPixelsPerSecond ) ;
         int height = chartArea.height-1 ;
         
         if( width == 0 ) {
@@ -205,7 +209,14 @@ public class DayGanttCanvas extends JPanel
                     @Override
                     public void run() {
                         Session s2 = ( Session )event.getValue() ;
-                        paintSession( s2, (Graphics2D)getGraphics() ) ;
+                        
+                        if( getGraphics() != null ) {
+                            long projection = (long)(1F/numPixelsPerSecond)*1000 + 1000 ;
+                            if( lastSessionHeartbeatPaintTime + projection < System.currentTimeMillis() ) {
+                                lastSessionHeartbeatPaintTime = System.currentTimeMillis() ;
+                                paintSession( s2, (Graphics2D)getGraphics() ) ;
+                            }
+                        }
                         refreshTotalTime( (Graphics2D)getGraphics() ) ;
                     }
                 } );

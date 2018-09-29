@@ -399,7 +399,10 @@ public class PlayState extends BaseControlTileState
                 tile.updateLapTimeLabel( lapTime ) ;
             }
             
-            this.si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+            si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+            si.session.setDuration( this.runTime ) ;
+            si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
+            
             SConsole.GLOBAL_EVENT_BUS
                     .publishEvent( EventCatalog.SESSION_PLAY_HEARTBEAT, 
                                    this.si.session ) ;

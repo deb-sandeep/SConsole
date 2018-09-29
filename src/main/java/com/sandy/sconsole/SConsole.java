@@ -1,6 +1,7 @@
 package com.sandy.sconsole ;
 
 import java.io.File ;
+import java.sql.Timestamp ;
 import java.text.ParseException ;
 import java.text.SimpleDateFormat ;
 import java.util.ArrayList ;
@@ -60,6 +61,13 @@ public class SConsole
     
     public static EventBus GLOBAL_EVENT_BUS = new EventBus() ;
     
+    // Convenience variables for ease of access.
+    public static Day TODAY = new Day( new Date() ) ;
+    public static long TODAY_FIRST_MIL = TODAY.getFirstMillisecond() ;
+    public static long TODAY_LAST_MIL = TODAY.getLastMillisecond() ;
+    public static Timestamp TODAY_FIRST_TS = new Timestamp( TODAY_FIRST_MIL ) ;
+    public static Timestamp TODAY_LAST_TS  = new Timestamp( TODAY_LAST_MIL ) ;
+    
     static {
         SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
             Calendar lastDate = null ;
@@ -81,6 +89,12 @@ public class SConsole
                     if( now.get( Calendar.DAY_OF_YEAR ) != 
                         lastDate.get( Calendar.DAY_OF_YEAR ) ) {
 
+                        TODAY = new Day( new Date() ) ;
+                        TODAY_FIRST_MIL = TODAY.getFirstMillisecond() ;
+                        TODAY_LAST_MIL = TODAY.getLastMillisecond() ;
+                        TODAY_FIRST_TS = new Timestamp( TODAY_FIRST_MIL ) ;
+                        TODAY_LAST_TS  = new Timestamp( TODAY_LAST_MIL ) ;
+                        
                         for( DayTickListener task : dayListeners ) {
                             task.dayTicked( now ) ;
                         }
