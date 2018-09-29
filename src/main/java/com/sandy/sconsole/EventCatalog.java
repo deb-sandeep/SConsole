@@ -2,6 +2,8 @@ package com.sandy.sconsole;
 
 import java.util.HashMap ;
 
+import org.apache.commons.lang.ObjectUtils.Null ;
+
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.Payload ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
@@ -59,6 +61,9 @@ public class EventCatalog {
     
     @Payload( type=Session.class ) 
     public static final int OFFLINE_SESSION_ADDED = 6002 ;
+    
+    @Payload( type=Null.class )
+    public static final int TOPIC_MILESTONES_CHANGED = 6003 ;
     
     // --------------- API Generated Events [End] ------------------------------
     

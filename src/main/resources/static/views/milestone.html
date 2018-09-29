@@ -65,13 +65,12 @@
   <thead>
     <tr class="success">
       <th>Topic</th>
-      <th>Freeze Duration</th>
+      <th><span class="glyphicon glyphicon-pushpin"></span></th>
       <th>Start date</th>
+      <th><span class="glyphicon glyphicon-link"></span></th>
       <th>End date</th>
-      <th>New duration</th>
-      <th>Original duration</th>
-      <th>Start shift</th>
-      <th>End shift</th>
+      <th>New <span class="glyphicon glyphicon-resize-horizontal"></span></th>
+      <th>Old <span class="glyphicon glyphicon-resize-horizontal"></span></th>
     </tr>
   </thead>
   <tbody>
@@ -80,13 +79,16 @@
       <td> {{topic.topicName}} </td>
       <td> 
         <input type="checkbox" 
-               ng-model="topic.freezeDuration"
+               ng-model="topic.newActive"
                style="width: 20px; height: 20px;">        
       </td>
       <td> 
           <div class="form-group">
               <div class="row">
-                  <div class="col-md-11">
+                  <div class="col-md-4">
+                    {{topic.burnStart | date:'MMM / d / yyyy'}}
+                  </div>
+                  <div class="col-md-8">
                      <div class='input-group date' id="datetimepicker_start{{topic.id}}">
                          <input type='text' class="form-control" />
                          <span class="input-group-addon">
@@ -98,9 +100,17 @@
           </div>
       </td>
       <td> 
+        <input type="checkbox" 
+               ng-model="topic.freezeDuration"
+               style="width: 20px; height: 20px;">        
+      </td>
+      <td> 
           <div class="form-group">
               <div class="row">
-                  <div class="col-md-11">
+                  <div class="col-md-4">
+                    {{topic.burnCompletion | date:'MMM / d / yyyy'}}
+                  </div>
+                  <div class="col-md-8">
                      <div class='input-group date' id="datetimepicker_end{{topic.id}}">
                          <input type='text' class="form-control" />
                          <span class="input-group-addon">
@@ -113,8 +123,6 @@
       </td>
       <td> {{topic.duration}} days </td>
       <td> {{topic.originalDuration}} days </td>
-      <td> {{topic.startShift}} days </td>
-      <td> {{topic.endShift}} days </td>
     </tr>
   </tbody>
 </table>
@@ -122,7 +130,7 @@
 <div class="container-fluid">
   <div class="row pull-right">
     <button type="button" class="btn btn-info"
-            ng-click="updateServer()">Update on server</button>
+            ng-click="updateOnServer()">Update on server</button>
   </div>
 </div> 
 

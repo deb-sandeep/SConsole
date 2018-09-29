@@ -5,6 +5,8 @@ import java.util.List ;
 
 import org.apache.log4j.Logger ;
 
+import com.sandy.common.bus.Event ;
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
@@ -28,6 +30,10 @@ public class ActiveTopicBurnDashboard extends AbstractScreenletTile {
     public ActiveTopicBurnDashboard( ScreenletPanel mother ) {
         super( mother, false ) ;
         topicRepo = SConsole.getAppContext().getBean( TopicRepository.class ) ;
+        
+        SConsole.GLOBAL_EVENT_BUS
+                .addSubscriberForEventTypes( this, true, 
+                                             EventCatalog.TOPIC_MILESTONES_CHANGED ) ; ;
     }
 
     /*
@@ -46,6 +52,24 @@ public class ActiveTopicBurnDashboard extends AbstractScreenletTile {
         }
     }
     
+    
+    
+    @Override
+    public void handleEvent( Event event ) {
+        super.handleEvent( event ) ;
+        
+        if( event.getEventType() == EventCatalog.TOPIC_MILESTONES_CHANGED ) {
+            try {
+                refreshTopicSummaries() ;
+                revalidate() ;
+                repaint() ;
+            }
+            catch( Exception e ) {
+                log.error( "Error populating topic burn summaries", e ) ;
+            }
+        }
+    }
+
     private void refreshTopicSummaries() 
         throws Exception {
         

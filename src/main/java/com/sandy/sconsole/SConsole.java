@@ -246,12 +246,6 @@ public class SConsole
         // session information to the next day.
         if( (ss.getStartTime().getTime() + ss.getDuration()*1000) > 
             day.getLastMillisecond() ) {
-            
-            log.debug( "Adding day spanning session - " ) ;
-            log.debug( "\tDate     = " + ss.getDate() ) ;
-            log.debug( "\tSubject  = " + ss.getSubject() ) ;
-            log.debug( "\tStart    = " + ss.getStartTime() ) ;
-            log.debug( "\tDuration = " + ss.getDuration() ) ;
             addToDayList( (Day)day.next(), ss ) ;
         }
     }

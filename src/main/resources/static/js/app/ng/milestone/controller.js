@@ -13,11 +13,13 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
     }
     
     $scope.subjectSelected = function() {
+        
         $scope.topics = TOPIC_MAP[$scope.subjectName ] ;
         computeTopicsForDisplay() ;
     }
     
     $scope.streamSelected = function() {
+        
         computeTopicsForDisplay() ;
     }
     
@@ -28,6 +30,10 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         }
         
         if( !topic.endDay.isSame( moment( topic.burnCompletion ) ) ) {
+            return "dirty" ;
+        }
+        
+        if( topic.active != topic.newActive ) {
             return "dirty" ;
         }
         
@@ -44,35 +50,30 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
                 changedTopics.push( {
                     topicId  : topic.id,
                     startDay : topic.startDay.toDate(),
-                    endDay   : topic.endDay.toDate()
+                    endDay   : topic.endDay.toDate(),
+                    active   : topic.newActive
                 }) ;
             }
         }
         
         console.log( "Posting changed topics to server." ) ;
+        $scope.loading = true ;
         $http.post( '/ChangedTopics', { 
             changedTopics : changedTopics
         })
         .then( 
-                TODO: Finish the post logic and then do the server side stuff
-                      like posting events etc .
             function( data ){
-                console.log( "Response from Create Session received.." ) ;
-                console.log( data ) ;
-                $scope.currentScreen = SCR_SERVER_RESPONSE ;
-                if( data.status == 200 ) {
-                    $scope.serverResponseStatus = "success" ;
-                }
-                else {
-                    $scope.serverResponseStatus = "failure" ;
-                }
+                loadTopicsFromServer() ;
             }, 
             function( error ){
-                console.log( "Error creating session." + error ) ;
-                $scope.currentScreen = SCR_SERVER_RESPONSE ;
-                $scope.serverResponseStatus = "failure" ;
+                console.log( "Error updating topic milestones." + error ) ;
+                $scope.message = "Server failure. " + error ;
             }
-        ) ;
+        ) 
+        .finally(function() {
+            $scope.loading = false ;
+        }) ;
+;
     }
     
     function loadTopicsFromServer() {
@@ -114,6 +115,7 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
                 topic.freezeDuration = true ;
                 topic.startShift = 0 ;
                 topic.endShift = 0 ;
+                topic.newActive = topic.active ;
                 
                 topic.originalDuration = moment.duration( 
                             moment( topic.burnCompletion ).diff( moment( topic.burnStart ) )
