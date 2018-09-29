@@ -1,18 +1,13 @@
 package com.sandy.sconsole.screenlet.dashboard.tile;
 
-import java.awt.BorderLayout ;
-import java.awt.Color ;
-import java.awt.Dimension ;
-import java.awt.Font ;
-import java.awt.Graphics ;
-import java.awt.Graphics2D ;
-import java.awt.Insets ;
+import java.awt.* ;
 
 import javax.swing.BorderFactory ;
 import javax.swing.JLabel ;
 import javax.swing.JPanel ;
 
 import org.apache.commons.lang.math.NumberUtils ;
+import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -22,6 +17,8 @@ import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 @SuppressWarnings( "serial" )
 public class TopicBurnSummaryPanel extends JPanel {
 
+    static final Logger log = Logger.getLogger( TopicBurnSummaryPanel.class ) ;
+    
     private static final Font TITLE_FONT = UIConstant.BASE_FONT.deriveFont( 22F ) ;
     
     private class PctCompletionCanvas extends JPanel {
@@ -59,7 +56,7 @@ public class TopicBurnSummaryPanel extends JPanel {
     
     private class DailyBurnCanvas extends JPanel {
 
-        private final Insets BORDER = new Insets( 15, 10, 15, 10 ) ;
+        private final Insets BORDER = new Insets( 2, 10, 2, 10 ) ;
         
         int maxValue = 0 ;
         int amberThreshold = 0 ;
