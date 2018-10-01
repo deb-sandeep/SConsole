@@ -15,9 +15,13 @@ import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
-public class SessionTypeChangeDialog extends AbstractDialogPanel {
+public class SessionTypeSelectionDialog extends AbstractDialogPanel {
     
-    static final Logger log = Logger.getLogger( SessionTypeChangeDialog.class ) ;
+    static final Logger log = Logger.getLogger( SessionTypeSelectionDialog.class ) ;
+    
+    public interface SessionTypeSelectionListener {
+        public void handleNewSessionTypeSelection( SessionType sessionType ) ;
+    }
     
     private SessionType sessionType = null ;
     
@@ -26,12 +30,12 @@ public class SessionTypeChangeDialog extends AbstractDialogPanel {
     private Icon lectureIcon  = null ;
     private Icon cancelIcon   = null ;
     
-    private ChangeState changeState = null ;
+    private SessionTypeSelectionListener changeListener = null ;
 
-    public SessionTypeChangeDialog( ChangeState changeState ) {
+    public SessionTypeSelectionDialog( SessionTypeSelectionListener listener ) {
         super( "Session Type Change" ) ;
         
-        this.changeState = changeState ;
+        this.changeListener = listener ;
         setUpUI() ;
         keyProcessor.disableAllKeys() ;
         keyProcessor.enableKey( Key.FN_A, "Exercise" ) ;
@@ -55,7 +59,7 @@ public class SessionTypeChangeDialog extends AbstractDialogPanel {
     private void setSessionType( SessionType type ) {
         this.sessionType = type ;
         super.hideDialog() ;
-        changeState.handleNewSessionTypeSelection( type ) ;
+        changeListener.handleNewSessionTypeSelection( type ) ;
     }
      
     private void setUpUI() {

@@ -15,6 +15,7 @@ public class ProblemAttempt {
     public static final String OUTCOME_REDO   = "Redo" ;
     public static final String OUTCOME_PIGEON = "Pigeon" ;
     public static final String OUTCOME_IGNORE = "Ignore" ;
+    public static final String OUTCOME_MOVE   = "Move" ;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

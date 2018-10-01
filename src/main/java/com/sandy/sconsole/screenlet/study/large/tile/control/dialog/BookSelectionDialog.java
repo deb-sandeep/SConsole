@@ -10,20 +10,25 @@ import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer.BookChangeListCellRenderer ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
-public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
+public class BookSelectionDialog extends AbstractListSelectionDialog<Book> {
     
-    static final Logger log = Logger.getLogger( BookChangeDialog.class ) ;
+    static final Logger log = Logger.getLogger( BookSelectionDialog.class ) ;
+    
+    public interface BookSelectionListener {
+        public Topic getDefaultTopic() ;
+        public Book getDefaultBook() ;
+        public void handleNewBookSelection( Book newBook ) ;
+    }
 
     private BookRepository bookRepo = null ;
     
-    private ChangeState changeState = null ;
+    private BookSelectionListener changeListener = null ;
     
-    public BookChangeDialog( ChangeState changeState ) {
+    public BookSelectionDialog( BookSelectionListener changeState ) {
         super( "Choose book", new BookChangeListCellRenderer() ) ;
-        this.changeState = changeState ;
+        this.changeListener = changeState ;
         bookRepo = SConsole.getAppContext().getBean( BookRepository.class ) ;
     }
 
@@ -31,7 +36,7 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
     protected List<Book> getListItems() {
         List<Book> books = new ArrayList<Book>() ;
         
-        Topic selectedTopic = changeState.getSessionInfo().session.getTopic() ;
+        Topic selectedTopic = changeListener.getDefaultTopic() ;
         if( selectedTopic != null ) {
             List<Integer> bookIds = bookRepo.findProblemBooksForTopic( selectedTopic.getId() ) ;
             bookRepo.findAllById( bookIds ).forEach( e -> books.add( e )) ;
@@ -41,12 +46,12 @@ public class BookChangeDialog extends AbstractListSelectionDialog<Book> {
 
     @Override
     protected Book getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().session.getBook() ;
+        return changeListener.getDefaultBook() ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        changeState.handleNewBookSelection( (Book)getReturnValue() ) ;
+        changeListener.handleNewBookSelection( (Book)getReturnValue() ) ;
     }
 }

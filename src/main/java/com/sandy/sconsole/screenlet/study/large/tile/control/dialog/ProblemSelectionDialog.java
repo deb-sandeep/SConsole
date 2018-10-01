@@ -6,26 +6,31 @@ import java.util.List ;
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer.ProblemChangeListCellRenderer ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
-public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
+public class ProblemSelectionDialog extends AbstractListSelectionDialog<Problem> {
     
-    static final Logger log = Logger.getLogger( ProblemChangeDialog.class ) ;
+    static final Logger log = Logger.getLogger( ProblemSelectionDialog.class ) ;
+    
+    public interface ProblemSelectionListener {
+        public Topic getDefaultTopic() ;
+        public Book getDefaultBook() ;
+        public Problem getDefaultProblem() ;
+        public void handleNewProblemSelection( Problem newProblem ) ;
+    }
 
     private ProblemRepository problemRepo = null ;
     
-    private ChangeState changeState = null ;
+    private ProblemSelectionListener changeListener = null ;
     
-    public ProblemChangeDialog( ChangeState changeState ) {
+    public ProblemSelectionDialog( ProblemSelectionListener changeState ) {
         super( "Choose problem", new ProblemChangeListCellRenderer() ) ;
-        this.changeState = changeState ;
+        this.changeListener = changeState ;
         problemRepo = SConsole.getAppContext().getBean( ProblemRepository.class ) ;
     }
 
@@ -33,10 +38,8 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
     protected List<Problem> getListItems() {
         List<Problem> problems = new ArrayList<>() ;
         
-        Session session = changeState.getSessionInfo().session ;
-        
-        Topic topic = session.getTopic() ;
-        Book book   = session.getBook() ;
+        Topic topic = changeListener.getDefaultTopic() ;
+        Book book   = changeListener.getDefaultBook() ;
         
         if( (topic != null) && (book != null) ) {
             problems = problemRepo.findUnsolvedProblems( topic.getId(), book.getId() ) ;
@@ -46,12 +49,12 @@ public class ProblemChangeDialog extends AbstractListSelectionDialog<Problem> {
 
     @Override
     protected Problem getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().session.getLastProblem() ;
+        return changeListener.getDefaultProblem() ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        changeState.handleNewProblemSelection( (Problem)getReturnValue() ) ;
+        changeListener.handleNewProblemSelection( (Problem)getReturnValue() ) ;
     }
 }

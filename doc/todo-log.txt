@@ -5,12 +5,6 @@ Pending log
     - L30 days chart
     - Fragmentation chart
   
-* L30 charts now need to start accounting for overflow sessions in both
-  days
-      
-* A web UI for burn completion readjustment. Should take care of streams
-  and cascading changes
-
 * A separate screenlet which should show the problem landscape of the
   given topic. Which problems are activated, solved, redo ed etc
   
@@ -63,4 +57,11 @@ Completed log
   
     - While scooping todays sessions, logic needs to be changed to pick up
       overflow sessions on both ends
+      
+* L30 charts now need to start accounting for overflow sessions in both
+  days
+      
+* A web UI for burn completion readjustment. Should take care of streams
+  and cascading changes
+
       

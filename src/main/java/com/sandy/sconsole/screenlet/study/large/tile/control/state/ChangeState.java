@@ -17,17 +17,23 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile 
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.Btn2Type ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.* ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.BookSelectionDialog.BookSelectionListener ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.ProblemSelectionDialog.ProblemSelectionListener ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.SessionTypeSelectionDialog.SessionTypeSelectionListener ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.TopicSelectionDialog.TopicSelectionListener ;
 
-public class ChangeState extends BaseControlTileState {
+public class ChangeState extends BaseControlTileState 
+    implements SessionTypeSelectionListener, TopicSelectionListener, 
+               BookSelectionListener, ProblemSelectionListener {
 
     static final Logger log = Logger.getLogger( ChangeState.class ) ;
     
     public static final String NAME = "Change" ;
     
-    private SessionTypeChangeDialog typeChangeDialog    = null ;
-    private TopicChangeDialog       topicChangeDialog   = null ;
-    private BookChangeDialog        bookChangeDialog    = null ;
-    private ProblemChangeDialog     problemChangeDialog = null ;
+    private SessionTypeSelectionDialog typeSelectionDialog    = null ;
+    private TopicSelectionDialog       topicSelectionDialog   = null ;
+    private BookSelectionDialog        bookSelectionDialog    = null ;
+    private ProblemSelectionDialog     problemSelectionDialog = null ;
     
     private SessionInformation si = null ;
     
@@ -38,14 +44,30 @@ public class ChangeState extends BaseControlTileState {
         addTransition( Key.FN_C, "Book",    this ) ;
         addTransition( Key.FN_D, "Problem", this ) ;
 
-        typeChangeDialog    = new SessionTypeChangeDialog( this ) ;
-        topicChangeDialog   = new TopicChangeDialog( this ) ;
-        bookChangeDialog    = new BookChangeDialog( this ) ;
-        problemChangeDialog = new ProblemChangeDialog( this ) ;
+        typeSelectionDialog    = new SessionTypeSelectionDialog( this ) ;
+        topicSelectionDialog   = new TopicSelectionDialog( this ) ;
+        bookSelectionDialog    = new BookSelectionDialog( this ) ;
+        problemSelectionDialog = new ProblemSelectionDialog( this ) ;
     }
     
     public SessionInformation getSessionInfo() {
         return this.si ;
+    }
+    
+    public String getSubjectName() {
+        return super.getSubjectName() ;
+    }
+    
+    public Topic getDefaultTopic() {
+        return this.si.session.getTopic() ;
+    }
+    
+    public Book getDefaultBook() {
+        return this.si.session.getBook() ;
+    }
+    
+    public Problem getDefaultProblem() {
+        return this.si.session.getLastProblem() ;
     }
     
     @Override
@@ -177,11 +199,11 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnAKey() {
-        showDialog( typeChangeDialog ) ;
+        showDialog( typeSelectionDialog ) ;
     }
     
     /**
-     * This method is called asynchronous by {@link SessionTypeChangeDialog}
+     * This method is called asynchronous by {@link SessionTypeSelectionDialog}
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewSessionTypeSelection( SessionType type ) {
@@ -202,11 +224,11 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnBKey() {
-        showDialog( topicChangeDialog ) ;
+        showDialog( topicSelectionDialog ) ;
     }
     
     /**
-     * This method is called asynchronous by {@link TopicChangeDialog}
+     * This method is called asynchronous by {@link TopicSelectionDialog}
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewTopicSelection( Topic topic ) {
@@ -234,11 +256,11 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnCKey() {
-        showDialog( bookChangeDialog ) ;
+        showDialog( bookSelectionDialog ) ;
     }
     
     /**
-     * This method is called asynchronous by {@link BookChangeDialog}
+     * This method is called asynchronous by {@link BookSelectionDialog}
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewBookSelection( Book book ) {
@@ -256,11 +278,11 @@ public class ChangeState extends BaseControlTileState {
      */
     @Override
     public void handleFnDKey() {
-        showDialog( problemChangeDialog ) ;
+        showDialog( problemSelectionDialog ) ;
     }
     
     /**
-     * This method is called asynchronous by {@link ProblemChangeDialog}
+     * This method is called asynchronous by {@link ProblemSelectionDialog}
      * when the user finishes his interaction with the dialog.
      */
     public void handleNewProblemSelection( Problem problem ) {

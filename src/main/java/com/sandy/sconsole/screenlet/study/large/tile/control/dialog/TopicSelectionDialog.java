@@ -8,40 +8,44 @@ import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.renderer.TopicChangeListCellRenderer ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
-public class TopicChangeDialog extends AbstractListSelectionDialog<Topic> {
+public class TopicSelectionDialog extends AbstractListSelectionDialog<Topic> {
     
-    static final Logger log = Logger.getLogger( TopicChangeDialog.class ) ;
+    static final Logger log = Logger.getLogger( TopicSelectionDialog.class ) ;
+    
+    public interface TopicSelectionListener {
+        public void handleNewTopicSelection( Topic newTopic ) ;
+        public String getSubjectName() ;
+        public Topic getDefaultTopic() ;
+    }
 
-    private String subjectName = null ;
     private TopicRepository topicRepo = null ;
     
-    private ChangeState changeState = null ;
+    private TopicSelectionListener changeListener = null ;
     
-    public TopicChangeDialog( ChangeState changeState ) {
+    public TopicSelectionDialog( TopicSelectionListener listener ) {
+        
         super( "Choose topic", new TopicChangeListCellRenderer() ) ;
 
-        this.changeState = changeState;
-        this.subjectName = changeState.getSubjectName() ;
+        this.changeListener = listener ; 
         
         topicRepo = SConsole.getAppContext().getBean( TopicRepository.class ) ;
     }
 
     @Override
     protected List<Topic> getListItems() {
-        return topicRepo.findAllBySubjectNameOrderByIdAsc( subjectName ) ;
+        return topicRepo.findAllBySubjectNameOrderByIdAsc( changeListener.getSubjectName() ) ;
     }
 
     @Override
     protected Topic getDefaultSelectedEntity() {
-        return changeState.getSessionInfo().session.getTopic() ;
+        return changeListener.getDefaultTopic() ;
     }
     
     @Override
     public void handleSelectNavKey() {
         super.handleSelectNavKey() ;
-        changeState.handleNewTopicSelection( (Topic)getReturnValue() ) ;
+        changeListener.handleNewTopicSelection( (Topic)getReturnValue() ) ;
     }
 }

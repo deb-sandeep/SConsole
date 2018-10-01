@@ -25,6 +25,8 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileU
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTileUI.OutcomeButtonsState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.PauseDialog ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.TopicSelectionDialog ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.TopicSelectionDialog.TopicSelectionListener ;
 
 /**
  * Transition In:
@@ -51,7 +53,7 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.dialog.PauseDialog 
  *  Key.STOP      -> Transition to HomeState
  */
 public class PlayState extends BaseControlTileState 
-    implements SecondTickListener {
+    implements SecondTickListener, TopicSelectionListener {
 
     private static final Logger log = Logger.getLogger( PlayState.class ) ;
     
@@ -60,6 +62,7 @@ public class PlayState extends BaseControlTileState
     private SessionInformation si = null ;
     
     private PauseDialog pauseDialog = null ;
+    private TopicSelectionDialog topicSelectionDialog = null ;
     
     private ProblemAttempt problemAttempt = null ;
     
@@ -72,12 +75,15 @@ public class PlayState extends BaseControlTileState
     public PlayState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
         
+        topicSelectionDialog = new TopicSelectionDialog( this ) ;
+        
         addTransition( Key.FN_A, "Solved", this ) ;
         addTransition( Key.FN_B, "Redo",   this ) ;
         addTransition( Key.FN_C, "Pigeon", this ) ;
         addTransition( Key.FN_D, "Skip",   this ) ;
         addTransition( Key.FN_E, "*",      this ) ;
         addTransition( Key.FN_F, "Ignore", this ) ;
+        addTransition( Key.FN_G, "Move",   this ) ;
         
         addTransition( Key.PLAYPAUSE, this ) ;
         
@@ -159,8 +165,8 @@ public class PlayState extends BaseControlTileState
             log.debug( "Session is an exercise. Activating problem outcome UI" ) ;
             tile.updateOutcomeCounts( si.session ) ;
             tile.setOutcomeButtonsState( OutcomeButtonsState.ACTIVE ) ;
-            enableTransition( Key.FN_A, Key.FN_B, Key.FN_C, 
-                              Key.FN_D, Key.FN_E, Key.FN_F );
+            enableTransition( Key.FN_A, Key.FN_B, Key.FN_C, Key.FN_D, 
+                              Key.FN_E, Key.FN_F, Key.FN_G );
         }
         
         tile.updateSessionTimeLabel( runTime ) ;
@@ -177,8 +183,6 @@ public class PlayState extends BaseControlTileState
         
         boolean publishCreationEvent = si.session.getId() == null ? true : false ;
         
-        log.debug( "Saving - runTime = " + runTime + ", pauseTime = " + pauseTime );
-                
         si.session.setDuration( this.runTime ) ;
         si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
         si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
@@ -387,6 +391,14 @@ public class PlayState extends BaseControlTileState
         log.debug( "Current problem marked as Ignore." ) ;
         saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_IGNORE ) ;
     }
+    
+    @Override
+    public void handleFnGKey() {
+        log.debug( "Attempting to move the current problem to another topic." ) ;
+        // Note that the dialog will call the handleNewTopicSelection when
+        // the user selects a new topic.
+        showDialog( topicSelectionDialog ) ;
+    }
 
     @Override
     public void secondTicked( Calendar calendar ) {
@@ -410,5 +422,21 @@ public class PlayState extends BaseControlTileState
         else {
             pauseTime++ ;
         }
+    }
+
+    @Override
+    public Topic getDefaultTopic() {
+        return this.si.session.getTopic() ;
+    }
+
+    @Override
+    public void handleNewTopicSelection( Topic newTopic ) {
+        log.debug( "Topic to move the current problem to - " + newTopic ) ;
+        
+        Problem problem = problemAttempt.getProblem() ;
+        problem.setTopic( newTopic ) ;
+        problemRepo.save( problem ) ;
+        
+        saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_MOVE ) ;
     }
 }
