@@ -1,18 +1,27 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control.dialog;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_A_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_B_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_C_COLOR ;
 import static javax.swing.SwingConstants.CENTER ;
 
-import java.awt.* ;
+import java.awt.BorderLayout ;
+import java.awt.Color ;
+import java.awt.Dimension ;
+import java.awt.GridLayout ;
 
-import javax.swing.* ;
+import javax.swing.BorderFactory ;
+import javax.swing.Icon ;
+import javax.swing.ImageIcon ;
+import javax.swing.JLabel ;
+import javax.swing.JPanel ;
 
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
-import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 
 @SuppressWarnings( "serial" )
 public class SessionTypeSelectionDialog extends AbstractDialogPanel {

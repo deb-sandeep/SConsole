@@ -89,7 +89,9 @@ public class TopicBurnSummaryPanel extends JPanel {
             // rate has no meaning and will be zero. In this case, set the
             // amber threshold to 0 and green threshold to the max value. This
             // will ensure that the bar will always be in red.
-            if( burnInfo.hasCompletionMilestoneDatePassed() ) {
+            if( burnInfo.hasCompletionMilestoneDatePassed() && 
+                burnInfo.getNumRemainingProblemCount() > 0 ) {
+                
                 amberThreshold = 0 ;
                 greenThreshold = maxValue ;
             }

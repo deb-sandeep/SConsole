@@ -239,25 +239,29 @@ public class PlayState extends BaseControlTileState
             session.incrementNumSolved() ;
             tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
-        if( outcome.equals( ProblemAttempt.OUTCOME_REDO   ) ) {
+        else if( outcome.equals( ProblemAttempt.OUTCOME_REDO   ) ) {
             problem.setRedo( true ) ;
             session.incrementNumRedo() ;
         }
-        if( outcome.equals( ProblemAttempt.OUTCOME_PIGEON ) ) {
+        else if( outcome.equals( ProblemAttempt.OUTCOME_PIGEON ) ) {
             problem.setPigeoned( true ) ;
             session.incrementNumPigeon() ;
             tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
-        if( outcome.equals( ProblemAttempt.OUTCOME_SKIP   ) ) {
+        else if( outcome.equals( ProblemAttempt.OUTCOME_SKIP   ) ) {
             problem.setSkipped( true ) ;
             session.incrementNumSkipped() ;
         }
-        if( outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) ) {
+        else if( outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) ) {
             problem.setSolved( true ) ;
             problem.setIgnored( true ) ;
             session.incrementNumIgnored() ;
             tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
         }
+        else if( outcome.equals( ProblemAttempt.OUTCOME_MOVE ) ) {
+            tile.updateNumProblemsLeftInBookLabel( --numProblemsLeftInBook ) ;
+        }
+        
         problemRepo.save( problem ) ;
         tile.updateOutcomeCounts( session ) ;
         
@@ -269,7 +273,8 @@ public class PlayState extends BaseControlTileState
                 .publishEvent( EventCatalog.PROBLEM_ATTEMPT_ENDED, attempt ) ;
         
         if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) || 
-            outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) ) {
+            outcome.equals( ProblemAttempt.OUTCOME_IGNORE ) || 
+            outcome.equals( ProblemAttempt.OUTCOME_MOVE ) ) {
             publishRefreshBurnInfo() ;
         }        
         
@@ -436,6 +441,11 @@ public class PlayState extends BaseControlTileState
         Problem problem = problemAttempt.getProblem() ;
         problem.setTopic( newTopic ) ;
         problemRepo.save( problem ) ;
+        
+        // NOTE that this would necessitate a burn refresh since the 
+        // number of problems in this topic has reduced. We would need to
+        // reflect the same in other tiles such as burn status and 
+        // the burn graph
         
         saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_MOVE ) ;
     }
