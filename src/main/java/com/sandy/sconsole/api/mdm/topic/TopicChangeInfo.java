@@ -11,6 +11,8 @@ public class TopicChangeInfo {
         private Timestamp startDay = null ;
         private Timestamp endDay = null ;
         private Boolean active = null ;
+        private String name = null ;
+        private Integer streamNumber = null ;
         
         public Integer getTopicId() { return topicId ; }
         public void setTopicId( Integer topicId ) {
@@ -30,6 +32,16 @@ public class TopicChangeInfo {
         public Boolean getActive() { return active ; }
         public void setActive( Boolean active ) {
             this.active = active ;
+        }
+        
+        public String getName() { return name ; }
+        public void setName( String name ) {
+            this.name = name ;
+        }
+        
+        public Integer getStreamNumber() { return streamNumber ; }
+        public void setStreamNumber( Integer streamNumber ) {
+            this.streamNumber = streamNumber ;
         }
     }
     

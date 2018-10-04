@@ -38,6 +38,8 @@ public class TopicController {
             topic.setBurnStart( ci.getStartDay() ) ; 
             topic.setBurnCompletion( ci.getEndDay() ) ;
             topic.setActive( ci.getActive() ) ;
+            topic.setTopicName( ci.getName() ) ;
+            topic.setStreamNumber( ci.getStreamNumber() ) ;
             
             log.debug( "Topic milestone information being updated for " + 
                        topic.getId() + " - " + topic.getTopicName() ) ;

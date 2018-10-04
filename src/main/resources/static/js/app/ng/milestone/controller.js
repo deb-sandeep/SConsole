@@ -1,6 +1,7 @@
 sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
     
     var TOPIC_MAP = {} ;
+    var numNewTopicsAdded = 0 ;
     
     $scope.streamNumber = "1" ;
     $scope.subjectName = "IIT - Maths" ;
@@ -37,21 +38,32 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
             return "dirty" ;
         }
         
+        if( topic.newName != topic.topicName ) {
+        		return "dirty" ;
+        }
+        
+        if( topic.newStreamNumber != topic.streamNumber ) {
+        		return "dirty" ;
+        }
+        
         return "" ;
     }
     
     $scope.updateOnServer = function() {
         
         var changedTopics = [] ;
+        var topics = TOPIC_MAP[ $scope.subjectName ] ;
         
-        for( var i=0; i<$scope.topics.length; i++ ) {
-            var topic = $scope.topics[i] ;
+        for( var i=0; i<topics.length; i++ ) {
+            var topic = topics[i] ;
             if( $scope.checkDirty( topic ) == "dirty" ) {
                 changedTopics.push( {
-                    topicId  : topic.id,
-                    startDay : topic.startDay.toDate(),
-                    endDay   : topic.endDay.toDate(),
-                    active   : topic.newActive
+                    topicId      : topic.id,
+                    startDay     : topic.startDay.toDate(),
+                    endDay       : topic.endDay.toDate(),
+                    active       : topic.newActive,
+                    name         : topic.newName,
+                    streamNumber : topic.newStreamNumber 
                 }) ;
             }
         }
@@ -73,7 +85,87 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         .finally(function() {
             $scope.loading = false ;
         }) ;
-;
+    }
+    
+    $scope.addNewTopic = function( index ) {
+    	
+    		numNewTopicsAdded++ ;
+    		
+        var original = $scope.topics[index] ;
+        var topic = {} ;
+    		
+        topic.id = -numNewTopicsAdded ;
+        topic.active = false ;
+        topic.burnStart = null ;
+        topic.burnCompletion = null ;
+        topic.streamNumber = original.streamNumber ;
+        topic.startDay = moment( original.endDay ) ;
+        topic.endDay = moment( original.endDay ) ;
+        topic.subject = original.subject ;
+        topic.duration = 0 ;
+        topic.originalDuration = 0 ;
+        topic.freezeDuration = true ;
+        topic.startShift = 0 ;
+        topic.endShift = 0 ;
+        topic.newActive = false ;
+        topic.overlap = false ;
+        topic.topicName = null ;
+        topic.newName = "<<Edit Topic Name>>" ;
+        topic.editTopic = true ;
+        topic.nextTopic = null ;
+        topic.newStreamNumber = original.streamNumber ;
+
+        var topics = TOPIC_MAP[ $scope.subjectName ] ;
+        topics.push( topic ) ;
+        
+        computeTopicsForDisplay() ;
+    }
+    
+    $scope.deleteNewTopic = function( index ) {
+    	
+    		var topic = $scope.topics[index] ;
+    		var topics = TOPIC_MAP[ $scope.subjectName ] ;
+    		var filteredTopics = topics.filter( function( value, index, arr ){
+    			return value.id != topic.id ;
+    		}) ;
+    		
+    		TOPIC_MAP[ $scope.subjectName ] = filteredTopics ;
+    		
+    		computeTopicsForDisplay() ;
+    }
+    
+    $scope.changeTopicStream = function( topic ) {
+    	
+    		topic.newStreamNumber = topic.newStreamNumber == '1' ? '2' : '1' ;
+    		computeTopicsForDisplay() ;
+    }
+    
+    $scope.moveTopicUp = function( index ) {
+
+    		var srcTopic = $scope.topics[ index ] ;
+		var destTopic = $scope.topics[ index-1 ] ;
+		
+		srcTopic.startDay = destTopic.startDay ;
+		srcTopic.endDay = srcTopic.startDay.clone().add( srcTopic.duration, 'd' ) ;
+		
+		destTopic.startDay = srcTopic.endDay.clone().add( 1, 'd' ) ;
+		destTopic.endDay = destTopic.startDay.clone().add( destTopic.duration, 'd' ) ;
+		
+		computeTopicsForDisplay() ;
+    }
+    
+    $scope.moveTopicDown = function( index ) {
+    	
+		var srcTopic = $scope.topics[ index ] ;
+		var destTopic = $scope.topics[ index+1 ] ;
+		
+		destTopic.startDay = srcTopic.startDay ;
+		destTopic.endDay = destTopic.startDay.clone().add( destTopic.duration, 'd' ) ;
+		
+		srcTopic.startDay = destTopic.endDay.clone().add( 1, 'd' ) ;
+		srcTopic.endDay = srcTopic.startDay.clone().add( srcTopic.duration, 'd' ) ;
+		
+		computeTopicsForDisplay() ;
     }
     
     function loadTopicsFromServer() {
@@ -116,6 +208,10 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
                 topic.startShift = 0 ;
                 topic.endShift = 0 ;
                 topic.newActive = topic.active ;
+                topic.overlap = false ;
+                topic.newName = topic.topicName ;
+                topic.editTopic = false ;
+                topic.newStreamNumber = topic.streamNumber ;
                 
                 topic.originalDuration = moment.duration( 
                             moment( topic.burnCompletion ).diff( moment( topic.burnStart ) )
@@ -144,6 +240,12 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         else if( a.startDay.isAfter( b.startDay ) ) {
             retVal = 1 ;
         }
+        else if( a.id < b.id ) {
+        		retVal = -1 ;
+        }
+        else if( a.id > b.id ) {
+        		retVal = 1 ;
+        }
         return retVal ;
     }
     
@@ -153,7 +255,7 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         var validTopics = [] ;
         
         for( var i=0; i<topics.length; i++ ) {
-            if( topics[i].streamNumber == $scope.streamNumber ) {
+            if( topics[i].newStreamNumber == $scope.streamNumber ) {
                 validTopics.push( topics[i] ) ;
             }
         }
@@ -161,16 +263,60 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         $scope.topics = validTopics ;
         $scope.topics.sort( topicSort ) ;
         
+        computeAndFlagTopicOverlap() ;
         chainTopicsInScope() ;
         
         $scope.$$postDigest(function(){
             for( var i=0; i<$scope.topics.length; i++ ) {
                 var topic = $scope.topics[i] ;
+                console.log( "Init date picker for topic = " + topic.id ) ;
                 initDatePicker( topic ) ;
             }
         });        
     }
     
+    // Identify the topics which are overlapping with others. An overlap
+    // occurs when the start date or end end day of a session lies 
+    // in between the start and end days of any other session.
+    function computeAndFlagTopicOverlap() {
+    		
+    		for( var i=0; i<$scope.topics.length; i++ ) {
+    			$scope.topics[i].overlap = false ;
+    		}
+    		
+    		for( var i=0; i<$scope.topics.length; i++ ) {
+    			
+    			var topicToCheck = $scope.topics[i] ;
+    			if( topicToCheck.overlap == true ) continue ;
+    			
+    			for( var j=0; j<$scope.topics.length; j++ ) {
+    				
+    				var topicToCheckAgainst = $scope.topics[j] ;
+    				if( i == j ) continue ;
+    				if( topicToCheckAgainst.overlap == true ) continue ;
+    				
+    				if( topicToCheck.startDay.isSame( topicToCheckAgainst.startDay ) || 
+     				topicToCheck.startDay.isSame( topicToCheckAgainst.endDay ) ) {
+    					
+    					topicToCheck.overlap = true ;
+    					topicToCheckAgainst.overlap = true ;
+    				}
+    				else if( topicToCheck.startDay.isAfter( topicToCheckAgainst.startDay ) && 
+    				         topicToCheck.startDay.isBefore( topicToCheckAgainst.endDay ) ) {
+    					
+    					topicToCheck.overlap = true ;
+    					topicToCheckAgainst.overlap = true ;
+    				}
+    				else if( topicToCheck.endDay.isAfter( topicToCheckAgainst.startDay ) && 
+   				         topicToCheck.endDay.isBefore( topicToCheckAgainst.endDay ) ) {
+   					
+   					topicToCheck.overlap = true ;
+   					topicToCheckAgainst.overlap = true ;
+   				}
+    			}
+    		}
+    }
+
     function chainTopicsInScope() {
         
         var lastTopic = null ;
@@ -252,18 +398,22 @@ sConsoleApp.controller( 'MilestoneController', function( $scope, $http ) {
         else {
             refreshDuration( topic ) ;
         }
+        
+        computeAndFlagTopicOverlap() ;
         $scope.$apply() ;
     }
     
     function processTopicEndDateChange( topic, endDate ) {
         
         refreshDuration( topic ) ;
-        $scope.$apply() ;
         
         var nextTopic = topic.nextTopic ;
         if( nextTopic != null ) {
             nextTopic.startDay = topic.endDay.clone().add( 1, 'd' ) ;
             updateStartDatePicker( nextTopic ) ;
         }
+        
+        computeAndFlagTopicOverlap() ;
+        $scope.$apply() ;
     }
 }) ;

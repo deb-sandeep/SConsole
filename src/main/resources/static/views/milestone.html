@@ -64,6 +64,8 @@
 <table class="table table-bordered table-striped table-compact">
   <thead>
     <tr class="success">
+      <th></th>
+      <th></th>
       <th>Topic</th>
       <th><span class="glyphicon glyphicon-pushpin"></span></th>
       <th>Start date</th>
@@ -71,12 +73,39 @@
       <th>End date</th>
       <th>New <span class="glyphicon glyphicon-resize-horizontal"></span></th>
       <th>Old <span class="glyphicon glyphicon-resize-horizontal"></span></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr ng-repeat="topic in topics track by $index"
         ng-class="checkDirty(topic)" >
-      <td> {{topic.topicName}} </td>
+      <td>
+        <div ng-show="topic.overlap">
+            <span class="glyphicon glyphicon-random"></span>
+        </div>
+      </td>
+      <td>
+        <span class="glyphicon glyphicon-arrow-up"
+              ng-click="moveTopicUp( $index )"
+              ng-show="$index > 0"></span>
+        <span class="glyphicon glyphicon-arrow-down"
+              ng-click="moveTopicDown( $index )"
+              ng-show="$index < topics.length-1"></span>
+      </td>
+      <td> 
+        <div ng-hide="topic.editTopic">
+            <span class="glyphicon glyphicon-pencil" 
+                  ng-click="topic.editTopic = true"></span> 
+	        {{topic.newName}} 
+	    </div>
+        <div ng-show="topic.editTopic">
+            <input type="text"
+                   ng-model="topic.newName"
+                   ng-blur="topic.editTopic = false">
+            </input>
+        </div>
+      </td>
       <td> 
         <input type="checkbox" 
                ng-model="topic.newActive"
@@ -123,6 +152,21 @@
       </td>
       <td> {{topic.duration}} days </td>
       <td> {{topic.originalDuration}} days </td>
+      <td>
+        <span class="glyphicon glyphicon-plus-sign"
+              ng-click="addNewTopic( $index )"></span>
+        <span class="glyphicon glyphicon-minus-sign"
+              ng-click="deleteNewTopic( $index )"
+              ng-show="topic.id < 0"></span>
+      </td>
+      <td>
+        <span class="glyphicon glyphicon-arrow-right"
+              ng-click="changeTopicStream( topic )"></span>
+        <span class="badge"
+              ng-click="changeTopicStream( topic )">
+            {{(topic.newStreamNumber == '2') ? '1' : '2' }}
+        </span>
+      </td>
     </tr>
   </tbody>
 </table>
