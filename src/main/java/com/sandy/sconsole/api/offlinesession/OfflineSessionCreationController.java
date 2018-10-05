@@ -135,12 +135,13 @@ public class OfflineSessionCreationController {
         log.debug( "Basic session details - " ) ;
         log.debug( session.toString() ) ;
         
-        log.debug( "Saving the session in DB" ) ;
         sessionRepo.save( session ) ;
-        log.debug( "New session created. ID = " + session.getId() ) ;
         
         saveExerciseDetails( session, input ) ;
         updateLastSession( session, input ) ;
+        
+        SConsole.GLOBAL_EVENT_BUS
+                .publishEvent( EventCatalog.OFFLINE_SESSION_ADDED, session ) ;
         
         return ResponseEntity.status( HttpStatus.OK ).body( "{\"message\":\"Success\"}" ) ;
     }
@@ -227,9 +228,6 @@ public class OfflineSessionCreationController {
         log.debug( session.toString() ) ;
         
         sessionRepo.save( session ) ;
-        
-        SConsole.GLOBAL_EVENT_BUS
-                .publishEvent( EventCatalog.OFFLINE_SESSION_ADDED, session ) ;
     }
     
     private void updateLastSession( Session session, SessionCreationRequest input ) {

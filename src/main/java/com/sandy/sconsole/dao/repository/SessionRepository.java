@@ -42,7 +42,7 @@ public interface SessionRepository extends CrudRepository<Session, Integer> {
             + "    s.topic_id = tm.id AND "
             + "    s.start_time > DATE(DATE_SUB(NOW(), INTERVAL 31 DAY)) AND "
             + "    s.start_time < CURDATE() AND "
-            + "    s.duration > 300 "
+            + "    s.duration > 60 "
             + "ORDER BY "
             + "    s.start_time ASC "
     )

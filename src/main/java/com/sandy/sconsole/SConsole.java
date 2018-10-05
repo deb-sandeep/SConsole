@@ -18,7 +18,9 @@ import org.springframework.context.ApplicationContextAware ;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry ;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer ;
 
+import com.sandy.common.bus.Event ;
 import com.sandy.common.bus.EventBus ;
+import com.sandy.common.bus.EventSubscriber ;
 import com.sandy.sconsole.api.remote.KeyEvent ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.SConsoleConfig ;
@@ -35,7 +37,8 @@ import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
 
 @SpringBootApplication
 public class SConsole 
-    implements ApplicationContextAware, WebMvcConfigurer, DayTickListener {
+    implements ApplicationContextAware, WebMvcConfigurer, DayTickListener,
+               EventSubscriber {
 
     private static final Logger log = Logger.getLogger( SConsole.class ) ;
     
@@ -145,6 +148,10 @@ public class SConsole
         APP = this ;
         SConsole.addDayTimerTask( this ) ;
         
+        SConsole.GLOBAL_EVENT_BUS
+                .addSubscriberForEventTypes( this, true, 
+                                             EventCatalog.OFFLINE_SESSION_ADDED ) ;
+        
         Thread t = new Thread( "Async keyevent postman" ) {
             public void run() {
                 while( true ) {
@@ -205,6 +212,13 @@ public class SConsole
         loadL30DaysSessionSummary() ;
     }
     
+    @Override
+    public void handleEvent( Event event ) {
+        if( event.getEventType() == EventCatalog.OFFLINE_SESSION_ADDED ) {
+            loadL30DaysSessionSummary() ;
+        }
+    }
+    
     private void loadL30DaysSessionSummary() {
         try {
             log.debug( "Loading last 30 days session summary" ) ;
@@ -262,4 +276,5 @@ public class SConsole
         SConsole app = SConsole.getAppContext().getBean( SConsole.class ) ;
         app.initialize() ;
     }
+
 }
