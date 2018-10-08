@@ -48,7 +48,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
               "SELECT "
             + "    CAST( s.start_time as DATE ) as date, "
-            + "    sum( s.duration )/3600 as value "
+            + "    sum( s.absolute_duration )/3600 as value "
             + "FROM "
             + "    session s, "
             + "    topic_master tm "
