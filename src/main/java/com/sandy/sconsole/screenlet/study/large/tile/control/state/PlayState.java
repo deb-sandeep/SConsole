@@ -72,6 +72,8 @@ public class PlayState extends BaseControlTileState
     
     private int numProblemsLeftInBook = 0 ;
     
+    private long lastPersistentUpdateTime = 0 ;
+    
     public PlayState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
         
@@ -97,6 +99,7 @@ public class PlayState extends BaseControlTileState
         pauseTime = 0 ;
         lapTime = 0 ;
         problemAttempt = null ;
+        lastPersistentUpdateTime = 0 ;
     }
 
     @Override
@@ -187,6 +190,8 @@ public class PlayState extends BaseControlTileState
         si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
         si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
         sessionRepo.save( si.session ) ;
+        
+        lastPersistentUpdateTime = System.currentTimeMillis() ;
         
         if( publishCreationEvent ) {
             SConsole.GLOBAL_EVENT_BUS
@@ -416,9 +421,13 @@ public class PlayState extends BaseControlTileState
                 tile.updateLapTimeLabel( lapTime ) ;
             }
             
-            si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
             si.session.setDuration( this.runTime ) ;
             si.session.setAbsoluteDuration( this.runTime + this.pauseTime ) ;
+            si.session.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+            
+            if( (System.currentTimeMillis() - lastPersistentUpdateTime) > 5000 ) {
+                updateSession() ;
+            }
             
             SConsole.GLOBAL_EVENT_BUS
                     .publishEvent( EventCatalog.SESSION_PLAY_HEARTBEAT, 
