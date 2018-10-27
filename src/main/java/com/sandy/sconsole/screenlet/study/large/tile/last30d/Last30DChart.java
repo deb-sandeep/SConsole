@@ -20,13 +20,16 @@ import org.jfree.chart.renderer.xy.XYBarRenderer ;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer ;
 import org.jfree.data.time.* ;
 
+import com.sandy.common.bus.Event ;
+import com.sandy.common.bus.EventSubscriber ;
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.DayValue ;
 
 public class Last30DChart 
-    implements DayTickListener {
+    implements DayTickListener, EventSubscriber {
     
     static final Logger log = Logger.getLogger( Last30DChart.class ) ;
     
@@ -67,6 +70,9 @@ public class Last30DChart
         this.subtle = subtle ;
         
         SConsole.addDayTimerTask( this ) ;
+        SConsole.GLOBAL_EVENT_BUS
+                .addSubscriberForEventTypes( this, true, 
+                                             EventCatalog.OFFLINE_SESSION_ADDED ) ;
         
         createDataSet() ;
         createJFreeChart() ;
@@ -244,7 +250,17 @@ public class Last30DChart
 
     @Override
     public void dayTicked( Calendar instance ) {
-        
+        refreshValues() ;
+    }
+    
+    @Override
+    public void handleEvent( Event event ) {
+        if( event.getEventType() == EventCatalog.OFFLINE_SESSION_ADDED ) {
+            refreshValues() ;
+        }
+    }
+    
+    private void refreshValues() {
         SwingUtilities.invokeLater( new Runnable() {
             @Override
             public void run() {
