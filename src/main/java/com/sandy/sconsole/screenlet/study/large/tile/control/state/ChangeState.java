@@ -35,8 +35,6 @@ public class ChangeState extends BaseControlTileState
     private BookSelectionDialog        bookSelectionDialog    = null ;
     private ProblemSelectionDialog     problemSelectionDialog = null ;
     
-    private SessionInformation si = null ;
-    
     public ChangeState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
         addTransition( Key.FN_A, "Type",    this ) ;

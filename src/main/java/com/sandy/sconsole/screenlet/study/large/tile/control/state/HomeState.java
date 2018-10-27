@@ -21,10 +21,9 @@ public class HomeState extends BaseControlTileState {
     
     public static final String NAME = "Home" ;
     
-    private SessionInformation si = new SessionInformation() ;
-    
     public HomeState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
+        super.si = new SessionInformation() ;
     }
     
     @Override
@@ -44,7 +43,7 @@ public class HomeState extends BaseControlTileState {
         
         if( payload == null ) {
             // Every time we transition to the home screen, we populate a fresh
-            // session blank - prepopulated with the details of the last session.
+            // session blank - pre-populated with the details of the last session.
             // This way, the user can start a new session with the details of the
             // previous one.
             
@@ -59,6 +58,11 @@ public class HomeState extends BaseControlTileState {
             createAndRenderSessionInfo( session ) ;
         }
         else {
+            // When is the payload not going to be null - This case arises
+            // if we are transitioning to the home state from the change
+            // state. In this case, we don't have to populate the last
+            // session but the session information that has been changed via
+            // the actions in the change state.
             createAndRenderSessionInfo( ((SessionInformation )si).session ) ;
         }
         

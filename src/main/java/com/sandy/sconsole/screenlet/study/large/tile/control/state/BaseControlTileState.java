@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities ;
 import org.apache.log4j.Logger ;
 import org.springframework.context.ApplicationContext ;
 
+import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
@@ -23,6 +24,7 @@ import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
+import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionControlTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation ;
@@ -46,6 +48,8 @@ public class BaseControlTileState extends State {
     private StudyScreenletLargePanel screenletPanel = null ;
     private RemoteController controller = null ;
     
+    protected SessionInformation si = null ;
+    
     protected BaseControlTileState( String stateName, 
                                     SessionControlTile tile,
                                     StudyScreenletLargePanel screenletPanel ) {
@@ -61,6 +65,14 @@ public class BaseControlTileState extends State {
         sessionRepo        = ctx.getBean( SessionRepository.class ) ;
         lastSessionRepo    = ctx.getBean( LastSessionRepository.class ) ;
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
+    }
+    
+    /**
+     * This method is called upon by the SessionControlTile at the break 
+     * of a day.
+     */
+    public void handleDayChange() {
+        publishRefreshBurnInfo() ;
     }
     
     protected void showMessage( String msg ) {
@@ -240,5 +252,25 @@ public class BaseControlTileState extends State {
                     .showDialog( dialog ) ;
         }});
         
+    }
+    
+    protected void publishRefreshBurnInfo() {
+        
+        Topic topic = null ;
+        TopicBurnInfo burnInfo = null ;
+        
+        if( this.si == null ) return ;
+        
+        try {
+            topic = si.session.getTopic() ;
+            burnInfo = new TopicBurnInfo( topic ) ;
+            
+            tile.getScreenlet()
+                .getEventBus()
+                .publishEvent( EventCatalog.BURN_INFO_REFRESHED, burnInfo ) ;
+        }
+        catch( Exception e ) {
+            log.error( "BurnInfo could not be created. Topic = " + topic, e ) ;
+        }
     }
 }

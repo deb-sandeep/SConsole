@@ -14,16 +14,18 @@ import com.sandy.sconsole.core.remote.KeyProcessor ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
 import com.sandy.sconsole.core.statemc.TransitionRequest ;
+import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.screenlet.study.TopicBurnInfo ;
 import com.sandy.sconsole.screenlet.study.large.StudyScreenletLargePanel ;
+import com.sandy.sconsole.screenlet.study.large.tile.control.state.BaseControlTileState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.ChangeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.HomeState ;
 import com.sandy.sconsole.screenlet.study.large.tile.control.state.PlayState ;
 
 @SuppressWarnings( "serial" )
 public class SessionControlTile extends SessionControlTileUI
-    implements SecondTickListener {
+    implements SecondTickListener, DayTickListener {
     
     private static final Logger log = Logger.getLogger( SessionControlTile.class ) ;
     
@@ -58,7 +60,7 @@ public class SessionControlTile extends SessionControlTileUI
                 log.debug( "Activating state = " + nextState.getName() ) ;
                 nextState.activate( transition.getPayload(), currentState, key ) ;
                 
-                currentState = nextState ;
+                currentState = ( BaseControlTileState )nextState ;
                 log.debug( "Current state is now = " + currentState.getName() ) ;
             }
             catch( Exception e ) {
@@ -88,7 +90,7 @@ public class SessionControlTile extends SessionControlTileUI
     private PlayState playState = null ;
     private ChangeState changeState = null ;
     
-    private State currentState = null ;
+    private BaseControlTileState currentState = null ;
     
     private State[] states = null ;
     
@@ -242,9 +244,21 @@ public class SessionControlTile extends SessionControlTileUI
                     log.error( "Could not process key", e ) ;
                 }
             }
-            else {
-//                log.debug( "Inactivity detected = " + keyProcessor.timeSinceLastKeyProcess() ) ;
-            }
         }
+    }
+
+    /**
+     * If a day change has been detected, we need to refresh certain 
+     * information on the screenlet, for example the thermometer etc. Some
+     * of these tiles are autonomous, for example the L30 operates on its
+     * own, however there are other tiles which are contextual - for example
+     * the thermometer which depends upon the current topic.
+     * 
+     * In this method, we instruct the current state to handle the day
+     * change event as it deems fit.
+     */
+    @Override
+    public void dayTicked( Calendar instance ) {
+        currentState.handleDayChange() ;
     }
 }
