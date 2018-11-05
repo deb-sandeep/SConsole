@@ -2,6 +2,8 @@ package com.sandy.sconsole.core.remote;
 
 public interface KeyListener {
 
+    default public void handleFastFwdBackKey() {} ;
+    default public void handleFastFwdFrontKey() {} ;
     default public void handleLeftNavKey() {} ;
     default public void handleRightNavKey() {} ;
     default public void handleUpNavKey() {} ;

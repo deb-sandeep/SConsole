@@ -6,6 +6,7 @@ import java.util.List ;
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -30,6 +31,10 @@ public class ProblemSelectionDialog extends AbstractListSelectionDialog<Problem>
     
     public ProblemSelectionDialog( ProblemSelectionListener changeState ) {
         super( "Choose problem", new ProblemChangeListCellRenderer() ) ;
+        
+        keyProcessor.enableKey( Key.FF_B ) ;
+        keyProcessor.enableKey( Key.FF_F ) ;
+        
         this.changeListener = changeState ;
         problemRepo = SConsole.getAppContext().getBean( ProblemRepository.class ) ;
     }
@@ -57,4 +62,40 @@ public class ProblemSelectionDialog extends AbstractListSelectionDialog<Problem>
         super.handleSelectNavKey() ;
         changeListener.handleNewProblemSelection( (Problem)getReturnValue() ) ;
     }
+    
+    @Override 
+    public void handleFastFwdBackKey() {
+        handleFastFwdKey( -1 ) ;
+    } ;
+    
+    @Override 
+    public void handleFastFwdFrontKey() {
+        handleFastFwdKey( 1 ) ;
+    }
+    
+    private void handleFastFwdKey( int step ) {
+        
+        int selectedIndex = entityList.getSelectedIndex() ;
+        if( selectedIndex == -1 ) {
+            if( listModel.isEmpty() ) {
+                return ;
+            }
+            selectedIndex = 0 ;
+        }
+
+        Problem refProblem = listModel.get( selectedIndex ) ;
+        int newSelectedIndex = -1 ;
+        
+        for( int index=selectedIndex+step; index<listModel.getSize() && index>0 ; index+=step ) {
+            Problem testProblem = listModel.get( index ) ;
+            if( !testProblem.getExerciseName().equals( refProblem.getExerciseName() ) ) {
+                newSelectedIndex = index ;
+                break ;
+            }
+        }
+        
+        if( newSelectedIndex != -1 ) {
+            selectIndex( newSelectedIndex ) ;
+        }
+    } ;
 }

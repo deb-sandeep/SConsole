@@ -51,13 +51,21 @@
   <div class="remote-row-separator"></div>
   
   <div class="remote-nav-row">
-    <div class="button nav-blank"></div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'FastFwd_Back')"
+         ng-style="{'visibility':keyActivationInfo.FF_B == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-fast-backward"></span>
+    </div>
     <div class="button nav"
          ng-click="btnPressed('NavControl', 'Up')"
          ng-style="{'visibility':keyActivationInfo.UP == null?'hidden':'visible'}">
         <span class="glyphicon glyphicon-chevron-up"></span>
     </div>
-    <div class="button nav-blank"></div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'FastFwd_Front')"
+         ng-style="{'visibility':keyActivationInfo.FF_F == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-fast-forward"></span>
+    </div>
   </div>
   <div class="remote-nav-row">
     <div class="button nav"

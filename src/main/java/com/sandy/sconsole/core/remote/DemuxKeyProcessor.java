@@ -134,6 +134,12 @@ public class DemuxKeyProcessor extends KeyProcessor {
         }
         
         switch( key ) {
+            case FF_B:
+                listener.handleFastFwdBackKey() ;
+                break ;
+            case FF_F:
+                listener.handleFastFwdFrontKey() ;
+                break ;
             case UP:
                 listener.handleUpNavKey() ;
                 break ;

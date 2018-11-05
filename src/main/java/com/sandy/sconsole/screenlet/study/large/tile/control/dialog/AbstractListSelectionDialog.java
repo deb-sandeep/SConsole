@@ -16,6 +16,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.frame.AbstractDialogPanel ;
 import com.sandy.sconsole.core.frame.UIConstant ;
+import com.sandy.sconsole.core.remote.Key ;
 
 @SuppressWarnings( "serial" )
 public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel {
@@ -25,8 +26,8 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
     private Icon selectIcon = null ;
     private Icon cancelIcon = null ;
     
-    private JList<T> entityList = null ;
-    private DefaultListModel<T> listModel = null ;
+    protected JList<T> entityList = null ;
+    protected DefaultListModel<T> listModel = null ;
     private ListCellRenderer<T> renderer = null ;
     
     private T selectedEntity = null ;
@@ -41,6 +42,8 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         
         keyProcessor.disableAllKeys() ;
         keyProcessor.enableNavKeys() ;
+        keyProcessor.disableKey( Key.FF_B ) ;
+        keyProcessor.disableKey( Key.FF_F ) ;
     }
 
     private void loadIcons() {
@@ -126,7 +129,7 @@ public abstract class AbstractListSelectionDialog<T> extends AbstractDialogPanel
         return panel ;
     }
     
-    private void selectIndex( int index ) {
+    protected void selectIndex( int index ) {
         
         int finalIndex = index ;
         

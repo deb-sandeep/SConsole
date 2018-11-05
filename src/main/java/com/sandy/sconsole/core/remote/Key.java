@@ -17,7 +17,9 @@ public enum Key {
     SCR_7        ( "ScreenletSelection@7"       , ""  ),
     SCR_8        ( "ScreenletSelection@8"       , ""  ),
     SCR_SHOWHIDE ( "ScreenletSelection@ShowHide", ""  ),
+    FF_B         ( "NavControl@FastFwd_Back"    , ""  ),
     UP           ( "NavControl@Up"              , ""  ),
+    FF_F         ( "NavControl@FastFwd_Front"   , ""  ),
     LEFT         ( "NavControl@Left"            , ""  ),
     RIGHT        ( "NavControl@Right"           , ""  ),
     DOWN         ( "NavControl@Down"            , ""  ),
@@ -45,7 +47,9 @@ public enum Key {
        else if( str.equals( "ScreenletSelection@7"        )) { return SCR_7 ; }
        else if( str.equals( "ScreenletSelection@8"        )) { return SCR_8 ; }
        else if( str.equals( "ScreenletSelection@ShowHide" ) ) { return SCR_SHOWHIDE; }
+       else if( str.equals( "NavControl@FastFwd_Back"     ) ) { return FF_B;             }
        else if( str.equals( "NavControl@Up"               ) ) { return UP;               }
+       else if( str.equals( "NavControl@FastFwd_Front"    ) ) { return FF_F;             }
        else if( str.equals( "NavControl@Left"             ) ) { return LEFT;             }
        else if( str.equals( "NavControl@Right"            ) ) { return RIGHT;            }
        else if( str.equals( "NavControl@Down"             ) ) { return DOWN;             }
@@ -70,7 +74,9 @@ public enum Key {
     
     static {
         keyTypeCodeMap.put( NAV_CONTROL, new Key[]{ 
+            FF_B,
             UP, 
+            FF_F,
             LEFT, 
             SELECT, 
             RIGHT, 
@@ -94,7 +100,9 @@ public enum Key {
             FN_H,
         } ) ;    
         
+        validKeys.add( FF_B ) ;
         validKeys.add( UP ) ;
+        validKeys.add( FF_F ) ;
         validKeys.add( LEFT ) ;
         validKeys.add( RIGHT ) ;
         validKeys.add( DOWN ) ;

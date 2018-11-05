@@ -25,6 +25,8 @@ public abstract class AbstractDialogPanel extends JPanel
     public void isBeingMadeVisible() {} ;
     public void isBeingHidden() {} ;
     
+    @Override public void handleFastFwdBackKey() {} ;
+    @Override public void handleFastFwdFrontKey() {} ;
     @Override public void handleLeftNavKey() {}
     @Override public void handleRightNavKey() {}
     @Override public void handleUpNavKey() {}

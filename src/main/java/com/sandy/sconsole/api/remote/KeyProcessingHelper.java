@@ -23,7 +23,9 @@ public class KeyProcessingHelper {
     private Stack<KeyProcessor> processors = null ;
     
     private static Key KEYS[] = {
+            FF_B,
             UP,
+            FF_F,
             LEFT,
             RIGHT,
             DOWN,

@@ -2,7 +2,9 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
     
     $scope.otaStatus = "ota-idle" ;
     $scope.keyActivationInfo = {
+        FF_B      : null,
         UP        : null,
+        FF_F      : null,
         LEFT      : null,
         RIGHT     : null,
         DOWN      : null,
@@ -21,7 +23,9 @@ sConsoleApp.controller( 'RemoteController', function( $scope, $http ) {
     }
     
     var deactivatedKeyInfo = {
+        FF_B      : null,
         UP        : null,
+        FF_F      : null,
         LEFT      : null,
         RIGHT     : null,
         DOWN      : null,
