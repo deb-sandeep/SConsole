@@ -422,6 +422,10 @@ public class PlayState extends BaseControlTileState
         return this.si.session.getTopic() ;
     }
 
+    /**
+     * NOTE: Don't get confused with the method name. This method is 
+     * being called for moving the current problem to a new topic.
+     */
     @Override
     public void handleNewTopicSelection( Topic newTopic ) {
         log.debug( "Topic to move the current problem to - " + newTopic ) ;
