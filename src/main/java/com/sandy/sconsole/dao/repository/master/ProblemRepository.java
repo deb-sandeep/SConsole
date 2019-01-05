@@ -65,6 +65,7 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
           +   "p.topic.id = ?1 and "
           +   "p.book.id = ?2 "
           + "ORDER BY " 
+          +   "p.chapterId asc, "
           +   "p.id asc" )
     List<Problem> findUnsolvedProblems( int topicId, int bookId ) ;
 

@@ -153,7 +153,7 @@ public class BaseControlTileState extends State {
         
         if( !problems.isEmpty() ) {
             
-            List<Problem> found = new ArrayList<>() ;
+            List<Problem> scoop = new ArrayList<>() ;
 
             // First pass - go through the problems and collect all redo problems
             // CR-8-Sep-18: If a redo problem is skipped, don't keep slapping 
@@ -161,12 +161,12 @@ public class BaseControlTileState extends State {
             // which needs to be presented at the end
             for( Problem p : problems ) {
                 if( p.getRedo() && !p.getSkipped() ) {
-                    found.add( p ) ;
+                    scoop.add( p ) ;
                 }
             }
-            unsolvedProblems.addAll( found ) ;
-            problems.removeAll( found ) ;
-            found.clear() ;
+            unsolvedProblems.addAll( scoop ) ;
+            problems.removeAll( scoop ) ;
+            scoop.clear() ;
             
             // Second pass - find all the questions whose id is greater than
             // or equal to the the sessions problem and which are not skipped
@@ -175,23 +175,27 @@ public class BaseControlTileState extends State {
                 // CR-12-Sep-18 - If there are skipped problems beyond the 
                 // last solved problem, don't include them ahead in the list.
                 // All skipped problems should be presented at the end
-                if( ( p.getId() >= refProblemId ) && !p.getSkipped() ) {
-                    found.add( p ) ;
+                // CR-05-Jan-19 - If there are some redo problems which have been
+                // skipped, ignore them in this pass too
+                if( ( p.getId() >= refProblemId ) && !p.getSkipped() && !p.getRedo() ) {
+                    scoop.add( p ) ;
                 }
             }
-            unsolvedProblems.addAll( found ) ;
-            problems.removeAll( found ) ;
-            found.clear() ;
+            unsolvedProblems.addAll( scoop ) ;
+            problems.removeAll( scoop ) ;
+            scoop.clear() ;
             
             // Third pass - Find all the problems which are not skipped and add
+            // CR-05-Jan-19 - If there are some redo problems which have been
+            // skipped, ignore them in this pass too
             for( Problem p : problems ) {
-                if( !p.getSkipped() ) {
-                    found.add( p ) ;
+                if( !p.getSkipped() && !p.getRedo() ) {
+                    scoop.add( p ) ;
                 }
             }
-            unsolvedProblems.addAll( found ) ;
-            problems.removeAll( found ) ;
-            found.clear() ;
+            unsolvedProblems.addAll( scoop ) ;
+            problems.removeAll( scoop ) ;
+            scoop.clear() ;
             
             
             // Fourth pass - add all the remaining problems to the unsolved
