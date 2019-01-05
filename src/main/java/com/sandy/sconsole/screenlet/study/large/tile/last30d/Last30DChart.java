@@ -124,8 +124,10 @@ public class Last30DChart
         plot.setBackgroundPaint( UIConstant.BG_COLOR ) ;
         
         if( subtle ) {
+            plot.setRangeGridlinePaint( Color.GRAY ) ;
+            
             plot.setDomainGridlinesVisible( false ) ;
-            plot.setRangeGridlinesVisible( false ) ;
+            plot.setRangeGridlinesVisible( true ) ;
         }
         
         configurePlotAxes( plot.getDomainAxis() ) ;

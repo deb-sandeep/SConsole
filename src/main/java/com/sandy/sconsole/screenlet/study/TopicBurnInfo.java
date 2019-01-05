@@ -148,10 +148,6 @@ public class TopicBurnInfo {
         totalBurnMilestoneDuration = getDurationInDays( 
                                                 burnStartMilestoneDate, 
                                                 burnCompletionMilestoneDate ) ;
-        
-        numDaysTillBurnCompletionMilestone = getDurationInDays(
-                                                new Date(),
-                                                burnCompletionMilestoneDate ) ;
     }
     
     private void computeBaseMilestoneBurnRate() {
