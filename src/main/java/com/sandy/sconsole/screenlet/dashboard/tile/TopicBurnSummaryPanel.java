@@ -185,7 +185,7 @@ public class TopicBurnSummaryPanel extends JPanel {
         JLabel label = new JLabel() ;
         label.setFont( TITLE_FONT ) ;
         label.setForeground( StudyScreenlet.getSubjectColor( subjectName ).brighter() ) ;
-        label.setText( topicName + getOvershootString() ) ;
+        label.setText( topicName + getOvershootString() + getNumDaysLeftString() ) ;
         label.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 0 ) );
         
         JPanel panel = new JPanel() ;
@@ -207,6 +207,14 @@ public class TopicBurnSummaryPanel extends JPanel {
         }
         buffer.append( days ) ;
         buffer.append( ")" ) ;
+        return buffer.toString() ;
+    }
+    
+    private String getNumDaysLeftString() {
+        
+        StringBuilder buffer = new StringBuilder( "{" ) ;
+        buffer.append( burnInfo.getNumDaysTillBurnCompletionMilestone() ) ;
+        buffer.append( "}" ) ;
         return buffer.toString() ;
     }
     
