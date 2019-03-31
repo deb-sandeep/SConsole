@@ -19,3 +19,6 @@ add "@sh /home/pi/projects/bin/sconsole/sconsole" on a new line
 -----------------------------------
 ps -aef | grep "sh.*sconsole"
 Kill the one which is run via the shell
+
+4. Adding new questions 
+INSERT INTO `sconsole`.`problem_master` (`topic_id`, `book_id`, `chapter_id`, `exercise_name`, `problem_tag` ) VALUES (174, 119, 7, 'CAE-10', '1');  
