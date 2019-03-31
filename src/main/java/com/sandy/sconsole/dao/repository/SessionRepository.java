@@ -24,8 +24,8 @@ public interface SessionRepository extends CrudRepository<Session, Integer> {
             + "FROM " 
             + "    session s "
             + "WHERE " 
-            + "   ( s.start_time > CURDATE() AND s.end_time < CURDATE()+1 ) OR " 
-            + "   ( s.end_time > CURDATE() AND s.end_time < CURDATE()+1 )" )
+            + "   ( s.start_time > CURDATE() AND s.end_time < DATE_ADD( CURDATE(), INTERVAL 1 DAY ) ) OR " 
+            + "   ( s.end_time > CURDATE() AND s.end_time < DATE_ADD( CURDATE(), INTERVAL 1 DAY ) )" )
     public List<Session> getTodaySessions() ;
     
     @Query( nativeQuery=true,
