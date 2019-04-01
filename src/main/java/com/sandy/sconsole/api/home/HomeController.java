@@ -35,4 +35,14 @@ public class HomeController {
     public String milestone() {
         return "milestone" ;
     }
+    
+    @RequestMapping( "/landing" )
+    public String jeetest() {
+        return "landing" ;
+    }
+    
+    @RequestMapping( "/qb-management" )
+    public String qbManagement() {
+        return "jeetest/qb-management" ;
+    }
 }
