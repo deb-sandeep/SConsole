@@ -13,18 +13,19 @@
     <link rel="stylesheet" href="/css/app/app.css"/>
     
     <script src="/js/app/ng/app-ng.js"></script>
-    <script src="/js/app/ng/jeetest/qbm.js"></script>
+    <script src="/js/app/ng/landing/controller.js"></script>
 </head>
 
-<body ng-controller="QBMController">
-
-<p><a href="#/!">Main</a></p>
-
-<a href="#!red">Red</a>
-<a href="#!green">Green</a>
-<a href="#!blue">Blue</a>
-
-<div ng-view style="color:white;"></div>
+<body ng-controller="LandingController">
+<!-- 1st row */ -->
+<div class="tile"
+     style="background-color:#FBEEC1"
+     ng-click="go('/jeetest/qb-management')">
+    <div class="tilecontent">
+        <div class="tiletable">
+	        <div class="tiletable-cell">Question Bank Management</div>
+        </div>
+    </div>
+</div>
 </body>
-
 </html>

@@ -1,10 +1,10 @@
-package com.sandy.sconsole.api.home;
+package com.sandy.sconsole.web;
 
 import org.springframework.stereotype.* ;
 import org.springframework.web.bind.annotation.* ;
 
 @Controller
-public class HomeController {
+public class SConsoleController {
     
     @RequestMapping( "/" )
     public String home() {
@@ -34,15 +34,5 @@ public class HomeController {
     @RequestMapping( "/milestone" )
     public String milestone() {
         return "milestone" ;
-    }
-    
-    @RequestMapping( "/landing" )
-    public String jeetest() {
-        return "landing" ;
-    }
-    
-    @RequestMapping( "/qb-management" )
-    public String qbManagement() {
-        return "jeetest/qb-management" ;
     }
 }

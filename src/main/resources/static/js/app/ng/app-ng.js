@@ -1,1 +1,1 @@
-var sConsoleApp = angular.module( 'sConsoleApp', [] ) ;
+var sConsoleApp = angular.module( 'sConsoleApp', ["ngRoute"] ) ;
