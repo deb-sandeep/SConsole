@@ -17,23 +17,13 @@ public class JEETestController {
         return "jeetest/qb-management" ;
     }
     
-    @RequestMapping( "/main" )
+    @RequestMapping( "/newQuestion" )
     public String jeeMain() {
-        return "jeetest/main" ;
+        return "jeetest/new_question" ;
     }
     
-    @RequestMapping( "/red" )
+    @RequestMapping( "/searchQuestions" )
     public String jeeRed() {
-        return "jeetest/red" ;
-    }
-    
-    @RequestMapping( "/blue" )
-    public String jeeBlue() {
-        return "jeetest/blue" ;
-    }
-    
-    @RequestMapping( "/green" )
-    public String jeeGreen() {
-        return "jeetest/green" ;
+        return "jeetest/search_questions" ;
     }
 }

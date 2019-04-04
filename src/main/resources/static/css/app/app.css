@@ -185,17 +185,20 @@ a {
     overflow:hidden;
 }
 
+/** following three are for responsive grids */
 .tilecontent {
     position:absolute;
     height:80%; /* = 100% - 2*10% padding */
     width:90%; /* = 100% - 2*5% padding */
     padding: 10% 5%;
 }
+
 .tiletable{
     display:table;
     height:100%;
     width:100%;
 }
+
 .tiletable-cell{
     display:table-cell;
     vertical-align:middle;
@@ -203,4 +206,9 @@ a {
     width:100%;
     font-family: 'Roboto', sans-serif;
     font-size:25px;
+}
+
+nav {
+	font-size:23px;
+	color:#A9A9A9;
 }

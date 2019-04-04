@@ -1,17 +1,14 @@
 sConsoleApp.config( function( $routeProvider ) {
 	$routeProvider
 	.when("/", {
-		templateUrl : "/jeetest/main"
+		templateUrl : "/jeetest/newQuestion"
 	})
-	.when("/red", {
-		templateUrl : "/jeetest/red"
+	.when("/searchQuestions", {
+		templateUrl : "/jeetest/searchQuestions"
 	})
-	.when("/green", {
-		templateUrl : "/jeetest/green"
+	.when("/newQuestion", {
+		templateUrl : "/jeetest/newQuestion"
 	})
-	.when("/blue", {
-		templateUrl : "/jeetest/blue"
-	});
 });
 
 sConsoleApp.controller( 'QBMController', function( $scope, $http ) {

@@ -18,13 +18,34 @@
 
 <body ng-controller="QBMController">
 
-<p><a href="#/!">Main</a></p>
+<nav class="navbar navbar-inverse navbar-static-top"
+     style="min-height:0px;margin-bottom:0px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                Question Bank Management
+            </div>
+            <div class="col-sm-5">
+                <div class="pull-right">
+				    <a href="#!/newQuestion">
+				        <button type="button" class="btn btn-success">
+				        <span class="glyphicon glyphicon-plus"></span>
+				        New Question
+				        </button>
+				    </a>
+	                <a href="#!/searchQuestions">
+                        <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search"></span>
+                        Search
+                        </button>
+	                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 
-<a href="#!red">Red</a>
-<a href="#!green">Green</a>
-<a href="#!blue">Blue</a>
+<div ng-view></div>
 
-<div ng-view style="color:white;"></div>
 </body>
-
 </html>
