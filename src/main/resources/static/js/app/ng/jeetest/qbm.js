@@ -1,13 +1,16 @@
 sConsoleApp.config( function( $routeProvider ) {
 	$routeProvider
 	.when("/", {
-		templateUrl : "/jeetest/newQuestion"
+		templateUrl : "/jeetest/newQuestion",
+		controller : "NewQuestionController"
 	})
 	.when("/searchQuestions", {
-		templateUrl : "/jeetest/searchQuestions"
+		templateUrl : "/jeetest/searchQuestions",
+		controller : "SearchQuestionController"
 	})
-	.when("/newQuestion", {
-		templateUrl : "/jeetest/newQuestion"
+	.when("/newQuestion/:id", {
+		templateUrl : "/jeetest/newQuestion",
+		controller : "NewQuestionController"
 	})
 });
 
