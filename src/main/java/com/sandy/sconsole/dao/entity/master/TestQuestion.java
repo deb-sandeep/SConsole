@@ -16,7 +16,7 @@ public class TestQuestion {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id = 0 ;
+    private Integer id = -1 ;
 
     @ManyToOne
     @JoinColumn( name="subject_name" )
