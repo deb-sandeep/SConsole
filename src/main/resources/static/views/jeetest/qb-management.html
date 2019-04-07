@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/css/app/app.css"/>
     
     <script src="/js/app/ng/app-ng.js"></script>
-    <script src="/js/app/ng/jeetest/new_question.js"></script>
+    <script src="/js/app/ng/jeetest/edit_question.js"></script>
     <script src="/js/app/ng/jeetest/search_question.js"></script>
     <script src="/js/app/ng/jeetest/qbm.js"></script>
 </head>
@@ -29,10 +29,10 @@
             </div>
             <div class="col-sm-5">
                 <div class="pull-right">
-				    <a href="#!/newQuestion/-1">
+				    <a href="#!/editQuestion/-1">
 				        <button type="button" class="btn btn-success">
-				        <span class="glyphicon glyphicon-plus"></span>
-				        New Question
+				        <span class="glyphicon glyphicon-edit"></span>
+				        Edit
 				        </button>
 				    </a>
 	                <a href="#!/searchQuestions">
@@ -46,6 +46,11 @@
         </div>
     </div>
 </nav>
+
+<div class="alert alert-danger alert-dismissible" ng-repeat="alert in alerts">
+<a ng-click="dismissAlert( $index )" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+{{alert.msg}}
+</div>
 
 <div ng-view></div>
 

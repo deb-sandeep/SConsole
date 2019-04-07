@@ -17,9 +17,9 @@ public class JEETestController {
         return "jeetest/qb-management" ;
     }
     
-    @RequestMapping( "/newQuestion" )
+    @RequestMapping( "/editQuestion" )
     public String jeeMain() {
-        return "jeetest/new_question" ;
+        return "jeetest/edit_question" ;
     }
     
     @RequestMapping( "/searchQuestions" )

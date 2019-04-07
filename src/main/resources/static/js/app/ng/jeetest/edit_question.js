@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'NewQuestionController', 
+sConsoleApp.controller( 'EditQuestionController', 
 		                function( $scope, $http, $routeParams ) {
 	
 	var questionId = $routeParams.id ;
@@ -6,6 +6,8 @@ sConsoleApp.controller( 'NewQuestionController',
 	$scope.message = "Test message from New Question Controller. ID = " + questionId ;
 	$scope.interactingWithServer = false ;
 	$scope.qbmMasterData = null ;
+	$scope.question = null ;
+	$scope.lastSavedQuestion = null ;
 	
 	// --- [START] Controller initialization
 	
@@ -13,9 +15,18 @@ sConsoleApp.controller( 'NewQuestionController',
 	// master data will consist of subjects, topics, books etc.
 	loadQBMMasterData() ;
 	
-	// --- [END] Controller initialization
 	loadQuestionForEdit( questionId ) ;
-
+	// --- [END] Controller initialization
+	
+	// --- [START] Scope functions
+	
+	$scope.editNewQuestion = function() {
+		console.log( "Editing a new quesiton." ) ;
+		loadQuestionForEdit( -1 ) ;
+	}
+	
+	// --- [START] Internal Questions
+	
     function loadQBMMasterData() {
         
         console.log( "Loading QBM master data from server." ) ;
@@ -31,6 +42,7 @@ sConsoleApp.controller( 'NewQuestionController',
                 function( error ){
                     console.log( "Error getting QBM master data." ) ;
                     console.log( error ) ;
+                    $scope.$parent.addErrorAlert( "Could not load master data." ) ;
                 }
         )
         .finally(function() {
@@ -40,16 +52,28 @@ sConsoleApp.controller( 'NewQuestionController',
     
     function loadQuestionForEdit( questionId ) {
     	
+    	if( typeof questionId === 'undefined' ) {
+    		questionId = -1 ;
+    	}
     	console.log( "Loading question for edit. ID = " + questionId ) ;
     	
-    	// Validate if $routeParams.id is undefined or -1, else try to 
-    	// get into modify mode by calling the server for loading the specified
-    	// question.
-    	if( (typeof questionId !== 'undefined') && (questionId > 0) ) {
-    		console.log( "Loading question." ) ;
-    	}
-    	else {
-    		console.log( "No question to load." ) ;
-    	}
+        $scope.interactingWithServer = true ;
+        $http.get( '/TestQuestion/' + questionId )
+        .then( 
+                function( data ){
+                    console.log( "Test Question received." ) ;
+                    console.log( data ) ;
+                    $scope.question = data ;
+                    $scope.lastSavedQuestion = data ;
+                }, 
+                function( error ){
+                    console.log( "Error getting Test Question data." ) ;
+                    console.log( error ) ;
+                    $scope.$parent.addErrorAlert( "Could not fetch question." ) ;
+                }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
     }
 } ) ;

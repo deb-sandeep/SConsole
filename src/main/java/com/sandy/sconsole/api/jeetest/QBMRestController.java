@@ -63,7 +63,7 @@ public class QBMRestController {
         
         TestQuestion testQuestion = null ;
         
-        if( id == null || id == -1 ) {
+        if( id == null || id <= 0 ) {
             log.debug( "Creating new test question" ) ;
             testQuestion = new TestQuestion() ;
         }
