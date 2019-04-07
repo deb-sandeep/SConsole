@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
+import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 
 @RestController
@@ -22,6 +23,9 @@ public class QBMRestController {
 
     @Autowired
     private BookRepository bookRepo = null ;
+    
+    @Autowired
+    private TestQuestionRepository testQuestionRepo = null ;
     
     @GetMapping( "/QBMMasterData" )
     public ResponseEntity<QBMMasterData> getQBMMasterData() {
@@ -39,7 +43,6 @@ public class QBMRestController {
                     qbmMaster.addBook( book ) ;
                 }
             }
-            
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( qbmMaster ) ;
         }
