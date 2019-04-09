@@ -1,15 +1,92 @@
-<div class="panel panel-default">
-  <div class="panel-body">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                {{message}}
-            </div>
-            <div class="col-sm-6">
-                Preview
-            </div>
-        </div>
-    </div>  
+<div class="panel panel-default" style="padding:0px; margin:0px">
+  <div class="panel-body" style="padding:5px">
+  <table style="table-layout: fixed; width:100%;" border>
+  <tr>
+    <td>
+        <table class="table table-condensed" border>
+            <!-- First row -->
+            <tr>
+                <td width="100px">ID</td>
+                <td width="5px">:</td>
+                <td>{{question.id}}</td>
+                
+                <td width="50px">Exam</td>
+                <td width="5px">:</td>
+                <td>{{question.targetExam}}</td>
+                
+                <td width="50px">Subject</td>
+                <td width="5px">:</td>
+                <td>{{question.subject.name}}</td>
+            </tr>
+            <!-- Second row -->
+            <tr>
+	            <td>Topic</td>
+	            <td>:</td>
+	            <td colspan="7">{{question.topic.topicName}}</td>
+            </tr>
+            <!-- Third row -->
+            <tr>
+                <td>Book</td>
+                <td>:</td>
+                <td colspan="7">{{question.book.bookName}}</td>
+            </tr>
+            <!-- Fourth row -->
+            <tr>
+                <td>Q Type</td>
+                <td>:</td>
+                <td colspan="4">{{question.questionType}}</td>
+                <td>Q Ref</td>
+                <td>:</td>
+                <td>{{question.questionRef}}</td>
+            </tr>
+            <!-- Fifth row -->
+            <tr>
+                <td>Lat Level</td>
+                <td>:</td>
+                <td colspan="4">{{question.lateralThinkingLevel}}</td>
+                <td>Time</td>
+                <td>:</td>
+                <td>{{question.projectedSolveTime}}</td>
+            </tr>
+            <!-- Sixth row -->
+            <tr>
+                <td>Body</td>
+                <td>:</td>
+                <td colspan="7"></td>
+            </tr>
+            <!-- Seventh row -->
+            <tr>
+                <td colspan="9">
+                    <textarea rows="10" style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;">
+                    </textarea>
+                </td>
+            </tr>
+            <!-- Eighth row -->
+            <tr>
+                <td>Answer</td>
+                <td>:</td>
+                <td colspan="7">
+                    Answer input area goes here.
+                </td>
+            </tr>
+        </table>
+    </td>
+    <td valign="top">
+        <table class="table table-condensed" border>
+            <!-- First row -->
+            <tr>
+                <td width="100%">Preview</td>
+            </tr>
+            <!-- Second row -->
+            <tr>
+                <td>
+                    <div>Preview</div>
+                </td>
+            </tr>
+        </table>
+    </td>
+  </tr>
+  </table>
   </div>
   <div class="panel-footer clearfix">
 	  <div class="pull-right">

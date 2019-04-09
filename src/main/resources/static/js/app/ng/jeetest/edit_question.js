@@ -34,10 +34,10 @@ sConsoleApp.controller( 'EditQuestionController',
         $scope.interactingWithServer = true ;
         $http.get( '/QBMMasterData' )
         .then( 
-                function( data ){
+                function( response ){
                     console.log( "QBM master data received." ) ;
-                    console.log( data ) ;
-                    $scope.qbmMasterData = data ;
+                    console.log( response ) ;
+                    $scope.qbmMasterData = response.data ;
                 }, 
                 function( error ){
                     console.log( "Error getting QBM master data." ) ;
@@ -60,11 +60,11 @@ sConsoleApp.controller( 'EditQuestionController',
         $scope.interactingWithServer = true ;
         $http.get( '/TestQuestion/' + questionId )
         .then( 
-                function( data ){
+                function( response ){
                     console.log( "Test Question received." ) ;
-                    console.log( data ) ;
-                    $scope.question = data ;
-                    $scope.lastSavedQuestion = data ;
+                    console.log( response ) ;
+                    $scope.question = response.data ;
+                    $scope.lastSavedQuestion = jQuery.extend(true, {}, response.data); ;
                 }, 
                 function( error ){
                     console.log( "Error getting Test Question data." ) ;
