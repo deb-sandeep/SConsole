@@ -3,70 +3,113 @@
   <table style="table-layout: fixed; width:100%;" border>
   <tr>
     <td>
-        <table class="table table-condensed" border>
+        <table class="table table-condensed">
             <!-- First row -->
             <tr>
-                <td width="100px">ID</td>
+                <td width="100px"><label for="id">ID</label></td>
                 <td width="5px">:</td>
                 <td>{{question.id}}</td>
-                
-                <td width="50px">Exam</td>
+                <td width="50px"><label for="exam">Exam</label></td>
                 <td width="5px">:</td>
-                <td>{{question.targetExam}}</td>
-                
-                <td width="50px">Subject</td>
+                <td>
+                 <select id="exam" 
+                         class="form-control"  
+                         ng-model="question.targetExam"
+                         ng-options="item for item in qbmMasterData.targetExams">
+                 </select>
+                </td>
+                <td width="50px"><label for="subject">Subject</label></td>
                 <td width="5px">:</td>
-                <td>{{question.subject.name}}</td>
+                <td>
+                 <select id="subject" 
+                         class="form-control"  
+                         ng-model="question.subject.name"
+                         ng-options="item for item in qbmMasterData.subjectNames">
+                 </select>
+                </td>
             </tr>
             <!-- Second row -->
             <tr>
-	            <td>Topic</td>
+	            <td><label for="topic">Topic</label></td>
 	            <td>:</td>
-	            <td colspan="7">{{question.topic.topicName}}</td>
+	            <td colspan="7">
+                 <select id="topic" 
+                         class="form-control"  
+                         ng-model="question.topic"
+                         ng-options="item as item.topicName for item in qbmMasterData.topics[question.subject.name] track by item.id">
+                 </select>
+	            </td>
             </tr>
             <!-- Third row -->
             <tr>
-                <td>Book</td>
+                <td><label for="book">Book</label></td>
                 <td>:</td>
-                <td colspan="7">{{question.book.bookName}}</td>
+                <td colspan="7">
+		         <select id="book" 
+		                 class="form-control"  
+		                 ng-model="question.book"
+		                 ng-options="item as item.bookShortName for item in qbmMasterData.books[question.subject.name] track by item.id">
+		         </select>
+                </td>
             </tr>
             <!-- Fourth row -->
             <tr>
-                <td>Q Type</td>
+                <td><label for="qtype">Q Type</label></td>
                 <td>:</td>
-                <td colspan="4">{{question.questionType}}</td>
-                <td>Q Ref</td>
+                <td colspan="4">
+                 <select id="qtype" 
+                         class="form-control"  
+                         ng-model="question.questionType"
+                         ng-options="item for item in qbmMasterData.questionTypes">
+                 </select>
+                </td>
+                <td><label for="qref">Q Ref</label></td>
                 <td>:</td>
-                <td>{{question.questionRef}}</td>
+                <td>
+                <input type="text" ng-model="question.questionRef" style="width:100%"/>
+                </td>
             </tr>
             <!-- Fifth row -->
             <tr>
-                <td>Lat Level</td>
+                <td><label for="lat_level">Lat level</label></td>
                 <td>:</td>
-                <td colspan="4">{{question.lateralThinkingLevel}}</td>
-                <td>Time</td>
+                <td colspan="4">
+                 <select id="lat_level" 
+                         class="form-control"  
+                         ng-model="question.lateralThinkingLevel"
+                         ng-options="item for item in qbmMasterData.lateralLevel">
+                 </select>
+                </td>
+                <td><label for="time">Time</label></td>
                 <td>:</td>
-                <td>{{question.projectedSolveTime}}</td>
+                <td>
+                 <select id="time" 
+                         class="form-control"  
+                         ng-model="question.projectedSolveTime"
+                         ng-options="item for item in qbmMasterData.approxSolveTime">
+                 </select>
+                </td>
             </tr>
             <!-- Sixth row -->
             <tr>
-                <td>Body</td>
+                <td><label for="answer">Body</label></td>
                 <td>:</td>
                 <td colspan="7"></td>
             </tr>
             <!-- Seventh row -->
             <tr>
                 <td colspan="9">
-                    <textarea rows="10" style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;">
-                    </textarea>
+                    <textarea rows="15" 
+                              ng-model="question.questionText"
+                              style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea>
                 </td>
             </tr>
             <!-- Eighth row -->
             <tr>
-                <td>Answer</td>
+                <td><label for="answer">Answer</label></td>
                 <td>:</td>
                 <td colspan="7">
-                    Answer input area goes here.
+                    <input id="answer" type="text" ng-model="question.answerText" style="width:100%"/>
                 </td>
             </tr>
         </table>

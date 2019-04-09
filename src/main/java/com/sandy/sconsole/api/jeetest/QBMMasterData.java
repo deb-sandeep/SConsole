@@ -10,7 +10,7 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 
 public class QBMMasterData {
 
-    private String[]  targetExams     = { "MAIN", "ADJ" } ;
+    private String[]  targetExams     = { "MAIN", "ADV" } ;
     private String[]  questionTypes   = { "SCA", "MCA", "IT", "RNT", "MMT" } ;
     private String[]  subjectNames    = { "IIT - Physics", "IIT - Chemistry", "IIT - Maths" } ;
     private Integer[] lateralLevel    = { 1, 2, 3, 4, 5 } ;

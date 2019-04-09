@@ -37,6 +37,8 @@ public class TestQuestion {
     private Integer   lateralThinkingLevel = 2 ;
     private Integer   projectedSolveTime   = 120 ;
     private String    questionText         = null ;
+    private String    questionFormattedText= null ;
+    private String    answerText           = null ;
     private Timestamp creationTime         = null ;
     private Timestamp lastUpdateTime       = null ;
     
@@ -142,5 +144,21 @@ public class TestQuestion {
     
     public void setLastUpdateTime( Timestamp lastUpdateTime ) {
         this.lastUpdateTime = lastUpdateTime ;
+    }
+
+    public String getQuestionFormattedText() {
+        return questionFormattedText ;
+    }
+
+    public void setQuestionFormattedText( String questionFormattedText ) {
+        this.questionFormattedText = questionFormattedText ;
+    }
+
+    public String getAnswerText() {
+        return answerText ;
+    }
+
+    public void setAnswerText( String answerText ) {
+        this.answerText = answerText ;
     }
 }
