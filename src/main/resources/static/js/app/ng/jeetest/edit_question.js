@@ -27,30 +27,81 @@ sConsoleApp.controller( 'EditQuestionController',
 	}
 	
 	$scope.discardChange = function() {
-	  console.log( "discardChange function called." ) ;
+		console.log( "discardChange function called." ) ;
 	}
 
 	$scope.editNewQuestion = function() {
-	  console.log( "editNewQuestion function called." ) ;
+		console.log( "editNewQuestion function called." ) ;
 	}
 
 	$scope.save = function() {
-	  console.log( "save function called." ) ;
+		console.log( "save function called." ) ;
+		if( validateInputs() ) {
+		}
 	}
 
 	$scope.saveAndCreateNew = function() {
-	  console.log( "saveAndCreateNew function called." ) ;
+		console.log( "saveAndCreateNew function called." ) ;
+		if( validateInputs() ) {
+		}
 	}
 
 	$scope.preview = function() {
-	  console.log( "preview function called." ) ;
+		console.log( "preview function called." ) ;
+		if( validateInputs() ) {
+		}
 	}
 
 	$scope.toggleAutoPreview = function() {
-	  console.log( "toggleAutoPreview function called." ) ;
+		console.log( "toggleAutoPreview function called." ) ;
 	}
 	  
 	// --- [START] Internal Questions
+	
+	function validateInputs() {
+		console.log( "Validating user inputs." ) ;
+		
+		var q = $scope.question ;
+		var errorsFound = false ;
+		
+		if( q.subject == null || q.subject.name == null ) {
+			errorsFound = true ;
+			$scope.$parent.addErrorAlert( "Subject name should be specified." ) ;
+		}
+		
+		if( q.topic == null ) {
+			errorsFound = true ;
+			$scope.$parent.addErrorAlert( "Topic should be specified." ) ;
+		}
+		
+		if( q.book == null ) {
+			errorsFound = true ;
+			$scope.$parent.addErrorAlert( "Book should be specified." ) ;
+		}
+		
+		if( q.questionRef == null || 
+		    ( typeof q.questionType === 'undefined' ) || 
+		    q.questionRef.trim().length == 0 ) {
+			errorsFound = true ;
+			$scope.$parent.addErrorAlert( "Question Reference should be specified." ) ;
+		}
+		
+		if( q.questionText == null || 
+		    ( typeof q.questionText === 'undefined' ) || 
+		    q.questionText.trim().length == 0 ) {
+			errorsFound = true ;
+			$scope.$parent.addErrorAlert( "Question Text should be specified." ) ;
+		}
+
+		if( errorsFound ) {
+			console.log( "Errors found in user inputs." ) ;
+		}
+		else {
+			console.log( "No errors found in user inputs." ) ; 
+		}
+
+		return errorsFound ;
+	}
 	
     function loadQBMMasterData() {
         
