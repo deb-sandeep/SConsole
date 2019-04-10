@@ -8,6 +8,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.qbmMasterData = null ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
+	$scope.isAutoPreviewOn = false ;
 	
 	// --- [START] Controller initialization
 	
@@ -25,6 +26,30 @@ sConsoleApp.controller( 'EditQuestionController',
 		loadQuestionForEdit( -1 ) ;
 	}
 	
+	$scope.discardChange = function() {
+	  console.log( "discardChange function called." ) ;
+	}
+
+	$scope.editNewQuestion = function() {
+	  console.log( "editNewQuestion function called." ) ;
+	}
+
+	$scope.save = function() {
+	  console.log( "save function called." ) ;
+	}
+
+	$scope.saveAndCreateNew = function() {
+	  console.log( "saveAndCreateNew function called." ) ;
+	}
+
+	$scope.preview = function() {
+	  console.log( "preview function called." ) ;
+	}
+
+	$scope.toggleAutoPreview = function() {
+	  console.log( "toggleAutoPreview function called." ) ;
+	}
+	  
 	// --- [START] Internal Questions
 	
     function loadQBMMasterData() {

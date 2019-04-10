@@ -133,7 +133,8 @@
   </div>
   <div class="panel-footer clearfix">
 	  <div class="pull-right">
-          <button type="button" class="btn btn-danger btn-sm">
+          <button type="button" class="btn btn-danger btn-sm"
+                  ng-click="discardChange()">
 	          Discard
           </button>
           <button type="button" class="btn btn-success btn-sm"
@@ -141,19 +142,24 @@
               <span class="glyphicon glyphicon-plus"></span>
               New
           </button>
-          <button type="button" class="btn btn-success btn-sm">
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="save()">
 	          <span class="glyphicon glyphicon-floppy-disk"></span>
 	          Save
           </button>
-          <button type="button" class="btn btn-success btn-sm">
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="saveAndCreateNew()">
               <span class="glyphicon glyphicon-floppy-disk"></span>
               <span class="glyphicon glyphicon-plus"></span>
               Save & New
           </button>
-          <button type="button" class="btn btn-info btn-sm">
+          <button type="button" class="btn btn-info btn-sm"
+                  ng-click="preview()">
               <span class="glyphicon glyphicon-eye-open"></span>
               Preview
-	          <input type="checkbox">
+	          <input type="checkbox"
+	                 ng-model="isAutoPreviewOn"
+	                 ng-change="toggleAutoPreview()">
 	              <span class="glyphicon glyphicon-time"></span>
 	          </input>
           </button>
