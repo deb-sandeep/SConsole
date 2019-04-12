@@ -6,72 +6,80 @@
         <table class="table table-condensed">
             <!-- First row -->
             <tr>
-                <td width="100px"><label for="id">ID</label></td>
+                <td width="100px" class="labelcell"><label for="id">ID</label></td>
                 <td width="5px">:</td>
                 <td>{{question.id}}</td>
-                <td width="50px"><label for="exam">Exam</label></td>
+                <td width="50px" class="labelcell"><label for="exam">Exam</label></td>
                 <td width="5px">:</td>
                 <td>
                  <select id="exam" 
                          class="form-control"  
                          ng-model="question.targetExam"
-                         ng-options="item for item in qbmMasterData.targetExams">
+                         ng-options="item for item in qbmMasterData.targetExams"
+                         ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
-                <td width="50px"><label for="subject">Subject</label></td>
+                <td width="50px" class="labelcell"><label for="subject">Subject</label></td>
                 <td width="5px">:</td>
                 <td>
                  <select id="subject" 
                          class="form-control"  
                          ng-model="question.subject.name"
-                         ng-options="item for item in qbmMasterData.subjectNames">
+                         ng-options="item for item in qbmMasterData.subjectNames"
+                         ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
             </tr>
             <!-- Second row -->
             <tr>
-	            <td><label for="topic">Topic</label></td>
+	            <td class="labelcell"><label for="topic">Topic</label></td>
 	            <td>:</td>
 	            <td colspan="7">
                  <select id="topic" 
                          class="form-control"  
                          ng-model="question.topic"
-                         ng-options="item as item.topicName for item in qbmMasterData.topics[question.subject.name] track by item.id">
+                         ng-options="item as item.topicName for item in qbmMasterData.topics[question.subject.name] track by item.id"
+                         ng-disabled="isExistingQuestion()">
                  </select>
 	            </td>
             </tr>
             <!-- Third row -->
             <tr>
-                <td><label for="book">Book</label></td>
+                <td class="labelcell"><label for="book">Book</label></td>
                 <td>:</td>
                 <td colspan="7">
 		         <select id="book" 
 		                 class="form-control"  
 		                 ng-model="question.book"
-		                 ng-options="item as item.bookShortName for item in qbmMasterData.books[question.subject.name] track by item.id">
+		                 ng-options="item as item.bookShortName for item in qbmMasterData.books[question.subject.name] track by item.id"
+                         ng-disabled="isExistingQuestion()">
 		         </select>
                 </td>
             </tr>
             <!-- Fourth row -->
             <tr>
-                <td><label for="qtype">Q Type</label></td>
+                <td class="labelcell"><label for="qtype">Q Type</label></td>
                 <td>:</td>
                 <td colspan="4">
                  <select id="qtype" 
                          class="form-control"  
                          ng-model="question.questionType"
-                         ng-options="item for item in qbmMasterData.questionTypes">
+                         ng-options="item for item in qbmMasterData.questionTypes"
+                         ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
-                <td><label for="qref">Q Ref</label></td>
+                <td class="labelcell"><label for="qref">Q Ref</label></td>
                 <td>:</td>
                 <td>
-                <input type="text" ng-model="question.questionRef" style="width:100%"/>
+                <input type="text" 
+                       ng-model="question.questionRef" 
+                       style="width:100%"
+                       ng-disabled="isExistingQuestion()"/>
                 </td>
             </tr>
             <!-- Fifth row -->
             <tr>
-                <td><label for="lat_level">Lat level</label></td>
+                <td class="labelcell"><label for="lat_level">Lat level</label></td>
                 <td>:</td>
                 <td colspan="4">
                  <select id="lat_level" 
@@ -80,7 +88,7 @@
                          ng-options="item for item in qbmMasterData.lateralLevel">
                  </select>
                 </td>
-                <td><label for="time">Time</label></td>
+                <td class="labelcell"><label for="time">Time</label></td>
                 <td>:</td>
                 <td>
                  <select id="time" 
@@ -92,7 +100,7 @@
             </tr>
             <!-- Sixth row -->
             <tr>
-                <td><label for="answer">Body</label></td>
+                <td class="labelcell"><label for="answer">Body</label></td>
                 <td>:</td>
                 <td colspan="7"></td>
             </tr>
@@ -115,15 +123,17 @@
         </table>
     </td>
     <td valign="top">
-        <table class="table table-condensed" border>
+        <table class="table table-condensed">
             <!-- First row -->
             <tr>
-                <td width="100%">Preview</td>
+                <td width="100%" class="labelcell">
+                <label for="preview">Preview</label>
+                </td>
             </tr>
             <!-- Second row -->
             <tr>
                 <td>
-                    <div>Preview</div>
+                    <render-test-question></render-test-question>
                 </td>
             </tr>
         </table>
@@ -158,8 +168,7 @@
               <span class="glyphicon glyphicon-eye-open"></span>
               Preview
 	          <input type="checkbox"
-	                 ng-model="isAutoPreviewOn"
-	                 ng-change="toggleAutoPreview()">
+	                 ng-model="isAutoPreviewOn">
 	              <span class="glyphicon glyphicon-time"></span>
 	          </input>
           </button>

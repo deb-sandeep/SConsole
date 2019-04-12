@@ -45,6 +45,11 @@ public class SConsole
     public static File SCREENSHOT_DIR = new File( System.getProperty( "user.home" ),
                                                   "projects/workspace/sconsole/capture/screenshot" ) ;
 
+    public static File JEETEST_IMG_DIR = new File( System.getProperty( "user.home" ),
+                                                  "projects/workspace/sconsole/jeetest/images" ) ;
+
+    public static File MATHJAX_DIR = new File( "/var/www/lib-ext/MathJax" ) ;
+
     private static Timer              SEC_TIMER = new Timer( "SEC_TIMER", true ) ;
     private static SimpleDateFormat   SDF       = new SimpleDateFormat( "yyyy-MM-dd" ) ;
     private static ApplicationContext APP_CTX   = null ;
@@ -205,6 +210,12 @@ public class SConsole
         registry.addResourceHandler("/screenshot/**")
                 .addResourceLocations( "file:" + SCREENSHOT_DIR.getAbsolutePath() + "/",
                                        "classpath:/static/img/" ) ;
+        
+        registry.addResourceHandler("/jeetest/images/**")
+                .addResourceLocations( "file:" + JEETEST_IMG_DIR.getAbsolutePath() + "/" ) ;
+        
+        registry.addResourceHandler("/js/lib/MathJax/**")
+                .addResourceLocations( "file:" + MATHJAX_DIR.getAbsolutePath() + "/" ) ;
     }
 
     @Override
