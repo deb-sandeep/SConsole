@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SConsole</title>
 
+    <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/app/app.css"/>
+    <link rel="stylesheet" href="/css/pure/tables.css"/>
+    
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({ TeX: { extensions: ["mhchem.js"] }});
     </script>
-    <script type="text/javascript" src="/js/lib/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full"></script>
+    <script type="text/javascript" 
+            src="/js/lib/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full">
+    </script>
     
     <script src="/js/lib/angular.min.js"></script>
     <script src="/js/lib/angular-route.min.js"></script>
@@ -22,13 +28,11 @@
 
     <script src="/js/app/util/text_formatter.js"></script>
     <script src="/js/app/ng/app-ng.js"></script>
-    <script src="/js/app/ng/jeetest/edit_question.js"></script>
-    <script src="/js/app/ng/jeetest/search_question.js"></script>
-    <script src="/js/app/ng/jeetest/qbm.js"></script>
-
-    <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/app/app.css"/>
-    <link rel="stylesheet" href="/css/pure/tables.css"/>
+    <script src="/js/app/ng/jeetest/directive.js"></script>
+    <script src="/js/app/ng/jeetest/qbm/edit_question.js"></script>
+    <script src="/js/app/ng/jeetest/qbm/search_question.js"></script>
+    <script src="/js/app/ng/jeetest/qbm/route.js"></script>
+    <script src="/js/app/ng/jeetest/qbm/qbm.js"></script>
 </head>
 
 <body ng-controller="QBMController">

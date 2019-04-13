@@ -14,16 +14,16 @@ public class JEETestController {
     
     @RequestMapping( "/qb-management" )
     public String qbManagement() {
-        return "jeetest/qb-management" ;
+        return "jeetest/qbm/qb-management" ;
     }
     
-    @RequestMapping( "/editQuestion" )
+    @RequestMapping( "/qbm/editQuestion" )
     public String jeeMain() {
-        return "jeetest/edit_question" ;
+        return "jeetest/qbm/edit_question" ;
     }
     
-    @RequestMapping( "/searchQuestions" )
+    @RequestMapping( "/qbm/searchQuestions" )
     public String jeeRed() {
-        return "jeetest/search_questions" ;
+        return "jeetest/qbm/search_questions" ;
     }
 }
