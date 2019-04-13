@@ -15,7 +15,7 @@ https://github.com/yahoo/pure/blob/master/LICENSE.md
 .pure-table caption {
     color: #000;
     font: italic 85%/1 arial, sans-serif;
-    padding: 1em 0;
+    padding: 0.2em 0;
     text-align: center;
 }
 
@@ -24,9 +24,9 @@ https://github.com/yahoo/pure/blob/master/LICENSE.md
     border-left: 1px solid #cbcbcb;/*  inner column border */
     border-width: 0 0 0 1px;
     font-size: inherit;
-    margin: 0;
+    margin: 0px;
     overflow: visible; /*to make ths where the title is really long work*/
-    padding: 0.5em 1em; /* cell padding */
+    padding: 0.5em 0.5em; /* cell padding */
 }
 
 /* Consider removing this next declaration block, as it causes problems when

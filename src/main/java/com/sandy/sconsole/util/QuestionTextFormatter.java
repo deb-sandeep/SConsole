@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.jeetest;
+package com.sandy.sconsole.util;
 
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
@@ -17,7 +17,7 @@ public class QuestionTextFormatter {
                                      ~Extensions.ANCHORLINKS ) ;
     
     private static final String JN_MARKER_PATTERN = 
-                             "\\{\\{@([a-zA-Z0-9]*)\\s+((.(?!\\{\\{))*)\\}\\}" ;
+                             "\\{\\{@([a-zA-Z0-9_]*)\\s+((.(?!\\{\\{))*)\\}\\}" ;
     
     private static final String MJ_BLOCK_MARKER_PATTERN = 
                              "\\$\\$.*?\\$\\$" ;
@@ -164,6 +164,10 @@ public class QuestionTextFormatter {
         }
         else if( type.equals( "blue" ) ) {
             return "<span class='blue'>" + processMarkDown( data ) + "</span>" ;
+        }
+        else if( type.equals( "mmt_matrix" ) ) {
+            MMTMatrixTagProcessor processor = new MMTMatrixTagProcessor( data, this ) ;
+            return processor.getProcessedText() ;
         }
         
         return null ;

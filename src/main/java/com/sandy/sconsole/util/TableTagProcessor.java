@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.jeetest;
+package com.sandy.sconsole.util;
 
 import java.io.BufferedReader ;
 import java.io.StringReader ;
