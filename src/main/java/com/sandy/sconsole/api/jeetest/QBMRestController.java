@@ -10,6 +10,7 @@ import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
+import org.springframework.web.bind.annotation.DeleteMapping ;
 import org.springframework.web.bind.annotation.GetMapping ;
 import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.PostMapping ;
@@ -25,6 +26,7 @@ import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.util.QuestionTextFormatter ;
+import com.sandy.sconsole.util.ResponseMsg ;
 
 @RestController
 public class QBMRestController {
@@ -92,6 +94,20 @@ public class QBMRestController {
                                      .body( testQuestion ) ;
         }
         return response ;
+    }
+    
+    @DeleteMapping( "/TestQuestion/{id}" )
+    public ResponseEntity<ResponseMsg> deleteQuestion( @PathVariable Integer id ) {
+        
+        log.debug( "Deleting test question with ID = " + id );
+        
+        if( id == null || id <= 0 ) {
+            return ResponseEntity.status( HttpStatus.NOT_FOUND )
+                                 .body( new ResponseMsg( "Question id can't be <=0" ) ) ;
+        }
+        testQuestionRepo.deleteById( id ) ;
+        return ResponseEntity.status( HttpStatus.OK )
+                             .body( new ResponseMsg( "Successfully deleted" ) ) ;
     }
     
     @GetMapping( "/TestQuestion" )

@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
+sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $location ) {
     
 	$scope.$parent.navBarTitle = "Search Questions." ;
 	$scope.topicsMasterList = [] ;
@@ -25,6 +25,33 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 	// --- [END] Controller initialization
 	
 	// --- [START] Scope functions
+	
+	$scope.editQuestion = function( id ) {
+		$location.path( "/editQuestion/" + id ) ;
+	}
+	
+	$scope.deleteQuestion = function( index ) {
+		
+		var question = $scope.searchResults[index] ;
+    	console.log( "Deleting question " + question.id ) ;
+
+    	$scope.$parent.interactingWithServer = true ;
+        $http.delete( '/TestQuestion/' + question.id )
+        .then( 
+            function( response ){
+                console.log( "Successfully deleted." ) ;
+                $scope.searchResults.splice( index, 1 ) ;
+            }, 
+            function( error ){
+                console.log( "Error deleting question on server." + error ) ;
+                var errMsg = "Server error." ;
+                $scope.$parent.addErrorAlert( "Could not delete question. " + errMsg ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
 	
 	$scope.subjectSelectionChanged = function() {
 		console.log( $scope.searchCriteria.selectedSubjects) ;

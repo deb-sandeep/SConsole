@@ -32,3 +32,8 @@
 .form-group {
 	margin-bottom : 5px;
 }
+
+.btn-sm {
+	padding-top:1px ;
+	padding-bottom:1px;
+}
