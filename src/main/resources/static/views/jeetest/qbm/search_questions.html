@@ -1,51 +1,126 @@
 <div class="split left">
 	<div class="panel-group" id="accordion">
+	  
 	  <div class="panel panel-default">
 	    <div class="panel-heading">
 	      <h4 class="panel-title">
-	        <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse1">
-	        Collapsible Group 1</a>
+	        <a data-toggle="collapse" data-parent="#accordion" data-target="#subjectChoice">
+	        Subject
+	        </a>
 	      </h4>
 	    </div>
-	    <div id="collapse1" class="panel-collapse collapse in">
-	      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-	      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-	      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-	      commodo consequat.</div>
-	    </div>
+	    <div id="subjectChoice" class="panel-collapse collapse in">
+	        <select id="subjectChoiceList" 
+	                class="form-control" 
+	                multiple="true" 
+	                size=3
+	                ng-model="searchCriteria.selectedSubjects"
+	                ng-options="obj for obj in $parent.qbmMasterData.subjectNames"
+	                ng-change="subjectSelectionChanged()">
+	        </select>
+        </div>
 	  </div>
+	  
 	  <div class="panel panel-default">
 	    <div class="panel-heading">
 	      <h4 class="panel-title">
-	        <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse2">
-	        Collapsible Group 2</a>
+	        <a data-toggle="collapse" data-parent="#accordion" data-target="#topicChoice">
+	        Topic
+	        </a>
 	      </h4>
 	    </div>
-	    <div id="collapse2" class="panel-collapse collapse">
-	      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-	      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-	      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-	      commodo consequat.</div>
+	    <div id="topicChoice" class="panel-collapse collapse">
+            <select id="topicChoiceList" 
+                    class="form-control" 
+                    multiple="true" 
+                    size=15
+                    ng-model="searchCriteria.selectedTopics"
+                    ng-options="item as item.topicName for item in topicsMasterList">
+            </select>
 	    </div>
 	  </div>
-	  <div class="panel panel-default">
-	    <div class="panel-heading">
-	      <h4 class="panel-title">
-	        <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse3">
-	        Collapsible Group 3</a>
-	      </h4>
-	    </div>
-	    <div id="collapse3" class="panel-collapse collapse">
-	      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-	      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-	      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-	      commodo consequat.</div>
-	    </div>
-	  </div>
+	  
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" data-target="#bookChoice">
+            Book
+            </a>
+          </h4>
+        </div>
+        <div id="bookChoice" class="panel-collapse collapse">
+            <select id="bookChoiceList" 
+                    class="form-control" 
+                    multiple="true" 
+                    size=15
+                    ng-model="searchCriteria.selectedBooks"
+                    ng-options="item as item.bookName for item in booksMasterList">
+            </select>
+        </div>
+      </div>
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" data-target="#questionTypeChoice">
+            Question type
+            </a>
+          </h4>
+        </div>
+        <div id="questionTypeChoice" class="panel-collapse collapse">
+            <select id="questionTypeChoiceList" 
+                    class="form-control" 
+                    multiple="true" 
+                    size=5
+                    ng-model="searchCriteria.selectedQuestionTypes"
+                    ng-options="item for item in $parent.qbmMasterData.questionTypes">
+            </select>
+        </div>
+      </div>
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Containing text</h4>
+        </div>
+        <div class="panel-body" style="padding:5px">
+           <input type="text" 
+                  ng-model="searchCriteria.searchText" 
+                  style="width:100%"/>
+           </td>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Miscellaneous</h4>
+        </div>
+        <div class="panel-body" style="padding:5px">
+			<div class="form-group">
+			    <input id="showOnlyUnsynched" 
+			           type="checkbox" 
+			           ng-model="searchCriteria.showOnlyUnsynched" />
+			    <label for="showOnlyUnsynched"> Only unsynched</label>
+			</div>
+			<div class="form-group">
+			    <input id="excludeAttempted" 
+			           type="checkbox" 
+			           ng-model="searchCriteria.excludeAttempted" />
+			    <label for="excludeAttempted"> Exclude attempted</label>
+			</div>
+        </div>
+      </div>
+      
+      <div class="pull-right" style="margin-top:10px">
+          <button type="button" class="btn btn-info btn-sm"
+                  ng-click="executeSearch()">
+              Search
+          </button>
+      </div>
+
 	</div>
 </div>
 
 <div class="split right">
     <h2>John Doe</h2>
-    <p>Some text here too.</p>
+    <p>{{searchCriteria}}</p>
 </div>

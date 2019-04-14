@@ -40,7 +40,7 @@ public class QBMRestController {
     @GetMapping( "/QBMMasterData" )
     public ResponseEntity<QBMMasterData> getQBMMasterData() {
         try {
-            log.debug( "Returning QBM Master Data" ) ;
+            log.debug( "Fetching QBM Master Data" ) ;
             
             QBMMasterData qbmMaster = new QBMMasterData() ;
             
@@ -68,7 +68,6 @@ public class QBMRestController {
         TestQuestion testQuestion = null ;
         
         if( id == null || id <= 0 ) {
-            log.debug( "Creating new test question" ) ;
             testQuestion = new TestQuestion() ;
         }
         else {
