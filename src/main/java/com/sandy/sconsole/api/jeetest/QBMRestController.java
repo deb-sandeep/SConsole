@@ -1,6 +1,8 @@
 package com.sandy.sconsole.api.jeetest;
 
+import java.util.ArrayList ;
 import java.util.HashMap ;
+import java.util.List ;
 import java.util.Map ;
 import java.util.NoSuchElementException ;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping ;
 import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
+import org.springframework.web.bind.annotation.RequestParam ;
 import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.common.util.StringUtil ;
@@ -89,6 +92,30 @@ public class QBMRestController {
                                      .body( testQuestion ) ;
         }
         return response ;
+    }
+    
+    @GetMapping( "/TestQuestion" )
+    public ResponseEntity<List<TestQuestion>> searchQuestions(
+            @RequestParam( value="subjects",              required=false ) String[] subjects,
+            @RequestParam( value="selectedQuestionTypes", required=false ) String[] selectedQuestionTypes,
+            @RequestParam( value="showOnlyUnsynched",     required=false ) Boolean showOnlyUnsynched,
+            @RequestParam( value="excludeAttempted",      required=false ) Boolean excludeAttempted,
+            @RequestParam( value="searchText",            required=false ) String searchText,
+            @RequestParam( value="selectedTopics",        required=false ) Integer[] topicIds,
+            @RequestParam( value="selectedBooks",         required=false ) Integer[] bookIds ) {
+        
+        List<TestQuestion> questions = new ArrayList<>() ;
+        try {
+            Iterable<TestQuestion> results = testQuestionRepo.findAll() ;
+            for( TestQuestion q : results ) {
+                questions.add( q ) ;
+            }
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( questions ) ;
+        }
+        catch( Exception e ) {
+            return ResponseEntity.status( 500 ).body( null ) ;
+        }
     }
     
     @PostMapping( "/TestQuestion" )

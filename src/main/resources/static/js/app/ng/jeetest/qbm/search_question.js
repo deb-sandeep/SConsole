@@ -8,7 +8,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 		selectedSubjects : [],
 		selectedTopics : [],
 		selectedBooks : [],
-		selectedQuestionTypes : [ "SCA", "MCA", "IT", "RNT", "MMT" ],
+		selectedQuestionTypes : [],
 		showOnlyUnsynched : false,
 		excludeAttempted : true,
 		searchText : ""
@@ -37,20 +37,60 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 			Array.prototype.push.apply( $scope.topicsMasterList, topics ) ;
 			Array.prototype.push.apply( $scope.booksMasterList, books ) ;
 		}
-		
-		var allTopics = { topicName : "ALL TOPICS" } ;
-		var allBooks  = { bookName : "ALL BOOKS" } ;
-		
-		$scope.topicsMasterList.unshift( allTopics ) ;
-		$scope.booksMasterList.unshift( allBooks ) ;
-		$scope.searchCriteria.selectedTopics.push( allTopics ) ;
-		$scope.searchCriteria.selectedBooks.push( allBooks ) ;
 	}
 	
 	$scope.executeSearch = function() {
 		console.log( "Executing search" ) ;
+		
+		var selTopics = [] ;
+		var selBooks = [] ;
+		
+		for( i=0; i<$scope.searchCriteria.selectedTopics.length; i++ ) {
+			selTopics.push( $scope.searchCriteria.selectedTopics[i].id ) ;
+		}
+		
+		for( i=0; i<$scope.searchCriteria.selectedBooks.length; i++ ) {
+			selBooks.push( $scope.searchCriteria.selectedBooks[i].id ) ;
+		}
+		
+		// NOTE: Empty value of any of the parameters implies that we consider
+		//       all the possibilities for that parameter.
+		var criteria = {
+			subjects              : $scope.searchCriteria.selectedSubjects,
+			selectedQuestionTypes : $scope.searchCriteria.selectedQuestionTypes,
+			showOnlyUnsynched     : $scope.searchCriteria.showOnlyUnsynched,
+			excludeAttempted      : $scope.searchCriteria.excludeAttempted,
+			searchText            : $scope.searchCriteria.searchText,
+			selectedTopics        : selTopics,
+			selectedBooks         : selBooks
+		} ;
+		
+		fetchSearchResults( criteria ) ;
 	}
 	
 	// --- [END] Scope functions
 	
+	function fetchSearchResults( criteria ) {
+		
+        $scope.$parent.interactingWithServer = true ;
+        $http( {
+            url:'/TestQuestion',
+            method:'GET',
+            params: criteria
+        })
+        .then( 
+            function( response ){
+                console.log( "Search results received." ) ;
+                console.log( response ) ;
+            }, 
+            function( error ){
+                console.log( "Error getting search results." ) ;
+                console.log( error ) ;
+                $scope.$parent.addErrorAlert( "Could not fetch search results." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
 } ) ;
