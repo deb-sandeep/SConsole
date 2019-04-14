@@ -22,7 +22,8 @@ sConsoleApp.controller( 'EditQuestionController',
 		if( $scope.isAutoPreviewOn ) {
 			generateFormattedTextAndRenderPreview() ;
 		}
-	}, 2000 ) ;
+	}, 3000 ) ;
+	
 	// --- [END] Controller initialization
 	
 	// --- [START] Scope functions
@@ -163,7 +164,8 @@ sConsoleApp.controller( 'EditQuestionController',
                         $scope.question.targetExam            = $scope.lastSavedQuestion.targetExam ;       
                         $scope.question.questionType          = $scope.lastSavedQuestion.questionType ;         
                         $scope.question.lateralThinkingLevel  = $scope.lastSavedQuestion.lateralThinkingLevel ;                 
-                        $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;               
+                        $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;
+                        $scope.question.questionRef           = $scope.lastSavedQuestion.questionRef ;
                     } 
                     
                     $scope.lastSavedQuestion = jQuery.extend(true, {}, response.data) ;
@@ -218,6 +220,10 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	function generateFormattedTextAndRenderPreview() {
 		
+        if( $scope.question.questionText == null ) {
+        	return ;
+        }
+        
         $scope.interactingWithServer = true ;
         $http.post( '/FormattedText', $scope.question.questionText )        
         .then( 

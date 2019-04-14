@@ -1,6 +1,10 @@
 function TextFormatter( $sce ) {
 
 	this.format = function( inputText ) {
+		
+		if( inputText == null ) {
+			return "" ;
+		}
 
 		// Why? Because once the input text is fomatted via $sce, it is transformed
 		// into an object. There is no point in trying to process it again. This
