@@ -10,13 +10,16 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 		selectedBooks : [],
 		selectedQuestionTypes : [ "SCA", "MCA", "IT", "RNT", "MMT" ],
 		showOnlyUnsynched : false,
-		excludeAttempted : true
+		excludeAttempted : true,
+		searchText : ""
 	}
 	
 	// --- [START] Controller initialization
 	// First load the master data from the server. The drop down
 	// master data will consist of subjects, topics, books etc.
+	
 	$scope.$parent.loadQBMMasterData() ;
+	
 	// --- [END] Controller initialization
 	
 	// --- [START] Scope functions
@@ -36,7 +39,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 		}
 		
 		var allTopics = { topicName : "ALL TOPICS" } ;
-		var allBooks  =  { bookName : "ALL BOOKS" } ;
+		var allBooks  = { bookName : "ALL BOOKS" } ;
 		
 		$scope.topicsMasterList.unshift( allTopics ) ;
 		$scope.booksMasterList.unshift( allBooks ) ;
