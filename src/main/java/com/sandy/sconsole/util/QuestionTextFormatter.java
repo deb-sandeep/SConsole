@@ -137,8 +137,7 @@ public class QuestionTextFormatter {
         throws Exception {
         
         if( type.equals( "img" ) ) {
-            processImg( data ) ;
-            return null ;
+            return processImg( data ) ;
         }
         else if( type.equals( "table" ) ) {
             TableTagProcessor processor = new TableTagProcessor( data, this ) ;
@@ -173,13 +172,9 @@ public class QuestionTextFormatter {
         return null ;
     }
     
-    public void processImg( String imgName ) 
+    public String processImg( String imgName ) 
         throws Exception {
-
-        // There is nothing much to do here. The img tag will be rendered
-        // on the browser. We might, however want to check if the specified
-        // image exists in the folder. This needs to be thought through..
-        // For now, keeping the function body as empty.
+        return "<img src='/jeetest/images/" + imgName + "'/>" ;
     }
 
     private String processMathTagContents( String content ) {

@@ -1,8 +1,6 @@
 sConsoleApp.controller( 'EditQuestionController', 
 		                function( $scope, $http, $sce, $routeParams ) {
 	
-	var textFormatter = new TextFormatter( null ) ;
-	
 	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
@@ -191,7 +189,7 @@ sConsoleApp.controller( 'EditQuestionController',
     
 	function renderPreview( markupText ) {
 		console.log( "Rendering preview with formatted text." ) ;
-		$scope.formattedContent = textFormatter.format( markupText ) ;
+		$scope.formattedContent = markupText ;
 	}
 	
 	function generateFormattedTextAndRenderPreview() {

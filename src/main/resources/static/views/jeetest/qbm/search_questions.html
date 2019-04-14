@@ -121,6 +121,13 @@
 </div>
 
 <div class="split right">
-    <h2>John Doe</h2>
-    <p>{{searchCriteria}}</p>
+	<div class="panel panel-success" 
+	     ng-repeat="question in searchResults">
+	  <div class="panel-heading">
+	    <span class="panel-title">Question</span>
+	  </div>
+	  <div class="panel-body">
+	      <render-test-question-on-edit-page></render-test-question-on-edit-page>
+	  </div>
+	</div> 
 </div>

@@ -14,6 +14,8 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 		searchText : ""
 	}
 	
+	$scope.searchResults = [] ;
+	
 	// --- [START] Controller initialization
 	// First load the master data from the server. The drop down
 	// master data will consist of subjects, topics, books etc.
@@ -72,7 +74,9 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
 	
 	function fetchSearchResults( criteria ) {
 		
+		$scope.searchResults = [] ;
         $scope.$parent.interactingWithServer = true ;
+        
         $http( {
             url:'/TestQuestion',
             method:'GET',
@@ -82,6 +86,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http ) {
             function( response ){
                 console.log( "Search results received." ) ;
                 console.log( response ) ;
+                $scope.searchResults = response.data ;
             }, 
             function( error ){
                 console.log( "Error getting search results." ) ;
