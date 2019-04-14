@@ -3,8 +3,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	var textFormatter = new TextFormatter( null ) ;
 	
-	$scope.interactingWithServer = false ;
-	$scope.qbmMasterData = null ;
+	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
 	$scope.isAutoPreviewOn = false ;
@@ -14,7 +13,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	// First load the dropdown master data from the server. The drop down
 	// master data will consist of subjects, topics, books etc.
-	loadQBMMasterData() ;
+	$scope.$parent.loadQBMMasterData() ;
 	
 	loadQuestionForEdit( $routeParams.id ) ;
 	
@@ -119,37 +118,14 @@ sConsoleApp.controller( 'EditQuestionController',
 		return true ;
 	}
 	
-    function loadQBMMasterData() {
-        
-        console.log( "Loading QBM master data from server." ) ;
-        
-        $scope.interactingWithServer = true ;
-        $http.get( '/QBMMasterData' )
-        .then( 
-                function( response ){
-                    console.log( "QBM master data received." ) ;
-                    console.log( response ) ;
-                    $scope.qbmMasterData = response.data ;
-                }, 
-                function( error ){
-                    console.log( "Error getting QBM master data." ) ;
-                    console.log( error ) ;
-                    $scope.$parent.addErrorAlert( "Could not load master data." ) ;
-                }
-        )
-        .finally(function() {
-            $scope.interactingWithServer = false ;
-        }) ;
-    }
-    
-    function loadQuestionForEdit( questionId ) {
+	function loadQuestionForEdit( questionId ) {
     	
     	if( typeof questionId === 'undefined' ) {
     		questionId = -1 ;
     	}
     	console.log( "Loading question for edit. ID = " + questionId ) ;
     	
-        $scope.interactingWithServer = true ;
+        $scope.$parent.interactingWithServer = true ;
         $http.get( '/TestQuestion/' + questionId )
         .then( 
                 function( response ){
@@ -178,14 +154,14 @@ sConsoleApp.controller( 'EditQuestionController',
                 }
         )
         .finally(function() {
-            $scope.interactingWithServer = false ;
+            $scope.$parent.interactingWithServer = false ;
         }) ;
     }
     
     function saveQuestionOnServer( previewRender, newQuestionEdit ) {
     	
     	console.log( "Saving question on server." ) ;
-        $scope.interactingWithServer = true ;
+        $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestQuestion', $scope.question )
         .then( 
             function( response ){
@@ -209,7 +185,7 @@ sConsoleApp.controller( 'EditQuestionController',
             }
         )
         .finally(function() {
-            $scope.interactingWithServer = false ;
+            $scope.$parent.interactingWithServer = false ;
         }) ;
     }
     
@@ -224,7 +200,7 @@ sConsoleApp.controller( 'EditQuestionController',
         	return ;
         }
         
-        $scope.interactingWithServer = true ;
+        $scope.$parent.interactingWithServer = true ;
         $http.post( '/FormattedText', $scope.question.questionText )        
         .then( 
             function( response ){
@@ -239,7 +215,7 @@ sConsoleApp.controller( 'EditQuestionController',
             }
         )
         .finally(function() {
-            $scope.interactingWithServer = false ;
+            $scope.$parent.interactingWithServer = false ;
         }) ;
 	}
 } ) ;

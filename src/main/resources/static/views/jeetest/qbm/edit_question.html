@@ -15,7 +15,7 @@
                  <select id="exam" 
                          class="form-control"  
                          ng-model="question.targetExam"
-                         ng-options="item for item in qbmMasterData.targetExams"
+                         ng-options="item for item in $parent.qbmMasterData.targetExams"
                          ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
@@ -25,7 +25,7 @@
                  <select id="subject" 
                          class="form-control"  
                          ng-model="question.subject.name"
-                         ng-options="item for item in qbmMasterData.subjectNames"
+                         ng-options="item for item in $parent.qbmMasterData.subjectNames"
                          ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
@@ -38,7 +38,7 @@
                  <select id="topic" 
                          class="form-control"  
                          ng-model="question.topic"
-                         ng-options="item as item.topicName for item in qbmMasterData.topics[question.subject.name] track by item.id"
+                         ng-options="item as item.topicName for item in $parent.qbmMasterData.topics[question.subject.name] track by item.id"
                          ng-disabled="isExistingQuestion()">
                  </select>
 	            </td>
@@ -51,7 +51,7 @@
 		         <select id="book" 
 		                 class="form-control"  
 		                 ng-model="question.book"
-		                 ng-options="item as item.bookShortName for item in qbmMasterData.books[question.subject.name] track by item.id"
+		                 ng-options="item as item.bookShortName for item in $parent.qbmMasterData.books[question.subject.name] track by item.id"
                          ng-disabled="isExistingQuestion()">
 		         </select>
                 </td>
@@ -64,7 +64,7 @@
                  <select id="qtype" 
                          class="form-control"  
                          ng-model="question.questionType"
-                         ng-options="item for item in qbmMasterData.questionTypes"
+                         ng-options="item for item in $parent.qbmMasterData.questionTypes"
                          ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
@@ -85,7 +85,7 @@
                  <select id="lat_level" 
                          class="form-control"  
                          ng-model="question.lateralThinkingLevel"
-                         ng-options="item for item in qbmMasterData.lateralLevel">
+                         ng-options="item for item in $parent.qbmMasterData.lateralLevel">
                  </select>
                 </td>
                 <td class="labelcell"><label for="time">Time</label></td>
@@ -94,7 +94,7 @@
                  <select id="time" 
                          class="form-control"  
                          ng-model="question.projectedSolveTime"
-                         ng-options="item for item in qbmMasterData.approxSolveTime">
+                         ng-options="item for item in $parent.qbmMasterData.approxSolveTime">
                  </select>
                 </td>
             </tr>
