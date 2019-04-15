@@ -39,6 +39,8 @@ public class TestQuestion {
     private String    questionText         = null ;
     private String    questionFormattedText= null ;
     private String    answerText           = null ;
+    private Boolean   synched              = Boolean.FALSE ;
+    private Boolean   attempted            = Boolean.FALSE ;
     private Timestamp creationTime         = null ;
     private Timestamp lastUpdateTime       = null ;
     
@@ -160,5 +162,21 @@ public class TestQuestion {
 
     public void setAnswerText( String answerText ) {
         this.answerText = answerText ;
+    }
+
+    public Boolean getSynched() {
+        return synched ;
+    }
+
+    public void setSynched( Boolean synched ) {
+        this.synched = synched ;
+    }
+
+    public Boolean getAttempted() {
+        return attempted ;
+    }
+
+    public void setAttempted( Boolean attempted ) {
+        this.attempted = attempted ;
     }
 }

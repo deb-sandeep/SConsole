@@ -17,7 +17,6 @@ public interface SessionRepository extends CrudRepository<Session, Integer> {
         public Integer getDuration() ;
     }
     
-//    @Query( "select s from Session s where s.startTime > CURRENT_DATE" )
     @Query( nativeQuery=true,
             value = 
               "SELECT * " 

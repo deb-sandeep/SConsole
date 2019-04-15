@@ -1,6 +1,5 @@
 package com.sandy.sconsole.api.jeetest;
 
-import java.util.ArrayList ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
@@ -120,14 +119,21 @@ public class QBMRestController {
             @RequestParam( value="selectedTopics",        required=false ) Integer[] topicIds,
             @RequestParam( value="selectedBooks",         required=false ) Integer[] bookIds ) {
         
-        List<TestQuestion> questions = new ArrayList<>() ;
+        TestQuestionSearchEngine searchEngine = null ;
+        
         try {
-            Iterable<TestQuestion> results = testQuestionRepo.findAll() ;
-            for( TestQuestion q : results ) {
-                questions.add( q ) ;
-            }
+            searchEngine = new TestQuestionSearchEngine( testQuestionRepo ) ;
+            List<TestQuestion> results = searchEngine.search( 
+                                                    subjects, 
+                                                    selectedQuestionTypes, 
+                                                    showOnlyUnsynched, 
+                                                    excludeAttempted, 
+                                                    searchText, 
+                                                    topicIds, 
+                                                    bookIds ) ;
+            
             return ResponseEntity.status( HttpStatus.OK )
-                                 .body( questions ) ;
+                                 .body( results ) ;
         }
         catch( Exception e ) {
             return ResponseEntity.status( 500 ).body( null ) ;
