@@ -4,6 +4,17 @@ sConsoleApp.controller( 'QBMController', function( $scope, $http ) {
 	$scope.navBarTitle = "" ;
 	$scope.interactingWithServer = false ;
 	$scope.qbmMasterData = null ;
+	
+	$scope.lastUsedSearchCriteria = null ;
+	$scope.searchCriteria = {
+			selectedSubjects : [],
+			selectedTopics : [],
+			selectedBooks : [],
+			selectedQuestionTypes : [],
+			showOnlyUnsynched : false,
+			excludeAttempted : true,
+			searchText : ""
+		} ;
     
 	$scope.addErrorAlert = function( msgString ) {
 	    $scope.alerts.push( { type: 'danger', msg: msgString } ) ;
@@ -14,6 +25,8 @@ sConsoleApp.controller( 'QBMController', function( $scope, $http ) {
 	}
 
     $scope.loadQBMMasterData = function() {
+    	
+    	if( $scope.qbmMasterData != null ) return ;
         
         console.log( "Loading QBM master data from server." ) ;
         

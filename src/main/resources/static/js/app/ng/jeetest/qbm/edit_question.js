@@ -4,7 +4,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
-	$scope.isAutoPreviewOn = false ;
+	$scope.isAutoPreviewOn = true ;
 	$scope.formattedContent = null ;
 	
 	// --- [START] Controller initialization
@@ -141,6 +141,10 @@ sConsoleApp.controller( 'EditQuestionController',
                         $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;
                         $scope.question.questionRef           = $scope.lastSavedQuestion.questionRef ;
                     } 
+                    
+                    if( $scope.question.questionFormattedText == null ) {
+                    	$scope.question.questionFormattedText = "" ;
+                    }
                     
                     $scope.lastSavedQuestion = jQuery.extend(true, {}, response.data) ;
                     renderPreview( $scope.question.questionFormattedText ) ;

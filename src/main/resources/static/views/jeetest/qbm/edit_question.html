@@ -79,6 +79,14 @@
             </tr>
             <!-- Fifth row -->
             <tr>
+                <td class="labelcell"><label for="answer">Answer</label></td>
+                <td>:</td>
+                <td colspan="7">
+                    <input id="answer" type="text" ng-model="question.answerText" style="width:100%"/>
+                </td>
+            </tr>
+            <!-- Sixth row -->
+            <tr>
                 <td class="labelcell"><label for="lat_level">Lat level</label></td>
                 <td>:</td>
                 <td colspan="4">
@@ -98,26 +106,18 @@
                  </select>
                 </td>
             </tr>
-            <!-- Sixth row -->
+            <!-- Seventh row -->
             <tr>
                 <td class="labelcell"><label for="answer">Body</label></td>
                 <td>:</td>
                 <td colspan="7"></td>
             </tr>
-            <!-- Seventh row -->
+            <!-- Eighth row -->
             <tr>
                 <td colspan="9">
                     <textarea rows="15" 
                               ng-model="question.questionText"
                               style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea>
-                </td>
-            </tr>
-            <!-- Eighth row -->
-            <tr>
-                <td class="labelcell"><label for="answer">Answer</label></td>
-                <td>:</td>
-                <td colspan="7">
-                    <input id="answer" type="text" ng-model="question.answerText" style="width:100%"/>
                 </td>
             </tr>
         </table>

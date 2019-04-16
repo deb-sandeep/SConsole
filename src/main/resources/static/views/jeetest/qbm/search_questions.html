@@ -14,7 +14,7 @@
 	                class="form-control" 
 	                multiple="true" 
 	                size=3
-	                ng-model="searchCriteria.selectedSubjects"
+	                ng-model="$parent.searchCriteria.selectedSubjects"
 	                ng-options="obj for obj in $parent.qbmMasterData.subjectNames"
 	                ng-change="subjectSelectionChanged()">
 	        </select>
@@ -34,7 +34,7 @@
                     class="form-control" 
                     multiple="true" 
                     size=15
-                    ng-model="searchCriteria.selectedTopics"
+                    ng-model="$parent.searchCriteria.selectedTopics"
                     ng-options="item as item.topicName for item in topicsMasterList">
             </select>
 	    </div>
@@ -53,7 +53,7 @@
                     class="form-control" 
                     multiple="true" 
                     size=15
-                    ng-model="searchCriteria.selectedBooks"
+                    ng-model="$parent.searchCriteria.selectedBooks"
                     ng-options="item as item.bookName for item in booksMasterList">
             </select>
         </div>
@@ -72,7 +72,7 @@
                     class="form-control" 
                     multiple="true" 
                     size=5
-                    ng-model="searchCriteria.selectedQuestionTypes"
+                    ng-model="$parent.searchCriteria.selectedQuestionTypes"
                     ng-options="item for item in $parent.qbmMasterData.questionTypes">
             </select>
         </div>
@@ -84,7 +84,7 @@
         </div>
         <div class="panel-body" style="padding:5px">
            <input type="text" 
-                  ng-model="searchCriteria.searchText" 
+                  ng-model="$parent.searchCriteria.searchText" 
                   style="width:100%"/>
            </td>
         </div>
@@ -98,13 +98,13 @@
 			<div class="form-group">
 			    <input id="showOnlyUnsynched" 
 			           type="checkbox" 
-			           ng-model="searchCriteria.showOnlyUnsynched" />
+			           ng-model="$parent.searchCriteria.showOnlyUnsynched" />
 			    <label for="showOnlyUnsynched"> Only unsynched</label>
 			</div>
 			<div class="form-group">
 			    <input id="excludeAttempted" 
 			           type="checkbox" 
-			           ng-model="searchCriteria.excludeAttempted" />
+			           ng-model="$parent.searchCriteria.excludeAttempted" />
 			    <label for="excludeAttempted"> Exclude attempted</label>
 			</div>
         </div>

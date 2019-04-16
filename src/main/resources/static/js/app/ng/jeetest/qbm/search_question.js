@@ -4,16 +4,6 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	$scope.topicsMasterList = [] ;
 	$scope.booksMasterList = [] ;
 	
-	$scope.searchCriteria = {
-		selectedSubjects : [],
-		selectedTopics : [],
-		selectedBooks : [],
-		selectedQuestionTypes : [],
-		showOnlyUnsynched : false,
-		excludeAttempted : true,
-		searchText : ""
-	}
-	
 	$scope.searchResults = [] ;
 	
 	// --- [START] Controller initialization
@@ -21,6 +11,10 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	// master data will consist of subjects, topics, books etc.
 	
 	$scope.$parent.loadQBMMasterData() ;
+	
+	if( $scope.$parent.lastUsedSearchCriteria != null ) {
+		fetchSearchResults( $scope.$parent.lastUsedSearchCriteria ) ;
+	}
 	
 	// --- [END] Controller initialization
 	
@@ -54,12 +48,16 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	}
 	
 	$scope.subjectSelectionChanged = function() {
-		console.log( $scope.searchCriteria.selectedSubjects) ;
+		console.log( $scope.$parent.searchCriteria.selectedSubjects ) ;
+		
+		$scope.$parent.selectedTopics = [] ;
+		$scope.$parent.selectedBooks = [] ;
+		
 		$scope.topicsMasterList = [] ;
 		$scope.booksMasterList = [] ;
 		
-		for( i=0; i<$scope.searchCriteria.selectedSubjects.length; i++ ) {
-			var subject = $scope.searchCriteria.selectedSubjects[i] ;
+		for( i=0; i<$scope.$parent.searchCriteria.selectedSubjects.length; i++ ) {
+			var subject = $scope.$parent.searchCriteria.selectedSubjects[i] ;
 			var topics = $scope.$parent.qbmMasterData.topics[ subject ] ;
 			var books = $scope.$parent.qbmMasterData.books[ subject ] ;
 			
@@ -74,22 +72,22 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 		var selTopics = [] ;
 		var selBooks = [] ;
 		
-		for( i=0; i<$scope.searchCriteria.selectedTopics.length; i++ ) {
-			selTopics.push( $scope.searchCriteria.selectedTopics[i].id ) ;
+		for( i=0; i<$scope.$parent.searchCriteria.selectedTopics.length; i++ ) {
+			selTopics.push( $scope.$parent.searchCriteria.selectedTopics[i].id ) ;
 		}
 		
-		for( i=0; i<$scope.searchCriteria.selectedBooks.length; i++ ) {
-			selBooks.push( $scope.searchCriteria.selectedBooks[i].id ) ;
+		for( i=0; i<$scope.$parent.searchCriteria.selectedBooks.length; i++ ) {
+			selBooks.push( $scope.$parent.searchCriteria.selectedBooks[i].id ) ;
 		}
 		
 		// NOTE: Empty value of any of the parameters implies that we consider
 		//       all the possibilities for that parameter.
 		var criteria = {
-			subjects              : $scope.searchCriteria.selectedSubjects,
-			selectedQuestionTypes : $scope.searchCriteria.selectedQuestionTypes,
-			showOnlyUnsynched     : $scope.searchCriteria.showOnlyUnsynched,
-			excludeAttempted      : $scope.searchCriteria.excludeAttempted,
-			searchText            : $scope.searchCriteria.searchText,
+			subjects              : $scope.$parent.searchCriteria.selectedSubjects,
+			selectedQuestionTypes : $scope.$parent.searchCriteria.selectedQuestionTypes,
+			showOnlyUnsynched     : $scope.$parent.searchCriteria.showOnlyUnsynched,
+			excludeAttempted      : $scope.$parent.searchCriteria.excludeAttempted,
+			searchText            : $scope.$parent.searchCriteria.searchText,
 			selectedTopics        : selTopics,
 			selectedBooks         : selBooks
 		} ;
@@ -114,6 +112,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
                 console.log( "Search results received." ) ;
                 console.log( response ) ;
                 $scope.searchResults = response.data ;
+                $scope.$parent.lastUsedSearchCriteria = criteria ;
             }, 
             function( error ){
                 console.log( "Error getting search results." ) ;
