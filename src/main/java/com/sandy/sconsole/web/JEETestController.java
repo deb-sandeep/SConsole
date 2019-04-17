@@ -22,6 +22,11 @@ public class JEETestController {
         return "jeetest/qbm/edit_question" ;
     }
     
+    @RequestMapping( "/qbm/qbInsight" )
+    public String qbInsight() {
+        return "jeetest/qbm/qb_insight" ;
+    }
+    
     @RequestMapping( "/qbm/searchQuestions" )
     public String jeeRed() {
         return "jeetest/qbm/search_questions" ;
