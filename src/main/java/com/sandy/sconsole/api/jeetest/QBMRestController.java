@@ -41,6 +41,21 @@ public class QBMRestController {
     @Autowired
     private TestQuestionRepository testQuestionRepo = null ;
     
+    @GetMapping( "/QBInsights" )
+    public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
+        try {
+            log.debug( "Fetching QB insights" ) ;
+            List<QBTopicInsight> insighs = testQuestionRepo.getTopicBasedInsight() ;
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( insighs ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error getting QB insights", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
     @GetMapping( "/QBMMasterData" )
     public ResponseEntity<QBMMasterData> getQBMMasterData() {
         try {
