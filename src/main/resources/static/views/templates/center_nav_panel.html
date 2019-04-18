@@ -1,0 +1,56 @@
+  <div class="remote-nav-row">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'FastFwd_Back')"
+         ng-style="{'visibility':keyActivationInfo.FF_B == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-fast-backward"></span>
+    </div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Up')"
+         ng-style="{'visibility':keyActivationInfo.UP == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'FastFwd_Front')"
+         ng-style="{'visibility':keyActivationInfo.FF_F == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-fast-forward"></span>
+    </div>
+  </div>
+  <div class="remote-nav-row">
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Left')"         
+         ng-style="{'visibility':keyActivationInfo.LEFT == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Select')"
+         style="color:#00FF00"
+         ng-style="{'visibility':keyActivationInfo.SELECT == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-ok-sign"></span>
+    </div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Right')"
+         ng-style="{'visibility':keyActivationInfo.RIGHT == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </div>
+  </div>
+  <div class="remote-nav-row">
+    <div class="button nav-blank"></div>
+    <!-- 
+    <div class="button nav"
+         ng-click="btnPressed('ScreenletSelection', 'ShowHide')"
+         style="color:#BB545F">
+        <span class="glyphicon glyphicon-transfer"></span>
+    </div>
+    -->
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Down')"
+         ng-style="{'visibility':keyActivationInfo.DOWN == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-chevron-down"></span>
+    </div>
+    <div class="button nav"
+         ng-click="btnPressed('NavControl', 'Cancel')"
+         style="color:#BB545F"
+         ng-style="{'visibility':keyActivationInfo.CANCEL == null?'hidden':'visible'}">
+        <span class="glyphicon glyphicon-remove-sign"></span>
+    </div>
+  </div>

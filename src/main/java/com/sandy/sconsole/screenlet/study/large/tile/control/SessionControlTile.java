@@ -33,6 +33,13 @@ public class SessionControlTile extends SessionControlTileUI
         
         private long lastKeyReceivedTime = -1 ;
 
+        // Note that the center tile panel card is replaced by projection 
+        // card for the play state, where the user is expected to indicate a
+        // projected completion time for the current problem being solved.
+        @Override public String getCenterPanelCardName() {
+            return currentState.getCenterPanelCardName() ;
+        }
+        
         @Override public String getName() {
             return "ControlTileKeyProcessor" ;
         }
@@ -51,17 +58,23 @@ public class SessionControlTile extends SessionControlTileUI
                 log.debug( "Current state = " + currentState.getName() ) ;
                 transition = currentState.acceptKey( key ) ;
                 
-                nextState = transition.getNextState() ;
-                log.debug( "Next state = " + nextState.getName() ) ;
-                
-                log.debug( "Deactivating state " + currentState.getName() ) ;
-                currentState.deactivate( nextState, key ) ;
-                
-                log.debug( "Activating state = " + nextState.getName() ) ;
-                nextState.activate( transition.getPayload(), currentState, key ) ;
-                
-                currentState = ( BaseControlTileState )nextState ;
-                log.debug( "Current state is now = " + currentState.getName() ) ;
+                if( transition == null ) {
+                    // This key was consumed without the need for a state
+                    // change. Nothing much to do in this case.
+                }
+                else {
+                    nextState = transition.getNextState() ;
+                    log.debug( "Next state = " + nextState.getName() ) ;
+                    
+                    log.debug( "Deactivating state " + currentState.getName() ) ;
+                    currentState.deactivate( nextState, key ) ;
+                    
+                    log.debug( "Activating state = " + nextState.getName() ) ;
+                    nextState.activate( transition.getPayload(), currentState, key ) ;
+                    
+                    currentState = ( BaseControlTileState )nextState ;
+                    log.debug( "Current state is now = " + currentState.getName() ) ;
+                }
             }
             catch( Exception e ) {
                 log.error( "Error processing key " + key + " in state " + 

@@ -5,7 +5,8 @@ public enum KeyType {
     SCREEN_SEL  ( "ScreenletSelection" ),
     NAV_CONTROL ( "NavControl"         ),
     RUN         ( "Run"                ),
-    FUNCTION    ( "Function"           );
+    FUNCTION    ( "Function"           ),
+    TIME_PROJ   ( "TimeProjection"     );
     
     public static KeyType decode( String str ) {
         if( str.equals( "ScreenletSelection" ) ) {
@@ -19,6 +20,9 @@ public enum KeyType {
         }    
         if( str.equals( "Function" ) ) {
             return FUNCTION;
+        }
+        if( str.equals( "TimeProjection" ) ) {
+            return TIME_PROJ;
         }
         
         throw new IllegalArgumentException( "String " + str + " is not a valid key type." ) ;

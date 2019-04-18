@@ -181,21 +181,23 @@ public abstract class State implements KeyListener {
         throws IllegalStateException {
         
         log.debug( "State " + stateName + " is accepting key " + key ) ;
-        
         TransitionState transition = transitionMap.get( key ) ;
+        if( transition != null ) {
+            if( !transition.isActive() ) {
+                log.warn( "Transition is deactivated for key " + key ) ;
+                throw new IllegalStateException( "Transition deactivated against key " + key ) ;
+            }
+            else {
+                Object payload = getTransitionOutPayload( transition.getState(), key ) ;
+                return new TransitionRequest( transition.getState(), payload ) ;
+            }
+        }
+        
         if( transition == null ) {
-            log.error( "No transitions against key " + key ) ;
-            throw new IllegalStateException( "No transition registered " + 
-                                             "against key " + key ) ;
-        }
-        else if( !transition.isActive() ) {
-            log.warn( "Transition is deactivated for key " + key ) ;
-            throw new IllegalStateException( "Transition deactivated against key " + key ) ;
+            handleNonTransitionMappedKey( key ) ;
         }
         
-        Object payload = getTransitionOutPayload( transition.getState(), key ) ;
-        
-        return new TransitionRequest( transition.getState(), payload ) ;
+        return null ;
     }
     
     @Override public void handleLeftNavKey() {}
@@ -233,5 +235,11 @@ public abstract class State implements KeyListener {
      */
     public Object getTransitionOutPayload( State nextState, Key key ) {
         return null ;
+    }
+    
+    public void handleNonTransitionMappedKey( Key key ) {
+        // By default this function does nothing. Subclasses may choose to
+        // override this function to provide functionality for key presses
+        // which are not mapped to transition activities.
     }
 }

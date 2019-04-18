@@ -32,6 +32,7 @@ public class ProblemAttempt {
     private Timestamp startTime ;
     private Timestamp endTime ;
     private Integer duration ;
+    private Integer projectedDuration ;
     private String outcome ;
     
     public Integer getId() { return id ; }
@@ -62,6 +63,11 @@ public class ProblemAttempt {
     public Integer getDuration() { return duration ; }
     public void setDuration( Integer duration ) {
         this.duration = duration ;
+    }
+    
+    public Integer getProjectedDuration() { return projectedDuration ; }
+    public void setProjectedDuration( Integer projectedDuration ) {
+        this.projectedDuration = projectedDuration ;
     }
     
     public String getOutcome() { return outcome ; }

@@ -1,8 +1,6 @@
 package com.sandy.sconsole.core.remote;
 
-import static com.sandy.sconsole.core.remote.KeyType.FUNCTION ;
-import static com.sandy.sconsole.core.remote.KeyType.NAV_CONTROL ;
-import static com.sandy.sconsole.core.remote.KeyType.RUN ;
+import static com.sandy.sconsole.core.remote.KeyType.* ;
 
 import java.util.* ;
 
@@ -34,37 +32,55 @@ public enum Key {
     FN_E         ( "Function@E"                 , "E" ),
     FN_F         ( "Function@F"                 , "F" ),
     FN_G         ( "Function@G"                 , "G" ),
-    FN_H         ( "Function@H"                 , "H" );
+    FN_H         ( "Function@H"                 , "H" ),
+    TP_30        ( "TimeProjection@30"          , "30"  ),
+    TP_60        ( "TimeProjection@60"          , "60"  ),
+    TP_120       ( "TimeProjection@120"         , "120" ),
+    TP_180       ( "TimeProjection@180"         , "180" ),
+    TP_240       ( "TimeProjection@240"         , "240" ),
+    TP_300       ( "TimeProjection@300"         , "300" ),
+    TP_420       ( "TimeProjection@420"         , "420" ),
+    TP_600       ( "TimeProjection@600"         , "600" ),
+    TP_900       ( "TimeProjection@900"         , "900" );
     
     public static Key decode( String str ) {
         
-            if( str.equals( "ScreenletSelection@1"        )) { return SCR_1 ; }
-       else if( str.equals( "ScreenletSelection@2"        )) { return SCR_2 ; }
-       else if( str.equals( "ScreenletSelection@3"        )) { return SCR_3 ; }
-       else if( str.equals( "ScreenletSelection@4"        )) { return SCR_4 ; }
-       else if( str.equals( "ScreenletSelection@5"        )) { return SCR_5 ; }
-       else if( str.equals( "ScreenletSelection@6"        )) { return SCR_6 ; }
-       else if( str.equals( "ScreenletSelection@7"        )) { return SCR_7 ; }
-       else if( str.equals( "ScreenletSelection@8"        )) { return SCR_8 ; }
-       else if( str.equals( "ScreenletSelection@ShowHide" ) ) { return SCR_SHOWHIDE; }
-       else if( str.equals( "NavControl@FastFwd_Back"     ) ) { return FF_B;             }
-       else if( str.equals( "NavControl@Up"               ) ) { return UP;               }
-       else if( str.equals( "NavControl@FastFwd_Front"    ) ) { return FF_F;             }
-       else if( str.equals( "NavControl@Left"             ) ) { return LEFT;             }
-       else if( str.equals( "NavControl@Right"            ) ) { return RIGHT;            }
-       else if( str.equals( "NavControl@Down"             ) ) { return DOWN;             }
-       else if( str.equals( "NavControl@Select"           ) ) { return SELECT;           }
-       else if( str.equals( "NavControl@Cancel"           ) ) { return CANCEL;           }
-       else if( str.equals( "Run@PlayPause"               ) ) { return PLAYPAUSE;        }
-       else if( str.equals( "Run@Stop"                    ) ) { return STOP;             }
-       else if( str.equals( "Function@A"                  ) ) { return FN_A;             }
-       else if( str.equals( "Function@B"                  ) ) { return FN_B;             }
-       else if( str.equals( "Function@C"                  ) ) { return FN_C;             }
-       else if( str.equals( "Function@D"                  ) ) { return FN_D;             }
-       else if( str.equals( "Function@E"                  ) ) { return FN_E;             }
-       else if( str.equals( "Function@F"                  ) ) { return FN_F;             }
-       else if( str.equals( "Function@G"                  ) ) { return FN_G;             }
-       else if( str.equals( "Function@H"                  ) ) { return FN_H;             }
+            if( str.equals( "ScreenletSelection@1"        )) { return SCR_1 ;        }
+       else if( str.equals( "ScreenletSelection@2"        )) { return SCR_2 ;        }
+       else if( str.equals( "ScreenletSelection@3"        )) { return SCR_3 ;        }
+       else if( str.equals( "ScreenletSelection@4"        )) { return SCR_4 ;        }
+       else if( str.equals( "ScreenletSelection@5"        )) { return SCR_5 ;        }
+       else if( str.equals( "ScreenletSelection@6"        )) { return SCR_6 ;        }
+       else if( str.equals( "ScreenletSelection@7"        )) { return SCR_7 ;        }
+       else if( str.equals( "ScreenletSelection@8"        )) { return SCR_8 ;        }
+       else if( str.equals( "ScreenletSelection@ShowHide" )) { return SCR_SHOWHIDE ; }
+       else if( str.equals( "NavControl@FastFwd_Back"     )) { return FF_B ;         }
+       else if( str.equals( "NavControl@Up"               )) { return UP ;           }
+       else if( str.equals( "NavControl@FastFwd_Front"    )) { return FF_F ;         }
+       else if( str.equals( "NavControl@Left"             )) { return LEFT ;         }
+       else if( str.equals( "NavControl@Right"            )) { return RIGHT ;        }
+       else if( str.equals( "NavControl@Down"             )) { return DOWN ;         }
+       else if( str.equals( "NavControl@Select"           )) { return SELECT ;       }
+       else if( str.equals( "NavControl@Cancel"           )) { return CANCEL ;       }
+       else if( str.equals( "Run@PlayPause"               )) { return PLAYPAUSE ;    }
+       else if( str.equals( "Run@Stop"                    )) { return STOP ;         }
+       else if( str.equals( "Function@A"                  )) { return FN_A ;         }
+       else if( str.equals( "Function@B"                  )) { return FN_B ;         }
+       else if( str.equals( "Function@C"                  )) { return FN_C ;         }
+       else if( str.equals( "Function@D"                  )) { return FN_D ;         }
+       else if( str.equals( "Function@E"                  )) { return FN_E ;         }
+       else if( str.equals( "Function@F"                  )) { return FN_F ;         }
+       else if( str.equals( "Function@G"                  )) { return FN_G ;         }
+       else if( str.equals( "Function@H"                  )) { return FN_H ;         }
+       else if( str.equals( "TimeProjection@30"           )) { return TP_30 ;        }
+       else if( str.equals( "TimeProjection@60"           )) { return TP_60  ;       }
+       else if( str.equals( "TimeProjection@120"          )) { return TP_120 ;       }
+       else if( str.equals( "TimeProjection@180"          )) { return TP_180 ;       }
+       else if( str.equals( "TimeProjection@240"          )) { return TP_240 ;       }
+       else if( str.equals( "TimeProjection@300"          )) { return TP_300 ;       }
+       else if( str.equals( "TimeProjection@420"          )) { return TP_420 ;       }
+       else if( str.equals( "TimeProjection@600"          )) { return TP_600 ;       }
+       else if( str.equals( "TimeProjection@900"          )) { return TP_900 ;       }
         
        throw new IllegalArgumentException( "String " + str + " is not a valid key." ) ;
     }
@@ -100,6 +116,18 @@ public enum Key {
             FN_H,
         } ) ;    
         
+        keyTypeCodeMap.put( TIME_PROJ, new Key[]{ 
+            TP_30,
+            TP_60,
+            TP_120,
+            TP_180,
+            TP_240,
+            TP_300,
+            TP_420,
+            TP_600,
+            TP_900
+        } ) ;    
+            
         validKeys.add( FF_B ) ;
         validKeys.add( UP ) ;
         validKeys.add( FF_F ) ;
@@ -118,6 +146,15 @@ public enum Key {
         validKeys.add( FN_F ) ;
         validKeys.add( FN_G ) ;
         validKeys.add( FN_H ) ;
+        validKeys.add( TP_30 ) ;
+        validKeys.add( TP_60 ) ;
+        validKeys.add( TP_120 ) ;
+        validKeys.add( TP_180 ) ;
+        validKeys.add( TP_240 ) ;
+        validKeys.add( TP_300 ) ;
+        validKeys.add( TP_420 ) ;
+        validKeys.add( TP_600 ) ;
+        validKeys.add( TP_900 ) ;
     }
     
     public static Key[] getsKeysOfType( KeyType type ) {

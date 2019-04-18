@@ -245,4 +245,12 @@ li {
 	line-height : 35px;
 }
 
-
+.proj-time {
+	width:120px;
+	font-size:20px;
+	padding-left:20px;
+    padding-right:20px;
+    padding-top:15px;
+    padding-bottom:15px;
+    border-radius:20px;
+}

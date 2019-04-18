@@ -7,7 +7,9 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
+import com.sandy.sconsole.core.remote.KeyType ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
 import com.sandy.sconsole.core.statemc.State ;
@@ -66,6 +68,7 @@ public class PlayState extends BaseControlTileState
     private int runTime = 0 ;
     private int pauseTime = 0 ;
     private int lapTime = 0 ;
+    private int projectedDuration = 0 ;
     
     private int numProblemsLeftInBook = 0 ;
     
@@ -89,12 +92,17 @@ public class PlayState extends BaseControlTileState
         pauseDialog = new PauseDialog( this ) ;
     }
 
+    @Override public String getCenterPanelCardName() {
+        return RemoteController.CENTER_PROJ_PANEL ;
+    }
+    
     @Override
     public void resetState() {
         si = null ;
         runTime = 0 ;
         pauseTime = 0 ;
         lapTime = 0 ;
+        projectedDuration = 0 ;
         problemAttempt = null ;
         lastPersistentUpdateTime = 0 ;
     }
@@ -207,11 +215,15 @@ public class PlayState extends BaseControlTileState
         }
         
         lapTime = 0 ;
+        projectedDuration = 0 ;
+        
         tile.updateLapTimeLabel( 0 ) ;
+        tile.updateLapTimeProjection( 0 ) ;
                 
         problem = si.unsolvedProblems.remove( 0 ) ;
         attempt = new ProblemAttempt() ;
         attempt.setDuration( lapTime ) ;
+        attempt.setProjectedDuration( projectedDuration ) ;
         attempt.setProblem( problem ) ;
         attempt.setStartTime( new Timestamp( System.currentTimeMillis() ) ) ;
         attempt.setSession( si.session ) ;
@@ -231,6 +243,7 @@ public class PlayState extends BaseControlTileState
         // Store the current problem attempt outcome in the database.
         problemAttempt.setOutcome( outcome ) ;
         problemAttempt.setEndTime( new Timestamp( System.currentTimeMillis() ) ) ;
+        problemAttempt.setProjectedDuration( projectedDuration ) ;
         problemAttempt.setDuration( lapTime ) ;
         problemAttemptRepo.save( problemAttempt ) ;
         
@@ -440,5 +453,16 @@ public class PlayState extends BaseControlTileState
         // the burn graph
         
         saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_MOVE ) ;
+    }
+
+    public void handleNonTransitionMappedKey( Key key ) {
+        if( key.getKeyType() == KeyType.TIME_PROJ ) {
+            updateTimeProjection( Integer.parseInt( key.getKeyCode() ) ) ;
+        }
+    }
+    
+    private void updateTimeProjection( int projectedDuration ) {
+        this.projectedDuration = projectedDuration ;
+        tile.updateLapTimeProjection( projectedDuration ) ;
     }
 }
