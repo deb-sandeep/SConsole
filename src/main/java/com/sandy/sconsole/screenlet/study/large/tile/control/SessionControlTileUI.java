@@ -75,9 +75,10 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     public JLabel sumsLeftLbl  = createDefaultLabel( "" ) ;
     public JLabel problemLbl   = createDefaultLabel( "" ) ;
     public JLabel sTimeLbl     = createDefaultLabel( "" ) ;
-    public JLabel lTimeLbl     = createDefaultLabel( "" ) ;
     public JLabel btn1Lbl      = createDefaultLabel( "" ) ;
     public JLabel btn2Lbl      = createDefaultLabel( "" ) ;
+    
+    public LapTimeLabel lTimeLbl = new LapTimeLabel() ;
     
     public JLabel numSkipLbl   = createDefaultLabel( "" ) ;
     public JLabel numSolvedLbl = createDefaultLabel( "" ) ;
@@ -426,7 +427,11 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     }
     
     public void updateLapTimeLabel( long seconds ) {
-        lTimeLbl.setText( seconds < 0 ? "" : getElapsedTimeLabel( seconds, false ) ) ;
+        lTimeLbl.setLapTime( seconds ) ;
+    }
+    
+    public void updateLapTimeProjection( long seconds ) {
+        lTimeLbl.setProjectedDuration( seconds ) ;
     }
     
     public void updateOutcomeCounts( Session session ) {
