@@ -92,9 +92,14 @@ public class KeyProcessingHelper {
         if( !processors.isEmpty() ) {
             processor = processors.peek() ;
             info = processor.getActivatedKeyInfo() ;
+            keyActivationInfo.put( "CenterPanelCardName", 
+                                   processor.getCenterPanelCardName() ) ;
         }
         else {
+            // By default, the navigation panel is activated.
             info = new HashMap<>() ;
+            keyActivationInfo.put( "CenterPanelCardName", 
+                                   RemoteController.CENTER_NAV_PANEL ) ;
         }
         
         for( Key key : KEYS ) {

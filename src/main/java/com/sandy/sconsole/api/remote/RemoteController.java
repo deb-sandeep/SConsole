@@ -15,6 +15,14 @@ public class RemoteController {
     
     private static final Logger log = Logger.getLogger( RemoteController.class ) ;
     
+    // The name of the card of the center panel representing the navigation panel
+    // This is activated in all cases except for the question attempt - Play State
+    public static final String CENTER_NAV_PANEL  = "NAV_PANEL" ;
+    
+    // The name of the card of the center panel representing the time projection
+    // panel. This is activated only during the Play State.
+    public static final String CENTER_PROJ_PANEL = "TIME_PROJECTION_PANEL" ;
+    
     private Stack<KeyProcessor> processors = new Stack<>() ;
     private KeyProcessingHelper keyProcessingHelper = new KeyProcessingHelper( processors ) ;
     

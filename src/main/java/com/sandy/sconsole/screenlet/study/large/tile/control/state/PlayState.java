@@ -7,6 +7,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.screenlet.Screenlet.RunState ;
@@ -89,6 +90,10 @@ public class PlayState extends BaseControlTileState
         pauseDialog = new PauseDialog( this ) ;
     }
 
+    @Override public String getCenterPanelCardName() {
+        return RemoteController.CENTER_PROJ_PANEL ;
+    }
+    
     @Override
     public void resetState() {
         si = null ;
@@ -440,5 +445,9 @@ public class PlayState extends BaseControlTileState
         // the burn graph
         
         saveProblemAttemptAndLoadNextProblem( ProblemAttempt.OUTCOME_MOVE ) ;
+    }
+
+    public void handleNonTransitionMappedKey( Key key ) {
+        log.debug( "Non transition key pressed. Key = " + key ) ;
     }
 }

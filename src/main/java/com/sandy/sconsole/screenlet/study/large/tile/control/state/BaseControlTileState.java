@@ -67,6 +67,10 @@ public class BaseControlTileState extends State {
         problemAttemptRepo = ctx.getBean( ProblemAttemptRepository.class ) ;
     }
     
+    public String getCenterPanelCardName() {
+        return RemoteController.CENTER_NAV_PANEL ;
+    }
+    
     /**
      * This method is called upon by the SessionControlTile at the break 
      * of a day.
