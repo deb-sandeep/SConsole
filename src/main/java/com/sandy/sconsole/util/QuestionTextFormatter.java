@@ -168,6 +168,10 @@ public class QuestionTextFormatter {
             MMTMatrixTagProcessor processor = new MMTMatrixTagProcessor( data, this ) ;
             return processor.getProcessedText() ;
         }
+        else if( type.equals( "opt" ) ) {
+            OptTagProcessor processor = new OptTagProcessor( data, this ) ;
+            return processor.getProcessedText() ;
+        }
         
         return null ;
     }
@@ -204,7 +208,6 @@ public class QuestionTextFormatter {
             }
             buffer.append( " " ) ;
         }
-        
         return buffer.toString() ;
     }
 }
