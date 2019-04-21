@@ -19,6 +19,7 @@ public class Problem {
     private String chapterId ;
     private String exerciseName ;
     private String problemTag ;
+    private String problemType ;
     private Boolean solved = false ;
     private Boolean active = true ;
     private Boolean pigeoned = false ;
@@ -67,6 +68,9 @@ public class Problem {
     
     public Boolean getStarred() { return starred ; }
     public void setStarred( Boolean starred ) { this.starred = starred ; }
+    
+    public void setProblemType( String type ) { this.problemType = type ; }
+    public String getProblemType() { return this.problemType ; }
     
     @Override
     public boolean equals( Object obj ) {
