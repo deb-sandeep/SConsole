@@ -1,11 +1,13 @@
 sConsoleApp.controller( 'EditQuestionController', 
-		                function( $scope, $http, $sce, $routeParams ) {
+		                function( $scope, $http, $sce, $routeParams, $window, $timeout ) {
 	
 	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
 	$scope.isAutoPreviewOn = true ;
 	$scope.formattedContent = null ;
+	$scope.answerType = "" ;
+	$scope.answerTypes = [ "", "iChem", "iMath", "Math" ] ;
 	
 	// --- [START] Controller initialization
 	
@@ -64,6 +66,32 @@ sConsoleApp.controller( 'EditQuestionController',
 		// 		Render the preview of the formatted text.
 		generateFormattedTextAndRenderPreview() ;
 	}
+	
+	$scope.prePopulateAnswerText = function() {
+		
+		if( $scope.question.id > 0 ) return ;
+		if( $scope.question.questionText != null && 
+		    $scope.question.questionText != "" ) return ;
+		
+		var answerText = "" ;
+		
+		if( $scope.question.questionText == null || 
+		    $scope.question.questionText == "" ) {
+			
+			if( $scope.answerType == "iChem" ) {
+				answerText = "\n\n1. {{@ichem }}\n2. {{@ichem }}\n3. {{@ichem }}\n4. {{@ichem }}"
+			}
+			else if( $scope.answerType == "iMath" ) {
+				answerText = "\n\n1. {{@imath }}\n2. {{@imath }}\n3. {{@imath }}\n4. {{@imath }}"
+			}
+			else if( $scope.answerType == "Math" ) {
+				answerText = "\n\n{{@opt\n1. \n2. \n3. \n4. }}"
+			}
+		}
+		
+		$scope.question.questionText = answerText ;
+	}
+	
 	// --- [START] Internal Questions
 	
 	function inputsValidated() {
@@ -146,6 +174,13 @@ sConsoleApp.controller( 'EditQuestionController',
                     	$scope.question.questionFormattedText = "" ;
                     }
                     
+                    if( questionId == -1 ) {
+                    	$timeout( function(){
+                    		var element = $window.document.getElementById( "questionRef" ) ; 
+                    		element.focus() ;
+                    	}) ;
+                    }
+                    
                     $scope.lastSavedQuestion = jQuery.extend(true, {}, response.data) ;
                     renderPreview( $scope.question.questionFormattedText ) ;
                 }, 
@@ -198,11 +233,11 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	function generateFormattedTextAndRenderPreview() {
 		
-        if( $scope.question.questionText == null ) {
+        if( $scope.question.questionText == null || 
+            $scope.question.questionText == "" ) {
         	return ;
         }
         
-        $scope.$parent.interactingWithServer = true ;
         $http.post( '/FormattedText', $scope.question.questionText )        
         .then( 
             function( response ){
@@ -215,9 +250,6 @@ sConsoleApp.controller( 'EditQuestionController',
                 console.log( "Error getting book details." + error ) ;
                 $scope.$parent.addErrorAlert( "Error generating formatted text" ) ;
             }
-        )
-        .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
-        }) ;
+        ) ;
 	}
 } ) ;
