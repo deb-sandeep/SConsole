@@ -90,6 +90,10 @@ sConsoleApp.controller( 'EditQuestionController',
 		}
 		
 		$scope.question.questionText = answerText ;
+    	$timeout( function(){
+    		var element = $window.document.getElementById( "questionText" ) ; 
+    		element.setSelectionRange( 0, 0 ) ;
+    	}) ;
 	}
 	
 	// --- [START] Internal Questions
