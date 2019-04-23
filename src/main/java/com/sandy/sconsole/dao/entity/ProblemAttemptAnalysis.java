@@ -26,6 +26,7 @@ public class ProblemAttemptAnalysis {
     @ManyToOne
     private Topic topic = null ;
     
+    private String  problemType          = null ;
     private String  topicName            = null ;
     private Integer totalNumProblems     = 0 ;
     private Integer numProblemsAttempted = 0 ;
@@ -49,6 +50,13 @@ public class ProblemAttemptAnalysis {
     }
     public void setTopic( Topic topic ) {
         this.topic = topic ;
+    }
+    
+    public String getProblemType() {
+        return problemType ;
+    }
+    public void setProblemType( String type ) {
+        this.problemType = type ;
     }
     
     public String getTopicName() {

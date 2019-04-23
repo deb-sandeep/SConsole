@@ -7,4 +7,5 @@ import com.sandy.sconsole.dao.entity.ProblemAttemptAnalysis ;
 public interface ProblemAttemptAnalysisRepository 
     extends CrudRepository<ProblemAttemptAnalysis, Integer> {
 
+    ProblemAttemptAnalysis findByTopicIdAndProblemType( int topicId, String problemType ) ;
 }

@@ -25,4 +25,19 @@ public interface TopicRepository extends CrudRepository<Topic, Integer> {
           + "    t.burnStart asc"
     )
     List<Topic> findActiveTopics() ;
+    
+    @Query( value = 
+            "select "
+          + "    p.topic, "
+          + "    p.problemType, "
+          + "    count( p.id ) " 
+          + "from Problem p "
+          + "where " 
+          + "    p.active = 1 "
+          + "group by " 
+          + "    p.topic, "
+          + "    p.problemType"
+    )
+    List<Object[]> getActiveProblemCountByTopic() ;
+    
 }
