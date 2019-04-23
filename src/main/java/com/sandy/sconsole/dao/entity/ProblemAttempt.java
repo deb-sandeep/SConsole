@@ -32,7 +32,7 @@ public class ProblemAttempt {
     private Timestamp startTime ;
     private Timestamp endTime ;
     private Integer duration ;
-    private Integer projectedDuration ;
+    private Integer projectedDuration = -1 ;
     private String outcome ;
     
     public Integer getId() { return id ; }
