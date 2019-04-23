@@ -137,6 +137,7 @@ public class OfflineSessionCreationController {
         
         sessionRepo.save( session ) ;
         
+        // TODO: Check for exceptions - across all
         saveExerciseDetails( session, input ) ;
         updateLastSession( session, input ) ;
         
@@ -178,6 +179,7 @@ public class OfflineSessionCreationController {
             attempt.setDuration( outcome.getDuration()*60 ) ;
             attempt.setOutcome( outcome.getOutcome() ) ;
             attempt.setStartTime( new Timestamp( startTime ) ) ;
+            attempt.setProjectedDuration( -1 ) ;
             
             startTime += outcome.getDuration()*1000 ;
             
