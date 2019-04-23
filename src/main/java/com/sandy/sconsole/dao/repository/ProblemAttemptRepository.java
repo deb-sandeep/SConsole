@@ -29,6 +29,38 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
     )
     public List<HistoricBurnStat> getHistoricBurnStats( Integer topicId ) ;
     
+    @Query( value =   
+            "SELECT "
+          + "    pa "
+          + "FROM "
+          + "    ProblemAttempt pa, "
+          + "    Problem p "
+          + "WHERE "
+          + "    pa.problem.id = p.id and "
+          + "    p.topic.id = ?1 and "
+          + "    pa.outcome in ( 'Solved', 'Redo', 'Pigeon' ) "
+          + "ORDER BY "
+          + "    pa.startTime DESC" 
+  )
+    public List<ProblemAttempt> findByTopicId( Integer topicId ) ;
+    
+    @Query( value =   
+              "SELECT "
+            + "    pa "
+            + "FROM "
+            + "    ProblemAttempt pa, "
+            + "    Problem p "
+            + "WHERE "
+            + "    pa.problem.id = p.id and "
+            + "    p.topic.id = ?1 and "
+            + "    pa.outcome in ( 'Solved', 'Redo', 'Pigeon' ) and "
+            + "    p.problemType = ?2 "
+            + "ORDER BY "
+            + "    pa.startTime DESC" 
+    )
+    public List<ProblemAttempt> findByTopicIdAndProblemType( Integer topicId, 
+                                                             String problemType ) ;
+    
     @Query( nativeQuery=true,
             value = 
               "SELECT "

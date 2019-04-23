@@ -1,5 +1,6 @@
 package com.sandy.sconsole.analysis;
 
+import java.util.ArrayList ;
 import java.util.Calendar ;
 import java.util.HashMap ;
 import java.util.LinkedHashMap ;
@@ -9,9 +10,11 @@ import java.util.Map ;
 import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.core.util.DayTickListener ;
+import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.ProblemAttemptAnalysis ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptAnalysisRepository ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 
 /** Problem Attempt Analysis Generator */
@@ -21,14 +24,20 @@ public class PAAGenerator implements DayTickListener {
     
     private ProblemAttemptAnalysisRepository paaRepo = null ;
     private TopicRepository topicRepo = null ;
+    private ProblemAttemptRepository paRepo = null ;
+    
+    private PAARecordUpdater analysisUpdater = null ;
     
     private Map<Integer, Map<String, ProblemAttemptAnalysis>> paaLookup = null ;
     
     public PAAGenerator( ProblemAttemptAnalysisRepository paaRepo,
-                         TopicRepository topicRepo ) {
+                         TopicRepository topicRepo,
+                         ProblemAttemptRepository paRepo ) {
         this.paaRepo = paaRepo ;
         this.topicRepo = topicRepo ;
+        this.paRepo = paRepo ;
         this.paaLookup = new LinkedHashMap<>() ;
+        this.analysisUpdater = new PAARecordUpdater() ;
     }
     
     public boolean isAsync() {
@@ -113,7 +122,27 @@ public class PAAGenerator implements DayTickListener {
                                   Map<String, ProblemAttemptAnalysis> paaMap ) {
         
         log.debug( "Refreshing problem analysis for topic " + topic.getTopicName() ) ;
-
         
+        List<ProblemAttempt> attempts = paRepo.findByTopicId( topic.getId() ) ;
+        Map<String, List<ProblemAttempt>> attemptsByType = new HashMap<>() ;
+        
+        String problemType = null ;
+        List<ProblemAttempt> attemptList = null ;
+        
+        for( ProblemAttempt attempt : attempts ) {
+            problemType = attempt.getProblem().getProblemType() ;
+            attemptList = attemptsByType.get( problemType ) ;
+            if( attemptList == null ) {
+                attemptList = new ArrayList<>() ;
+                attemptsByType.put( problemType, attemptList ) ;
+            }
+            attemptList.add( attempt ) ;
+        }
+        
+        List<ProblemAttempt> attemptsForType = null ;
+        for( ProblemAttemptAnalysis paa : paaMap.values() ) {
+            attemptsForType = attemptsByType.get( paa.getProblemType() ) ;
+            analysisUpdater.updateAnalysis( paa, attemptsForType );
+        }
     }
 }

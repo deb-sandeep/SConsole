@@ -31,6 +31,7 @@ public class ProblemAttemptAnalysis {
     private Integer totalNumProblems     = 0 ;
     private Integer numProblemsAttempted = 0 ;
     private Integer avgTime              = 0 ;
+    private Integer stddev               = 0 ;
     private Integer seventyPercentile    = 0 ;
     private Integer eightyPercentile     = 0 ;
     private Float   efficiency           = 0.0F ;
@@ -87,6 +88,13 @@ public class ProblemAttemptAnalysis {
         this.avgTime = avgTime ;
     }
     
+    public Integer getStddev() {
+        return stddev ;
+    }
+    public void setStddev( Integer stddev ) {
+        this.stddev = stddev ;
+    }
+
     public Integer getSeventyPercentile() {
         return seventyPercentile ;
     }

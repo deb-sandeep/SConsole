@@ -38,6 +38,7 @@ import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptAnalysisRepository ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository.SessionSummary ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
@@ -166,6 +167,9 @@ public class SConsole
     @Autowired
     private TopicRepository topicRepo = null ;
     
+    @Autowired
+    private ProblemAttemptRepository paRepo = null ;
+    
     private Map<Day, List<SessionSummary>> l30SessionSummary = 
                                     new HashMap<Day, List<SessionSummary>>() ;
     
@@ -202,10 +206,12 @@ public class SConsole
         this.frame = new SConsoleFrame() ;
         loadL30DaysSessionSummary() ;
         
-        paaGenerator = new PAAGenerator( paaRepo, topicRepo ) ;
+        paaGenerator = new PAAGenerator( paaRepo, topicRepo, paRepo ) ;
         SConsole.addDayTimerTask( paaGenerator ) ;
         
-        paaGenerator.analyzeProblemAttempts() ;
+        new Thread(() -> {
+            paaGenerator.analyzeProblemAttempts() ;
+        }).start() ;
     }
     
     @Override
