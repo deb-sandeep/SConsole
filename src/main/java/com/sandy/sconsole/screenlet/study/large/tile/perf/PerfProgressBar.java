@@ -102,7 +102,7 @@ class PerfProgressBar extends JLabel {
         int width = getWidth() ;
         int maxValue = Math.max( pctile80, runDuration ) ;
         
-        maxValue = ( maxValue == 0 ) ? 300 : maxValue ;
+        maxValue = ( maxValue == 0 ) ? 300 : maxValue + 5 ;
         return ((float)width)/maxValue ;
     }
 }
