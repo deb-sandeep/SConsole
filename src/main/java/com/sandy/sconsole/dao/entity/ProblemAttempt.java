@@ -75,6 +75,10 @@ public class ProblemAttempt {
         this.outcome = outcome ;
     }
     
+    public String getSubjectName() {
+        return this.session.getTopic().getSubject().getName() ;
+    }
+    
     public String toString() {
         StringBuffer buffer = new StringBuffer() ;
         buffer.append( "id        = " ).append( id              ).append( "\n" ) 

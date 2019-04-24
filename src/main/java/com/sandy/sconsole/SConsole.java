@@ -4,7 +4,14 @@ import java.io.File ;
 import java.sql.Timestamp ;
 import java.text.ParseException ;
 import java.text.SimpleDateFormat ;
-import java.util.* ;
+import java.util.ArrayList ;
+import java.util.Calendar ;
+import java.util.Date ;
+import java.util.HashMap ;
+import java.util.List ;
+import java.util.Map ;
+import java.util.Timer ;
+import java.util.TimerTask ;
 import java.util.concurrent.LinkedBlockingQueue ;
 
 import org.apache.log4j.Logger ;
@@ -21,6 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer ;
 import com.sandy.common.bus.Event ;
 import com.sandy.common.bus.EventBus ;
 import com.sandy.common.bus.EventSubscriber ;
+import com.sandy.sconsole.analysis.PAAGenerator ;
 import com.sandy.sconsole.api.remote.KeyEvent ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.SConsoleConfig ;
@@ -29,8 +37,11 @@ import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.screenlet.Screenlet ;
 import com.sandy.sconsole.core.util.DayTickListener ;
 import com.sandy.sconsole.core.util.SecondTickListener ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptAnalysisRepository ;
+import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository ;
 import com.sandy.sconsole.dao.repository.SessionRepository.SessionSummary ;
+import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.screenlet.dashboard.DashboardScreenlet ;
 import com.sandy.sconsole.screenlet.fragmentation.FragmentationScreenlet ;
 import com.sandy.sconsole.screenlet.study.StudyScreenlet ;
@@ -92,7 +103,15 @@ public class SConsole
                         TODAY_LAST_TS  = new Timestamp( TODAY_LAST_MIL ) ;
                         
                         for( DayTickListener task : dayListeners ) {
-                            task.dayTicked( now ) ;
+                            
+                            if( !task.isAsync() ) {
+                                task.dayTicked( now ) ;
+                            }
+                            else {
+                                new Thread(() -> {
+                                    task.dayTicked( now ) ;
+                                }).start() ;                 
+                            }
                         }
                     }
                     lastDate = now ;
@@ -140,10 +159,22 @@ public class SConsole
     private SessionRepository sessionRepo = null ;
     
     @Autowired
+    private ProblemAttemptAnalysisRepository paaRepo = null ;
+    
+    @Autowired
     private RemoteController remoteController = null ;
+    
+    @Autowired
+    private TopicRepository topicRepo = null ;
+    
+    @Autowired
+    private ProblemAttemptRepository paRepo = null ;
     
     private Map<Day, List<SessionSummary>> l30SessionSummary = 
                                     new HashMap<Day, List<SessionSummary>>() ;
+    
+    private PAAGenerator paaGenerator = null ;
+    
     public SConsole() {
         APP = this ;
         SConsole.addDayTimerTask( this ) ;
@@ -174,6 +205,13 @@ public class SConsole
         registerScreenlets() ;
         this.frame = new SConsoleFrame() ;
         loadL30DaysSessionSummary() ;
+        
+        paaGenerator = new PAAGenerator( paaRepo, topicRepo, paRepo ) ;
+        SConsole.addDayTimerTask( paaGenerator ) ;
+        
+        new Thread(() -> {
+            paaGenerator.analyzeProblemAttempts() ;
+        }).start() ;
     }
     
     @Override

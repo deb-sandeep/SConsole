@@ -7,6 +7,7 @@ import org.apache.log4j.Logger ;
 
 import com.sandy.sconsole.EventCatalog ;
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.analysis.PAARecordUpdater ;
 import com.sandy.sconsole.api.remote.RemoteController ;
 import com.sandy.sconsole.core.remote.Key ;
 import com.sandy.sconsole.core.remote.KeyType ;
@@ -74,10 +75,13 @@ public class PlayState extends BaseControlTileState
     
     private long lastPersistentUpdateTime = 0 ;
     
+    private PAARecordUpdater analysisUpdater = null ;
+    
     public PlayState( SessionControlTile tile, StudyScreenletLargePanel screenletPanel ) {
         super( NAME, tile, screenletPanel ) ;
         
         topicSelectionDialog = new TopicSelectionDialog( this ) ;
+        analysisUpdater = new PAARecordUpdater() ;
         
         addTransition( Key.FN_A, "Solved", this ) ;
         addTransition( Key.FN_B, "Redo",   this ) ;
@@ -93,7 +97,14 @@ public class PlayState extends BaseControlTileState
     }
 
     @Override public String getCenterPanelCardName() {
-        return RemoteController.CENTER_PROJ_PANEL ;
+        // Show the time projection panel, only if we are doing an exercise.
+        // Else, show the default center screen panel - which is the 
+        // navigation panel.
+        if( this.si != null && 
+            this.si.session.getSessionType() == SessionType.EXERCISE ) {
+            return RemoteController.CENTER_PROJ_PANEL ;
+        }
+        return super.getCenterPanelCardName() ;
     }
     
     @Override
@@ -247,6 +258,23 @@ public class PlayState extends BaseControlTileState
         problemAttempt.setDuration( lapTime ) ;
         problemAttemptRepo.save( problemAttempt ) ;
         
+        Problem problemForAnalysis = problemAttempt.getProblem() ;
+        
+        if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) || 
+            outcome.equals( ProblemAttempt.OUTCOME_REDO )   || 
+            outcome.equals( ProblemAttempt.OUTCOME_PIGEON ) ) {
+            new Thread(() -> {
+                try {
+                    log.debug( "Spawning async analysis for problem " +  
+                               problemForAnalysis.getId() ) ;
+                    analysisUpdater.updateAnalysis( problemForAnalysis ) ;
+                }
+                catch( Exception e ) {
+                    log.error( "Error analyzing problem attempts.", e ) ;
+                }
+            }).start() ;
+        }
+                
         // Update the problem master with the problem outcome details
         Problem problem = problemAttempt.getProblem() ;
         if( outcome.equals( ProblemAttempt.OUTCOME_SOLVED ) ) {

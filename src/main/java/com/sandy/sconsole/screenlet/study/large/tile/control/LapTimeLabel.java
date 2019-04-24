@@ -9,6 +9,8 @@ import java.awt.Paint ;
 
 import javax.swing.JLabel ;
 
+import com.sandy.sconsole.core.util.SConsoleUtil ;
+
 @SuppressWarnings( "serial" )
 public class LapTimeLabel extends JLabel {
     
@@ -32,7 +34,7 @@ public class LapTimeLabel extends JLabel {
     public void setLapTime( long seconds ) {
         
         currentLapTime = seconds ;
-        setText( seconds < 0 ? "" : getElapsedTimeLabel( seconds, false ) ) ;        
+        setText( seconds < 0 ? "" : SConsoleUtil.getElapsedTimeLabel( seconds, false ) ) ;        
     }
     
     public void setProjectedDuration( long seconds ) {
@@ -73,16 +75,5 @@ public class LapTimeLabel extends JLabel {
       
       g2d.setPaint( oldPaint );
       super.paintComponent( g ) ;
-    }
-
-    private String getElapsedTimeLabel( long seconds, boolean longFormat ) {
-        int secs    = (int)(seconds) % 60 ;
-        int minutes = (int)((seconds / 60) % 60) ;
-        int hours   = (int)(seconds / (60*60)) ;
-        
-        if( longFormat ) {
-            return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
-        }
-        return String.format("%02d:%02d", minutes, secs ) ;
     }
 }
