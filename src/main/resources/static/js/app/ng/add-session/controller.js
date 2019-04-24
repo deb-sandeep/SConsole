@@ -165,7 +165,7 @@ sConsoleApp.controller( 'AddSessionController', function( $scope, $http ) {
             for( var i=0; i<$scope.sessionDetails.selectedProblems.length; i++ ) {
                 var problem = $scope.sessionDetails.selectedProblems[i] ;
                 problem.outcome = "Solved" ;
-                problem.duration = 5 ;
+                problem.duration = 2 ;
             }
         }
     }
