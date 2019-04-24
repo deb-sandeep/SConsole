@@ -1,12 +1,23 @@
 package com.sandy.sconsole.screenlet.study.large.tile.control;
 
-import static com.sandy.sconsole.core.frame.UIConstant.* ;
+import static com.sandy.sconsole.core.frame.UIConstant.BASE_FONT ;
+import static com.sandy.sconsole.core.frame.UIConstant.BG_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_A_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_B_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_C_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_D_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.FN_F_COLOR ;
+import static com.sandy.sconsole.core.frame.UIConstant.TILE_BORDER ;
 import static javax.swing.SwingConstants.CENTER ;
 
 import java.awt.BorderLayout ;
 import java.awt.Color ;
 
-import javax.swing.* ;
+import javax.swing.BorderFactory ;
+import javax.swing.Icon ;
+import javax.swing.ImageIcon ;
+import javax.swing.JLabel ;
+import javax.swing.JPanel ;
 import javax.swing.border.Border ;
 
 import org.apache.log4j.Logger ;
@@ -17,6 +28,7 @@ import com.sandy.sconsole.core.frame.UIConstant ;
 import com.sandy.sconsole.core.remote.DemuxKeyProcessor ;
 import com.sandy.sconsole.core.screenlet.AbstractScreenletTile ;
 import com.sandy.sconsole.core.screenlet.ScreenletPanel ;
+import com.sandy.sconsole.core.util.SConsoleUtil ;
 import com.sandy.sconsole.dao.entity.Session ;
 import com.sandy.sconsole.dao.entity.Session.SessionType ;
 import com.sandy.sconsole.dao.entity.master.Book ;
@@ -423,7 +435,8 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     }
     
     public void updateSessionTimeLabel( long seconds ) {
-        sTimeLbl.setText( seconds < 0 ? "" : getElapsedTimeLabel( seconds, true ) ) ;
+        sTimeLbl.setText( seconds < 0 ? 
+                   "" : SConsoleUtil.getElapsedTimeLabel( seconds, true ) ) ;
     }
     
     public void updateLapTimeLabel( long seconds ) {
@@ -510,17 +523,6 @@ public abstract class SessionControlTileUI extends AbstractScreenletTile {
     // ----------------- Panel content manipulation [Ends] -------------------
     
     // ----------------- UI Utility methods [Start] -------------------
-    
-    private String getElapsedTimeLabel( long seconds, boolean longFormat ) {
-        int secs    = (int)(seconds) % 60 ;
-        int minutes = (int)((seconds / 60) % 60) ;
-        int hours   = (int)(seconds / (60*60)) ;
-        
-        if( longFormat ) {
-            return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
-        }
-        return String.format("%02d:%02d", minutes, secs ) ;
-    }
     
     protected void showMessage( String msg ) {
         (( StudyScreenletLargePanel )parent).showMessage( msg ) ;

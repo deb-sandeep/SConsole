@@ -188,6 +188,10 @@ public class Session {
         return (int)( sessionEndMil - sessionStartMil ) / 1000 ;
     }
     
+    public String getSubjectName() {
+        return getTopic().getSubject().getName() ;
+    }
+    
     public Session clone() {
         Session clone = new Session() ;
         clone.setId( id ) ;

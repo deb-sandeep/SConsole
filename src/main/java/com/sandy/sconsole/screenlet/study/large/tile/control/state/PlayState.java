@@ -97,7 +97,14 @@ public class PlayState extends BaseControlTileState
     }
 
     @Override public String getCenterPanelCardName() {
-        return RemoteController.CENTER_PROJ_PANEL ;
+        // Show the time projection panel, only if we are doing an exercise.
+        // Else, show the default center screen panel - which is the 
+        // navigation panel.
+        if( this.si != null && 
+            this.si.session.getSessionType() == SessionType.EXERCISE ) {
+            return RemoteController.CENTER_PROJ_PANEL ;
+        }
+        return super.getCenterPanelCardName() ;
     }
     
     @Override
