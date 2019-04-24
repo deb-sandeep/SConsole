@@ -26,6 +26,7 @@ import com.sandy.sconsole.screenlet.study.large.tile.control.SessionInformation 
 import com.sandy.sconsole.screenlet.study.large.tile.daygantt.DayGanttTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.last30d.L30DaysNumQTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.last30d.L30DaysSubjectHrsTile ;
+import com.sandy.sconsole.screenlet.study.large.tile.perf.PerfHeuristicTile ;
 import com.sandy.sconsole.screenlet.study.large.tile.topicburnstat.TopicBurnStatTile ;
 
 import info.clearthought.layout.TableLayout ;
@@ -44,7 +45,8 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     
     private static final String TOPIC_BURN_PC      = "0,2,1,5" ;
     private static final String SESSION_CONTROL_PC = "2,2,7,5" ;
-    private static final String FRAG_TILE_PC       = "8,2,9,5" ;
+    private static final String HEURISTIC_PERF_PC  = "8,2,9,2" ;
+    private static final String FRAG_TILE_PC       = "8,3,9,5" ;
     
     private static final String BURN_PC            = "0,6,4,9" ;
     private static final String THERMOMETER_PC     = "5,6,5,9" ;
@@ -60,9 +62,10 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private SessionControlTile    sessionControlTile  = null ;
     private FragmentationTile     fragTile            = null ;
     private BurnTile              burnTile            = null ;
-    private ThermometerTile     thermometerTile     = null ;
+    private ThermometerTile       thermometerTile     = null ;
     private L30DaysNumQTile       l30DaysNumQTile     = null ;
     private L30DaysSubjectHrsTile l30DaysHoursTile    = null ;
+    private PerfHeuristicTile     heuristicTile       = null ;
     
     private JLabel messageLabel = null ;
     
@@ -85,6 +88,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
         thermometerTile    = new ThermometerTile( this ) ;
         l30DaysNumQTile    = new L30DaysNumQTile( this ) ;
         l30DaysHoursTile   = new L30DaysSubjectHrsTile( this ) ;
+        heuristicTile      = new PerfHeuristicTile( this ) ;
     }
     
     private void initializeMessageLabel() {
@@ -137,6 +141,7 @@ public class StudyScreenletLargePanel extends ScreenletLargePanel {
     private void layoutStatRow( JPanel panel ) {
         panel.add( topicBurnStatTile, TOPIC_BURN_PC ) ;
         panel.add( sessionControlTile, SESSION_CONTROL_PC ) ;
+        panel.add( heuristicTile, HEURISTIC_PERF_PC ) ;
         panel.add( fragTile, FRAG_TILE_PC ) ;
     }
     

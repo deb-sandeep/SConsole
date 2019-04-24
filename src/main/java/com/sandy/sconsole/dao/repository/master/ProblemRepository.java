@@ -91,6 +91,14 @@ public interface ProblemRepository extends CrudRepository<Problem, Integer> {
             +   "p.active = true and "
             +   "p.topic.id = ?1 " )
     Integer findActiveProblemCount( int topicId ) ;
+    
+    @Query(   "SELECT count(p) "
+            + "FROM Problem p "
+            + "WHERE "
+            +   "p.active = true and "
+            +   "p.topic.id = ?1 and "
+            +   "p.problemType = ?2 ")
+    Integer findActiveProblemCount( int topicId, String problemType ) ;
 
     @Query(   "SELECT count(p) "
             + "FROM Problem p "
