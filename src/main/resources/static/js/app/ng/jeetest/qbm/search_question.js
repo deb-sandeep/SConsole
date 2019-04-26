@@ -5,6 +5,12 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	$scope.booksMasterList = [] ;
 	
 	$scope.searchResults = [] ;
+	$scope.actionCmd = "" ;
+	$scope.actionCmdList = [ "", 
+		"Select All", 
+		"Unselect All", 
+		"Sync" 
+	] ;
 	
 	// --- [START] Controller initialization
 	// First load the master data from the server. The drop down
@@ -95,7 +101,84 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 		fetchSearchResults( criteria ) ;
 	}
 	
+	$scope.actionCmdChanged = function() {
+		
+		if( $scope.actionCmd == "Select All" ) {
+			for( i=0; i<$scope.searchResults.length; i++ ) {
+				var question = $scope.searchResults[i] ;
+				question.selected = true ;
+			}
+			$scope.actionCmd = "" ;
+		}
+		else if( $scope.actionCmd == "Unselect All" ) {
+			for( i=0; i<$scope.searchResults.length; i++ ) {
+				var question = $scope.searchResults[i] ;
+				question.selected = false ;
+			}
+			$scope.actionCmd = "" ;
+		}
+		else if( $scope.actionCmd == "Sync" ) {
+			syncSelectedQuestions() ;
+		}
+	}
+	
+	$scope.syncQuestion = function( question ) {
+		
+		console.log( "Synching question = " + question.id ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/SyncTestQuestionsToPimon', [ question.id ] )
+        .then( 
+            function( response ){
+                console.log( "Successfully synched question." ) ;
+                question.synched = true ;
+            }, 
+            function( error ){
+                console.log( "Error synching questions." + error ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+	
 	// --- [END] Scope functions
+	
+	function syncSelectedQuestions() {
+		var selectedQuestionIds = [] ;
+		var selectedQuestions = [] ;
+		
+		for( i=0; i<$scope.searchResults.length; i++ ) {
+			var question = $scope.searchResults[i] ;
+			if( question.selected ) {
+				selectedQuestionIds.push( question.id ) ;
+				selectedQuestions.push( question ) ;
+			}
+		}
+		if( selectedQuestionIds.length == 0 ) {
+			$scope.$parent.addErrorAlert( "No questions selected for sync" ) ;
+    		$scope.actionCmd = "" ;
+		}
+		else {
+			console.log( "Synching questions = " + selectedQuestionIds ) ;
+	        $scope.$parent.interactingWithServer = true ;
+	        $http.post( '/SyncTestQuestionsToPimon', selectedQuestionIds )
+	        .then( 
+	            function( response ){
+	                console.log( "Successfully synched question." ) ;
+	        		for( i=0; i<selectedQuestions.length; i++ ) {
+	        			selectedQuestions[i].synched = true ;
+	        		}
+	            }, 
+	            function( error ){
+	                console.log( "Error synching questions." + error ) ;
+	            }
+	        )
+	        .finally(function() {
+	            $scope.$parent.interactingWithServer = false ;
+	    		$scope.actionCmd = "" ;
+	        }) ;
+		}
+	}
 	
 	function fetchSearchResults( criteria ) {
 		
@@ -113,6 +196,11 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
                 console.log( response ) ;
                 $scope.searchResults = response.data ;
                 $scope.$parent.lastUsedSearchCriteria = criteria ;
+                
+    			for( i=0; i<$scope.searchResults.length; i++ ) {
+    				var question = $scope.searchResults[i] ;
+    				question.selected = false ;
+    			}
             }, 
             function( error ){
                 console.log( "Error getting search results." ) ;
@@ -124,4 +212,5 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
             $scope.$parent.interactingWithServer = false ;
         }) ;
 	}
+
 } ) ;

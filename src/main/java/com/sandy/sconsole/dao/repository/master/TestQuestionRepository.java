@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.CrudRepository ;
 import org.springframework.data.repository.query.Param ;
 
-import com.sandy.sconsole.api.jeetest.QBTopicInsight ;
+import com.sandy.sconsole.api.jeetest.qbm.QBTopicInsight ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 
 public interface TestQuestionRepository 
@@ -66,5 +66,7 @@ public interface TestQuestionRepository
             + "    tm.subject_name, "
             + "    tm.id asc" )
     public List<QBTopicInsight> getTopicBasedInsight() ;
+    
+    public TestQuestion findByHash( String hash ) ;
     
 }

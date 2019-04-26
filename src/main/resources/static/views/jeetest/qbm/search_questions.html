@@ -121,10 +121,28 @@
 </div>
 
 <div class="split right">
+    <div style="height:36px">
+	    <div ng-show="searchResults.length > 0" class="pull-right" >
+	        <select id="actionList" 
+	                class="form-control" 
+	                ng-model="actionCmd"
+	                ng-options="item for item in actionCmdList"
+	                ng-change="actionCmdChanged()">
+	        </select>
+	    </div>
+    </div>
 	<div class="panel panel-success" 
 	     ng-repeat="question in searchResults">
 	  <div class="panel-heading">
+        <input type="checkbox" 
+               ng-model="question.selected" />
 	    <span class="panel-title">Question</span>
+	    &nbsp;
+	    <a ng-hide="question.synched" 
+	       ng-click="syncQuestion( question )"
+	       style="color:#0000FF">
+	       <span class="glyphicon glyphicon-cloud-upload"></span>
+	    </a>
 	    <div class="pull-right"> 
           <button type="button" class="btn btn-danger btn-sm"
                   ng-click="deleteQuestion( $index )">
@@ -137,7 +155,7 @@
 	    </div>
 	  </div>
 	  <div class="panel-body">
-	      <render-test-question-on-edit-page></render-test-question-on-edit-page>
+	      <render-test-question-on-search-page></render-test-question-on-search-page>
 	  </div>
 	</div> 
 </div>

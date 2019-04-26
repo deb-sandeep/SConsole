@@ -1,5 +1,7 @@
 package com.sandy.sconsole.util;
 
+import java.util.ArrayList ;
+import java.util.List ;
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
 
@@ -209,5 +211,23 @@ public class QuestionTextFormatter {
             buffer.append( " " ) ;
         }
         return buffer.toString() ;
+    }
+    
+    public List<String> getEmbeddedImageNames( String input ) {
+        
+        Pattern r = Pattern.compile( JN_MARKER_PATTERN, Pattern.DOTALL ) ;
+        Matcher m = r.matcher( input ) ;
+        
+        List<String> embeddedImageNames = new ArrayList<>() ;
+        
+        while( m.find() ) {
+            String markerType = m.group( 1 ) ;
+            String markerData = m.group( 2 ) ;
+            
+            if( markerType.equals( "img" ) ) {
+                embeddedImageNames.add( markerData ) ;
+            }
+        }
+        return embeddedImageNames ;
     }
 }

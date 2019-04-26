@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.jeetest;
+package com.sandy.sconsole.api.jeetest.qbm;
 
 import java.util.List ;
 

@@ -1,5 +1,6 @@
-package com.sandy.sconsole.api.jeetest;
+package com.sandy.sconsole.api.jeetest.qbm;
 
+import java.net.InetAddress ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
@@ -31,6 +32,8 @@ import com.sandy.sconsole.util.ResponseMsg ;
 public class QBMRestController {
     
     static final Logger log = Logger.getLogger( QBMRestController.class ) ;
+    
+    private static final String SERVER_HOST = "192.168.0.117:8080" ;
     
     @Autowired
     private TopicRepository topicRepo = null ;
@@ -216,6 +219,59 @@ public class QBMRestController {
         catch( Exception e ) {
             log.error( "Error formatting input", e ) ;
             return ResponseEntity.status( 500 ).body( null ) ;
+        }
+    }
+    
+    /**
+     * This method is called upon by the browser to the local server. The 
+     * local server then posts a requests to the pimon server for it to 
+     * import the local questions.
+     */
+    @PostMapping( "/SyncTestQuestionsToPimon" )
+    public ResponseEntity<ResponseMsg> syncQuestions ( @RequestBody Integer[] ids ) {
+        
+        try {
+            log.debug( "Received questions to sync.." ) ;
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            String ipAddress = inetAddress.getHostAddress() ;
+            if( ipAddress.equals( "192.168.0.117" ) ) {
+                return ResponseEntity.status( HttpStatus.BAD_REQUEST )
+                                     .body( new ResponseMsg( "Already on server. Can't sync" ) ) ;
+            }
+            else {
+                TestQuestionSynchronizer synchronizer = null ;
+                synchronizer = new TestQuestionSynchronizer( SERVER_HOST ) ;
+                synchronizer.syncQuestions( ids ) ;
+                
+                return ResponseEntity.status( HttpStatus.OK )
+                                     .body( ResponseMsg.SUCCESS ) ;
+            }
+        }
+        catch( Exception e ) {
+            log.error( "Error synchronizing questions to server", e ) ;
+            return ResponseEntity.status( 500 ).body( null ) ;
+        }
+    }
+    
+    /**
+     * This function is called upon by some local server in the network in
+     * an attempt to import the requested questions.
+     */
+    @PostMapping( "/ImportNewTestQuestions" ) 
+    public ResponseEntity<ResponseMsg> importNewQuestions( 
+                                @RequestBody List<TestQuestionEx> questions ) {
+        
+        log.debug( "Importing new questions..." ) ;
+        TestQuestionSynchronizer synchronizer = new TestQuestionSynchronizer() ;
+        try {
+            synchronizer.importQuestions( questions ) ;
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error formatting input", e ) ;
+            return ResponseEntity.status( 500 )
+                                 .body( new ResponseMsg( e.getMessage() ) ) ;
         }
     }
 }
