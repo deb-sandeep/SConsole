@@ -9,7 +9,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	$scope.actionCmdList = [ "", 
 		"Select All", 
 		"Unselect All", 
-		"Sync" 
+		"Sync Selected" 
 	] ;
 	
 	// --- [START] Controller initialization
@@ -117,7 +117,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 			}
 			$scope.actionCmd = "" ;
 		}
-		else if( $scope.actionCmd == "Sync" ) {
+		else if( $scope.actionCmd == "Sync Selected" ) {
 			syncSelectedQuestions() ;
 		}
 	}

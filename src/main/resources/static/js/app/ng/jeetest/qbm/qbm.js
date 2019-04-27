@@ -11,7 +11,7 @@ sConsoleApp.controller( 'QBMController', function( $scope, $http ) {
 			selectedTopics : [],
 			selectedBooks : [],
 			selectedQuestionTypes : [],
-			showOnlyUnsynched : false,
+			showOnlyUnsynched : true,
 			excludeAttempted : true,
 			searchText : ""
 		} ;
