@@ -14,11 +14,11 @@ public class JEETestLandingController {
     
     @RequestMapping( "/qb-management" )
     public String qbManagement() {
-        return "jeetest/qbm/qb-management" ;
+        return "jeetest/qbm/qb_management" ;
     }
     
     @RequestMapping( "/test-config" )
     public String testConfig() {
-        return "jeetest/config/test-config" ;
+        return "jeetest/config/test_config" ;
     }
 }

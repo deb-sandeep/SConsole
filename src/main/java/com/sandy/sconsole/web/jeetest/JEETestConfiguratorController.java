@@ -6,4 +6,9 @@ import org.springframework.web.bind.annotation.* ;
 @Controller
 @RequestMapping( "/jeetest/config" )
 public class JEETestConfiguratorController {
+    
+    @RequestMapping( "/summaryDashboard" )
+    public String jeeMain() {
+        return "jeetest/config/summary_dashboard" ;
+    }
 }
