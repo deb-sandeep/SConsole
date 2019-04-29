@@ -1,5 +1,51 @@
 <div class="panel panel-default" style="padding:0px; margin:0px" align="center">
   <div class="panel-body" style="padding:5px">
-    <h2>{{$parent.navBarTitle}}</h2>
+	<table class="table table-bordered table-compact"
+	       style="width:auto !important;">
+	  <thead>
+        <tr class="success">
+          <th></th>
+          <th colspan="3" align="center" 
+              style="text-align:center;"># Questions</th>
+          <th></th>
+          <th></th>
+          <th colspan="2" align="center" 
+              style="text-align:center;">
+              <button class="btn btn-primary btn-sm">
+                     <span class="glyphicon glyphicon-plus"
+                           ng-click="newTest()"></span>
+              </button>
+          </th>
+        </tr>
+	    <tr class="success">
+	      <th>ID</th>
+	      <th># Phy</th>
+	      <th># Chem</th>
+	      <th># Math</th>
+	      <th>Dur (min)</th>
+          <th>Creation Dt</th>
+          <th colspan="2" align="center" 
+              style="text-align:center;">Edit</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr ng-repeat="test in testSummaries">
+	       <td>{{test.id}}</td>
+           <td>{{test.numPhyQuestions}}</td>
+           <td>{{test.numMathQuestions}}</td>
+           <td>{{test.numChemQuestions}}</td>
+           <td>{{test.duration}}</td>
+           <td>{{test.creationDate | date}}</td>
+           <td>
+              <span class="glyphicon glyphicon-trash"
+                    ng-click="deleteTest( test )"></span>
+           </td>
+           <td>
+              <span class="glyphicon glyphicon-pencil"
+                    ng-click="editTest( test )"></span>
+           </td>
+	    </tr>
+	  </tbody>
+	</table>
   </div>
 </div>

@@ -11,4 +11,9 @@ public class JEETestConfiguratorController {
     public String jeeMain() {
         return "jeetest/config/summary_dashboard" ;
     }
+    
+    @RequestMapping( "/newTestConfig" )
+    public String newTestConfig() {
+        return "jeetest/config/new_test" ;
+    }
 }

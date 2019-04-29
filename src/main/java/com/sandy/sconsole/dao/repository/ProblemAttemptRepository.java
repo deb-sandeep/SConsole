@@ -41,7 +41,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
           + "    pa.outcome in ( 'Solved', 'Redo', 'Pigeon' ) "
           + "ORDER BY "
           + "    pa.startTime DESC" 
-  )
+    )
     public List<ProblemAttempt> findByTopicId( Integer topicId ) ;
     
     @Query( value =   
