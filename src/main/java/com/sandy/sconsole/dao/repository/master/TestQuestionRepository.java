@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.CrudRepository ;
 import org.springframework.data.repository.query.Param ;
 
-import com.sandy.sconsole.api.jeetest.qbm.QBTopicInsight ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 
 public interface TestQuestionRepository 
@@ -51,8 +50,10 @@ public interface TestQuestionRepository
     @Query( nativeQuery=true,
             value =   
               "select " 
+            + "    tm.id as topicId, "
             + "    tm.subject_name as subjectName, "
             + "    tm.topic_name as topicName, "
+            + "    mqm.question_type as questionType, "
             + "    count( mqm.id ) as totalQuestions, "
             + "    sum( mqm.attempted ) as attemptedQuestions "
             + "from "
@@ -61,11 +62,12 @@ public interface TestQuestionRepository
             + "on "
             + "    tm.id = mqm.topic_id " 
             + "group by "
-            + "    tm.topic_name " 
+            + "    tm.topic_name, "
+            + "    mqm.question_type "
             + "order by "
             + "    tm.subject_name, "
-            + "    tm.id asc" )
-    public List<QBTopicInsight> getTopicBasedInsight() ;
+            + "    tm.id asc " )
+    public List<Object[]> getTopicBasedInsight() ;
     
     public TestQuestion findByHash( String hash ) ;
     

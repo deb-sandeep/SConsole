@@ -61,6 +61,7 @@ public class PAAGenerator implements DayTickListener {
         
         Map<String, ProblemAttemptAnalysis> paaPTypeMap = null ;
         Topic topic = null ;
+        log.debug( "Refreshing analysis for topics" ) ;
         for( Integer topicId : paaLookup.keySet() ) {
             paaPTypeMap = paaLookup.get( topicId ) ;
             topic = topicRepo.findById( topicId ).get() ;
@@ -120,8 +121,6 @@ public class PAAGenerator implements DayTickListener {
     
     private void refreshAnalysis( Topic topic, 
                                   Map<String, ProblemAttemptAnalysis> paaMap ) {
-        
-        log.debug( "Refreshing problem analysis for topic " + topic.getTopicName() ) ;
         
         List<ProblemAttempt> attempts = paRepo.findByTopicId( topic.getId() ) ;
         Map<String, List<ProblemAttempt>> attemptsByType = new HashMap<>() ;

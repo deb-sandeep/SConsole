@@ -1,7 +1,11 @@
 package com.sandy.sconsole.api.jeetest.qbm;
 
+import java.math.BigDecimal ;
+import java.math.BigInteger ;
 import java.net.InetAddress ;
+import java.util.ArrayList ;
 import java.util.HashMap ;
+import java.util.LinkedHashMap ;
 import java.util.List ;
 import java.util.Map ;
 import java.util.NoSuchElementException ;
@@ -48,15 +52,61 @@ public class QBMRestController {
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
         try {
             log.debug( "Fetching QB insights" ) ;
-            List<QBTopicInsight> insighs = testQuestionRepo.getTopicBasedInsight() ;
+            List<Object[]> results = testQuestionRepo.getTopicBasedInsight() ;
+            List<QBTopicInsight> insights = assembleInsights( results ) ;
             return ResponseEntity.status( HttpStatus.OK )
-                                 .body( insighs ) ;
+                                 .body( insights ) ;
         }
         catch( Exception e ) {
             log.error( "Error getting QB insights", e ) ;
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
                                  .body( null ) ;
         }
+    }
+    
+    private List<QBTopicInsight> assembleInsights( List<Object[]> tupules ) {
+        
+        List<QBTopicInsight> insights = new ArrayList<>() ;
+        Map<Integer, QBTopicInsight> insightsMap = new LinkedHashMap<>() ;
+        
+        for( Object[] tupule : tupules ) {
+            Integer topicId      = (Integer)tupule[0] ;
+            String  subjectName  = (String )tupule[1] ;
+            String  topicName    = (String )tupule[2] ;
+            String  questionType = (String )tupule[3] ;
+            Integer numQ         = 0 ;
+            Integer attQ         = 0 ;
+            
+            QBTopicInsight insight = insightsMap.get( topicId ) ;
+            if( insight == null ) {
+                insight = new QBTopicInsight() ;
+                insightsMap.put( topicId, insight ) ;
+                
+                for( String qType : QBMMasterData.questionTypes ) {
+                    insight.getGetTotalQuestionsByType().put( qType, 0 ) ;
+                    insight.getGetAttemptedQuestionsByType().put( qType, 0 ) ;
+                }
+            }
+            
+            insight.setSubjectName( subjectName ) ;
+            insight.setTopicName( topicName ) ;
+            
+            if( questionType != null ) {
+                numQ = ((BigInteger)tupule[4]).intValue() ;
+                attQ = ((BigDecimal)tupule[5]).intValue() ;
+                
+                insight.setTotalQuestions( insight.getTotalQuestions() + numQ ) ;
+                insight.setAttemptedQuestions( insight.getAttemptedQuestions() + attQ ) ;
+                insight.getGetTotalQuestionsByType().put( questionType, numQ ) ;
+                insight.getGetAttemptedQuestionsByType().put( questionType, attQ ) ;
+            }
+        }
+        
+        for( QBTopicInsight insight : insightsMap.values() ) {
+            insights.add( insight ) ;
+        }
+        
+        return insights ;
     }
     
     @GetMapping( "/QBMMasterData" )

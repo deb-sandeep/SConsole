@@ -22,7 +22,7 @@ import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 
 public class PAARecordUpdater {
     
-    private static final Logger log = Logger.getLogger( PAARecordUpdater.class ) ;
+    static final Logger log = Logger.getLogger( PAARecordUpdater.class ) ;
 
     private ProblemRepository pRepo = null ;
     private ProblemAttemptRepository paRepo = null ;
@@ -64,14 +64,8 @@ public class PAARecordUpdater {
     public void updateAnalysis( ProblemAttemptAnalysis paa,
                                 List<ProblemAttempt> attempts ) {
         
-        log.debug( "Updating attempt analysis for " ) ;
-        log.debug( "\ttopic = " + paa.getTopicName() ) ;
         if( attempts == null || attempts.isEmpty() ) {
-            log.debug( "\tNo problems attempted. Skipping analysis" ) ;
             return ;
-        }
-        else {
-            log.debug( "\tnumAttempts = " + attempts.size() ) ;
         }
         
         Map<Integer, Integer[]> problemTimeMap = new HashMap<>() ;
