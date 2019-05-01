@@ -51,7 +51,7 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
         console.log( "Loading question bank insights from server." ) ;
         
         $scope.$parent.interactingWithServer = true ;
-        $http.get( '/QBInsights' )
+        $http.get( '/QBTopicInsights' )
         .then( 
                 function( response ){
                     console.log( "QBM insights received." ) ;

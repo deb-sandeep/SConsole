@@ -48,7 +48,7 @@ public class QBMRestController {
     @Autowired
     private TestQuestionRepository testQuestionRepo = null ;
     
-    @GetMapping( "/QBInsights" )
+    @GetMapping( "/QBTopicInsights" )
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
         try {
             log.debug( "Fetching QB insights" ) ;
@@ -83,11 +83,12 @@ public class QBMRestController {
                 insightsMap.put( topicId, insight ) ;
                 
                 for( String qType : QBMMasterData.questionTypes ) {
-                    insight.getGetTotalQuestionsByType().put( qType, 0 ) ;
-                    insight.getGetAttemptedQuestionsByType().put( qType, 0 ) ;
+                    insight.getTotalQuestionsByType().put( qType, 0 ) ;
+                    insight.getAttemptedQuestionsByType().put( qType, 0 ) ;
                 }
             }
             
+            insight.setTopicId( topicId ) ;
             insight.setSubjectName( subjectName ) ;
             insight.setTopicName( topicName ) ;
             
@@ -97,8 +98,8 @@ public class QBMRestController {
                 
                 insight.setTotalQuestions( insight.getTotalQuestions() + numQ ) ;
                 insight.setAttemptedQuestions( insight.getAttemptedQuestions() + attQ ) ;
-                insight.getGetTotalQuestionsByType().put( questionType, numQ ) ;
-                insight.getGetAttemptedQuestionsByType().put( questionType, attQ ) ;
+                insight.getTotalQuestionsByType().put( questionType, numQ ) ;
+                insight.getAttemptedQuestionsByType().put( questionType, attQ ) ;
             }
         }
         

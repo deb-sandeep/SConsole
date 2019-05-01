@@ -1,0 +1,221 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<span class="panel-title">Physics</span>
+		<div class="pull-right">
+             <button class="btn btn-primary btn-sm"
+                     data-toggle="modal" 
+                     data-target="#phyTopicsDialog">
+                    <span class="glyphicon glyphicon-plus"></span>
+             </button>
+		</div>
+	</div>
+	<div class="panel-body" style="padding:0px">
+           <select class="form-control" 
+                   size=5
+                   style="padding:3px;"
+                   ng-options="item as item.topicName for item in phyTopics | filter:filterOnlySelectedTopics"
+                   ng-model="$parent.selectedTopic"
+                   ng-change="topicSelectionChanged()">
+               <option style="display:none" value="">select a type</option>
+           </select>
+	</div>
+</div>
+<p/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="panel-title">Chemistry</span>
+        <div class="pull-right">
+             <button class="btn btn-primary btn-sm"
+                     data-toggle="modal" 
+                     data-target="#chemTopicsDialog">
+                    <span class="glyphicon glyphicon-plus"></span>
+             </button>
+        </div>
+    </div>
+    <div class="panel-body" style="padding:0px">
+           <select class="form-control" 
+                   size=5
+                   style="padding:3px;"
+                   ng-options="item as item.topicName for item in chemTopics | filter:filterOnlySelectedTopics"
+                   ng-model="$parent.selectedTopic"
+                   ng-change="topicSelectionChanged()">
+               <option style="display:none" value="">select a type</option>
+           </select>
+    </div>
+</div>
+<p/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="panel-title">Mathematics</span>
+        <div class="pull-right">
+             <button class="btn btn-primary btn-sm"
+                     data-toggle="modal" 
+                     data-target="#mathTopicsDialog">
+                    <span class="glyphicon glyphicon-plus"></span>
+             </button>
+        </div>
+    </div>
+    <div class="panel-body" style="padding:0px">
+           <select class="form-control" 
+                   size=5
+                   style="padding:3px;"
+                   ng-options="item as item.topicName for item in mathTopics | filter:filterOnlySelectedTopics"
+                   ng-model="$parent.selectedTopic"
+                   ng-change="topicSelectionChanged()">
+               <option style="display:none" value="">select a type</option>
+           </select>
+    </div>
+</div>
+
+<div id="phyTopicsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Physics Topics</h4>
+        <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px">SCA</th>
+                <th width="40px">MCA</th>
+                <th width="40px">IT</th>
+                <th width="40px">RNT</th>
+                <th width="40px">MMT</th>
+            </thead>
+        </table>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:200px;'>
+          <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+            </thead>
+            <tbody>
+		        <tr ng-repeat="topic in phyTopics"
+		            ng-click="toggleTopicSelection( topic )"
+		            ng-class="getTopicRowStyle( topic )">
+		           <td>{{topic.topicName}}</td>
+		           <td>{{topic.totalQuestionsByType['SCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['MCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['IT']}}</td>
+                   <td>{{topic.totalQuestionsByType['RNT']}}</td>
+                   <td>{{topic.totalQuestionsByType['MMT']}}</td>
+		        </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="chemTopicsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Chemistry Topics</h4>
+        <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px">SCA</th>
+                <th width="40px">MCA</th>
+                <th width="40px">IT</th>
+                <th width="40px">RNT</th>
+                <th width="40px">MMT</th>
+            </thead>
+        </table>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:200px;'>
+          <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="topic in chemTopics"
+                    ng-click="toggleTopicSelection( topic )"
+                    ng-class="getTopicRowStyle( topic )">
+                   <td>{{topic.topicName}}</td>
+                   <td>{{topic.totalQuestionsByType['SCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['MCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['IT']}}</td>
+                   <td>{{topic.totalQuestionsByType['RNT']}}</td>
+                   <td>{{topic.totalQuestionsByType['MMT']}}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mathTopicsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Maths Topics</h4>
+        <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px">SCA</th>
+                <th width="40px">MCA</th>
+                <th width="40px">IT</th>
+                <th width="40px">RNT</th>
+                <th width="40px">MMT</th>
+            </thead>
+        </table>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:200px;'>
+          <table width="100%">
+            <thead>
+                <th width="*"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+                <th width="40px"></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="topic in mathTopics"
+                    ng-click="toggleTopicSelection( topic )"
+                    ng-class="getTopicRowStyle( topic )">
+                   <td>{{topic.topicName}}</td>
+                   <td>{{topic.totalQuestionsByType['SCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['MCA']}}</td>
+                   <td>{{topic.totalQuestionsByType['IT']}}</td>
+                   <td>{{topic.totalQuestionsByType['RNT']}}</td>
+                   <td>{{topic.totalQuestionsByType['MMT']}}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
