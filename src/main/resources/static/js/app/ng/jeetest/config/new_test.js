@@ -15,6 +15,7 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 	} ;
 	
 	$scope.selectedTopic = null ;
+	$scope.selectedQuestion = null ;
 	$scope.examType = $scope.examTypes[0] ;
 	
 	// -----------------------------------------------------------------------
@@ -44,6 +45,13 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 	
 	$scope.topicSelectionChanged = function() {
 		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
+	}
+	
+	$scope.questionSelectionChanged = function() {
+	}
+	
+	$scope.questionSelectedForTest = function() {
+		console.log( "Double click detected." ) ;
 	}
 	
 	// --- [END] Scope functions

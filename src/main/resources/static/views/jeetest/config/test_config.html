@@ -10,19 +10,34 @@
     <link rel="stylesheet" href="/css/app/test_config.css"/>
     <link rel="stylesheet" href="/css/pure/tables.css"/>
     
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ TeX: { extensions: ["mhchem.js"] }});
+    </script>
+    <script type="text/javascript" 
+            src="/js/lib/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full">
+    </script>
+    
     <script src="/js/lib/angular.min.js"></script>
     <script src="/js/lib/angular-route.min.js"></script>
     <script src="/js/lib/jquery.min.js"></script>
     <script src="/js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/lib/dombuilder/DOMBuilder.min.js"></script>
     
+    <script>
+        DOMBuilder.apply( window, 'dom' ) ;
+    </script>
+
     <script src="/js/app/ng/app-ng.js"></script>
+    <script src="/js/app/ng/jeetest/config/directive.js"></script>
     <script src="/js/app/ng/jeetest/config/route.js"></script>
+    <script src="/js/app/ng/jeetest/config/filter.js"></script>
     <script src="/js/app/ng/jeetest/config/summary_dashboard.js"></script>
     <script src="/js/app/ng/jeetest/config/new_test.js"></script>
     <script src="/js/app/ng/jeetest/config/test_config.js"></script>
 </head>
 
-<body ng-controller="TestConfiguratorController">
+<body ng-controller="TestConfiguratorController"
+      style="background-color: #FFFFFF;">
 
 <nav class="navbar navbar-inverse navbar-static-top"
      style="min-height:0px;margin-bottom:0px;">

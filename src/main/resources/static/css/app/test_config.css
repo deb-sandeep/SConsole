@@ -7,3 +7,16 @@
     background-color:#FFFFFF;
     height:25px;
 }
+
+.test-config-panel-heading {
+	padding:5px 10px ;
+	background-color:#d0feff !important;
+}
+
+.test-config-panel-body {
+	padding:5px ;
+}
+
+.question-select {
+	font-family:"Courier New", Courier, monospace ;
+}
