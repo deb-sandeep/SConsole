@@ -71,4 +71,16 @@ public interface TestQuestionRepository
     
     public TestQuestion findByHash( String hash ) ;
     
+    @Query(   "SELECT q "
+            + "FROM TestQuestion q "
+            + "WHERE "
+            +   "q.topic.id = :topicId AND "
+            +   "q.id NOT IN ( " 
+            +   "    SELECT " 
+            +   "      tqb.topic.id "
+            +   "    FROM "
+            +   "      TestQuestionBinding tqb " 
+            +   ")" )
+    public List<TestQuestion> findActiveQuestionsForTopic( 
+                                       @Param( "topicId" ) Integer topicId ) ;
 }

@@ -1,12 +1,21 @@
 sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location ) {
     
 	$scope.$parent.navBarTitle = "Create New Test" ;
+	$scope.examTypes = [ "MAIN", "ADV" ] ;
 	
 	$scope.phyTopics = [] ;
 	$scope.chemTopics = [] ;
 	$scope.mathTopics = [] ;
+	$scope.questionsForSelectedTopic = {
+		SCA : [],
+		MCA : [],
+		IT  : [],
+		RNT : [],
+		MMT : []
+	} ;
 	
 	$scope.selectedTopic = null ;
+	$scope.examType = $scope.examTypes[0] ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -34,11 +43,7 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 	}
 	
 	$scope.topicSelectionChanged = function() {
-		// TODO: Get the active questions associated with this topic 
-		//       and categorize them as per their question types.
-		//       Populate second column with question type scroll divs
-		//       with meta data of each question. The div should have
-		//       a move to button which moves the question to the final list.
+		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
 	}
 	
 	// --- [END] Scope functions
@@ -95,6 +100,29 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 				console.log( "Invalid subject found. " + insight.subjectName ) ; 
 			}
 		}
+	}
+	
+	function loadQuestionsForTopic( topicId, examType ) {
+		
+        console.log( "Loading questions for topic " + topicId ) ;
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.get( '/TestQuestion/Topic/' + topicId + "?examType=" + examType )
+        .then( 
+                function( response ){
+                    console.log( "Questions for topic received." ) ;
+                    console.log( response ) ;
+                    $scope.questionsForSelectedTopic = response.data ;
+                }, 
+                function( error ){
+                    console.log( "Error getting Q for topic " + topicId ) ;
+                    console.log( error ) ;
+                    $scope.addErrorAlert( "Could not load questions for topic." ) ;
+                }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
 	}
 	
 	// --- [END] Local functions

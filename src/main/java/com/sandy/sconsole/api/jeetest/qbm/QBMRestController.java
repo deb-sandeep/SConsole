@@ -164,6 +164,48 @@ public class QBMRestController {
         return response ;
     }
     
+    @GetMapping( "/TestQuestion/Topic/{topicId}" )
+    public ResponseEntity<Map<String, List<TestQuestion>>> getUnassignedQuestionsByTopic( 
+                                            @PathVariable Integer topicId,
+                                            @RequestParam( "examType" ) String examType ) {
+        
+        log.debug( "Fetching test question for topic ID = " + topicId + 
+                   " and exam type = " + examType ) ;
+        ResponseEntity<Map<String, List<TestQuestion>>> response = null ;
+        
+        if( topicId == null ) {
+            response = ResponseEntity.status( HttpStatus.BAD_REQUEST )
+                                     .body( null ) ;
+        }
+        else {
+            List<TestQuestion> questions = null ;
+            questions = testQuestionRepo.findActiveQuestionsForTopic( topicId ) ;
+            
+            Map<String,List<TestQuestion>> map = new HashMap<>() ;
+            for( String qType : QBMMasterData.questionTypes ) {
+                map.put( qType, new ArrayList<>() ) ;
+            }
+            
+            List<TestQuestion> questionList = null ;
+            for( TestQuestion q : questions ) {
+                questionList = map.get( q.getQuestionType() ) ;
+                if( examType.equals( QBMMasterData.EXAM_TYPE_MAIN ) ) {
+                    if( q.getQuestionType().equals( QBMMasterData.Q_TYPE_SCA ) ) {
+                        questionList.add( q ) ;
+                    }
+                }
+                else {
+                    questionList.add( q ) ;
+                }
+            }
+            
+            response = ResponseEntity.status( HttpStatus.OK )
+                                     .body( map ) ;
+        }
+        return response ;
+    }
+    
+    
     @DeleteMapping( "/TestQuestion/{id}" )
     public ResponseEntity<ResponseMsg> deleteQuestion( @PathVariable Integer id ) {
         
