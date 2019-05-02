@@ -15,7 +15,6 @@
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['SCA']"
                ng-model="$parent.selectedQuestion"
-               ng-change="questionSelectionChanged()"
                ng-dblclick="questionSelectedForTest()">
            <option style="display:none" value="">select a type</option>
        </select>
@@ -35,8 +34,7 @@
                size=5
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['MCA']"
-               ng-model="$parent.selectedQuestion"
-               ng-change="questionSelectionChanged()">
+               ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
     </div>
@@ -55,8 +53,7 @@
                size=5
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['IT']"
-               ng-model="$parent.selectedQuestion"
-               ng-change="questionSelectionChanged()">
+               ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
     </div>
@@ -75,8 +72,7 @@
                size=5
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['RNT']"
-               ng-model="$parent.selectedQuestion"
-               ng-change="questionSelectionChanged()">
+               ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
     </div>
@@ -95,8 +91,7 @@
                size=5
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['MMT']"
-               ng-model="$parent.selectedQuestion"
-               ng-change="questionSelectionChanged()">
+               ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
     </div>

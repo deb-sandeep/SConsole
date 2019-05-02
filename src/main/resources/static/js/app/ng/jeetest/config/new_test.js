@@ -18,6 +18,12 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 	$scope.selectedQuestion = null ;
 	$scope.examType = $scope.examTypes[0] ;
 	
+	$scope.assembledQuestions = {
+		'IIT - Physics'   : [],
+		'IIT - Chemistry' : [],
+		'IIT - Maths'     : []
+	}
+	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	loadQBInsights() ;
@@ -47,11 +53,25 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
 	}
 	
-	$scope.questionSelectionChanged = function() {
-	}
-	
 	$scope.questionSelectedForTest = function() {
-		console.log( "Double click detected." ) ;
+		var qType = $scope.selectedQuestion.questionType ;
+		var sType = $scope.selectedQuestion.subject.name ;
+		
+		var srcArray = $scope.questionsForSelectedTopic[ qType ] ;
+		var tgtArray = $scope.assembledQuestions[ sType ] ;
+		
+		var question = $scope.selectedQuestion ;
+		
+		// Remove the selected question from the source array
+		for( var i=0; i<srcArray.length; i++ ) {
+			if( srcArray[i] == question ) {
+				srcArray.splice( i, 1 ) ;
+				i-- ;
+			}
+		}
+		
+		// Add the selected question to the target array 
+		tgtArray.push( question ) ;
 	}
 	
 	// --- [END] Scope functions

@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<span class="panel-title">Physics
+        ( {{assembledQuestions[ 'IIT - Physics' ].length}} )</span>
+	</div>
+	<div class="panel-body" style="padding:0px">
+       <select class="form-control question-select" 
+               size=10
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in assembledQuestions[ 'IIT - Physics' ]"
+               ng-model="$parent.selectedQuestion"
+               ng-change="questionSelectionChanged()">
+           <option style="display:none" value="">select a type</option>
+       </select>
+	</div>
+</div>
+<p/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="panel-title">Chemistry
+        ( {{assembledQuestions[ 'IIT - Chemistry' ].length}} )</span>
+    </div>
+    <div class="panel-body" style="padding:0px">
+       <select class="form-control question-select" 
+               size=10
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in assembledQuestions[ 'IIT - Chemistry' ]"
+               ng-model="$parent.selectedQuestion">
+           <option style="display:none" value="">select a type</option>
+       </select>
+    </div>
+</div>
+<p/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="panel-title">Mathematics
+        ( {{assembledQuestions[ 'IIT - Maths' ].length}} )</span>
+    </div>
+    <div class="panel-body" style="padding:0px">
+       <select class="form-control question-select" 
+               size=10
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in assembledQuestions[ 'IIT - Maths' ]"
+               ng-model="$parent.selectedQuestion">
+           <option style="display:none" value="">select a type</option>
+       </select>
+    </div>
+</div>
