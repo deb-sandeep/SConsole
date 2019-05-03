@@ -67,17 +67,186 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 			if( srcArray[i] == question ) {
 				srcArray.splice( i, 1 ) ;
 				i-- ;
+				break ;
 			}
 		}
 		
 		// Add the selected question to the target array 
 		tgtArray.push( question ) ;
+		
+		refreshRampGraph( sType, tgtArray ) ;
+	}
+	
+	$scope.moveQuestionUp = function() {
+		changeSelectedQuestionSequence( true ) ;
+	}
+	
+	$scope.moveQuestionDown = function() {
+		changeSelectedQuestionSequence( false ) ;
+	}
+	
+	$scope.removeAssembledQuestion = function() {
+		
+		var question = $scope.selectedQuestion ;
+		var sType = question.subject.name ;
+		var qType = question.questionType ;
+		
+		var srcArray = $scope.assembledQuestions[ sType ] ;
+		
+		for( var i=0; i<srcArray.length; i++ ) {
+			if( srcArray[i] == question ) {
+				srcArray.splice( i, 1 ) ;
+				
+				if( question.topic.id == $scope.selectedTopic.topicId ) {
+					$scope.questionsForSelectedTopic[ qType ].push( question ) ;
+				}
+				
+				if( i < srcArray.length ) {
+					$scope.selectedQuestion = srcArray[i] ;
+				}
+				else {
+					if( srcArray.length > 0 ) {
+						$scope.selectedQuestion = srcArray[i-1] ;
+					}
+				}
+				
+				refreshRampGraph( sType, srcArray ) ;
+				
+				break ;
+			}
+		}
+	}
+	
+	$scope.getProjectedMinutes = function( subject ) {
+		
+		var minutes = 0 ;
+		var srcArray = $scope.assembledQuestions[ subject ] ;
+		
+		for( var i=0; i<srcArray.length; i++ ) {
+			minutes += srcArray[i].projectedSolveTime ;
+		}
+		
+		return minutes/60 ;
 	}
 	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+	
+	function changeSelectedQuestionSequence( up ) {
+		
+		if( $scope.selectedQuestion == null ) return ;
+		
+		var question = $scope.selectedQuestion ;
+		var sType = question.subject.name ;
+		var qType = question.questionType ;
+		
+		var tgtQArray = $scope.assembledQuestions[ sType ] ;
+		for( var i=0; i<tgtQArray.length; i++ ) {
+			if( tgtQArray[i] == question ) {
+				
+				if( up ) {
+					if( i > 0 ) {
+						var temp = tgtQArray[i-1] ;
+						tgtQArray[i-1] = question ;
+						tgtQArray[i] = temp ;
+					}
+				} 
+				else {
+					if( i < tgtQArray.length-1 ) {
+						var temp = tgtQArray[i+1] ;
+						tgtQArray[i+1] = question ;
+						tgtQArray[i] = temp ;
+					}
+				}
+				refreshRampGraph( sType, tgtQArray ) ;
+				return ;
+			}
+		}
+	}
+	
+	function refreshRampGraph( sType, tgtArray ) {
+		
+		var canvasId = "" ;
+		
+		if     ( sType == 'IIT - Physics'   ) { canvasId = "phy_ramp_graph"  ; }
+		else if( sType == 'IIT - Chemistry' ) { canvasId = "chem_ramp_graph" ; }
+		else if( sType == 'IIT - Maths'     ) { canvasId = "math_ramp_graph" ; }
+		
+	    var canvas = document.getElementById( canvasId ) ;
+	    RGraph.reset( canvas ) ;
+	    
+	    var timeArray = [] ;
+	    var latArray = [] ;
+	    var xTicks = [] ;
+	    
+	    for( var i=0; i<tgtArray.length; i++ ) {
+	    	xTicks.push( "" + (i+1) ) ;
+	    	latArray.push( tgtArray[i].lateralThinkingLevel ) ;
+	    	timeArray.push( tgtArray[i].projectedSolveTime ) ;
+	    }
+	    
+	    bar = new RGraph.Bar({
+	        id: canvasId,
+	        data: latArray,
+	        options: {
+	            backgroundGridVlines: false,
+	            backgroundGridBorder: true,
+	            backgroundGridColor: '#999',
+	            xaxisLabels: xTicks,
+	            hmargin: 2,
+	            marginLeft: 30,
+	            marginRight: 50,
+	            marginBottom: 20,
+	            colors: ['Gradient(#E0E0E0:#FEFEFE)'],
+	            textColor: '#ccc',
+	            axesColor: '#999',
+	            xaxisTickmarksCount: 0,
+	            yaxisTickmarksCount: 0,
+	            shadowColor: 'black',
+	            shadowOffsetx: 0,
+	            shadowOffsety: 0,
+	            shadowBlur: 5,
+	            colorsStroke: 'rgba(0,0,0,0)',
+	            combinedEffect: 'wave',
+	            combinedEffectOptions: '{frames: 30}',
+	            textSize: 12
+	        }
+	    });
+
+
+
+	    var line = new RGraph.Line({
+	        id: canvasId,
+	        data: timeArray,
+	        options: {
+	            axes: false,
+	            backgroundGrid: false,
+	            linewidth: 2,
+	            colors: ['#0b0'],
+	            yaxisPosition: 'right',
+	            axesColor: '#999',
+	            textColor: '#ccc',
+	            marginLeft: 5,
+	            marginRight: 5,
+	            tickmarksStyle: null,
+	            spline: true,
+	            combinedEffect: 'trace',
+	            textSize: 12
+	        }
+	    });
+	    
+	    var combo = new RGraph.CombinedChart([bar, line]).draw() ;
+	    
+	    // Because the combo class turns the Line chart labels off,
+	    // turn them back on
+	    line.set({
+	        yaxisLabels: true
+	    });
+
+	    RGraph.redraw();
+	}
 	
 	function loadQBInsights() {
 		

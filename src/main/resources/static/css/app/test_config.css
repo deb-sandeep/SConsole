@@ -8,9 +8,19 @@
     height:25px;
 }
 
-.test-config-panel-heading {
+.test-config-qsel-heading {
 	padding:5px 10px ;
 	background-color:#d0feff !important;
+}
+
+.test-config-tsel-heading {
+    padding:5px 10px ;
+    background-color:#bcfec1!important;
+}
+
+.test-config-qass-heading {
+    padding:5px 10px ;
+    background-color:#fcfeb3!important;
 }
 
 .test-config-panel-body {
