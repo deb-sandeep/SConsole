@@ -19,11 +19,12 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
 	
 	$scope.editTest = function( test ) {
 		console.log( "Edit test clicked." ) ;
+		$location.path( "/editTest/" + test.id ) ;
 	}
 	
 	$scope.newTest = function() {
 		console.log( "New test clicked." ) ;
-		$location.path( "/newTest" ) ;
+		$location.path( "/editTest/-1" ) ;
 	}
 	
 	// --- [END] Scope functions

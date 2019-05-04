@@ -1,7 +1,9 @@
-sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routeParams, $location ) {
     
 	$scope.$parent.navBarTitle = "Create New Test" ;
 	$scope.examTypes = [ "MAIN", "ADV" ] ;
+	
+	$scope.testId = $routeParams.id ;
 	
 	$scope.phyTopics = [] ;
 	$scope.chemTopics = [] ;
@@ -27,6 +29,8 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	loadQBInsights() ;
+	
+	console.log( "Editing test = " + $scope.testId ) ;
 	
 	// --- [END] Controller initialization -----------------------------------
 	
@@ -96,7 +100,6 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 		for( var i=0; i<srcArray.length; i++ ) {
 			if( srcArray[i] == question ) {
 				srcArray.splice( i, 1 ) ;
-				
 				if( question.topic.id == $scope.selectedTopic.topicId ) {
 					$scope.questionsForSelectedTopic[ qType ].push( question ) ;
 				}
@@ -109,9 +112,7 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 						$scope.selectedQuestion = srcArray[i-1] ;
 					}
 				}
-				
 				refreshRampGraph( sType, srcArray ) ;
-				
 				break ;
 			}
 		}
@@ -125,8 +126,12 @@ sConsoleApp.controller( 'NewTestController', function( $scope, $http, $location 
 		for( var i=0; i<srcArray.length; i++ ) {
 			minutes += srcArray[i].projectedSolveTime ;
 		}
-		
 		return minutes/60 ;
+	}
+	
+	$scope.saveTest = function() {
+		
+		console.log( "Saving test." ) ;
 	}
 	
 	// --- [END] Scope functions

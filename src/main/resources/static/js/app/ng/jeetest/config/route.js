@@ -4,8 +4,8 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/config/summaryDashboard",
 		controller : "SummaryDashboardController"
 	})
-	.when("/newTest", {
-		templateUrl : "/jeetest/config/newTestConfig",
-		controller : "NewTestController"
+	.when("/editTest/:id", {
+		templateUrl : "/jeetest/config/editTestConfig",
+		controller : "EditTestController"
 	})
 });

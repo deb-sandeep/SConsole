@@ -12,8 +12,8 @@ public class JEETestConfiguratorController {
         return "jeetest/config/summary_dashboard" ;
     }
     
-    @RequestMapping( "/newTestConfig" )
+    @RequestMapping( "/editTestConfig" )
     public String newTestConfig() {
-        return "jeetest/config/new_test" ;
+        return "jeetest/config/edit_test" ;
     }
 }
