@@ -2,6 +2,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
     
 	$scope.$parent.navBarTitle = "Create New Test" ;
 	$scope.examTypes = [ "MAIN", "ADV" ] ;
+	$scope.questionTypes = [ "SCA", "MCA", "IT", "RNT", "MMT" ] ;
 	
 	$scope.testId = $routeParams.id ;
 	
@@ -314,7 +315,12 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
                 function( response ){
                     console.log( "Questions for topic received." ) ;
                     console.log( response ) ;
-                    $scope.questionsForSelectedTopic = response.data ;
+                    
+                    // Need to filter the response based on what questions are
+                    // already selected, so that the questions are note
+                    // repeated across the question combo and assembled lists.
+                    $scope.questionsForSelectedTopic = 
+                    	filterFreshlyLoadedTopicQuestions( topicId, response.data ) ;
                 }, 
                 function( error ){
                     console.log( "Error getting Q for topic " + topicId ) ;
@@ -325,6 +331,37 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
         .finally(function() {
             $scope.$parent.interactingWithServer = false ;
         }) ;
+	}
+	
+	function filterFreshlyLoadedTopicQuestions( topicId, typeQuestionsMap ) {
+		for( var i=0; i<$scope.questionTypes.length; i++ ) {
+			var srcArray = typeQuestionsMap[ $scope.questionTypes[i] ] ;
+			
+			if( srcArray.length == 0 ) continue ;
+			
+			var sType = srcArray[0].subject.name ;
+			var assembledQuestions = $scope.assembledQuestions[ sType ] ;
+			
+			if( assembledQuestions.length == 0 ) continue ;
+			for( var j=0; j<assembledQuestions.length; j++ ) {
+				var assQ = assembledQuestions[j] ;
+				
+				if( assQ.topic.id == topicId ) {
+					
+					for( var k=0; k<srcArray.length; k++ ) {
+						var srcQ = srcArray[k] ;
+						
+						if( srcQ.id == assQ.id ) {
+							srcArray.splice( k, 1 ) ;
+							k-- ;
+							console.log( "Purged " + srcQ.questionRef ) ;
+						}
+					}
+				}
+			}
+		}
+		
+		return typeQuestionsMap ;
 	}
 	
 	// --- [END] Local functions
