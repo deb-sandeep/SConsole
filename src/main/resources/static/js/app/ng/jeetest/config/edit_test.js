@@ -59,6 +59,9 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	}
 	
 	$scope.questionSelectedForTest = function() {
+		
+		if( $scope.selectedQuestion == null ) return ;
+		
 		var qType = $scope.selectedQuestion.questionType ;
 		var sType = $scope.selectedQuestion.subject.name ;
 		
@@ -131,12 +134,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	}
 	
 	$scope.saveTest = function() {
-		
-		// Attributes to send to server
-		// Test ID
-		// Phy questions
-		// Chem questions
-		// Maths questions
+		saveTestOnServer() ;
 	}
 	
 	// --- [END] Scope functions
@@ -144,6 +142,32 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
 	
+    function saveTestOnServer() {
+    	
+    	console.log( "Saving test on server." ) ;
+    	
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestConfiguration', {
+        	id : $scope.testId,
+        	phyQuestions : $scope.assembledQuestions[ 'IIT - Physics' ],
+	    	chemQuestions : $scope.assembledQuestions[ 'IIT - Chemistry' ],
+	    	mathQuestions : $scope.assembledQuestions[ 'IIT - Maths' ]
+        })
+        .then( 
+            function( response ){
+                console.log( "Successfully saved test configuration." ) ;
+                $scope.testId = response.data.id ;
+            }, 
+            function( error ){
+                console.log( "Error saving test on server." + error ) ;
+                $scope.$parent.addErrorAlert( "Could not save test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
 	function changeSelectedQuestionSequence( up ) {
 		
 		if( $scope.selectedQuestion == null ) return ;

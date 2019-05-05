@@ -24,4 +24,6 @@ public interface TestConfigIndexRepository
           + "    tci.id ASC "
     )
     List<TestConfigIndex> findUnattemptedTests() ;
+    
+    
 }

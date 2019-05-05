@@ -8,6 +8,8 @@ import javax.persistence.GenerationType ;
 import javax.persistence.Id ;
 import javax.persistence.Table ;
 
+import org.hibernate.annotations.Formula ;
+
 @Entity
 @Table( name = "test_config_index" )
 public class TestConfigIndex {
@@ -25,6 +27,9 @@ public class TestConfigIndex {
     
     private Timestamp creationDate         = null ;
     private Timestamp lastUpdateDate       = null ;
+    
+    @Formula( "(SELECT count(*) FROM test_attempt ta WHERE ta.test_id = id)" )
+    private Boolean attempted = false ;
     
     public Integer getId() {
         return id ;
@@ -73,5 +78,12 @@ public class TestConfigIndex {
     }
     public void setLastUpdateDate( Timestamp time ) {
         this.lastUpdateDate = time ;
+    }
+
+    public Boolean getAttempted() {
+        return attempted ;
+    }
+    public void setAttempted( Boolean attempted ) {
+        this.attempted = attempted ;
     }
 }
