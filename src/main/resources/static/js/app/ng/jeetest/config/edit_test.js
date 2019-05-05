@@ -31,9 +31,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	loadQBInsights() ;
-	
-	console.log( "Editing test = " + $scope.testId ) ;
-	
+	setTitle() ;
 	// --- [END] Controller initialization -----------------------------------
 	
 	// -----------------------------------------------------------------------
@@ -82,7 +80,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		// Add the selected question to the target array 
 		tgtArray.push( question ) ;
 		
-		refreshRampGraph( sType, tgtArray ) ;
+		refreshRampGraph( sType ) ;
 	}
 	
 	$scope.moveQuestionUp = function() {
@@ -104,8 +102,10 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		for( var i=0; i<srcArray.length; i++ ) {
 			if( srcArray[i] == question ) {
 				srcArray.splice( i, 1 ) ;
-				if( question.topic.id == $scope.selectedTopic.topicId ) {
-					$scope.questionsForSelectedTopic[ qType ].push( question ) ;
+				if( $scope.selectedTopic != null ) {
+					if( question.topic.id == $scope.selectedTopic.topicId ) {
+						$scope.questionsForSelectedTopic[ qType ].push( question ) ;
+					}
 				}
 				
 				if( i < srcArray.length ) {
@@ -116,7 +116,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 						$scope.selectedQuestion = srcArray[i-1] ;
 					}
 				}
-				refreshRampGraph( sType, srcArray ) ;
+				refreshRampGraph( sType ) ;
 				break ;
 			}
 		}
@@ -142,6 +142,60 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
 	
+	function setTitle() {
+		if( $scope.testId == -1 ) {
+			$scope.$parent.navBarTitle = "Editing <NEW TEST>" ;
+		}
+		else {
+			$scope.$parent.navBarTitle = "Editing Test - " + $scope.testId ;			
+		}
+	}
+	
+	function loadTestConfiguration( testId ) {
+		
+        $scope.$parent.interactingWithServer = true ;
+        $http.get( '/TestConfiguration/' + testId )
+        .then( 
+            function( response ){
+                console.log( "Successfully loaded test configuration." ) ;
+                
+                $scope.assembledQuestions[ 'IIT - Physics'   ] = response.data.phyQuestions ;
+                $scope.assembledQuestions[ 'IIT - Chemistry' ] = response.data.chemQuestions ;
+                $scope.assembledQuestions[ 'IIT - Maths'     ] = response.data.mathQuestions ;
+
+                setTimeout( function(){
+                	refreshRampGraph( 'IIT - Physics' ) ;
+                	refreshRampGraph( 'IIT - Chemistry' ) ;
+                	refreshRampGraph( 'IIT - Maths' ) ;
+                }, 500 ) ;
+                
+                selectTopics( response.data.phyQuestions,  $scope.phyTopics  ) ;
+                selectTopics( response.data.chemQuestions, $scope.chemTopics ) ;
+                selectTopics( response.data.mathQuestions, $scope.mathTopics ) ;
+            }, 
+            function( error ){
+                console.log( "Error getting test configuration from server." + error ) ;
+                $scope.$parent.addErrorAlert( "Could not fetch test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+	
+	function selectTopics( questions, topics ) {
+		
+		for( var i=0; i<questions.length; i++ ) {
+			var question = questions[i] ;
+			for( var j=0; j<topics.length; j++ ) {
+				var topic = topics[j] ;
+				if( question.topic.id == topic.topicId ) {
+					topic.selected = true ;
+				}
+			}
+		}
+	}
+	
     function saveTestOnServer() {
     	
     	console.log( "Saving test on server." ) ;
@@ -157,6 +211,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
             function( response ){
                 console.log( "Successfully saved test configuration." ) ;
                 $scope.testId = response.data.id ;
+                setTitle() ;
             }, 
             function( error ){
                 console.log( "Error saving test on server." + error ) ;
@@ -194,19 +249,21 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 						tgtQArray[i] = temp ;
 					}
 				}
-				refreshRampGraph( sType, tgtQArray ) ;
+				refreshRampGraph( sType ) ;
 				return ;
 			}
 		}
 	}
 	
-	function refreshRampGraph( sType, tgtArray ) {
+	function refreshRampGraph( sType ) {
 		
 		var canvasId = "" ;
 		
 		if     ( sType == 'IIT - Physics'   ) { canvasId = "phy_ramp_graph"  ; }
 		else if( sType == 'IIT - Chemistry' ) { canvasId = "chem_ramp_graph" ; }
 		else if( sType == 'IIT - Maths'     ) { canvasId = "math_ramp_graph" ; }
+		
+		tgtArray = $scope.assembledQuestions[ sType ] ;
 		
 	    var canvas = document.getElementById( canvasId ) ;
 	    RGraph.reset( canvas ) ;
@@ -248,9 +305,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	            textSize: 12
 	        }
 	    });
-
-
-
 	    var line = new RGraph.Line({
 	        id: canvasId,
 	        data: timeArray,
@@ -290,6 +344,10 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
                 function( response ){
                     console.log( response ) ;
                     processRawInsightData( response.data ) ;
+            		
+            		if( $scope.testId > 0 ) {
+            			loadTestConfiguration( $scope.testId ) ;
+            		}
                 }, 
                 function( error ){
                     console.log( error ) ;

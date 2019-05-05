@@ -15,6 +15,7 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
 	
 	$scope.deleteTest = function( test ) {
 		console.log( "Delete test clicked." ) ;
+		deleteTestConfiguration( test.id ) ;
 	}
 	
 	$scope.editTest = function( test ) {
@@ -31,6 +32,27 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+	
+	function deleteTestConfiguration( id ) {
+		
+    	console.log( "Deleting test configuration. ID = " + id ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.delete( "/TestConfiguration/" + id )
+        .then( 
+            function( response ){
+                console.log( "Test Configuration deleted." ) ;
+                fetchTestConfigurations() ;
+            }, 
+            function( error ){
+                console.log( "Error deleting test configuration." ) ;
+                console.log( error ) ;
+                $scope.$parent.addErrorAlert( "Could not delete test config." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
 	
     function fetchTestConfigurations() {
     	
