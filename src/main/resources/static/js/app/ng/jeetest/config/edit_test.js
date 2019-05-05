@@ -9,6 +9,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	$scope.phyTopics = [] ;
 	$scope.chemTopics = [] ;
 	$scope.mathTopics = [] ;
+	
 	$scope.questionsForSelectedTopic = {
 		SCA : [],
 		MCA : [],
@@ -39,7 +40,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	// --- [START] Scope functions -------------------------------------------
 	
 	$scope.toggleTopicSelection = function( topic ) {
-		console.log( "Topic selected = " + topic.topicName ) ;
 		topic.selected = !topic.selected ;
 	}
 	
@@ -132,7 +132,11 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	
 	$scope.saveTest = function() {
 		
-		console.log( "Saving test." ) ;
+		// Attributes to send to server
+		// Test ID
+		// Phy questions
+		// Chem questions
+		// Maths questions
 	}
 	
 	// --- [END] Scope functions
@@ -256,18 +260,14 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	
 	function loadQBInsights() {
 		
-        console.log( "Loading question bank insights from server." ) ;
-        
         $scope.$parent.interactingWithServer = true ;
         $http.get( '/QBTopicInsights' )
         .then( 
                 function( response ){
-                    console.log( "QBM insights received." ) ;
                     console.log( response ) ;
                     processRawInsightData( response.data ) ;
                 }, 
                 function( error ){
-                    console.log( "Error getting Q insights data." ) ;
                     console.log( error ) ;
                     $scope.addErrorAlert( "Could not load QB insights." ) ;
                 }
@@ -307,13 +307,10 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	
 	function loadQuestionsForTopic( topicId, examType ) {
 		
-        console.log( "Loading questions for topic " + topicId ) ;
-        
         $scope.$parent.interactingWithServer = true ;
         $http.get( '/TestQuestion/Topic/' + topicId + "?examType=" + examType )
         .then( 
                 function( response ){
-                    console.log( "Questions for topic received." ) ;
                     console.log( response ) ;
                     
                     // Need to filter the response based on what questions are
@@ -323,7 +320,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
                     	filterFreshlyLoadedTopicQuestions( topicId, response.data ) ;
                 }, 
                 function( error ){
-                    console.log( "Error getting Q for topic " + topicId ) ;
                     console.log( error ) ;
                     $scope.addErrorAlert( "Could not load questions for topic." ) ;
                 }
@@ -354,7 +350,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 						if( srcQ.id == assQ.id ) {
 							srcArray.splice( k, 1 ) ;
 							k-- ;
-							console.log( "Purged " + srcQ.questionRef ) ;
 						}
 					}
 				}
