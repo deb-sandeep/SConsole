@@ -1,7 +1,11 @@
 package com.sandy.sconsole.api.jeetest.qbm;
 
+import java.math.BigDecimal ;
+import java.math.BigInteger ;
 import java.net.InetAddress ;
+import java.util.ArrayList ;
 import java.util.HashMap ;
+import java.util.LinkedHashMap ;
 import java.util.List ;
 import java.util.Map ;
 import java.util.NoSuchElementException ;
@@ -44,13 +48,14 @@ public class QBMRestController {
     @Autowired
     private TestQuestionRepository testQuestionRepo = null ;
     
-    @GetMapping( "/QBInsights" )
+    @GetMapping( "/QBTopicInsights" )
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
         try {
             log.debug( "Fetching QB insights" ) ;
-            List<QBTopicInsight> insighs = testQuestionRepo.getTopicBasedInsight() ;
+            List<Object[]> results = testQuestionRepo.getTopicBasedInsight() ;
+            List<QBTopicInsight> insights = assembleInsights( results ) ;
             return ResponseEntity.status( HttpStatus.OK )
-                                 .body( insighs ) ;
+                                 .body( insights ) ;
         }
         catch( Exception e ) {
             log.error( "Error getting QB insights", e ) ;
@@ -112,6 +117,48 @@ public class QBMRestController {
         }
         return response ;
     }
+    
+    @GetMapping( "/TestQuestion/Topic/{topicId}" )
+    public ResponseEntity<Map<String, List<TestQuestion>>> getUnassignedQuestionsByTopic( 
+                                            @PathVariable Integer topicId,
+                                            @RequestParam( "examType" ) String examType ) {
+        
+        log.debug( "Fetching test question for topic ID = " + topicId + 
+                   " and exam type = " + examType ) ;
+        ResponseEntity<Map<String, List<TestQuestion>>> response = null ;
+        
+        if( topicId == null ) {
+            response = ResponseEntity.status( HttpStatus.BAD_REQUEST )
+                                     .body( null ) ;
+        }
+        else {
+            List<TestQuestion> questions = null ;
+            questions = testQuestionRepo.findActiveQuestionsForTopic( topicId ) ;
+            
+            Map<String,List<TestQuestion>> map = new HashMap<>() ;
+            for( String qType : QBMMasterData.questionTypes ) {
+                map.put( qType, new ArrayList<>() ) ;
+            }
+            
+            List<TestQuestion> questionList = null ;
+            for( TestQuestion q : questions ) {
+                questionList = map.get( q.getQuestionType() ) ;
+                if( examType.equals( QBMMasterData.EXAM_TYPE_MAIN ) ) {
+                    if( q.getQuestionType().equals( QBMMasterData.Q_TYPE_SCA ) ) {
+                        questionList.add( q ) ;
+                    }
+                }
+                else {
+                    questionList.add( q ) ;
+                }
+            }
+            
+            response = ResponseEntity.status( HttpStatus.OK )
+                                     .body( map ) ;
+        }
+        return response ;
+    }
+    
     
     @DeleteMapping( "/TestQuestion/{id}" )
     public ResponseEntity<ResponseMsg> deleteQuestion( @PathVariable Integer id ) {
@@ -273,5 +320,51 @@ public class QBMRestController {
             return ResponseEntity.status( 500 )
                                  .body( new ResponseMsg( e.getMessage() ) ) ;
         }
+    }
+
+    private List<QBTopicInsight> assembleInsights( List<Object[]> tupules ) {
+        
+        List<QBTopicInsight> insights = new ArrayList<>() ;
+        Map<Integer, QBTopicInsight> insightsMap = new LinkedHashMap<>() ;
+        
+        for( Object[] tupule : tupules ) {
+            Integer topicId      = (Integer)tupule[0] ;
+            String  subjectName  = (String )tupule[1] ;
+            String  topicName    = (String )tupule[2] ;
+            String  questionType = (String )tupule[3] ;
+            Integer numQ         = 0 ;
+            Integer attQ         = 0 ;
+            
+            QBTopicInsight insight = insightsMap.get( topicId ) ;
+            if( insight == null ) {
+                insight = new QBTopicInsight() ;
+                insightsMap.put( topicId, insight ) ;
+                
+                for( String qType : QBMMasterData.questionTypes ) {
+                    insight.getTotalQuestionsByType().put( qType, 0 ) ;
+                    insight.getAttemptedQuestionsByType().put( qType, 0 ) ;
+                }
+            }
+            
+            insight.setTopicId( topicId ) ;
+            insight.setSubjectName( subjectName ) ;
+            insight.setTopicName( topicName ) ;
+            
+            if( questionType != null ) {
+                numQ = ((BigInteger)tupule[4]).intValue() ;
+                attQ = ((BigDecimal)tupule[5]).intValue() ;
+                
+                insight.setTotalQuestions( insight.getTotalQuestions() + numQ ) ;
+                insight.setAttemptedQuestions( insight.getAttemptedQuestions() + attQ ) ;
+                insight.getTotalQuestionsByType().put( questionType, numQ ) ;
+                insight.getAttemptedQuestionsByType().put( questionType, attQ ) ;
+            }
+        }
+        
+        for( QBTopicInsight insight : insightsMap.values() ) {
+            insights.add( insight ) ;
+        }
+        
+        return insights ;
     }
 }

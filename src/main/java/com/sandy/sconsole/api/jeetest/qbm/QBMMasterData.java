@@ -9,12 +9,25 @@ import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 
 public class QBMMasterData {
+    
+    public static final String EXAM_TYPE_MAIN = "MAIN" ;
+    public static final String EXAM_TYPE_ADV  = "ADV" ;
+    
+    public static final String Q_TYPE_SCA = "SCA" ;
+    public static final String Q_TYPE_MCA = "MCA" ;
+    public static final String Q_TYPE_IT  = "IT" ;
+    public static final String Q_TYPE_RNT = "RNT" ;
+    public static final String Q_TYPE_MMT = "MMT" ;
+    
+    public static final String S_TYPE_PHY   = "IIT - Physics" ;
+    public static final String S_TYPE_CHEM  = "IIT - Chemistry" ;
+    public static final String S_TYPE_MATHS = "IIT - Maths" ;
 
-    private String[]  targetExams     = { "MAIN", "ADV" } ;
-    private String[]  questionTypes   = { "SCA", "MCA", "IT", "RNT", "MMT" } ;
-    private String[]  subjectNames    = { "IIT - Physics", "IIT - Chemistry", "IIT - Maths" } ;
-    private Integer[] lateralLevel    = { 1, 2, 3, 4, 5 } ;
-    private Integer[] approxSolveTime = { 15, 30, 60, 90, 120, 180, 240, 300, 600 } ; 
+    public static String[]  targetExams     = { EXAM_TYPE_MAIN, EXAM_TYPE_ADV } ;
+    public static String[]  questionTypes   = { Q_TYPE_SCA, Q_TYPE_MCA, Q_TYPE_IT, Q_TYPE_RNT, Q_TYPE_MMT } ;
+    public static String[]  subjectNames    = { S_TYPE_PHY, S_TYPE_CHEM, S_TYPE_MATHS } ;
+    public static Integer[] lateralLevel    = { 1, 2, 3, 4, 5 } ;
+    public static Integer[] approxSolveTime = { 15, 30, 60, 90, 120, 180, 240, 300, 600 } ; 
 
     private Map<String, List<Topic>> topics = new HashMap<>() ;
     private Map<String, List<Book>>  books  = new HashMap<>() ;
@@ -23,24 +36,12 @@ public class QBMMasterData {
         return targetExams ;
     }
 
-    public void setTargetExams( String[] targetExams ) {
-        this.targetExams = targetExams ;
-    }
-    
     public String[] getQuestionTypes() {
         return questionTypes ;
     }
     
-    public void setQuestionTypes( String[] questionTypes ) {
-        this.questionTypes = questionTypes ;
-    }
-    
     public String[] getSubjectNames() {
         return subjectNames ;
-    }
-    
-    public void setSubjectNames( String[] subjectNames ) {
-        this.subjectNames = subjectNames ;
     }
     
     public Map<String, List<Topic>> getTopics() {
@@ -81,15 +82,7 @@ public class QBMMasterData {
         return lateralLevel ;
     }
     
-    public void setLateralLevel( Integer[] lateralLevel ) {
-        this.lateralLevel = lateralLevel ;
-    }
-    
     public Integer[] getApproxSolveTime() {
         return approxSolveTime ;
-    }
-    
-    public void setApproxSolveTime( Integer[] approxSolveTime ) {
-        this.approxSolveTime = approxSolveTime ;
     }
 }

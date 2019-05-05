@@ -1,0 +1,32 @@
+.topic-sel-dlg-row {
+	background-color:#f5f5a0;
+	height:25px;
+}
+
+.topic-dlg-row {
+    background-color:#FFFFFF;
+    height:25px;
+}
+
+.test-config-qsel-heading {
+	padding:5px 10px ;
+	background-color:#d0feff !important;
+}
+
+.test-config-tsel-heading {
+    padding:5px 10px ;
+    background-color:#bcfec1!important;
+}
+
+.test-config-qass-heading {
+    padding:5px 10px ;
+    background-color:#fcfeb3!important;
+}
+
+.test-config-panel-body {
+	padding:5px ;
+}
+
+.question-select {
+	font-family:"Courier New", Courier, monospace ;
+}
