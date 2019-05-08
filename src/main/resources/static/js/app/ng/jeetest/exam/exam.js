@@ -4,6 +4,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
 	$scope.navBarTitle = "Landing" ;
 	$scope.interactingWithServer = false ;
 	
+	$scope.activeTest = null ;
+	
 	$scope.addErrorAlert = function( msgString ) {
 	    $scope.alerts.push( { type: 'danger', msg: msgString } ) ;
 	} ;

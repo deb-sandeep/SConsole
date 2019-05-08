@@ -18,7 +18,7 @@
 	            class="test-summary-{{test.examType}}">
 	           <td>{{test.id}}</td>
 	           <td>{{test.examType}}</td>
-	           <td style="text-align:right;">{{test.duration/60}}</td>
+	           <td style="text-align:right;">{{getTestDuration(test)}}</td>
 	           <td style="text-align:right;">{{test.numPhyQuestions}}</td>
 	           <td style="text-align:right;">{{test.numMathQuestions}}</td>
 	           <td style="text-align:right;">{{test.numChemQuestions}}</td>

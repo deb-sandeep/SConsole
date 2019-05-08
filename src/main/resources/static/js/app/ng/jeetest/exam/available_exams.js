@@ -27,7 +27,26 @@ sConsoleApp.controller( 'AvailableExamsController', function( $scope, $http, $lo
 	}
 	
 	$scope.takeTest = function( test ) {
-		console.log( "Taking test = " + test.id ) ;
+		$scope.$parent.activeTest = test ;
+		if( test.examType == "MAIN" ) {
+			$location.path( "/instructionsMain" ) ;
+		}
+		else {
+			$location.path( "/instructionsAdv" ) ;
+		}
+	}
+	
+	$scope.getTestDuration = function( test ) {
+		if( test.examType == "MAIN" ) {
+			return ( test.numPhyQuestions + 
+					 test.numMathQuestions + 
+					 test.numMathQuestions ) * 2 ;
+		}
+		else {
+			return ( test.numPhyQuestions + 
+					 test.numMathQuestions + 
+					 test.numMathQuestions ) * 3.5 ;
+		}
 	}
 	
 	// --- [END] Scope functions

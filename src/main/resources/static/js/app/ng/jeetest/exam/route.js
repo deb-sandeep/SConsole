@@ -4,4 +4,16 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/exam/availableExams",
 		controller : "AvailableExamsController"
 	})
+	.when("/instructionsMain", {
+		templateUrl : "/jeetest/exam/instructionsMain",
+		controller : "MainInstructionController"
+	})
+	.when("/instructionsAdv", {
+		templateUrl : "/jeetest/exam/instructionsAdv",
+		controller : "AdvInstructionController"
+	})
+	.when("/startMainTest", {
+		templateUrl : "/jeetest/exam/mainTest",
+		controller : "JEEMainTestController"
+	})
 });
