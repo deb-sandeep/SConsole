@@ -8,7 +8,7 @@ import org.apache.log4j.Logger ;
 
 public class OptTagProcessor {
 
-    private static final Logger log = Logger.getLogger( OptTagProcessor.class ) ;
+    static final Logger log = Logger.getLogger( OptTagProcessor.class ) ;
     
     private String                markupData    = null ;
     private QuestionTextFormatter textProcessor = null ;
@@ -33,7 +33,6 @@ public class OptTagProcessor {
         while( ( line = br.readLine() ) != null ) {
             
             line = line.trim() ;
-            log.debug( "> " + line ) ;
             
             if( StringUtil.isEmptyOrNull( line ) ) {
                 continue ;

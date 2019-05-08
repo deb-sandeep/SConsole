@@ -30,3 +30,11 @@
 .question-select {
 	font-family:"Courier New", Courier, monospace ;
 }
+
+.test-summary-MAIN {
+	background-color:#f4f5de;
+}
+
+.test-summary-ADV {
+	background-color:#faf2f1;
+}
