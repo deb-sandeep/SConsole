@@ -159,6 +159,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
             function( response ){
                 console.log( "Successfully loaded test configuration." ) ;
                 
+                $scope.examType = response.data.examType ;
                 $scope.assembledQuestions[ 'IIT - Physics'   ] = response.data.phyQuestions ;
                 $scope.assembledQuestions[ 'IIT - Chemistry' ] = response.data.chemQuestions ;
                 $scope.assembledQuestions[ 'IIT - Maths'     ] = response.data.mathQuestions ;
@@ -202,8 +203,9 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestConfiguration', {
-        	id : $scope.testId,
-        	phyQuestions : $scope.assembledQuestions[ 'IIT - Physics' ],
+        	id            : $scope.testId,
+        	examType      : $scope.examType,
+        	phyQuestions  : $scope.assembledQuestions[ 'IIT - Physics' ],
 	    	chemQuestions : $scope.assembledQuestions[ 'IIT - Chemistry' ],
 	    	mathQuestions : $scope.assembledQuestions[ 'IIT - Maths' ]
         })

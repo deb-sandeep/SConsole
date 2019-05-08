@@ -138,6 +138,7 @@ public class TestConfiguratorRestController {
         if( tci != null ) {
             config = new TestConfiguration() ;
             config.setId( id ) ;
+            config.setExamType( tci.getExamType() ) ;
             
             List<TestQuestionBinding> bindings = tqbRepo.findAllByTestConfigId( id ) ;
             if( bindings != null && !bindings.isEmpty() ) {
@@ -183,6 +184,7 @@ public class TestConfiguratorRestController {
         }
         
         // Save the test config index - get the id
+        ci.setExamType( config.getExamType() ) ;
         ci.setNumPhyQuestions( config.getPhyQuestions().size() ) ;
         ci.setNumChemQuestions( config.getChemQuestions().size() ) ;
         ci.setNumMathQuestions( config.getMathQuestions().size() ) ;

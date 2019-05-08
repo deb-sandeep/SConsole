@@ -17,7 +17,7 @@ public class TestConfigIndex {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
-
+    private String examType = null ;
     private Integer numPhyQuestions = 0 ;
     private Integer numChemQuestions = 0 ;
     private Integer numMathQuestions = 0 ;
@@ -36,6 +36,13 @@ public class TestConfigIndex {
     }
     public void setId( Integer id ) {
         this.id = id ;
+    }
+    
+    public String getExamType() {
+        return examType ;
+    }
+    public void setExamType( String examType ) {
+        this.examType = examType ;
     }
     
     public Integer getNumPhyQuestions() {

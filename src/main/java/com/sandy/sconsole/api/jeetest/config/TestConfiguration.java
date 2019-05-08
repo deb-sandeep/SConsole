@@ -8,6 +8,7 @@ import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 public class TestConfiguration {
 
     private Integer id = -1 ;
+    private String examType = null ;
     private List<TestQuestion> phyQuestions  = new ArrayList<>() ;
     private List<TestQuestion> chemQuestions = new ArrayList<>() ;
     private List<TestQuestion> mathQuestions = new ArrayList<>() ;
@@ -17,6 +18,13 @@ public class TestConfiguration {
     }
     public void setId( Integer id ) {
         this.id = id ;
+    }
+    
+    public String getExamType() {
+        return examType ;
+    }
+    public void setExamType( String examType ) {
+        this.examType = examType ;
     }
     
     public List<TestQuestion> getPhyQuestions() {
