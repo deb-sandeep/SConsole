@@ -192,8 +192,8 @@ a {
 .tile {
     float:left;
     position: relative;
-    width: 25%;
-    padding-bottom : 25%; /* = width for a 1:1 aspect ratio */
+    width: 300px;
+    height: 300px;
     margin:1.66%;
     overflow:hidden;
 }
@@ -201,9 +201,10 @@ a {
 /** following three are for responsive grids */
 .tilecontent {
     position:absolute;
-    height:80%; /* = 100% - 2*10% padding */
-    width:90%; /* = 100% - 2*5% padding */
-    padding: 10% 5%;
+    height:100%; /* = 100% - 2*10% padding */
+    width:100%; /* = 100% - 2*5% padding */
+    padding: 5% 5%;
+    text-align:center;
 }
 
 .tiletable{
