@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/app/app.css"/>
-    <link rel="stylesheet" href="/css/app/test_config.css"/>
+    <link rel="stylesheet" href="/css/app/exam.css"/>
     <link rel="stylesheet" href="/css/pure/tables.css"/>
     
     <script type="text/x-mathjax-config">
@@ -32,6 +32,7 @@
     <script src="/js/app/ng/jeetest/exam/route.js"></script>
     <script src="/js/app/ng/jeetest/exam/filter.js"></script>
     <script src="/js/app/ng/jeetest/exam/exam.js"></script>
+    <script src="/js/app/ng/jeetest/exam/available_exams.js"></script>
 </head>
 
 <body ng-controller="ExamController"
@@ -42,7 +43,7 @@
     <div class="container" style="width:100%">
         <div class="row" >
             <div class="col-sm-7">
-                {{navBarTitle}}
+                JEE Exam :: {{navBarTitle}}
             </div>
             <div class="col-sm-5">
                 <!-- Space for controls common to module -->
@@ -55,8 +56,6 @@
 <a ng-click="dismissAlert( $index )" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 {{alert.msg}}
 </div>
-
-<h2>{{navBarTitle}}</h2>
 
 <div ng-view></div>
 

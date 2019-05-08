@@ -1,7 +1,7 @@
 sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
 	
 	$scope.alerts = [] ;
-	$scope.navBarTitle = "Exam" ;
+	$scope.navBarTitle = "Landing" ;
 	$scope.interactingWithServer = false ;
 	
 	$scope.addErrorAlert = function( msgString ) {

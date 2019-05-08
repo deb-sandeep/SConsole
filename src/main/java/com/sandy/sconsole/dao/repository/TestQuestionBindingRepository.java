@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.CrudRepository ;
 
 import com.sandy.sconsole.dao.entity.TestQuestionBinding ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 
 public interface TestQuestionBindingRepository 
     extends CrudRepository<TestQuestionBinding, Integer> {
@@ -26,4 +27,13 @@ public interface TestQuestionBindingRepository
           + "  tqb.sequence ASC"
     )
     List<TestQuestionBinding> findAllByTestConfigId( Integer id ) ;
+
+    @Query(   "SELECT DISTINCT tqb.topic "
+            + "FROM TestQuestionBinding tqb "
+            + "WHERE tqb.testConfig.id = ?1 "
+            + "ORDER BY "
+            + "  tqb.subject.name ASC, "
+            + "  tqb.topic.id ASC"
+      )
+    List<Topic> getTopicsForTest( Integer id ) ;
 }

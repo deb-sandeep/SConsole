@@ -1,7 +1,9 @@
 package com.sandy.sconsole.api.jeetest.config;
 
 import java.util.ArrayList ;
+import java.util.HashMap ;
 import java.util.List ;
+import java.util.Map ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
@@ -18,6 +20,7 @@ import com.sandy.sconsole.api.jeetest.qbm.QBMMasterData ;
 import com.sandy.sconsole.dao.entity.TestConfigIndex ;
 import com.sandy.sconsole.dao.entity.TestQuestionBinding ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.TestConfigIndexRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
@@ -64,6 +67,34 @@ public class TestConfiguratorRestController {
                 return ResponseEntity.status( HttpStatus.BAD_REQUEST )
                                      .body( null ) ;
             }
+        }
+        catch( Exception e ) {
+            log.error( "Error loading test configuration", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
+    @GetMapping( "/TestConfiguration/{id}/Topics" )
+    public ResponseEntity<Map<String, List<String>>> getTopicsForTest( 
+                                                @PathVariable Integer id ) {
+        try {
+            log.debug( "Loading topics for test. Id = " + id ) ;
+            List<Topic> topics = tqbRepo.getTopicsForTest( id ) ;
+            
+            Map<String, List<String>> subTopicsMap = new HashMap<>() ;
+            subTopicsMap.put( QBMMasterData.S_TYPE_PHY,   new ArrayList<>() ) ;
+            subTopicsMap.put( QBMMasterData.S_TYPE_CHEM,  new ArrayList<>() ) ;
+            subTopicsMap.put( QBMMasterData.S_TYPE_MATHS, new ArrayList<>() ) ;
+            
+            for( Topic topic : topics ) {
+                String sName = topic.getSubject().getName() ;
+                List<String> topicList = subTopicsMap.get( sName ) ;
+                topicList.add( topic.getTopicName() ) ;
+            }
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( subTopicsMap ) ;
         }
         catch( Exception e ) {
             log.error( "Error loading test configuration", e ) ;
