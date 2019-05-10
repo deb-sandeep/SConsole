@@ -36,13 +36,16 @@
 <div id="section-tab-panel" class="container">
   <div class="row">
     <div class="col-sm-8">
-	    <button type="button" class="btn btn-default btn-lg action-btn">
+	    <button type="button" class="btn btn-default btn-lg action-btn"
+	            ng-click="activateSection( 'IIT - Physics' )">
 	    Physics
 	    </button>
-	    <button type="button" class="btn btn-default btn-lg action-btn">
+	    <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Chemistry' )">
 	    Chemistry
 	    </button>
-	    <button type="button" class="btn btn-default btn-lg action-btn">
+	    <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Maths' )">
 	    Mathematics
 	    </button>
     </div>
@@ -64,32 +67,43 @@
             This is amazing.
         </div>
         <div id="question-action-panel">
-	        <button type="button" class="btn btn-success btn-lg action-btn">
+	        <button type="button" class="btn btn-success btn-lg action-btn"
+	                ng-click="saveAndNext()">
 	        Save & Next
 	        </button>
-	        <button type="button" class="btn btn-warning btn-lg action-btn">
+	        <button type="button" class="btn btn-warning btn-lg action-btn"
+                    ng-click="saveAndMarkForReview()">
 	        Save & Mark for Review
 	        </button>
-	        <button type="button" class="btn btn-default btn-lg action-btn">
+	        <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="clearResponse()">
 	        Clear Response
 	        </button>
-            <button type="button" class="btn btn-info btn-lg action-btn">
+            <button type="button" class="btn btn-info btn-lg action-btn"
+                    ng-click="markForReviewAndNext()">
             Mark for Review & Next
             </button>
         </div>
         <div id="back-next-submit-panel">
-            <button type="button" class="btn btn-default btn-lg action-btn">
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="showPreviousQuestion()">
              &#8810; BACK
             </button>
-            <button type="button" class="btn btn-default btn-lg action-btn">
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="showNextQuestion()">
             NEXT &#8811;
             </button>
-            <button type="button" class="btn btn-success btn-lg pull-right action-btn">
+            <button type="button" class="btn btn-success btn-lg pull-right action-btn"
+                    ng-click="submitAnswers()">
             SUBMIT
             </button>
         </div>        
-        <div id="pane-toggle-tab">
-            <span class="glyphicon glyphicon-menu-right"></span>
+        <div id="pane-toggle-tab"
+             ng-click="toggleQuestionPalette()">
+            <span class="glyphicon glyphicon-menu-right"
+                  ng-show="!paletteHidden"></span>
+            <span class="glyphicon glyphicon-menu-left"
+                  ng-show="paletteHidden"></span>
         </div>
     </div>
     <div id="question-palette-panel">
@@ -138,7 +152,9 @@
         </div>
         <div id="question-control-dashboard">
             <div>
-	            <button type="button" class="btn btn-default q-control q-not-visited">
+	            <button type="button" class="btn btn-default q-control q-not-visited"
+	                    ng-click="showQuestion( question )"
+	                    ng-class="getStatusStyle( question )">
 	            1
 	            </button>
                 <button type="button" class="btn btn-default q-control q-not-answered">
