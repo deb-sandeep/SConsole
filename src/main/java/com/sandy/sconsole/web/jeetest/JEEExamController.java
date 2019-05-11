@@ -26,9 +26,4 @@ public class JEEExamController {
     public String mainTest() {
         return "jeetest/exam/main_test" ;
     }
-    
-    @RequestMapping( "/ui" )
-    public String ui() {
-        return "jeetest/exam/ui" ;
-    }
 }

@@ -1,1 +1,133 @@
-<h2>JEE Main Test Interface</h2>
+<div id="section-tab-panel" class="container">
+  <div class="row">
+    <div class="col-sm-8">
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Physics' )"
+                ng-if="phySectionQuestionIndex > -1">
+        Physics
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Chemistry' )"
+                ng-if="chemSectionQuestionIndex > -1">
+        Chemistry
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Maths' )"
+                ng-if="mathSectionQuestionIndex > -1">
+        Mathematics
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-info btn-lg action-btn">
+        <span class="glyphicon glyphicon-save"></span>
+        Download Question
+        </button>
+    </div>
+    <div class="col-sm-2" style="text-align:right;">
+        <span id="timer" class="badge">02 : 54 : 23</span>
+    </div>
+  </div>
+</div>
+
+<div id="split-pane">
+    <div id="question-display-panel">
+        <div id="question-display-scroll-pane">
+            This is amazing.
+        </div>
+        <div id="question-action-panel">
+            <button type="button" class="btn btn-success btn-lg action-btn"
+                    ng-click="saveAndNext()">
+            Save & Next
+            </button>
+            <button type="button" class="btn btn-warning btn-lg action-btn"
+                    ng-click="saveAndMarkForReview()">
+            Save & Mark for Review
+            </button>
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="clearResponse()">
+            Clear Response
+            </button>
+            <button type="button" class="btn btn-info btn-lg action-btn"
+                    ng-click="markForReviewAndNext()">
+            Mark for Review & Next
+            </button>
+        </div>
+        <div id="back-next-submit-panel">
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="showPreviousQuestion()">
+             &#8810; BACK
+            </button>
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="showNextQuestion()">
+            NEXT &#8811;
+            </button>
+            <button type="button" class="btn btn-success btn-lg pull-right action-btn"
+                    ng-click="submitAnswers()">
+            SUBMIT
+            </button>
+        </div>        
+        <div id="pane-toggle-tab"
+             ng-click="toggleQuestionPalette()">
+            <span class="glyphicon glyphicon-menu-right"
+                  ng-show="!paletteHidden"></span>
+            <span class="glyphicon glyphicon-menu-left"
+                  ng-show="paletteHidden"></span>
+        </div>
+    </div>
+    <div id="question-palette-panel">
+        <div id="attempt-stat-panel">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="40px">
+                            <span class="ans-stat-symbol stat-not-visited">
+                            23
+                            </span>
+                        </td>
+                        <td>Not Visited</td>
+                        <td width="40px">
+                            <span class="ans-stat-symbol stat-not-answered">
+                            40
+                            </span>
+                        </td>
+                        <td>Not Answered</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="ans-stat-symbol stat-attempted">
+                            05
+                            </span>
+                        </td>
+                        <td>Attempted</td>
+                        <td>
+                            <span class="ans-stat-symbol stat-marked-for-review">
+                            40
+                            </span>
+                        </td>
+                        <td>Marked for Review</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="ans-stat-symbol stat-ans-and-marked-for-review">
+                            05
+                            </span>
+                        </td>
+                        <td colspan="3">Answered & Marked for Review</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        </div>
+        <div id="question-control-dashboard">
+            <div>
+                <button ng-repeat="questionEx in questions"
+                        type="button" 
+                        class="btn btn-default q-control"
+                        ng-click="showQuestion( questionEx )"
+                        ng-class="questionEx.getStatusStyle()">
+                {{$index + 1}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
