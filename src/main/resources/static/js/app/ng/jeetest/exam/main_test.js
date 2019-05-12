@@ -14,6 +14,16 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
 	$scope.chemSectionQuestionIndex = -1 ;
 	$scope.mathSectionQuestionIndex = -1 ;
 	
+	$scope.attemptSummary = {
+		notVisited : 0,
+		notAnswered : 0,
+		attempted : 0,
+		markedForReview : 0,
+		answeredAndMarkedForReview : 0
+	} ;
+	
+	$scope.currentQuestion = null ;
+	
 	// ---------------- local variables --------------------------------------
 	
 	
@@ -28,6 +38,21 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
 	
 	$scope.activateSection = function( subjectName ) {
 		console.log( "Activating section = " + subjectName ) ;
+		var indexToJump = -1 ;
+		
+		if( subjectName == 'IIT - Physics' ) {
+			indexToJump = $scope.phySectionQuestionIndex ;
+		}
+		else if( subjectName == 'IIT - Chemistry' ) {
+			indexToJump = $scope.chemSectionQuestionIndex ;
+		}
+		else if( subjectName == 'IIT - Maths' ) {
+			indexToJump = $scope.mathSectionQuestionIndex ;
+		}
+		
+		if( indexToJump > -1 ) {
+			$scope.showQuestion( $scope.questions[ indexToJump ] ) ;
+		}
 	}
 	
 	$scope.toggleQuestionPalette = function() {
@@ -51,12 +76,16 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
 	
     $scope.saveAndNext = function() {
     	console.log( "Saving answer and showing next question." ) ;
-    	// Validate if answer provided
+    	// TODO: Validate if answer provided
+    	$scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
+    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     $scope.saveAndMarkForReview = function() {
     	console.log( "Saving answer and marking for review. Showing next question" ) ;
-    	// Validate if answer provided
+    	// TODO: Validate if answer provided
+    	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
+    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     $scope.clearResponse = function() {
@@ -66,14 +95,16 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     
     $scope.markForReviewAndNext = function() {
     	console.log( "Mark question for review and move to next" ) ;
+    	$scope.currentQuestion.attemptState = AttemptState.prototype.MARKED_FOR_REVIEW ;
+    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     $scope.showNextQuestion = function() {
-    	
+    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     $scope.showPreviousQuestion = function() {
-    	
+    	$scope.showQuestion( $scope.currentQuestion.prevQuestion ) ;
     }
     
     $scope.submitAnswers = function() {
@@ -81,7 +112,13 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     }
     
     $scope.showQuestion = function( questionEx ) {
-    	
+    	if( questionEx != null ) {
+    		$scope.currentQuestion = questionEx ;
+    		if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
+    			$scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
+    		}
+    		refreshAttemptSummary() ;
+    	}
     }
     
     // --- [END] Scope functions
@@ -111,6 +148,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
                 console.log( "Successfully loaded test configuration." ) ;
                 console.log( response.data ) ;
                 preProcessQuestions( response.data ) ;
+                $scope.showQuestion( $scope.questions[0] ) ;
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;
@@ -159,6 +197,36 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     			questionEx.prevQuestion = lastQuestionEx ;
     		}
     		$scope.questions.push( questionEx ) ;
+    		questionEx.index = $scope.questions.length ;
+    	}
+    }
+    
+    function refreshAttemptSummary() {
+    	
+        $scope.attemptSummary.notVisited = 0 ;
+        $scope.attemptSummary.notAnswered = 0 ;
+        $scope.attemptSummary.attempted = 0 ;
+        $scope.attemptSummary.markedForReview = 0 ;
+        $scope.attemptSummary.answeredAndMarkedForReview = 0 ;    	
+    	
+    	for( var i=0; i<$scope.questions.length; i++ ) {
+    		
+    		var q = $scope.questions[i] ;
+    		if( q.attemptState == AttemptState.prototype.NOT_VISITED ) {
+    			$scope.attemptSummary.notVisited++ ;
+    		}
+    		else if( q.attemptState == AttemptState.prototype.NOT_ANSWERED ) {
+    			$scope.attemptSummary.notAnswered++ ;
+    		}
+    		else if( q.attemptState == AttemptState.prototype.ATTEMPTED ) {
+    			$scope.attemptSummary.attempted++ ;
+    		}
+    		else if( q.attemptState == AttemptState.prototype.MARKED_FOR_REVIEW ) {
+    			$scope.attemptSummary.markedForReview++ ;
+    		}
+    		else if( q.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
+    			$scope.attemptSummary.answeredAndMarkedForReview++ ;
+    		}
     	}
     }
 	

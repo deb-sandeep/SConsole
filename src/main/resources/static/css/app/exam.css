@@ -256,3 +256,18 @@
     background-position: -435px -16px;
 }
 
+.question-listing {
+	font-size: 16px;
+	padding:10px;
+	padding-bottom: 25px;
+    border-style:hidden;
+    border-bottom-style:solid;
+    border-color:#f4f4f4;
+    border-width:3px;
+}
+
+.question-listing h4 {
+	margin-bottom:20px;
+	color:blue;
+}
+

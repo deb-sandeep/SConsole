@@ -18,7 +18,10 @@
         </button>
     </div>
     <div class="col-sm-2">
-        <button type="button" class="btn btn-info btn-lg action-btn">
+        <button type="button" 
+                class="btn btn-info btn-lg action-btn"
+                data-toggle="modal" 
+                data-target="#questionPaperDialog">
         <span class="glyphicon glyphicon-save"></span>
         Download Question
         </button>
@@ -32,7 +35,8 @@
 <div id="split-pane">
     <div id="question-display-panel">
         <div id="question-display-scroll-pane">
-            This is amazing.
+            <h2>{{currentQuestion.index}}</h2>
+            {{currentQuestion.question.id}}
         </div>
         <div id="question-action-panel">
             <button type="button" class="btn btn-success btn-lg action-btn"
@@ -81,13 +85,13 @@
                     <tr>
                         <td width="40px">
                             <span class="ans-stat-symbol stat-not-visited">
-                            23
+                            {{attemptSummary.notVisited}}
                             </span>
                         </td>
                         <td>Not Visited</td>
                         <td width="40px">
                             <span class="ans-stat-symbol stat-not-answered">
-                            40
+                            {{attemptSummary.notAnswered}}
                             </span>
                         </td>
                         <td>Not Answered</td>
@@ -95,13 +99,13 @@
                     <tr>
                         <td>
                             <span class="ans-stat-symbol stat-attempted">
-                            05
+                            {{attemptSummary.attempted}}
                             </span>
                         </td>
                         <td>Attempted</td>
                         <td>
                             <span class="ans-stat-symbol stat-marked-for-review">
-                            40
+                            {{attemptSummary.markedForReview}}
                             </span>
                         </td>
                         <td>Marked for Review</td>
@@ -109,7 +113,7 @@
                     <tr>
                         <td>
                             <span class="ans-stat-symbol stat-ans-and-marked-for-review">
-                            05
+                            {{attemptSummary.answeredAndMarkedForReview}}
                             </span>
                         </td>
                         <td colspan="3">Answered & Marked for Review</td>
@@ -130,4 +134,25 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="questionPaperDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:1000px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Question Paper:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:85vh;'>
+		    <div class="question-listing" 
+		         ng-repeat="questionEx in questions">
+		      <h4>Question {{$index + 1}}</h4>
+	          <render-question-on-full-question-paper></render-question-on-full-question-paper>
+		    </div> 
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

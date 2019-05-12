@@ -26,11 +26,13 @@
 	              <span class="glyphicon glyphicon-info-sign"
 	                    ng-click="showTopics( test )"
 	                    data-toggle="modal" 
-	                    data-target="#topicsDialog"></span>
+	                    data-target="#topicsDialog"
+	                    ng-show="actionVisible( test )"></span>
 	           </td>
                <td style="text-align:center;">
                   <span class="glyphicon glyphicon-paste"
-                        ng-click="takeTest( test )"></span>
+                        ng-click="takeTest( test )"
+                        ng-show="actionVisible( test )"></span>
                </td>
 	        </tr>
 		</tbody>

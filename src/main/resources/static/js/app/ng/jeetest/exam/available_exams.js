@@ -29,24 +29,31 @@ sConsoleApp.controller( 'AvailableExamsController', function( $scope, $http, $lo
 	$scope.takeTest = function( test ) {
 		$scope.$parent.activeTest = test ;
 		if( test.examType == "MAIN" ) {
-			$location.path( "/instructionsMain" ) ;
+			$location.path( "/startMainTest" ) ;
+			//$location.path( "/instructionsMain" ) ;
 		}
 		else {
 			$location.path( "/instructionsAdv" ) ;
 		}
 	}
 	
+	$scope.getNumQuestions = function( test ) {
+		return test.numPhyQuestions + 
+		       test.numChemQuestions + 
+		       test.numMathQuestions ;
+	}
+	
 	$scope.getTestDuration = function( test ) {
 		if( test.examType == "MAIN" ) {
-			return ( test.numPhyQuestions + 
-					 test.numMathQuestions + 
-					 test.numMathQuestions ) * 2 ;
+			return $scope.getNumQuestions( test ) * 2 ;
 		}
 		else {
-			return ( test.numPhyQuestions + 
-					 test.numMathQuestions + 
-					 test.numMathQuestions ) * 3.5 ;
+			return $scope.getNumQuestions( test ) * 3.5 ;
 		}
+	}
+	
+	$scope.actionVisible = function( test ) {
+		return $scope.getNumQuestions( test ) > 0 ;
 	}
 	
 	// --- [END] Scope functions
@@ -63,9 +70,9 @@ sConsoleApp.controller( 'AvailableExamsController', function( $scope, $http, $lo
             function( response ){
                 console.log( "Topics for test ßreceived." ) ;
                 console.log( response ) ;
-        		$scope.includedTopics[ 'IIT - Physics'  ]  = response.data[ 'IIT - Physics'  ] ;
+        		$scope.includedTopics[ 'IIT - Physics'   ] = response.data[ 'IIT - Physics'  ] ;
         		$scope.includedTopics[ 'IIT - Chemistry' ] = response.data[ 'IIT - Chemistry' ] ;
-        		$scope.includedTopics[ 'IIT - Maths' ]     = response.data[ 'IIT - Maths' ] ;
+        		$scope.includedTopics[ 'IIT - Maths'     ] = response.data[ 'IIT - Maths' ] ;
             }, 
             function( error ){
                 console.log( "Error getting topics for test." ) ;
