@@ -1,8 +1,7 @@
 // TODO:
+//      0. Refactor questions, attemptSummary, currentQuestion, secondsREmainng to parent
 //		1. Reapply overflowY to body on moving to the next route
-//      2. Start Test - the spans need to be revisited - remove redundant styles
-
-sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $http, $location ) {
     
 	$scope.$parent.navBarTitle = "Main" ;
 	$scope.paletteHidden = false ;
@@ -23,6 +22,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
 	} ;
 	
 	$scope.currentQuestion = null ;
+	$scope.secondsRemaining = 0 ;
 	
 	// ---------------- local variables --------------------------------------
 	
@@ -76,21 +76,29 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
 	
     $scope.saveAndNext = function() {
     	console.log( "Saving answer and showing next question." ) ;
-    	// TODO: Validate if answer provided
-    	$scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
-    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
+    		$scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
+    		$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	}
+    	else {
+    		alert( "Please answer the question before saving." ) ;
+    	}
     }
     
     $scope.saveAndMarkForReview = function() {
     	console.log( "Saving answer and marking for review. Showing next question" ) ;
-    	// TODO: Validate if answer provided
-    	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
-    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
+        	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
+        	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	}
+    	else {
+    		alert( "Please answer the question before saving." ) ;
+    	}
     }
     
     $scope.clearResponse = function() {
     	console.log( "Clearing response." ) ;
-    	// Stay on the same question
+    	$scope.currentQuestion.interactionHandler.clearResponse() ;
     }
     
     $scope.markForReviewAndNext = function() {
@@ -121,10 +129,32 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     	}
     }
     
+    $scope.scrollBottom = function() {
+    	scrollToElement( "q_bottom" ) ;
+    }
+    
+    $scope.scrollTop = function() {
+    	scrollToElement( "q_top" ) ;
+    }
+    
+    $scope.showQuestionPaper = function() {
+    	console.log( "Showing question paper" ) ; 
+    }
+    
+    $scope.hideQuestionPaper = function() {
+    	console.log( "Hiding question paper" ) ; 
+    }
+    
     // --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+    
+    function scrollToElement( id ) {
+    	var myElement = document.getElementById( id ) ;
+    	var topPos = myElement.offsetTop ;
+    	document.getElementById( 'question-display-scroll-pane' ).scrollTop = topPos ;
+    }
     
     function initializeController() {
     	if( $scope.$parent.activeTest == null ) {
@@ -148,6 +178,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
                 console.log( "Successfully loaded test configuration." ) ;
                 console.log( response.data ) ;
                 preProcessQuestions( response.data ) ;
+                
+                $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
+                setTimeout( handleTimerEvent, 1000 ) ;
                 $scope.showQuestion( $scope.questions[0] ) ;
             }, 
             function( error ){
@@ -196,8 +229,22 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     			lastQuestionEx.nextQuestion = questionEx ;
     			questionEx.prevQuestion = lastQuestionEx ;
     		}
-    		$scope.questions.push( questionEx ) ;
+    		
     		questionEx.index = $scope.questions.length ;
+    		associateInteractionHandler( questionEx ) ;
+    		
+    		$scope.questions.push( questionEx ) ;
+    	}
+    }
+    
+    function associateInteractionHandler( questionEx ) {
+    	if( questionEx.question.questionType == "SCA" ) {
+    		questionEx.interactionHandler = new SCAInteractionHandler( questionEx, $rootScope ) ;
+    	}
+    	else {
+    		console.log( "ERROR: Main can't have questions of type other " +
+    				     "than SCA" ) ;
+    		alert( "Non SCA type question found in Main exam." ) ;
     	}
     }
     
@@ -230,5 +277,16 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http, $locat
     	}
     }
 	
+    function handleTimerEvent() {
+    	$scope.secondsRemaining-- ;
+    	if( $scope.secondsRemaining > 0 ) {
+    		setTimeout( handleTimerEvent, 1000 ) ;
+    		$scope.$digest() ;
+    	}
+    	else {
+    		// TODO: Force submit the answers.
+    	}
+    }
+    
 	// --- [END] Local functions
 } ) ;

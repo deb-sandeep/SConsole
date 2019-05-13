@@ -14,3 +14,36 @@ sConsoleApp.directive( 'renderQuestionOnFullQuestionPaper', function() {
         }
 	} ;
 }) ;
+
+sConsoleApp.directive( 'renderQuestionForAttempt', function() {
+
+	return {
+		restrict : 'E',
+		link : function( $scope, element, attributes ) {
+			
+			$scope.$watch( 'currentQuestion', function( newValue, oldValue ){
+				
+				if( element.children.length > 0 &&
+					$scope.currentQuestion != null &&
+					$scope.currentQuestion.question.questionFormattedText != null ) {
+					
+					var questionEx = $scope.currentQuestion ;
+					var question = questionEx.question ;
+					
+					element.empty() ;
+					element.append( 
+						DIV( 
+							P( {
+								innerHTML : question.questionFormattedText,
+								id : 'q-for-attempt'
+							}),
+							questionEx.interactionHandler.getUserInterface() 
+						) 
+					) ;
+					
+					MathJax.Hub.Queue( ["Typeset", MathJax.Hub, element.children()[0]] ) ;
+				}
+			}) ; 
+        }
+	} ;
+}) ;

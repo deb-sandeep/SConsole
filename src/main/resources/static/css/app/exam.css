@@ -52,7 +52,10 @@
     
     line-height: 40px;
     text-align:center;
-    font-size:25px;
+    font-size:30px;
+    font-family:Courier New;
+    font-style:normal;
+    font-weight:normal;
 }
 
 #split-pane {
@@ -124,6 +127,36 @@
     background-color:#ffffff;
     padding:10px;
     overflow:auto;
+}
+
+#question-display-scroll-pane h3 {
+    border-style:hidden;
+    border-bottom-style:solid;
+    border-color:#f4f4f4;
+    border-width:1px;
+    margin-bottom:20px;
+    padding-bottom:10px;
+}
+
+#q-for-attempt {
+    font-size: 18px;
+}
+
+#scroll-top {
+    position: relative;
+    float:right;
+    right: 0px;
+    font-size: 40px;
+    bottom: 10px;
+    color: cornflowerblue;
+}
+
+#scroll-bottom {
+    position: absolute;
+    right: 0px;
+    font-size: 40px;
+    top: 10px;
+    color: cornflowerblue;
 }
 
 .action-btn {
@@ -271,3 +304,9 @@
 	color:blue;
 }
 
+#sca-response-ui {
+	font-size:20px;
+	margin-top: 50px;
+	padding-left: 30px;
+	padding-righ: 30px
+}
