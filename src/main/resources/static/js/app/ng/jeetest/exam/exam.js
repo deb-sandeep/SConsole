@@ -158,6 +158,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.submitAnswers = function() {
+    	console.log( "Submitting answers." ) ;
     	$scope.timerActive = false ;
     }
     

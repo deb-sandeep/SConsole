@@ -77,8 +77,10 @@
                     ng-click="$parent.showNextQuestion()">
             NEXT &#8811;
             </button>
-            <button type="button" class="btn btn-success btn-lg pull-right action-btn"
-                    ng-click="$parent.submitAnswers()">
+            <button type="button" 
+                    class="btn btn-success btn-lg pull-right action-btn"
+	                data-toggle="modal" 
+	                data-target="#submitConfirmationDialog">
             SUBMIT
             </button>
         </div>        
@@ -171,6 +173,66 @@
 		      <h4>Question {{$index + 1}}</h4>
 	          <render-question-on-full-question-paper></render-question-on-full-question-paper>
 		    </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="submitConfirmationDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:600px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Confirm submission</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div id="pre-submission-summary">
+            <h3>Exam Summary:</h3>
+            <table align="center" class="pure-table pure-table-horizontal">
+                <tbody>
+                    <tr>
+                        <th>No of Questions</th>
+                        <td>{{$parent.questions.length}}</td>
+                    </tr>
+                    <tr>
+                        <th>Answered</th>
+                        <td>{{attemptSummary.attempted}}</td>
+                    </tr>
+                    <tr>
+                        <th>Not Answered</th>
+                        <td>{{attemptSummary.notAnswered}}</td>
+                    </tr>
+                    <tr>
+                        <th>Marked for Review</th>
+                        <td>{{attemptSummary.markedForReview}}</td>
+                    </tr>
+                    <tr>
+                        <th>Answered and Marked for Review</th>
+                        <td>{{attemptSummary.answeredAndMarkedForReview}}</td>
+                    </tr>
+                    <tr>
+                        <th>Not Visited</th>
+                        <td>{{attemptSummary.notVisited}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4>Are you sure you want to submit for final marking?</h4>
+            <h4>No changes will be allowed after submission.</h4>
+            <button type="button" 
+                    class="btn btn-default btn-md"
+                    data-dismiss="modal"
+                    ng-click="$parent.submitAnswers()">
+                YES
+            </button>
+            <button type="button" 
+                    class="btn btn-default btn-md"
+                    data-dismiss="modal">
+                NO
+            </button>
         </div>
       </div>
     </div>
