@@ -220,7 +220,6 @@
 }
 
 /* These are for showing status of answered questions in palette */
-
 .ans-stat-symbol {
     background: url(/img/questions_icons_sprite.png) no-repeat;
     line-height: 38px;
@@ -235,7 +234,6 @@
 
 .stat-not-visited {
     background-position: -479px -16px;
-    color:black !important;
 }
 
 .stat-not-answered {

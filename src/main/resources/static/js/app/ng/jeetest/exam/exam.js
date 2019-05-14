@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
+sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $location ) {
 	
 	$scope.alerts = [] ;
 	$scope.navBarTitle = "Landing" ;
@@ -21,7 +21,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
-	$scope.initialize = function() {
+	$scope.resetState = function() {
 		$scope.activeTest = null ;
 		$scope.alerts.length = 0 ;
 		$scope.paletteHidden = false ;
@@ -39,6 +39,33 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
 		$scope.alerts.splice( index, 1 ) ;
 	}
 
+    $scope.initializeController = function() {
+    	if( $scope.activeTest == null ) {
+    		$location.path( "/" ) ;
+    	}
+    	else {
+    		// Remove any scrollbars from the viewport - this is a full screen SPA
+    		var elements = document.getElementsByTagName( "body" ) ;
+    		elements[0].style.overflowY = "hidden" ;
+    		
+    		// Note that this route can get transitioned in from either the
+    		// instructions page or from the submit confirmation page.
+    		// In case we are coming in from the instruction page, the 
+    		// questions would need to be freshly loaded and the test started
+    		// afresh. However, if we are coming back from the submit confirmation
+    		// page, we don't have to recreate the full state - only 
+    		// the attempt summary and the section indexes.
+    		
+    		if( $scope.questions.length == 0 ) {
+    			loadTestConfiguration() ;
+    		}
+    		else {
+    			$scope.$broadcast( 'computeSectionIndices' ) ;
+    			$scope.showQuestion( $scope.questions[0] ) ;
+    		}
+    	}
+    }
+    
 	$scope.toggleQuestionPalette = function() {
 		
 	    var palette = document.getElementById( "question-palette-panel" ) ;
@@ -130,10 +157,92 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
     	console.log( "Hiding question paper" ) ; 
     }
     
+    $scope.submitAnswers = function() {
+    	$scope.timerActive = false ;
+    }
+    
 	// --- [END] Scope functions
 
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+    
+    function loadTestConfiguration() {
+    	
+        $scope.interactingWithServer = true ;
+        $http.get( '/TestConfiguration/' + $scope.activeTest.id )
+        .then( 
+            function( response ){
+                console.log( "Successfully loaded test configuration." ) ;
+                console.log( response.data ) ;
+                preProcessQuestions( response.data ) ;
+                $scope.$broadcast( 'computeSectionIndices' ) ;
+                
+                $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
+                $scope.startTimer() ;
+                $scope.showQuestion( $scope.questions[0] ) ;
+            }, 
+            function( error ){
+                console.log( "Error getting test configuration from server." + error ) ;
+                $scope.addErrorAlert( "Could not fetch test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function preProcessQuestions( testConfig ) {
+    	
+        var phyQuestions  = testConfig.phyQuestions ;
+        var chemQuestions = testConfig.chemQuestions ;
+        var mathQuestions = testConfig.mathQuestions ;
+        
+        if( phyQuestions.length > 0 ) {
+        	enhanceQuestions( phyQuestions ) ;
+        }
+        
+        if( chemQuestions.length > 0 ) {
+        	enhanceQuestions( chemQuestions ) ;
+        }
+        
+        if( mathQuestions.length > 0 ) {
+        	enhanceQuestions( mathQuestions ) ;
+        }
+    }
+    
+    function enhanceQuestions( questions ) {
+    	
+    	for( var i=0; i<questions.length; i++ ) {
+    		
+    		var question = questions[i] ;
+    		var questionEx = new QuestionEx( question ) ;
+    		var lastQuestionEx = null ;
+    		
+    		if( $scope.questions.length > 0 ) {
+    			lastQuestionEx = $scope.questions[ $scope.questions.length-1 ] ;
+    			
+    			lastQuestionEx.nextQuestion = questionEx ;
+    			questionEx.prevQuestion = lastQuestionEx ;
+    		}
+    		
+    		questionEx.index = $scope.questions.length ;
+    		associateInteractionHandler( questionEx ) ;
+    		
+    		$scope.questions.push( questionEx ) ;
+    	}
+    }
+    
+    function associateInteractionHandler( questionEx ) {
+    	
+    	if( questionEx.question.questionType == "SCA" ) {
+    		questionEx.interactionHandler = new SCAInteractionHandler( questionEx, $rootScope ) ;
+    	}
+    	else {
+    		console.log( "ERROR: Main can't have questions of type other " +
+    				     "than SCA" ) ;
+    		alert( "Non SCA type question found in Main exam." ) ;
+    	}
+    }
     
     function scrollToElement( id ) {
     	var myElement = document.getElementById( id ) ;

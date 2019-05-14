@@ -1,6 +1,6 @@
 // TODO:
 //		1. Reapply overflowY to body on moving to the next route
-sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $http, $location ) {
+sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
     
 	$scope.$parent.navBarTitle = "Main" ;
 	
@@ -21,7 +21,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
-	initializeController() ;
+	$scope.$parent.initializeController() ;
 	
 	// --- [END] Controller initialization -----------------------------------
 	
@@ -32,6 +32,10 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 		refreshAttemptSummary() ;
 	}) ;
 	
+	$scope.$on( 'computeSectionIndices', function( event, payload ){
+		computeSectionIndices() ;
+	}) ;
+
 	// --- [END] Event listeners ---------------------------------------------
 	
 	// --- [START] Scope functions -------------------------------------------
@@ -55,85 +59,10 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 		}
 	}
 	
-    $scope.submitAnswers = function() {
-    	$scope.$parent.timerActive = false ;
-    }
-    
     // --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
-    
-    function initializeController() {
-    	if( $scope.$parent.activeTest == null ) {
-    		$location.path( "/" ) ;
-    	}
-    	else {
-    		// Remove any scrollbars from the viewport - this is a full screen SPA
-    		var elements = document.getElementsByTagName( "body" ) ;
-    		elements[0].style.overflowY = "hidden" ;
-    		
-    		// Note that this route can get transitioned in from either the
-    		// instructions page or from the submit confirmation page.
-    		// In case we are coming in from the instruction page, the 
-    		// questions would need to be freshly loaded and the test started
-    		// afresh. However, if we are coming back from the submit confirmation
-    		// page, we don't have to recreate the full state - only 
-    		// the attempt summary and the section indexes.
-    		
-    		if( $scope.$parent.questions.length == 0 ) {
-    			loadTestConfiguration() ;
-    		}
-    		else {
-    			computeSectionIndices() ;
-    			$scope.showQuestion( $scope.$parent.questions[0] ) ;
-    		}
-    	}
-    }
-    
-    function loadTestConfiguration() {
-    	
-        $scope.$parent.interactingWithServer = true ;
-        $http.get( '/TestConfiguration/' + $scope.$parent.activeTest.id )
-        .then( 
-            function( response ){
-                console.log( "Successfully loaded test configuration." ) ;
-                console.log( response.data ) ;
-                preProcessQuestions( response.data ) ;
-                computeSectionIndices() ;
-                
-                $scope.$parent.secondsRemaining = $scope.$parent.questions.length * 2 * 60 ;
-                $scope.$parent.startTimer() ;
-                $scope.showQuestion( $scope.$parent.questions[0] ) ;
-            }, 
-            function( error ){
-                console.log( "Error getting test configuration from server." + error ) ;
-                $scope.$parent.addErrorAlert( "Could not fetch test." ) ;
-            }
-        )
-        .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
-        }) ;
-    }
-    
-    function preProcessQuestions( testConfig ) {
-    	
-        var phyQuestions  = testConfig.phyQuestions ;
-        var chemQuestions = testConfig.chemQuestions ;
-        var mathQuestions = testConfig.mathQuestions ;
-        
-        if( phyQuestions.length > 0 ) {
-        	enhanceQuestions( phyQuestions ) ;
-        }
-        
-        if( chemQuestions.length > 0 ) {
-        	enhanceQuestions( chemQuestions ) ;
-        }
-        
-        if( mathQuestions.length > 0 ) {
-        	enhanceQuestions( mathQuestions ) ;
-        }
-    }
     
     function computeSectionIndices() {
     	
@@ -156,40 +85,6 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     			$scope.mathSectionQuestionIndex = i ;
     			break ;
     		}
-    	}
-    }
-    
-    function enhanceQuestions( questions ) {
-    	
-    	for( var i=0; i<questions.length; i++ ) {
-    		
-    		var question = questions[i] ;
-    		var questionEx = new QuestionEx( question ) ;
-    		var lastQuestionEx = null ;
-    		
-    		if( $scope.$parent.questions.length > 0 ) {
-    			lastQuestionEx = $scope.$parent.questions[ $scope.$parent.questions.length-1 ] ;
-    			
-    			lastQuestionEx.nextQuestion = questionEx ;
-    			questionEx.prevQuestion = lastQuestionEx ;
-    		}
-    		
-    		questionEx.index = $scope.$parent.questions.length ;
-    		associateInteractionHandler( questionEx ) ;
-    		
-    		$scope.$parent.questions.push( questionEx ) ;
-    	}
-    }
-    
-    function associateInteractionHandler( questionEx ) {
-    	
-    	if( questionEx.question.questionType == "SCA" ) {
-    		questionEx.interactionHandler = new SCAInteractionHandler( questionEx, $rootScope ) ;
-    	}
-    	else {
-    		console.log( "ERROR: Main can't have questions of type other " +
-    				     "than SCA" ) ;
-    		alert( "Non SCA type question found in Main exam." ) ;
     	}
     }
     
