@@ -5,9 +5,6 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     
 	$scope.$parent.navBarTitle = "Main" ;
 	
-	// This is populated with instances of QuestionEx
-	$scope.questions = [] ;
-	
 	$scope.phySectionQuestionIndex  = -1 ;
 	$scope.chemSectionQuestionIndex = -1 ;
 	$scope.mathSectionQuestionIndex = -1 ;
@@ -50,7 +47,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 		}
 		
 		if( indexToJump > -1 ) {
-			$scope.showQuestion( $scope.questions[ indexToJump ] ) ;
+			$scope.showQuestion( $scope.$parent.questions[ indexToJump ] ) ;
 		}
 	}
 	
@@ -159,9 +156,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
                 console.log( response.data ) ;
                 preProcessQuestions( response.data ) ;
                 
-                $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
+                $scope.secondsRemaining = $scope.$parent.questions.length * 2 * 60 ;
                 setTimeout( handleTimerEvent, 1000 ) ;
-                $scope.showQuestion( $scope.questions[0] ) ;
+                $scope.showQuestion( $scope.$parent.questions[0] ) ;
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;
@@ -180,17 +177,17 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
         var mathQuestions = testConfig.mathQuestions ;
         
         if( phyQuestions.length > 0 ) {
-        	$scope.phySectionQuestionIndex = $scope.questions.length ;
+        	$scope.phySectionQuestionIndex = $scope.$parent.questions.length ;
         	enhanceQuestions( phyQuestions ) ;
         }
         
         if( chemQuestions.length > 0 ) {
-        	$scope.chemSectionQuestionIndex = $scope.questions.length ;
+        	$scope.chemSectionQuestionIndex = $scope.$parent.questions.length ;
         	enhanceQuestions( chemQuestions ) ;
         }
         
         if( mathQuestions.length > 0 ) {
-        	$scope.mathSectionQuestionIndex = $scope.questions.length ;
+        	$scope.mathSectionQuestionIndex = $scope.$parent.questions.length ;
         	enhanceQuestions( mathQuestions ) ;
         }
     }
@@ -203,17 +200,17 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     		var questionEx = new QuestionEx( question ) ;
     		var lastQuestionEx = null ;
     		
-    		if( $scope.questions.length > 0 ) {
-    			lastQuestionEx = $scope.questions[ $scope.questions.length-1 ] ;
+    		if( $scope.$parent.questions.length > 0 ) {
+    			lastQuestionEx = $scope.$parent.questions[ $scope.$parent.questions.length-1 ] ;
     			
     			lastQuestionEx.nextQuestion = questionEx ;
     			questionEx.prevQuestion = lastQuestionEx ;
     		}
     		
-    		questionEx.index = $scope.questions.length ;
+    		questionEx.index = $scope.$parent.questions.length ;
     		associateInteractionHandler( questionEx ) ;
     		
-    		$scope.questions.push( questionEx ) ;
+    		$scope.$parent.questions.push( questionEx ) ;
     	}
     }
     
@@ -236,9 +233,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
         $scope.attemptSummary.markedForReview = 0 ;
         $scope.attemptSummary.answeredAndMarkedForReview = 0 ;    	
     	
-    	for( var i=0; i<$scope.questions.length; i++ ) {
+    	for( var i=0; i<$scope.$parent.questions.length; i++ ) {
     		
-    		var q = $scope.questions[i] ;
+    		var q = $scope.$parent.questions[i] ;
     		if( q.attemptState == AttemptState.prototype.NOT_VISITED ) {
     			$scope.attemptSummary.notVisited++ ;
     		}

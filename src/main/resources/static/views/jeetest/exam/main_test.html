@@ -136,7 +136,7 @@
         </div>
         <div id="question-control-dashboard">
             <div>
-                <button ng-repeat="questionEx in questions"
+                <button ng-repeat="questionEx in $parent.questions"
                         type="button" 
                         class="btn btn-default q-control"
                         ng-click="showQuestion( questionEx )"
@@ -167,7 +167,7 @@
       <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
         <div style='overflow:auto;height:85vh;'>
 		    <div class="question-listing" 
-		         ng-repeat="questionEx in questions">
+		         ng-repeat="questionEx in $parent.questions">
 		      <h4>Question {{$index + 1}}</h4>
 	          <render-question-on-full-question-paper></render-question-on-full-question-paper>
 		    </div> 
