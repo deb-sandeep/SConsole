@@ -46,6 +46,18 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 		return ( selectedOption != null ) ;
 	}
 	
+	this.getTotalMarks = function() {
+		return 4 ;
+	}
+	
+	this.getAnswer = function() {
+    	if( questionEx.attemptState == AttemptState.prototype.ATTEMPTED ||
+        	questionEx.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
+    		return selectedOption ;
+       	}
+    	return "" ;
+	}
+	
 	function getOption( id ) {
 		return INPUT( {
 			type : 'radio',

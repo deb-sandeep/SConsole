@@ -211,12 +211,8 @@
     background-position: -75px -54px;
 }
 
-.review_answered {
+.review-answered {
     background-position: -9px -87px;
-}
-
-.not_visited {
-    background-position: -157px -4px !important;
 }
 
 /* These are for showing status of answered questions in palette */
@@ -306,7 +302,7 @@
 	font-size:20px;
 	margin-top: 50px;
 	padding-left: 30px;
-	padding-righ: 30px
+	padding-right: 30px
 }
 
 #pre-submission-summary {
@@ -318,3 +314,14 @@
 	font-size:16px;
 }
 
+#test-result {
+	text-align:center;
+}
+
+#test-result h2 {
+	margin-bottom:30px;
+}
+
+#test-result table {
+	margin-bottom:30px;
+}

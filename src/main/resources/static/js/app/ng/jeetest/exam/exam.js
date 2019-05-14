@@ -163,6 +163,9 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	$scope.timerActive = false ;
     	$location.path( "/testResult" ) ;
     	$scope.answersSubmitted = true ;
+    	
+		var elements = document.getElementsByTagName( "body" ) ;
+		elements[0].style.overflowY = "auto" ;
     }
     
 	// --- [END] Scope functions
@@ -258,7 +261,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	$scope.secondsRemaining-- ;
     	if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
     		setTimeout( handleTimerEvent, 1000 ) ;
-    		$scope.$digest() ;
     	}
     	else {
     		$scope.timerActive = false ;
@@ -267,6 +269,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     			$scope.submitAnswers() ;
     		}
     	}
+    	$scope.$digest() ;
     }
 	// --- [END] Local functions
 } ) ;
