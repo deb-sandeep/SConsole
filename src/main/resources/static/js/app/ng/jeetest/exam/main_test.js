@@ -4,7 +4,6 @@
 sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $http, $location ) {
     
 	$scope.$parent.navBarTitle = "Main" ;
-	$scope.paletteHidden = false ;
 	
 	// This is populated with instances of QuestionEx
 	$scope.questions = [] ;
@@ -52,25 +51,6 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 		
 		if( indexToJump > -1 ) {
 			$scope.showQuestion( $scope.questions[ indexToJump ] ) ;
-		}
-	}
-	
-	$scope.toggleQuestionPalette = function() {
-		
-	    var palette = document.getElementById( "question-palette-panel" ) ;
-	    var display = document.getElementById( "question-display-panel" ) ;
-		
-		if( $scope.paletteHidden ) {
-			palette.style.display = "block" ;
-			palette.style.width = "25%" ;
-			display.style.width = "75%" ;
-			$scope.paletteHidden = false ;
-		}
-		else {
-			palette.style.display = "none" ;
-			palette.style.width = "0%" ;
-			display.style.width = "100%" ;
-			$scope.paletteHidden = true ;
 		}
 	}
 	

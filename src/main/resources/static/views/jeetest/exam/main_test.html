@@ -28,7 +28,7 @@
         </button>
     </div>
     <div class="col-sm-2" style="text-align:right;">
-        <span id="timer" class="badge">{{ secondsRemaining | duration}}</span>
+        <span id="timer" class="badge">{{ secondsRemaining | duration }}</span>
     </div>
   </div>
 </div>
@@ -83,11 +83,11 @@
             </button>
         </div>        
         <div id="pane-toggle-tab"
-             ng-click="toggleQuestionPalette()">
+             ng-click="$parent.toggleQuestionPalette()">
             <span class="glyphicon glyphicon-menu-right"
-                  ng-show="!paletteHidden"></span>
+                  ng-show="!$parent.paletteHidden"></span>
             <span class="glyphicon glyphicon-menu-left"
-                  ng-show="paletteHidden"></span>
+                  ng-show="$parent.paletteHidden"></span>
         </div>
     </div>
     <div id="question-palette-panel">
