@@ -27,7 +27,9 @@ sConsoleApp.controller( 'AvailableExamsController', function( $scope, $http, $lo
 	}
 	
 	$scope.takeTest = function( test ) {
+		$scope.$parent.initialize() ;
 		$scope.$parent.activeTest = test ;
+		
 		if( test.examType == "MAIN" ) {
 			$location.path( "/startMainTest" ) ;
 			//$location.path( "/instructionsMain" ) ;

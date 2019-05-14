@@ -22,7 +22,7 @@
                 class="btn btn-info btn-lg action-btn"
                 data-toggle="modal" 
                 data-target="#questionPaperDialog"
-                ng-click="showQuestionPaper()">
+                ng-click="$parent.showQuestionPaper()">
         <span class="glyphicon glyphicon-save"></span>
         Download Question
         </button>
@@ -42,39 +42,39 @@
             <div id="q_bottom"></div>
 
             <div id="scroll-bottom"
-                 ng-click="scrollBottom()">
+                 ng-click="$parent.scrollBottom()">
                 <span class="glyphicon glyphicon-circle-arrow-down"></span>
             </div>
             <div id="scroll-top"
-                 ng-click="scrollTop()">
+                 ng-click="$parent.scrollTop()">
                 <span class="glyphicon glyphicon-circle-arrow-up"></span>
             </div>
         </div>
         <div id="question-action-panel">
             <button type="button" class="btn btn-success btn-lg action-btn"
-                    ng-click="saveAndNext()">
+                    ng-click="$parent.saveAndNext()">
             Save & Next
             </button>
             <button type="button" class="btn btn-warning btn-lg action-btn"
-                    ng-click="saveAndMarkForReview()">
+                    ng-click="$parent.saveAndMarkForReview()">
             Save & Mark for Review
             </button>
             <button type="button" class="btn btn-default btn-lg action-btn"
-                    ng-click="clearResponse()">
+                    ng-click="$parent.clearResponse()">
             Clear Response
             </button>
             <button type="button" class="btn btn-info btn-lg action-btn"
-                    ng-click="markForReviewAndNext()">
+                    ng-click="$parent.markForReviewAndNext()">
             Mark for Review & Next
             </button>
         </div>
         <div id="back-next-submit-panel">
             <button type="button" class="btn btn-default btn-lg action-btn"
-                    ng-click="showPreviousQuestion()">
+                    ng-click="$parent.showPreviousQuestion()">
              &#8810; BACK
             </button>
             <button type="button" class="btn btn-default btn-lg action-btn"
-                    ng-click="showNextQuestion()">
+                    ng-click="$parent.showNextQuestion()">
             NEXT &#8811;
             </button>
             <button type="button" class="btn btn-success btn-lg pull-right action-btn"
@@ -159,7 +159,7 @@
         <button type="button" 
                 class="close" 
                 data-dismiss="modal"
-                ng-click="hideQuestionPaper()">
+                ng-click="$parent.hideQuestionPaper()">
             &times;
         </button>
         <h4 class="modal-title">Question Paper:</h4>

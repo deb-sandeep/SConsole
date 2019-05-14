@@ -60,6 +60,6 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	function optionClicked( input ) {
 		selectedOption = input.value ;
 		questionEx.attemptState = AttemptState.prototype.NOT_ANSWERED ;
-		$rootScope.$apply() ;
+		$rootScope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
 	}
 }
