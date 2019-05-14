@@ -17,7 +17,6 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 		answeredAndMarkedForReview : 0
 	} ;
 	
-	$scope.currentQuestion = null ;
 	$scope.secondsRemaining = 0 ;
 	
 	// ---------------- local variables --------------------------------------
@@ -53,9 +52,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
 	
     $scope.saveAndNext = function() {
     	console.log( "Saving answer and showing next question." ) ;
-    	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
-    		$scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
-    		$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	if( $scope.$parent.currentQuestion.interactionHandler.isAnswered() ) {
+    		$scope.$parent.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
+    		$scope.showQuestion( $scope.$parent.currentQuestion.nextQuestion ) ;
     	}
     	else {
     		alert( "Please answer the question before saving." ) ;
@@ -64,9 +63,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     
     $scope.saveAndMarkForReview = function() {
     	console.log( "Saving answer and marking for review. Showing next question" ) ;
-    	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
-        	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
-        	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	if( $scope.$parent.currentQuestion.interactionHandler.isAnswered() ) {
+        	$scope.$parent.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
+        	$scope.showQuestion( $scope.$parent.currentQuestion.nextQuestion ) ;
     	}
     	else {
     		alert( "Please answer the question before saving." ) ;
@@ -75,21 +74,21 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     
     $scope.clearResponse = function() {
     	console.log( "Clearing response." ) ;
-    	$scope.currentQuestion.interactionHandler.clearResponse() ;
+    	$scope.$parent.currentQuestion.interactionHandler.clearResponse() ;
     }
     
     $scope.markForReviewAndNext = function() {
     	console.log( "Mark question for review and move to next" ) ;
-    	$scope.currentQuestion.attemptState = AttemptState.prototype.MARKED_FOR_REVIEW ;
-    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	$scope.$parent.currentQuestion.attemptState = AttemptState.prototype.MARKED_FOR_REVIEW ;
+    	$scope.showQuestion( $scope.$parent.currentQuestion.nextQuestion ) ;
     }
     
     $scope.showNextQuestion = function() {
-    	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+    	$scope.showQuestion( $scope.$parent.currentQuestion.nextQuestion ) ;
     }
     
     $scope.showPreviousQuestion = function() {
-    	$scope.showQuestion( $scope.currentQuestion.prevQuestion ) ;
+    	$scope.showQuestion( $scope.$parent.currentQuestion.prevQuestion ) ;
     }
     
     $scope.submitAnswers = function() {
@@ -98,9 +97,9 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $rootScope, $
     
     $scope.showQuestion = function( questionEx ) {
     	if( questionEx != null ) {
-    		$scope.currentQuestion = questionEx ;
-    		if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
-    			$scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
+    		$scope.$parent.currentQuestion = questionEx ;
+    		if( $scope.$parent.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
+    			$scope.$parent.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
     		}
     		refreshAttemptSummary() ;
     	}

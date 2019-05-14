@@ -9,6 +9,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http ) {
 	
 	// This is populated with instances of QuestionEx
 	$scope.questions = [] ;
+	$scope.currentQuestion = null ;
 	
 	$scope.addErrorAlert = function( msgString ) {
 	    $scope.alerts.push( { type: 'danger', msg: msgString } ) ;
