@@ -16,4 +16,8 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/exam/mainTest",
 		controller : "JEEMainTestController"
 	})
+	.when("/testResult", {
+		templateUrl : "/jeetest/exam/testResult",
+		controller : "JEETestResultController"
+	})
 });

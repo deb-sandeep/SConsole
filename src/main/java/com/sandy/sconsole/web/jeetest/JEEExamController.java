@@ -26,4 +26,9 @@ public class JEEExamController {
     public String mainTest() {
         return "jeetest/exam/main_test" ;
     }
+
+    @RequestMapping( "/testResult" )
+    public String testResult() {
+        return "jeetest/exam/test_result" ;
+    }
 }

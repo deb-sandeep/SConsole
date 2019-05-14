@@ -12,6 +12,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	$scope.currentQuestion = null ;
 	$scope.secondsRemaining = 0 ;
 	$scope.timerActive = false ;
+	$scope.answersSubmitted = false ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -160,6 +161,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     $scope.submitAnswers = function() {
     	console.log( "Submitting answers." ) ;
     	$scope.timerActive = false ;
+    	$location.path( "/testResult" ) ;
+    	$scope.answersSubmitted = true ;
     }
     
 	// --- [END] Scope functions
@@ -259,7 +262,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	}
     	else {
     		$scope.timerActive = false ;
-    		// TODO: Force submit the answers.
+    		$scope.secondsRemaining = 0 ;
+    		if( !$scope.answersSubmitted ) {
+    			$scope.submitAnswers() ;
+    		}
     	}
     }
 	// --- [END] Local functions
