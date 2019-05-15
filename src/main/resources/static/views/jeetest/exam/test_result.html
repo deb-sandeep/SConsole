@@ -22,7 +22,7 @@
                     ng-class="getRowBackgroundClass( questionEx )">
                    <td class="q-attribute">Q {{$index + 1}}</td>
                    <td class="q-attribute">{{questionEx.question.lateralThinkingLevel}}</td>
-                   <td class="q-attribute" style="text-align:right;">{{questionEx.question.projectedSolveTime}}</td>
+                   <td class="q-attribute" style="text-align:right;">{{questionEx.question.projectedSolveTime | mmss}}</td>
                    <td class="q-attribute">{{questionEx.question.answerText}}</td>
                    <td>
                         <span class="stat-icon-small" 
