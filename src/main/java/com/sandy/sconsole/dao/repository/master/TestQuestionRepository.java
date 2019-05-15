@@ -81,7 +81,7 @@ public interface TestQuestionRepository
             +   "q.topic.id = :topicId AND "
             +   "q.id NOT IN ( " 
             +   "    SELECT " 
-            +   "      tqb.topic.id "
+            +   "      tqb.question.id "
             +   "    FROM "
             +   "      TestQuestionBinding tqb " 
             +   ")" )
