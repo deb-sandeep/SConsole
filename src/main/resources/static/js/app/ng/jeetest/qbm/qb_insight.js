@@ -5,10 +5,15 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 	
 	var phyTotalQ = 0 ;
 	var phyAttemptedQ = 0 ;
+	var phyAssignedQ = 0 ;
+	
 	var chemTotalQ = 0 ;
 	var chemAttemptedQ = 0 ;
+	var chemAssignedQ = 0 ;
+	
 	var mathTotalQ = 0 ;
 	var mathAttemptedQ = 0 ;
+	var mathAssignedQ = 0 ;
 	
 	var phyTopics = [] ;
 	var chemTopics = [] ;
@@ -75,45 +80,45 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 			var insight = rawData[i] ;
 			
 			if( insight.subjectName == 'IIT - Physics' ) {
-				phyTotalQ += insight.totalQuestions ;
-				if( insight.attemptedQuestions != null ) {
-					phyAttemptedQ += insight.attemptedQuestions ;
-				}
+				phyTotalQ     += insight.totalQuestions ;
+				phyAttemptedQ += insight.attemptedQuestions ;
+				phyAssignedQ  += insight.assignedQuestions ;
 				
 				phyTopics.push( insight.topicName ) ;
-				phyTopicsInsights.push( [ insight.totalQuestions - insight.attemptedQuestions, 
+				phyTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
+					                      insight.assignedQuestions - insight.attemptedQuestions,
 					                      insight.attemptedQuestions ] ) ;
 			}
 			else if( insight.subjectName == 'IIT - Chemistry' ) {
-				chemTotalQ += insight.totalQuestions ;
-				if( insight.attemptedQuestions != null ) {
-					chemAttemptedQ += insight.attemptedQuestions ;
-				}
+				chemTotalQ     += insight.totalQuestions ;
+				chemAttemptedQ += insight.attemptedQuestions ;
+				chemAssignedQ  += insight.assignedQuestions ;
 				
 				chemTopics.push( insight.topicName ) ;
-				chemTopicsInsights.push( [ insight.totalQuestions - insight.attemptedQuestions, 
-					                      insight.attemptedQuestions ] ) ;
+				chemTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
+						                   insight.assignedQuestions - insight.attemptedQuestions,
+						                   insight.attemptedQuestions ] ) ;
 			}
 			else if( insight.subjectName == 'IIT - Maths' ) {
-				mathTotalQ += insight.totalQuestions ;
-				if( insight.attemptedQuestions != null ) {
-					mathAttemptedQ += insight.attemptedQuestions ;
-				}
+				mathTotalQ     += insight.totalQuestions ;
+				mathAttemptedQ += insight.attemptedQuestions ;
+				mathAssignedQ  += insight.assignedQuestions ;
 				
 				mathTopics.push( insight.topicName ) ;
-				mathTopicsInsights.push( [ insight.totalQuestions - insight.attemptedQuestions, 
-					                      insight.attemptedQuestions ] ) ;
+				mathTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
+						                   insight.assignedQuestions - insight.attemptedQuestions,
+						                   insight.attemptedQuestions ] ) ;
 			}
 			else {
 				console.log( "Invalid subject found. " + insight.subjectName ) ; 
 			}
 		}
 		
-		subjectInsights.push( [ phyTotalQ  - phyAttemptedQ,  phyAttemptedQ  ] ) ;
-		subjectInsights.push( [ chemTotalQ - chemAttemptedQ, chemAttemptedQ ] ) ;
-		subjectInsights.push( [ mathTotalQ - mathAttemptedQ, mathAttemptedQ ] ) ;
+		subjectInsights.push( [ phyTotalQ  - phyAssignedQ,  phyAssignedQ  - phyAttemptedQ,  phyAttemptedQ  ] ) ;
+		subjectInsights.push( [ chemTotalQ - chemAssignedQ, chemAssignedQ - chemAttemptedQ, chemAttemptedQ ] ) ;
+		subjectInsights.push( [ mathTotalQ - mathAssignedQ, mathAssignedQ - mathAttemptedQ, mathAttemptedQ ] ) ;
 		
-		renderGraph( 'subject_insight_graph', subjectInsights,    subjectNames, 10 ) ;
+		renderGraph( 'subject_insight_graph', subjectInsights,  subjectNames, 10 ) ;
 		$scope.renderPhyInsights() ;
 	}
 	
@@ -145,11 +150,11 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 	            yaxisLabelsFont:'Quicksand',
 	            yaxisTitleFont:'Quicksand',
 	            
-	            key: ['Remaining','Attempted'],
+	            key: ['Remaining','Assigned','Attempted'],
 	            keyHalign: 'middle',
 	            keyPosition: 'margin',
-	            keyColors: ['#00e676','#cfd8dc'],
-	            colors: ['#00e676','#cfd8dc'],
+	            keyColors: ['#00e676','#9F9F9F','#cfd8dc'],
+	            colors: ['#00e676','#9F9F9F','#cfd8dc'],
 	            keyLabelsSize: 10,
 	            keyLabelsFont:'Verdana',
 	        }

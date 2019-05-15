@@ -332,8 +332,15 @@ public class QBMRestController {
             String  subjectName  = (String )tupule[1] ;
             String  topicName    = (String )tupule[2] ;
             String  questionType = (String )tupule[3] ;
-            Integer numQ         = 0 ;
-            Integer attQ         = 0 ;
+            
+            // Total number of questions in this topic's question bank
+            Integer numQ = 0 ; 
+            
+            // Total number of questions attempted in this topic from the question bank
+            Integer attQ = 0 ; 
+            
+            // Total number of questions assigned to tests from this topic's question bank
+            Integer assQ = 0 ; 
             
             QBTopicInsight insight = insightsMap.get( topicId ) ;
             if( insight == null ) {
@@ -353,11 +360,15 @@ public class QBMRestController {
             if( questionType != null ) {
                 numQ = ((BigInteger)tupule[4]).intValue() ;
                 attQ = ((BigDecimal)tupule[5]).intValue() ;
+                assQ = ((BigInteger)tupule[6]).intValue() ;
                 
                 insight.setTotalQuestions( insight.getTotalQuestions() + numQ ) ;
                 insight.setAttemptedQuestions( insight.getAttemptedQuestions() + attQ ) ;
+                insight.setAssignedQuestions( insight.getAssignedQuestions() + assQ ) ;
+                
                 insight.getTotalQuestionsByType().put( questionType, numQ ) ;
                 insight.getAttemptedQuestionsByType().put( questionType, attQ ) ;
+                insight.getAssignedQuestionsByType().put( questionType, assQ ) ;
             }
         }
         
