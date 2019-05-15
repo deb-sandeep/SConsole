@@ -5,6 +5,7 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
 	$scope.totalMarks = 0 ;
 	$scope.totalScore = 0 ;
 	$scope.totalNegativeMarks = 0 ;
+	$scope.selectedQuestion = null ;
 	
 	// ---------------- local variables --------------------------------------
 	
@@ -26,6 +27,19 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
 	$scope.returnToTestIndex = function() {
 		$location.path( "/" ) ;
 	}
+	
+	$scope.selectQuestion = function( questionEx ) {
+		$scope.selectedQuestion = questionEx ;
+	}
+	
+	$scope.getRowBackgroundClass = function( questionEx ) {
+		if( questionEx == $scope.selectedQuestion ) {
+			return "selected-test-summary-row" ;
+		}
+		return "" ;
+	}
+	
+	
 	
     // --- [END] Scope functions
 	

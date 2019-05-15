@@ -17,3 +17,17 @@ sConsoleApp.filter( 'duration', function(){
 	    return hours + ':' + minutes + ':' + seconds ;
 	} ;
 }) ;
+
+sConsoleApp.filter( 'mmss', function(){
+
+	return function( secondsCount ) {
+		
+	    var minutes = Math.floor( secondsCount / 60 ) ;
+	    var seconds = secondsCount - ( minutes * 60 ) ;
+
+	    if( minutes < 10 ){ minutes = "0" + minutes ; }
+	    if( seconds < 10 ){ seconds = "0" + seconds ; }
+
+	    return minutes + ' : ' + seconds ;
+	} ;
+}) ;

@@ -283,6 +283,12 @@
     background-position: -435px -16px;
 }
 
+.q-control-border {
+    border-style:solid;
+    border-color:#5f7ff4;
+    border-width:1px;
+}
+
 .question-listing {
 	font-size: 16px;
 	padding:10px;
@@ -310,18 +316,89 @@
 	height:400px;
 }
 
-#pre-submission-summary table {
+#pre-submission-summary th, td {
 	font-size:16px;
+	text-align:left;
 }
+
+/* --------- Styles for the test result page ----------------------------- */
 
 #test-result {
+  position: absolute;
+  right: 0;
+  left:0;
+  height:800px;
+  overflow-x: hidden;
+  overflow-y:hidden;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#test-result-summary {
+  position:relative;
+  left: 0;
+  width: calc( 50% - 10px ) ;
+  padding:10px;
+}
+
+#test-result-summary table {
+	margin-bottom:30px;
+	width:100%;
+}
+
+#test-result-summary td, th{
 	text-align:center;
+	padding:3px 3px;
 }
 
-#test-result h2 {
-	margin-bottom:30px;
+#test-result-summary tr.selected-test-summary-row {
+	background-color:yellow;
 }
 
-#test-result table {
-	margin-bottom:30px;
+#test-result-summary tr.selected-test-summary-row td.q-attribute {
+    background-color:yellow !important;
 }
+
+#test-result-summary td.q-attribute{
+    background-color:#f7fff4;
+}
+
+#test-result-summary button {
+	float:right;
+}
+
+#test-question-display {
+  position:absolute;
+  right: 0;
+  top:0;
+  background-color: #FFFAFA;
+  overflow-y:auto;
+  width: 50%;
+  height: 700px;
+  margin:10px;
+  padding:10px;
+  border-style:solid;
+  border-color:#f4f4f4;
+  border-width:2px;
+}
+
+#test-question-display table {
+    margin-bottom:30px;
+    width:100%;
+    font-size:16px;
+}
+
+#test-question-display th {
+	background-color:#edebeb;
+	text-align:left;
+	padding: 3px 3px;
+}
+
+#test-question-display td {
+    padding: 3px 3px;
+}
+
+#test-question-render {
+	font-size:17px;
+}
+

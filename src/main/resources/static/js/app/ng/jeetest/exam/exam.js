@@ -130,8 +130,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
     			$scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
     		}
-    		$scope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
     	}
+    	$scope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
     }
     
     $scope.showNextQuestion = function() {
@@ -166,6 +166,14 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	
 		var elements = document.getElementsByTagName( "body" ) ;
 		elements[0].style.overflowY = "auto" ;
+    }
+    
+    $scope.getControlDashboardQuestionButtonStyle = function( questionEx ) {
+    	var style = questionEx.getStatusStyle() ;
+    	if( $scope.currentQuestion == questionEx ) {
+    		style += " q-control-border" ;
+    	}
+    	return style ;
     }
     
 	// --- [END] Scope functions
@@ -233,6 +241,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		}
     		
     		questionEx.index = $scope.questions.length ;
+    		questionEx.timeSpent = 0 ;
     		associateInteractionHandler( questionEx ) ;
     		
     		$scope.questions.push( questionEx ) ;
@@ -259,6 +268,11 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     
     function handleTimerEvent() {
     	$scope.secondsRemaining-- ;
+    	
+    	if( $scope.currentQuestion != null ) {
+    		$scope.currentQuestion.timeSpent++ ;
+    	}
+    	
     	if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
     		setTimeout( handleTimerEvent, 1000 ) ;
     	}

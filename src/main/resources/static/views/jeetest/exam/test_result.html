@@ -1,44 +1,80 @@
+<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}} </h2>
 <div id="test-result">
-    <h2>Score : {{totalScore}} / {{totalMarks}} </h2>
-    <p>
-    <p>
-    <table align="center" class="pure-table pure-table-horizontal"
-           style="font-size:16px;">
-        <thead>
+    <div id="test-result-summary">
+        <table align="center" class="pure-table pure-table-horizontal"
+               style="font-size:16px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="q-attribute">Lat</th>
+                    <th class="q-attribute">Solve</br>Time</th>
+                    <th class="q-attribute">Correct<br/>Answer</th>
+                    <th></th>
+                    <th>Answer</th>
+                    <th>Time</th>
+                    <th>Result</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="questionEx in $parent.questions"
+                    ng-click="selectQuestion( questionEx )"
+                    ng-class="getRowBackgroundClass( questionEx )">
+                   <td class="q-attribute">Q {{$index + 1}}</td>
+                   <td class="q-attribute">{{questionEx.question.lateralThinkingLevel}}</td>
+                   <td class="q-attribute" style="text-align:right;">{{questionEx.question.projectedSolveTime}}</td>
+                   <td class="q-attribute">{{questionEx.question.answerText}}</td>
+                   <td>
+                        <span class="stat-icon-small" 
+                              ng-class="questionEx.getResultStatusIconStyle()">
+                        </span>
+                    </td>
+                   <td>{{questionEx.interactionHandler.getAnswer()}}</td>
+                   <td>{{questionEx.timeSpent | mmss}}</td>
+                   <td>
+                        <span ng-if="questionEx.isCorrectlyAnswered()"  
+                              class="glyphicon glyphicon-ok"
+                              style="color:green;"></span>
+                        <span ng-if="!questionEx.isCorrectlyAnswered()" 
+                              class="glyphicon glyphicon-remove"
+                              style="color:red;"></span>
+                   </td>
+                   <td>{{questionEx.getScore()}}</td>
+                </tr>        
+            </tbody>
+        </table>
+        <button class="btn btn-info btn-md"
+                ng-click="returnToTestIndex()">
+            Return to Test Index
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+    </div>
+    <div id="test-question-display">
+        <table align="center" class="pure-table pure-table-horizontal"
+               ng-show="selectedQuestion != null">
             <tr>
-                <th></th>
-                <th></th>
-                <th>Answer</th>
-                <th>Correct<br/>Answer</th>
-                <th>Result</th>
-                <th>Marks</th>
+                <th>Subject</th>
+                <td>{{selectedQuestion.question.subject.name}}</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="questionEx in $parent.questions">
-               <td>Question {{$index + 1}}</td>
-               <td>
-                    <span class="stat-icon-small" 
-                          ng-class="questionEx.getResultStatusIconStyle()">
-                    </span>
-                </td>
-               <td>{{questionEx.interactionHandler.getAnswer()}}</td>
-               <td>{{questionEx.question.answerText}}</td>
-               <td>
-                    <span ng-if="questionEx.isCorrectlyAnswered()"  
-                          class="glyphicon glyphicon-ok"
-                          style="color:green;"></span>
-                    <span ng-if="!questionEx.isCorrectlyAnswered()" 
-                          class="glyphicon glyphicon-remove"
-                          style="color:red;"></span>
-               </td>
-               <td>{{questionEx.getScore()}}</td>
-            </tr>        
-        </tbody>
-    </table>
-    <button class="btn btn-info btn-md"
-            ng-click="returnToTestIndex()">
-        Return to Test Index
-        <span class="glyphicon glyphicon-chevron-right"></span>
-    </button>
+            <tr>
+                <th>Topic</th>
+                <td>{{selectedQuestion.question.topic.topicName}}</td>
+            </tr>
+            <tr>
+                <th>Book</th>
+                <td>{{selectedQuestion.question.book.bookShortName}}</td>
+            </tr>
+            <tr>
+                <th>Question type</th>
+                <td>{{selectedQuestion.question.questionType}}</td>
+            </tr>
+            <tr>
+                <th>Question reference</th>
+                <td>{{selectedQuestion.question.questionRef}}</td>
+            </tr>
+        </table>
+        <div id="test-question-render">
+	        <render-test-summary-question></render-test-summary-question>
+        </div>
+    </div>
 </div>
