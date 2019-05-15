@@ -30,6 +30,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		$scope.currentQuestion = null ;
 		$scope.secondsRemaining = 0 ;
 		$scope.timerActive = false ;
+		$scope.answersSubmitted = false ;
 	}
 	
 	$scope.addErrorAlert = function( msgString ) {
@@ -161,8 +162,16 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     $scope.submitAnswers = function() {
     	console.log( "Submitting answers." ) ;
     	$scope.timerActive = false ;
-    	$location.path( "/testResult" ) ;
     	$scope.answersSubmitted = true ;
+    	
+    	if( !$scope.$$phase ) {
+    		$scope.$apply(function(){
+    			$location.path( "/testResult" ) ;
+    		});    	
+    	}
+    	else {
+    		$location.path( "/testResult" ) ;
+    	}
     	
 		var elements = document.getElementsByTagName( "body" ) ;
 		elements[0].style.overflowY = "auto" ;
