@@ -170,6 +170,7 @@ public class TestConfiguratorRestController {
             config = new TestConfiguration() ;
             config.setId( id ) ;
             config.setExamType( tci.getExamType() ) ;
+            config.setTestConfigIndex( tci ) ;
             
             List<TestQuestionBinding> bindings = tqbRepo.findAllByTestConfigId( id ) ;
             if( bindings != null && !bindings.isEmpty() ) {
@@ -222,13 +223,15 @@ public class TestConfiguratorRestController {
         
         // Recreate all question mapping rows
         List<TestQuestionBinding> tqbList = new ArrayList<>() ;
-        int duration = 0 ;
-        duration += assembleTestQuestionBinding( tqbList, config.getPhyQuestions() ) ;
-        duration += assembleTestQuestionBinding( tqbList, config.getChemQuestions() ) ;
-        duration += assembleTestQuestionBinding( tqbList, config.getMathQuestions() ) ;
+        int projectedSolveTime = 0 ;
+        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getPhyQuestions() ) ;
+        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getChemQuestions() ) ;
+        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getMathQuestions() ) ;
+        ci.setProjectedSolveTime( projectedSolveTime ) ;
         
-        // Save the config index
-        ci.setDuration( duration ) ;
+        ci.setTotalMarks( computeTotalMarks( ci ) );
+        ci.setDuration( computeDuration( ci ) ) ;
+        
         ci = tciRepo.save( ci ) ;
         
         // Associate the config index with the question bindings
@@ -242,9 +245,39 @@ public class TestConfiguratorRestController {
         return ci.getId() ;
     }
     
+    private int computeTotalMarks( TestConfigIndex ci ) {
+        
+        int totalMarks = 0 ;
+        if( ci.getExamType().equals( "MAIN" ) ) {
+            int numQuestions = ci.getNumPhyQuestions() +  
+                               ci.getNumChemQuestions() + 
+                               ci.getNumMathQuestions() ;
+            totalMarks = numQuestions * 4 ;
+        }
+        else {
+            throw new RuntimeException( "TOTO: Total mark computation of ADV test" ) ;
+        }
+        return totalMarks ;
+    }
+    
+    // Note that this returns the duration in minutes.
+    private int computeDuration( TestConfigIndex ci ) {
+        
+        int duration = 0 ;
+        if( ci.getExamType().equals( "MAIN" ) ) {
+            int numQuestions = ci.getNumPhyQuestions() +  
+                               ci.getNumChemQuestions() + 
+                               ci.getNumMathQuestions() ;
+            duration = numQuestions * 2 ;
+        }
+        else {
+            throw new RuntimeException( "TOTO: Total duration computation of ADV test" ) ;
+        }
+        return duration ;
+    }
+    
     private int assembleTestQuestionBinding( List<TestQuestionBinding> tqbList,
                                              List<TestQuestion> questionList ) {
-
         int duration = 0 ;
         for( int i=0; i<questionList.size(); i++ ) {
             
@@ -260,7 +293,6 @@ public class TestConfiguratorRestController {
             
             tqbList.add( tqb ) ;
         }
-        
         return duration ;
     }
 }

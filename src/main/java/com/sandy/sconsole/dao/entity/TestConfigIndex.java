@@ -21,8 +21,10 @@ public class TestConfigIndex {
     private Integer numPhyQuestions = 0 ;
     private Integer numChemQuestions = 0 ;
     private Integer numMathQuestions = 0 ;
+    private Integer totalMarks = 0 ;
     
-    // Note that duration is in minutes.
+    // Note that duration is in seconds.
+    private Integer projectedSolveTime = 0 ;
     private Integer duration = 0 ;
     
     private Timestamp creationDate         = null ;
@@ -64,6 +66,20 @@ public class TestConfigIndex {
     }
     public void setNumMathQuestions( Integer numMathQuestions ) {
         this.numMathQuestions = numMathQuestions ;
+    }
+    
+    public Integer getTotalMarks() {
+        return totalMarks ;
+    }
+    public void setTotalMarks( Integer totalMarks ) {
+        this.totalMarks = totalMarks ;
+    }
+    
+    public Integer getProjectedSolveTime() {
+        return projectedSolveTime ;
+    }
+    public void setProjectedSolveTime( Integer projectedSolveTime ) {
+        this.projectedSolveTime = projectedSolveTime ;
     }
     
     public Integer getDuration() {

@@ -10,6 +10,7 @@ function QuestionEx( q ) {
 	
 	this.index = 0 ;
 	this.question = q ;
+	this.timeSpent = 0 ;
 	this.prevQuestion = null ;
 	this.nextQuestion = null ;
 	this.attemptState = AttemptState.prototype.NOT_VISITED ;

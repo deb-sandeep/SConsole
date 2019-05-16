@@ -9,10 +9,25 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	
 	// This is populated with instances of QuestionEx
 	$scope.questions = [] ;
+	$scope.testConfigIndex = null ;
 	$scope.currentQuestion = null ;
 	$scope.secondsRemaining = 0 ;
+	$scope.timeSpent = 0 ;
 	$scope.timerActive = false ;
 	$scope.answersSubmitted = false ;
+	$scope.testAttempt = {
+	    id : 0,
+	    testConfig : null,
+	    score : 0,
+	    timeTaken : 0, 
+	    numCorrectAnswers : 0,
+	    numWrongAnswers : 0,
+	    numNotVisited : 0,
+	    numNotAnswered : 0,
+	    numAttempted : 0,
+	    numMarkedForReview : 0,
+	    numAnsAndMarkedForReview : 0
+	} ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -27,10 +42,24 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		$scope.alerts.length = 0 ;
 		$scope.paletteHidden = false ;
 		$scope.questions = [] ;
+		$scope.testConfigIndex = null ;
 		$scope.currentQuestion = null ;
 		$scope.secondsRemaining = 0 ;
 		$scope.timerActive = false ;
 		$scope.answersSubmitted = false ;
+		$scope.testAttempt = {
+		    id : 0,
+		    testConfig : null,
+		    score : 0,
+		    timeTaken : 0, 
+		    numCorrectAnswers : 0,
+		    numWrongAnswers : 0,
+		    numNotVisited : 0,
+		    numNotAnswered : 0,
+		    numAttempted : 0,
+		    numMarkedForReview : 0,
+		    numAnsAndMarkedForReview : 0
+		} ;
 	}
 	
 	$scope.addErrorAlert = function( msgString ) {
@@ -185,6 +214,27 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	return style ;
     }
     
+    $scope.saveTestAttempt = function() {
+    	
+    	console.log( "Saving test attempt." ) ;
+    	
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt', $scope.testAttempt )
+        .then ( 
+            function( response ){
+                console.log( "Successfully saved test attempt." ) ;
+                $scope.testAttempt = response.data ;
+            }, 
+            function( error ){
+                console.log( "Error saving test attempt on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save test attempt." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
 	// --- [END] Scope functions
 
 	// -----------------------------------------------------------------------
@@ -198,12 +248,19 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             function( response ){
                 console.log( "Successfully loaded test configuration." ) ;
                 console.log( response.data ) ;
+                
                 preProcessQuestions( response.data ) ;
+                $scope.testConfigIndex = response.data.testConfigIndex ;
+                
                 $scope.$broadcast( 'computeSectionIndices' ) ;
                 
                 $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
                 $scope.startTimer() ;
                 $scope.showQuestion( $scope.questions[0] ) ;
+                
+                $scope.testAttempt.testConfig = $scope.testConfigIndex ;
+                
+                $scope.saveTestAttempt() ;
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;
@@ -277,6 +334,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     
     function handleTimerEvent() {
     	$scope.secondsRemaining-- ;
+    	$scope.timeSpent++ ;
     	
     	if( $scope.currentQuestion != null ) {
     		$scope.currentQuestion.timeSpent++ ;
@@ -294,5 +352,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	}
     	$scope.$digest() ;
     }
+    
 	// --- [END] Local functions
 } ) ;

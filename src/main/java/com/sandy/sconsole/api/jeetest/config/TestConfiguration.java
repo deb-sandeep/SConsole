@@ -3,6 +3,7 @@ package com.sandy.sconsole.api.jeetest.config;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import com.sandy.sconsole.dao.entity.TestConfigIndex ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 
 public class TestConfiguration {
@@ -12,6 +13,7 @@ public class TestConfiguration {
     private List<TestQuestion> phyQuestions  = new ArrayList<>() ;
     private List<TestQuestion> chemQuestions = new ArrayList<>() ;
     private List<TestQuestion> mathQuestions = new ArrayList<>() ;
+    private TestConfigIndex tci = null ;
     
     public Integer getId() {
         return id ;
@@ -46,5 +48,12 @@ public class TestConfiguration {
     }
     public void setMathQuestions( List<TestQuestion> mathQuestions ) {
         this.mathQuestions = mathQuestions ;
+    }
+    
+    public void setTestConfigIndex( TestConfigIndex tci ) {
+        this.tci = tci ;
+    }
+    public TestConfigIndex getTestConfigIndex() {
+        return this.tci ;
     }
 }

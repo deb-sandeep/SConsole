@@ -44,15 +44,6 @@ sConsoleApp.controller( 'AvailableExamsController', function( $scope, $http, $lo
 		       test.numMathQuestions ;
 	}
 	
-	$scope.getTestDuration = function( test ) {
-		if( test.examType == "MAIN" ) {
-			return $scope.getNumQuestions( test ) * 2 ;
-		}
-		else {
-			return $scope.getNumQuestions( test ) * 3.5 ;
-		}
-	}
-	
 	$scope.actionVisible = function( test ) {
 		return $scope.getNumQuestions( test ) > 0 ;
 	}
