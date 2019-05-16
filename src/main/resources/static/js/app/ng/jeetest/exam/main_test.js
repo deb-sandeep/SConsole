@@ -44,6 +44,10 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
 		console.log( "Activating section = " + subjectName ) ;
 		var indexToJump = -1 ;
 		
+		$scope.$parent.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.SECTION_CHANGE, 
+				null ) ;
+		
 		if( subjectName == 'IIT - Physics' ) {
 			indexToJump = $scope.phySectionQuestionIndex ;
 		}

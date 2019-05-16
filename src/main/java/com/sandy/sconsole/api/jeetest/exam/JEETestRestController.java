@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
+import com.sandy.sconsole.dao.entity.ClickStreamEvent ;
 import com.sandy.sconsole.dao.entity.TestAttempt ;
 import com.sandy.sconsole.dao.entity.TestQuestionAttempt ;
+import com.sandy.sconsole.dao.repository.ClickStreamEventRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
@@ -28,6 +30,9 @@ public class JEETestRestController {
     
     @Autowired
     private TestQuestionAttemptRepository tqaRepo = null ;
+    
+    @Autowired
+    private ClickStreamEventRepository cseRepo = null ;
     
     @PostMapping( "/TestAttempt" ) 
     public ResponseEntity<TestAttempt> saveTestAttempt(
@@ -60,6 +65,23 @@ public class JEETestRestController {
                 log.debug( "Saving attempt for quesiton - " + attempt.getTestQuestionId() ) ;
                 tqaRepo.save( attempt ) ; 
             }
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error saving test configuration", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
+    @PostMapping( "/ClickStreamEvent" ) 
+    public ResponseEntity<ResponseMsg> saveClickStreamEvent(
+            @RequestBody ClickStreamEvent event ) {
+        
+        try {
+            log.debug( "Saving click stream event." ) ;
+            cseRepo.save( event ) ;
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( ResponseMsg.SUCCESS ) ;
         }

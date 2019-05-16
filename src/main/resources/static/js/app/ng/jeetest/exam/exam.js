@@ -1,3 +1,22 @@
+function ClickStreamEvent(){} ;
+
+ClickStreamEvent.prototype.TEST_STARTED                = "TEST_STARTED" ;
+ClickStreamEvent.prototype.QUESTION_VISITED            = "QUESTION_VISITED" ;
+ClickStreamEvent.prototype.ANSWER_SAVE                 = "ANSWER_SAVE" ;
+ClickStreamEvent.prototype.ANSWER_SAVE_AND_MARK_REVIEW = "ANSWER_SAVE_AND_MARK_REVIEW" ;
+ClickStreamEvent.prototype.ANSWER_CLEAR_RESPONSE       = "ANSWER_CLEAR_RESPONSE" ;
+ClickStreamEvent.prototype.ANSWER_MARK_FOR_REVIEW      = "ANSWER_MARK_FOR_REVIEW" ;
+ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START   = "QUESTION_PAPER_VIEW_START" ;
+ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END     = "QUESTION_PAPER_VIEW_END" ;
+ClickStreamEvent.prototype.SECTION_CHANGE              = "SECTION_CHANGE" ;
+ClickStreamEvent.prototype.SUBMIT                      = "SUBMIT" ;
+ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED     = "CONTROL_PANEL_COLLAPSED" ;
+ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED      = "CONTROL_PANEL_EXPANDED" ;
+ClickStreamEvent.prototype.BACK_QUESTION               = "BACK_QUESTION" ;
+ClickStreamEvent.prototype.NEXT_QUESTION               = "NEXT_QUESTION" ;
+ClickStreamEvent.prototype.SCROLL_BOTTOM               = "SCROLL_BOTTOM" ;
+ClickStreamEvent.prototype.SCROLL_TOP                  = "SCROLL_TOP" ;
+
 sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $location ) {
 	
 	$scope.alerts = [] ;
@@ -28,6 +47,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	    numMarkedForReview : 0,
 	    numAnsAndMarkedForReview : 0
 	} ;
+	
+	var startTime = 0 ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -60,6 +81,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		    numMarkedForReview : 0,
 		    numAnsAndMarkedForReview : 0
 		} ;
+
+		startTime = 0 ;
 	}
 	
 	$scope.addErrorAlert = function( msgString ) {
@@ -107,12 +130,18 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 			palette.style.width = "25%" ;
 			display.style.width = "75%" ;
 			$scope.paletteHidden = false ;
+			$scope.saveClickStreamEvent( 
+					ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED, 
+					null ) ;
 		}
 		else {
 			palette.style.display = "none" ;
 			palette.style.width = "0%" ;
 			display.style.width = "100%" ;
 			$scope.paletteHidden = true ;
+			$scope.saveClickStreamEvent( 
+					ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED, 
+					null ) ;
 		}
 	}
 	
@@ -125,6 +154,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	console.log( "Saving answer and showing next question." ) ;
     	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
     		$scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
+    		$scope.saveClickStreamEvent( 
+    				ClickStreamEvent.prototype.ANSWER_SAVE, 
+    				"" + $scope.currentQuestion.question.id ) ;
+    		
     		$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     	}
     	else {
@@ -136,6 +169,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	console.log( "Saving answer and marking for review. Showing next question" ) ;
     	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
         	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
+    		$scope.saveClickStreamEvent( 
+    				ClickStreamEvent.prototype.ANSWER_SAVE_AND_MARK_REVIEW, 
+    				"" + $scope.currentQuestion.question.id ) ;
+    		
         	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     	}
     	else {
@@ -146,11 +183,18 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     $scope.clearResponse = function() {
     	console.log( "Clearing response." ) ;
     	$scope.currentQuestion.interactionHandler.clearResponse() ;
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.ANSWER_CLEAR_RESPONSE, 
+				"" + $scope.currentQuestion.question.id ) ;
     }
     
     $scope.markForReviewAndNext = function() {
     	console.log( "Mark question for review and move to next" ) ;
     	$scope.currentQuestion.attemptState = AttemptState.prototype.MARKED_FOR_REVIEW ;
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.ANSWER_MARK_FOR_REVIEW, 
+				"" + $scope.currentQuestion.question.id ) ;
+		
     	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
@@ -160,39 +204,62 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
     			$scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
     		}
+    		$scope.saveClickStreamEvent( 
+    				ClickStreamEvent.prototype.QUESTION_VISITED, 
+    				"" + questionEx.question.id ) ;
     	}
     	$scope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
     }
     
     $scope.showNextQuestion = function() {
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.NEXT_QUESTION, 
+				null ) ;
     	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     $scope.showPreviousQuestion = function() {
-    	$scope.showQuestion( $scope.currentQuestion.prevQuestion ) ;
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.BACK_QUESTION, 
+				null ) ;
+		$scope.showQuestion( $scope.currentQuestion.prevQuestion ) ;
     }
     
     $scope.scrollBottom = function() {
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.SCROLL_BOTTOM, 
+				$scope.currentQuestion.question.id ) ;
     	scrollToElement( "q_bottom" ) ;
     }
     
     $scope.scrollTop = function() {
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.SCROLL_TOP, 
+				$scope.currentQuestion.question.id ) ;
     	scrollToElement( "q_top" ) ;
     }
     
     $scope.showQuestionPaper = function() {
-    	console.log( "Showing question paper" ) ; 
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
+				null ) ;
     }
     
     $scope.hideQuestionPaper = function() {
-    	console.log( "Hiding question paper" ) ; 
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
+				null ) ;
     }
     
     $scope.submitAnswers = function() {
-    	console.log( "Submitting answers." ) ;
+    	
     	$scope.timerActive = false ;
     	$scope.answersSubmitted = true ;
     	
+		$scope.saveClickStreamEvent( 
+				ClickStreamEvent.prototype.SUBMIT, 
+				null ) ;
+		
     	if( !$scope.$$phase ) {
     		$scope.$apply(function(){
     			$location.path( "/testResult" ) ;
@@ -207,6 +274,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.getControlDashboardQuestionButtonStyle = function( questionEx ) {
+    	
     	var style = questionEx.getStatusStyle() ;
     	if( $scope.currentQuestion == questionEx ) {
     		style += " q-control-border" ;
@@ -216,18 +284,42 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     
     $scope.saveTestAttempt = function() {
     	
-    	console.log( "Saving test attempt." ) ;
-    	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestAttempt', $scope.testAttempt )
         .then ( 
             function( response ){
-                console.log( "Successfully saved test attempt." ) ;
                 $scope.testAttempt = response.data ;
             }, 
             function( error ){
                 console.log( "Error saving test attempt on server." ) ;
                 $scope.$parent.addErrorAlert( "Could not save test attempt." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    $scope.saveClickStreamEvent = function( eventId, payload ) {
+    	
+    	var timeMarker = (new Date()).getTime() - startTime ;
+    	console.log( "ClickStreamEvent[ " + 
+    			        "eventId = " + eventId + "," + 
+    			        "timeMarker = " + timeMarker + ", " + 
+    			        "payload = " + payload + "]" ) ;
+    	
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/ClickStreamEvent', {
+        	'eventId'    : eventId,
+        	'timeMarker' : timeMarker,
+        	'payload'    : payload
+        } )
+        .then ( 
+            function( response ){
+            }, 
+            function( error ){
+                console.log( "Error saving click stream event." ) ;
+                $scope.$parent.addErrorAlert( "Could not save click stream event." ) ;
             }
         )
         .finally(function() {
@@ -246,7 +338,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         $http.get( '/TestConfiguration/' + $scope.activeTest.id )
         .then( 
             function( response ){
-                console.log( "Successfully loaded test configuration." ) ;
                 console.log( response.data ) ;
                 
                 preProcessQuestions( response.data ) ;
@@ -256,11 +347,14 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
                 
                 $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
                 $scope.startTimer() ;
+                
+        		startTime = (new Date()).getTime() ;
+        		$scope.testAttempt.testConfig = $scope.testConfigIndex ;
+        		$scope.saveTestAttempt() ;
+                $scope.saveClickStreamEvent( 
+                		ClickStreamEvent.prototype.TEST_STARTED, null ) ;
+
                 $scope.showQuestion( $scope.questions[0] ) ;
-                
-                $scope.testAttempt.testConfig = $scope.testConfigIndex ;
-                
-                $scope.saveTestAttempt() ;
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;
