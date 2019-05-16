@@ -75,6 +75,7 @@ public class OfflineSessionCreationController {
             return ResponseEntity.status( HttpStatus.OK ).body( books ) ;
         }
         catch( Exception e ) {
+            log.error( "Exception while getting books", e ) ;
             return ResponseEntity.status( 500 ).body( null ) ;
         }
     }
@@ -96,6 +97,7 @@ public class OfflineSessionCreationController {
             return ResponseEntity.status( HttpStatus.OK ).body( problems ) ;
         }
         catch( Exception e ) {
+            log.error( "Exception while getting problems", e ) ;
             return ResponseEntity.status( 500 ).body( null ) ;
         }
     }
@@ -120,31 +122,37 @@ public class OfflineSessionCreationController {
     public ResponseEntity<String> createOfflineSession( 
                                    @RequestBody SessionCreationRequest input ) {
         
-        log.debug( "\n\n-------------------------------------" ) ;
-        log.debug( "Saving an offline session." ) ;
-        
-        Session session = new Session() ;
-        session.setSessionType( SessionType.decode( input.getSessionType() ) ) ;
-        session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
-        session.setDuration( input.getDuration()*60 ) ;
-        session.setAbsoluteDuration( input.getDuration()*60 ) ;
-        session.setStartTime( new Timestamp( input.getStartTime().getTime() ) ) ;
-        session.setEndTime( new Timestamp( session.getStartTime().getTime() + 
-                                           input.getDuration()*60*1000 ) );
-        
-        log.debug( "Basic session details - " ) ;
-        log.debug( session.toString() ) ;
-        
-        sessionRepo.save( session ) ;
-        
-        // TODO: Check for exceptions - across all
-        saveExerciseDetails( session, input ) ;
-        updateLastSession( session, input ) ;
-        
-        SConsole.GLOBAL_EVENT_BUS
-                .publishEvent( EventCatalog.OFFLINE_SESSION_ADDED, session ) ;
-        
-        return ResponseEntity.status( HttpStatus.OK ).body( "{\"message\":\"Success\"}" ) ;
+        try {
+            log.debug( "\n\n-------------------------------------" ) ;
+            log.debug( "Saving an offline session." ) ;
+            
+            Session session = new Session() ;
+            session.setSessionType( SessionType.decode( input.getSessionType() ) ) ;
+            session.setTopic( topicRepo.findById( input.getTopicId() ).get() ) ;
+            session.setDuration( input.getDuration()*60 ) ;
+            session.setAbsoluteDuration( input.getDuration()*60 ) ;
+            session.setStartTime( new Timestamp( input.getStartTime().getTime() ) ) ;
+            session.setEndTime( new Timestamp( session.getStartTime().getTime() + 
+                                               input.getDuration()*60*1000 ) );
+            
+            log.debug( "Basic session details - " ) ;
+            log.debug( session.toString() ) ;
+            
+            sessionRepo.save( session ) ;
+            
+            // TODO: Check for exceptions - across all
+            saveExerciseDetails( session, input ) ;
+            updateLastSession( session, input ) ;
+            
+            SConsole.GLOBAL_EVENT_BUS
+                    .publishEvent( EventCatalog.OFFLINE_SESSION_ADDED, session ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK ).body( "{\"message\":\"Success\"}" ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Exception creating offline session", e ) ;
+            return ResponseEntity.status( 500 ).body( null ) ;
+        }
     }
     
     private void saveExerciseDetails( Session session, SessionCreationRequest input ) {
