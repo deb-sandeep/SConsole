@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController ;
 import com.sandy.sconsole.dao.entity.ClickStreamEvent ;
 import com.sandy.sconsole.dao.entity.TestAttempt ;
 import com.sandy.sconsole.dao.entity.TestQuestionAttempt ;
+import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.repository.ClickStreamEventRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
+import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
 
 @RestController
@@ -33,6 +35,9 @@ public class JEETestRestController {
     
     @Autowired
     private ClickStreamEventRepository cseRepo = null ;
+    
+    @Autowired
+    private TestQuestionRepository tqRepo = null ;
     
     @PostMapping( "/TestAttempt" ) 
     public ResponseEntity<TestAttempt> saveTestAttempt(
@@ -64,6 +69,12 @@ public class JEETestRestController {
             for( TestQuestionAttempt attempt : attempts ) {
                 log.debug( "Saving attempt for quesiton - " + attempt.getTestQuestionId() ) ;
                 tqaRepo.save( attempt ) ; 
+                
+                TestQuestion question = tqRepo.findById( attempt.getTestQuestionId() ).get() ;
+                if( attempt.getTimeSpent() > 0 ) {
+                    question.setAttempted( true ) ;
+                    tqRepo.save( question ) ;
+                }
             }
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( ResponseMsg.SUCCESS ) ;
