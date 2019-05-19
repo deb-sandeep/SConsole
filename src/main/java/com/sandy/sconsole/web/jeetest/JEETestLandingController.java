@@ -26,4 +26,9 @@ public class JEETestLandingController {
     public String exam() {
         return "jeetest/exam/exam" ;
     }
+
+    @RequestMapping( "/analysis" )
+    public String analysis() {
+        return "jeetest/analysis/analysis" ;
+    }
 }

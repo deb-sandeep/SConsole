@@ -1,0 +1,50 @@
+<div style="padding: 0px; margin: 10px" align="center">
+	<table class="table table-bordered table-compact"
+		style="width: auto !important;">
+		<thead>
+			<tr class="success">
+				<th>ID</th>
+				<th>Type</th>
+				<th>Dur (min)</th>
+				<th>#Q</th>
+				<th>Date</th>
+				<th>Score</th>
+				<th>#&check;</th>
+				<th>#&cross;</th>
+				<th><span class="stat-icon-small answered"></span></th>
+                <th><span class="stat-icon-small review-answered"></span></th>
+                <th><span class="stat-icon-small review"></span></th>
+                <th><span class="stat-icon-small not-answered"></span></th>
+                <th><span class="stat-icon-small not-visited"></span></th>
+                <th></th>
+			</tr>
+		</thead>
+		<tbody>
+	        <tr ng-repeat="attempt in attemptSummaries"
+	            class="test-summary-{{test.examType}}">
+	           <td>{{attempt.testConfig.id}}</td>
+	           <td>{{attempt.testConfig.examType}}</td>
+	           <td style="text-align:right;font-family:Courier;">{{attempt.testConfig.duration*60 | duration}}</td>
+	           <td style="text-align:right;">
+	               {{attempt.testConfig.numPhyQuestions + 
+	                 attempt.testConfig.numChemQuestions + 
+	                 attempt.testConfig.numMathQuestions}}
+	           </td>
+	           <td>{{attempt.dateAttempted | date}}</td>
+	           <td>{{attempt.score}} / {{attempt.testConfig.totalMarks}}</td>
+	           <td style="text-align:right;">{{attempt.numCorrectAnswers}}</td>
+	           <td style="text-align:right;">{{attempt.numWrongAnswers}}</td>
+	           <td style="text-align:right;">{{attempt.numAttempted}}</td>
+               <td style="text-align:right;">{{attempt.numAnsAndMarkedForReview}}</td>
+               <td style="text-align:right;">{{attempt.numMarkedForReview}}</td>
+               <td style="text-align:right;">{{attempt.numNotAnswered}}</td>
+               <td style="text-align:right;">{{attempt.numNotVisited}}</td>
+               <td>
+                    <span class="glyphicon glyphicon-list"
+                          style="color:green;"
+                          ng-click="displayTestAttemptDetails( attempt )"></span>
+               </td>               
+	        </tr>
+		</tbody>
+	</table>
+</div>

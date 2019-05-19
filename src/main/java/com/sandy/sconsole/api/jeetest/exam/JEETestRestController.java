@@ -8,6 +8,8 @@ import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
+import org.springframework.web.bind.annotation.GetMapping ;
+import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
@@ -38,6 +40,22 @@ public class JEETestRestController {
     
     @Autowired
     private TestQuestionRepository tqRepo = null ;
+    
+    @GetMapping( "/TestAttempt" ) 
+    public ResponseEntity<List<TestAttempt>> getTestAttempts() {
+        try {
+            log.debug( "Getting available test attempts." ) ;
+            
+            List<TestAttempt> testAttempts = taRepo.findAllByOrderByDateAttemptedDesc() ;
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( testAttempts ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error getting available test attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
     
     @PostMapping( "/TestAttempt" ) 
     public ResponseEntity<TestAttempt> saveTestAttempt(
@@ -101,5 +119,11 @@ public class JEETestRestController {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
                                  .body( null ) ;
         }
+    }
+    
+    @GetMapping( "/TestQuestionAttempt/{id}" )
+    public ResponseEntity<TestQuestion> getTestQuestionAttempts( 
+                @PathVariable Integer testAttemptId ) {
+        return null ;
     }
 }
