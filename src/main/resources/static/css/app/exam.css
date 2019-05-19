@@ -324,21 +324,24 @@
 /* --------- Styles for the test result page ----------------------------- */
 
 #test-result {
-  position: absolute;
-  right: 0;
-  left:0;
-  height:800px;
-  overflow-x: hidden;
-  overflow-y:hidden;
-  padding-left: 10px;
-  padding-right: 10px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 105px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #test-result-summary {
-  position:relative;
-  left: 0;
-  width: calc( 50% - 10px ) ;
-  padding:10px;
+    position: relative;
+    left: 0;
+    width: calc( 50% - 10px );
+    height: calc( 100% - 20px );
+    padding: 10px;
+    overflow: auto;
 }
 
 #test-result-summary table {
@@ -368,18 +371,18 @@
 }
 
 #test-question-display {
-  position:absolute;
-  right: 0;
-  top:0;
-  background-color: #FFFAFA;
-  overflow-y:auto;
-  width: 50%;
-  height: 700px;
-  margin:10px;
-  padding:10px;
-  border-style:solid;
-  border-color:#f4f4f4;
-  border-width:2px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #FFFAFA;
+    overflow-y: auto;
+    width: 50%;
+    height: calc(100% - 55px);
+    margin: 10px;
+    padding: 10px;
+    border-style: solid;
+    border-color: #f4f4f4;
+    border-width: 2px;
 }
 
 #test-question-display table {
@@ -401,4 +404,12 @@
 #test-question-render {
 	font-size:17px;
 }
+
+#test-question-display button {
+    position: fixed;
+    bottom: 5px;
+    right: 10px;	
+}
+
+
 
