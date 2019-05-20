@@ -1,1 +1,81 @@
-<h2>{{id}}</h2>
+<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}} </h2>
+<div id="test-result">
+    <div id="test-result-summary">
+        <table align="center" class="pure-table pure-table-horizontal"
+               style="font-size:16px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="q-attribute">Lat</th>
+                    <th class="q-attribute">Solve</br>Time</th>
+                    <th class="q-attribute">Correct<br/>Answer</th>
+                    <th></th>
+                    <th>Answer</th>
+                    <th>Time</th>
+                    <th>Result</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="question in questions"
+                    ng-click="questionAttemptSelected( $index )"
+                    ng-class="getRowBackgroundClass( $index )">
+                    
+                   <td class="q-attribute">Q {{$index + 1}}</td>
+                   <td class="q-attribute">{{question.lateralThinkingLevel}}</td>
+                   <td class="q-attribute" style="text-align:right;font-family:Courier;">{{question.projectedSolveTime | mmss}}</td>
+                   <td class="q-attribute">{{question.answerText}}</td>
+                   <td>
+                        <span class="stat-icon-small" 
+                              ng-class="getAttemptStatusIconStyle( $index )">
+                        </span>
+                    </td>
+                   <td>{{questionAttempts[$index].answerProvided}}</td>
+                   <td style="text-align:right;font-family:Courier;">{{questionAttempts[$index].timeSpent | mmss}}</td>
+                   <td>
+                        <span ng-if="questionAttempts[$index].isCorrect"  
+                              class="glyphicon glyphicon-ok"
+                              style="color:green;"></span>
+                        <span ng-if="!questionAttempts[$index].isCorrect" 
+                              class="glyphicon glyphicon-remove"
+                              style="color:red;"></span>
+                   </td>
+                   <td>{{questionAttempts[$index].score}}</td>
+                </tr>        
+            </tbody>
+        </table>
+    </div>
+    <div id="test-question-display">
+        <table align="center" class="pure-table pure-table-horizontal"
+               ng-show="selectedQuestion != null">
+            <tr>
+                <th>Subject</th>
+                <td>{{selectedQuestion.subject.name}}</td>
+            </tr>
+            <tr>
+                <th>Topic</th>
+                <td>{{selectedQuestion.topic.topicName}}</td>
+            </tr>
+            <tr>
+                <th>Book</th>
+                <td>{{selectedQuestion.book.bookShortName}}</td>
+            </tr>
+            <tr>
+                <th>Question type</th>
+                <td>{{selectedQuestion.questionType}}</td>
+            </tr>
+            <tr>
+                <th>Question reference</th>
+                <td>{{selectedQuestion.questionRef}}</td>
+            </tr>
+        </table>
+        <div id="test-question-render">
+            <render-test-summary-question></render-test-summary-question>
+        </div>
+        <button class="btn btn-info btn-md"
+                ng-click="returnToAttemptIndex()">
+            Return to Test Index
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+    </div>
+</div>

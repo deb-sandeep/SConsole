@@ -1,6 +1,7 @@
 package com.sandy.sconsole.api.jeetest.exam;
 
 import java.sql.Timestamp ;
+import java.util.ArrayList ;
 import java.util.Date ;
 import java.util.List ;
 
@@ -21,6 +22,7 @@ import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.repository.ClickStreamEventRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
 
@@ -40,6 +42,9 @@ public class JEETestRestController {
     
     @Autowired
     private TestQuestionRepository tqRepo = null ;
+    
+    @Autowired
+    private TestQuestionBindingRepository tqbRepo = null ;
     
     @GetMapping( "/TestAttempt" ) 
     public ResponseEntity<List<TestAttempt>> getTestAttempts() {
@@ -121,9 +126,29 @@ public class JEETestRestController {
         }
     }
     
-    @GetMapping( "/TestQuestionAttempt/{id}" )
-    public ResponseEntity<TestQuestion> getTestQuestionAttempts( 
+    @GetMapping( "/TestQuestionAttempt/TestAttempt/{testAttemptId}" )
+    public ResponseEntity<List<List<? extends Object>>> getTestQuestionAttempts( 
                 @PathVariable Integer testAttemptId ) {
-        return null ;
+        
+        try {
+            log.debug( "Fetching test quesiton attempts." ) ;
+            List<TestQuestionAttempt> questionAttempts = null ;
+            List<TestQuestion> questions = null ;
+            
+            questionAttempts = tqaRepo.findAllByTestAttemptId( testAttemptId ) ;
+            questions = tqbRepo.getTestQuestionsForTestAttempt( testAttemptId ) ;
+            
+            List<List<? extends Object>> response = new ArrayList<>() ;
+            response.add( questionAttempts ) ;
+            response.add( questions ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( response ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error fetching test question attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
     }
 }
