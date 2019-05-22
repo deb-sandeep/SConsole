@@ -90,18 +90,27 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     		data.push( ganttActivities ) ;
     	}
     	
-    	var maxTime = $scope.clickEvents[ $scope.clickEvents.length - 1 ].timeMarker / 1000 ;
+    	var maxTime = ($scope.clickEvents[ $scope.clickEvents.length - 1 ].timeMarker) / 1000 ;
+    	maxTime = Math.floor( maxTime ) ;
     	
     	var canvas = document.getElementById( 'testAttemptGantt' ) ;
     	canvas.width = window.innerWidth ;
     	canvas.height = window.innerHeight - 50 ;
+    	
+    	var xLabels = [] ;
+    	var xAxisDivs = Math.floor(maxTime/300) ;
+    	
+    	for( var i=0; i<xAxisDivs; i++ ) {
+    		xLabels.push( "" + (i+1)*5 ) ;
+    	}
 
         new RGraph.Gantt({
             id: 'testAttemptGantt',
             data: data,
             options: {
             	backgroundGrid : true,
-            	backgroundGridVlinesCount: 0,
+            	backgroundGridVlinesCount: xAxisDivs,
+            	xaxisLabels : xLabels,
             	xaxisScaleMax: maxTime,
             	yaxisLabelsSize: 10,
             	tooltips: tooltips,
