@@ -1,5 +1,3 @@
-// TODO:
-//		1. Reapply overflowY to body on moving to the next route
 sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
     
 	$scope.$parent.navBarTitle = "Main" ;

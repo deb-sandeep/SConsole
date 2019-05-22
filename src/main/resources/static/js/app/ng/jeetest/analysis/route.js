@@ -8,4 +8,8 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/analysis/attemptDetails",
 		controller : "TestAttemptDetailsController"
 	})
+	.when("/testAttemptTimeSequence/:id", {
+		templateUrl : "/jeetest/analysis/testAttemptTimeSequence",
+		controller : "TestAttemptTimeSequenceController"
+	})
 });

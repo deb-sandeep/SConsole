@@ -151,4 +151,30 @@ public class JEETestRestController {
                                  .body( null ) ;
         }
     }
+
+    @GetMapping( "/ClickStreamEvent/TestAttempt/{testAttemptId}" )
+    public ResponseEntity<List<List<? extends Object>>> getClickStreamEventsForTestAttempt( 
+                @PathVariable Integer testAttemptId ) {
+        
+        try {
+            log.debug( "Fetching click stream events." ) ;
+            List<TestQuestion> questions = null ;
+            List<ClickStreamEvent> events = null ;
+            
+            events = cseRepo.findAllByTestAttemptIdOrderById( testAttemptId ) ;
+            questions = tqbRepo.getTestQuestionsForTestAttempt( testAttemptId ) ;
+            
+            List<List<? extends Object>> response = new ArrayList<>() ;
+            response.add( events ) ;
+            response.add( questions ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( response ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error fetching test question attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class ClickStreamEvent {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
     
+    private Integer testAttemptId = null ;
     private String eventId = null ;
     private String payload = null ;
     private Integer timeMarker = null ;
@@ -26,6 +27,13 @@ public class ClickStreamEvent {
     }
     public void setId( Integer id ) {
         this.id = id ;
+    }
+    
+    public Integer getTestAttemptId() {
+        return testAttemptId ;
+    }
+    public void setTestAttemptId( Integer testAttemptId ) {
+        this.testAttemptId = testAttemptId ;
     }
     
     public String getEventId() {
