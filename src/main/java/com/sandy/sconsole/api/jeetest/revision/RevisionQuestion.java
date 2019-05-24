@@ -15,4 +15,5 @@ public interface RevisionQuestion {
     public Timestamp getStartTime() ;
     public Integer getStarred() ;
     public Integer getRevisionCount() ;
+    public String getChapterId() ;
 }

@@ -1,0 +1,76 @@
+#revision-search-panel {
+	position:relative;
+	height:140px;
+}
+
+#revision-body {
+	position:absolute;
+	height:calc( 100% - 33px ) ;
+	width:100%;
+}
+
+#revision-study {
+    position: absolute;
+    background: #323333;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    padding: 20px;
+}
+
+#revision-study-controls {
+    background: #323333;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 90px;
+    padding: 10px;
+}
+
+#revision-study-controls button {
+	float:right;
+	margin-left:10px;
+	margin-right:10px;
+	font-size: 25px;
+}
+
+#revision-study-controls span {
+    font-size: 35px;
+}
+
+.status-row {
+    position:relative;
+    width:100%;
+    height:50px;
+    font-size:35px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.status-header {
+	font-size:30px;
+    margin-bottom:60px;
+}
+
+.subject {
+    font-size:25px;
+	color:#b5c4ff;
+}
+
+.topic {
+    color:#91cf94;
+}
+
+.book {
+    font-size:40px;
+	color:#c78f9b;
+    height:55px;
+}
+
+.problem {
+    font-size:50px;
+    color:#e6e389;
+    height:70px;
+}

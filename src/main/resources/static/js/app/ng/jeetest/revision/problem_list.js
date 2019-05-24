@@ -8,6 +8,9 @@ sConsoleApp.controller( 'RevisionProblemListController', function( $scope, $http
 	if( $scope.$parent.revisionProblems.length == 0 ) {
 		$location.path( "/" ) ;
 	}
+	else {
+		$scope.$parent.revisionInProgress = false ;
+	}
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------

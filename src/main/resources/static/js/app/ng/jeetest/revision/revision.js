@@ -14,6 +14,7 @@ sConsoleApp.controller( 'RevisionController', function( $scope, $http, $route, $
 	} ;
 	
 	$scope.revisionProblems = [] ;
+	$scope.revisionInProgress = false ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -60,6 +61,8 @@ sConsoleApp.controller( 'RevisionController', function( $scope, $http, $route, $
                     console.log( response ) ;
                     $scope.qbmMasterData = response.data ;
                     $scope.searchCriteria.subject.name = $scope.qbmMasterData.subjectNames[0];
+                    $scope.searchCriteria.topic = $scope.qbmMasterData.topics['IIT - Physics'][4] ;
+                    $scope.searchCriteria.book = $scope.qbmMasterData.books['IIT - Physics'][9] ;
                 }, 
                 function( error ){
                     console.log( "Error getting QBM master data." ) ;

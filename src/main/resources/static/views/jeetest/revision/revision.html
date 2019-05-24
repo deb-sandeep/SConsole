@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/app/app.css"/>
+    <link rel="stylesheet" href="/css/app/revision.css"/>
     <link rel="stylesheet" href="/css/pure/tables.css"/>
     
     <script src="/js/lib/angular.min.js"></script>
@@ -46,8 +47,10 @@
 {{alert.msg}}
 </div>
 
-<div class="panel panel-default" style="padding:0px; margin:0px">
-	 <div class="panel-body" style="padding:5px">
+<div id="revision-search-panel"
+     class="panel panel-default"
+     ng-if="!revisionInProgress">
+	 <div class="panel-body">
 	   <table class="table table-condensed" width="100%">
 	       <!-- First row -->
 	       <tr>
@@ -114,7 +117,7 @@
 	 </div>
 </div>
 
-<div ng-view></div>
+<div id="revision-body" ng-view></div>
 
 </body>
 </html>
