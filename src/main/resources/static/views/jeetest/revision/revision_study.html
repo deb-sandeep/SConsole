@@ -4,12 +4,9 @@
            <div class="pull-left">
 	           <span class="label label-info">NL - {{numQuestionsRemaining}}</span>
 	           <span class="label label-success">NC - {{numQuestionsRevised}}</span>
-               <span class="label label-primary">{{currentQuestion.outcome}}</span>
-               <span class="label label-primary">{{currentQuestion.duration | mmss}}</span>
-               <span class="label label-primary">{{currentQuestion.startTime | date}}</span>
            </div>
            <div class="pull-right">
-	           <span class="label label-primary">{{timeSpent | duration}}</span>
+	           <span class="label label-primary" style="font-family:Courier New">{{timeSpent | duration}}</span>
            </div>
         </div>
         <div class="status-row subject">
@@ -28,24 +25,36 @@
             {{currentQuestion.problemTag}}&nbsp;&nbsp;&nbsp;&nbsp;
             <span class="glyphicon glyphicon-star" ng-show="currentQuestion.starred == 1"></span>
         </div>
+        <div class="status-row status-header">
+           <div style="text-align:center;"">
+               <span class="label label-primary">{{currentQuestion.outcome}}</span>
+               <span class="label label-primary">{{currentQuestion.duration | mmss}}</span>
+               <span class="label label-primary">{{currentQuestion.startTime | date}}</span>
+           </div>
+        </div>
     </div>
     <div id="revision-study-controls">
         <button type="button" 
-                class="btn btn-info btn-lg">
+                class="btn btn-info btn-lg"
+                ng-click="revisionCompleted()">
           <span class="glyphicon glyphicon-ok"></span>
           Revised
         </button>
         <button type="button" 
-                class="btn btn-warning btn-lg">
+                class="btn btn-warning btn-lg"
+                ng-click="skipRight()">
           <span class="glyphicon glyphicon-menu-right"></span></button>
         <button type="button" 
-                class="btn btn-warning btn-lg">
+                class="btn btn-warning btn-lg"
+                ng-click="skipLeft()">
           <span class="glyphicon glyphicon-menu-left"></span></button>
         <button type="button" 
-                class="btn btn-success btn-lg">
+                class="btn btn-success btn-lg"
+                ng-click="toggleStar()">
           <span class="glyphicon glyphicon-star"></span></button>
         <button type="button" 
-                class="btn btn-default btn-lg">
+                class="btn btn-default btn-lg"
+                ng-click="endRevision()">
           <span class="glyphicon glyphicon-stop"></span></button>
     </div>
 </div>

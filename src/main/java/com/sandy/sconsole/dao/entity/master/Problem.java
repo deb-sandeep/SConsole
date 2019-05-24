@@ -27,6 +27,7 @@ public class Problem {
     private Boolean skipped = false ;
     private Boolean starred = false ;
     private Boolean ignored = false ;
+    private Integer revisionCount = 0 ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -71,6 +72,11 @@ public class Problem {
     
     public void setProblemType( String type ) { this.problemType = type ; }
     public String getProblemType() { return this.problemType ; }
+    
+    public Integer getRevisionCount() { return revisionCount ; }
+    public void setRevisionCount( Integer revisionCount ) {
+        this.revisionCount = revisionCount ;
+    }
     
     @Override
     public boolean equals( Object obj ) {
