@@ -31,4 +31,9 @@ public class JEETestLandingController {
     public String analysis() {
         return "jeetest/analysis/analysis" ;
     }
+    
+    @RequestMapping( "/revision" )
+    public String revision() {
+        return "jeetest/revision/revision" ;
+    }
 }
