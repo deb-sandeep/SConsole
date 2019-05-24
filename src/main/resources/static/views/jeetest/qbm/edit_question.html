@@ -68,26 +68,6 @@
                          ng-disabled="isExistingQuestion()">
                  </select>
                 </td>
-                <td class="labelcell"><label for="qref">Q Ref</label></td>
-                <td>:</td>
-                <td>
-                <input id="questionRef"
-                       type="text" 
-                       ng-model="question.questionRef" 
-                       style="width:100%"
-                       ng-disabled="isExistingQuestion()"/>
-                </td>
-            </tr>
-            <!-- Fifth row -->
-            <tr>
-                <td class="labelcell"><label for="answer">Answer</label></td>
-                <td>:</td>
-                <td colspan="4">
-                    <input id="answer" 
-                           type="text" 
-                           ng-model="question.answerText" 
-                           style="width:100%"/>
-                </td>
                 <td class="labelcell"><label for="atype">A Type</label></td>
                 <td>:</td>
                 <td>
@@ -96,6 +76,26 @@
                          ng-model="answerType"
                          ng-options="item for item in answerTypes">
                  </select>
+                </td>
+            </tr>
+            <!-- Fifth row -->
+            <tr>
+                <td class="labelcell"><label for="qref">Q Ref</label></td>
+                <td>:</td>
+                <td colspan="4">
+                    <input id="questionRef"
+                           type="text" 
+                           ng-model="question.questionRef" 
+                           style="width:100%"
+                           ng-disabled="isExistingQuestion()"/>
+                </td>
+                <td class="labelcell"><label for="answer">Answer</label></td>
+                <td>:</td>
+                <td>
+                    <input id="answer" 
+                           type="text" 
+                           ng-model="question.answerText" 
+                           style="width:100%"/>
                 </td>
             </tr>
             <!-- Sixth row -->
