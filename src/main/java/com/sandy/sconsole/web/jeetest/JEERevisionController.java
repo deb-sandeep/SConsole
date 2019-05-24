@@ -11,4 +11,9 @@ public class JEERevisionController {
     public String availableExams() {
         return "jeetest/revision/problem_list" ;
     }
+
+    @RequestMapping( "/revisionStudy" )
+    public String revisionStudy() {
+        return "jeetest/revision/revision_study" ;
+    }
 }

@@ -6,10 +6,167 @@ import org.springframework.data.jpa.repository.Query ;
 import org.springframework.data.repository.* ;
 
 import com.sandy.sconsole.api.burncalibration.HistoricBurnStat ;
+import com.sandy.sconsole.api.jeetest.revision.RevisionQuestion ;
 import com.sandy.sconsole.core.util.DayValue ;
 import com.sandy.sconsole.dao.entity.* ;
 
 public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt, Integer> {
+    
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    pm.id as questionId, "
+            + "    tm.topic_name as topicName, "
+            + "    bm.book_short_name as bookShortName, "
+            + "    pm.exercise_name as exerciseName, "
+            + "    pm.problem_type as problemType, "
+            + "    pm.problem_tag as problemTag, "
+            + "    pa.outcome as outcome, "
+            + "    pa.duration as duration, "
+            + "    pa.start_time as startTime, "
+            + "    pm.starred as starred, "
+            + "    pm.revision_count as revisionCount "
+            + "FROM "
+            + "    problem_attempt pa, "
+            + "    problem_master pm, "
+            + "    book_master bm, "
+            + "    topic_master tm "
+            + "WHERE "
+            + "    ( ( pa.outcome = 'Solved' and pa.duration > 420 ) OR "
+            + "      ( pa.outcome in ('Redo','Pigeon') ) OR "
+            + "      pm.starred = 1 ) "
+            + "    AND "
+            + "    pa.problem_id = pm.id AND "
+            + "    pm.topic_id = tm.id AND "
+            + "    pm.book_id = bm.id AND "
+            + "    pm.revision_count <= ?1 AND "
+            + "    tm.subject_name = ?2 AND "
+            + "    tm.id = ?3 AND "
+            + "    bm.id = ?4 "
+            + "ORDER BY "
+            + "    tm.topic_name ASC, "
+            + "    bm.book_short_name ASC, "
+            + "    pm.id ASC "
+    )
+    public List<RevisionQuestion> getRevisionQuestions( Integer revCountThreshold,
+                                                        String subjectName,
+                                                        Integer topicId,
+                                                        Integer bookId) ;
+
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    pm.id as questionId, "
+            + "    tm.topic_name as topicName, "
+            + "    bm.book_short_name as bookShortName, "
+            + "    pm.exercise_name as exerciseName, "
+            + "    pm.problem_type as problemType, "
+            + "    pm.problem_tag as problemTag, "
+            + "    pa.outcome as outcome, "
+            + "    pa.duration as duration, "
+            + "    pa.start_time as startTime, "
+            + "    pm.starred as starred, "
+            + "    pm.revision_count as revisionCount "
+            + "FROM "
+            + "    problem_attempt pa, "
+            + "    problem_master pm, "
+            + "    book_master bm, "
+            + "    topic_master tm "
+            + "WHERE "
+            + "    ( ( pa.outcome = 'Solved' and pa.duration > 420 ) OR "
+            + "      ( pa.outcome in ('Redo','Pigeon') ) OR "
+            + "      pm.starred = 1 ) "
+            + "    AND "
+            + "    pa.problem_id = pm.id AND "
+            + "    pm.topic_id = tm.id AND "
+            + "    pm.book_id = bm.id AND "
+            + "    pm.revision_count <= ?1 AND "
+            + "    tm.subject_name = ?2 AND "
+            + "    tm.id = ?3 "
+            + "ORDER BY "
+            + "    tm.topic_name ASC, "
+            + "    bm.book_short_name ASC, "
+            + "    pm.id ASC "
+    )
+    public List<RevisionQuestion> getRevisionQuestions( Integer revCountThreshold,
+                                                        String subjectName,
+                                                        Integer topicId ) ;
+
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    pm.id as questionId, "
+            + "    tm.topic_name as topicName, "
+            + "    bm.book_short_name as bookShortName, "
+            + "    pm.exercise_name as exerciseName, "
+            + "    pm.problem_type as problemType, "
+            + "    pm.problem_tag as problemTag, "
+            + "    pa.outcome as outcome, "
+            + "    pa.duration as duration, "
+            + "    pa.start_time as startTime, "
+            + "    pm.starred as starred, "
+            + "    pm.revision_count as revisionCount "
+            + "FROM "
+            + "    problem_attempt pa, "
+            + "    problem_master pm, "
+            + "    book_master bm, "
+            + "    topic_master tm "
+            + "WHERE "
+            + "    ( ( pa.outcome = 'Solved' and pa.duration > 420 ) OR "
+            + "      ( pa.outcome in ('Redo','Pigeon') ) OR "
+            + "      pm.starred = 1 ) "
+            + "    AND "
+            + "    pa.problem_id = pm.id AND "
+            + "    pm.topic_id = tm.id AND "
+            + "    pm.book_id = bm.id AND "
+            + "    pm.revision_count <= ?1 AND "
+            + "    tm.subject_name = ?2 AND "
+            + "    bm.id = ?3 "
+            + "ORDER BY "
+            + "    tm.topic_name ASC, "
+            + "    bm.book_short_name ASC, "
+            + "    pm.id ASC "
+    )
+    public List<RevisionQuestion> getRevisionQuestionsByBook( Integer revCountThreshold,
+                                                              String subjectName,
+                                                              Integer bookId ) ;
+
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    pm.id as questionId, "
+            + "    tm.topic_name as topicName, "
+            + "    bm.book_short_name as bookShortName, "
+            + "    pm.exercise_name as exerciseName, "
+            + "    pm.problem_type as problemType, "
+            + "    pm.problem_tag as problemTag, "
+            + "    pa.outcome as outcome, "
+            + "    pa.duration as duration, "
+            + "    pa.start_time as startTime, "
+            + "    pm.starred as starred, "
+            + "    pm.revision_count as revisionCount "
+            + "FROM "
+            + "    problem_attempt pa, "
+            + "    problem_master pm, "
+            + "    book_master bm, "
+            + "    topic_master tm "
+            + "WHERE "
+            + "    ( ( pa.outcome = 'Solved' and pa.duration > 420 ) OR "
+            + "      ( pa.outcome in ('Redo','Pigeon') ) OR "
+            + "      pm.starred = 1 ) "
+            + "    AND "
+            + "    pa.problem_id = pm.id AND "
+            + "    pm.topic_id = tm.id AND "
+            + "    pm.book_id = bm.id AND "
+            + "    pm.revision_count <= ?1 AND "
+            + "    tm.subject_name = ?2 "
+            + "ORDER BY "
+            + "    tm.topic_name ASC, "
+            + "    bm.book_short_name ASC, "
+            + "    pm.id ASC "
+    )
+    public List<RevisionQuestion> getRevisionQuestions( Integer revCountThreshold,
+                                                        String subjectName ) ;
 
     @Query( nativeQuery=true,
             value =   

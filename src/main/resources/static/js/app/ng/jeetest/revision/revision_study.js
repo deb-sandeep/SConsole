@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'RevisionProblemListController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'RevisionStudyController', function( $scope, $http, $location ) {
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------

@@ -17,8 +17,10 @@
     <script src="/js/app/ng/app-ng.js"></script>
     <script src="/js/app/ng/jeetest/revision/directive.js"></script>
     <script src="/js/app/ng/jeetest/revision/route.js"></script>
+    <script src="/js/app/ng/jeetest/exam/filter.js"></script>
     <script src="/js/app/ng/jeetest/revision/filter.js"></script>
     <script src="/js/app/ng/jeetest/revision/problem_list.js"></script>
+    <script src="/js/app/ng/jeetest/revision/revision_study.js"></script>
     <script src="/js/app/ng/jeetest/revision/revision.js"></script>
 </head>
 
@@ -42,6 +44,74 @@
 <div class="alert alert-danger alert-dismissible" ng-repeat="alert in alerts">
 <a ng-click="dismissAlert( $index )" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 {{alert.msg}}
+</div>
+
+<div class="panel panel-default" style="padding:0px; margin:0px">
+	 <div class="panel-body" style="padding:5px">
+	   <table class="table table-condensed" width="100%">
+	       <!-- First row -->
+	       <tr>
+	           <td width="10%" class="labelcell">
+	               <label for="subject">Subject</label>
+	           </td>
+	           <td width="1%">:</td>
+	           <td width="39%">
+	            <select id="subject" 
+	                    class="form-control"  
+	                    ng-model="searchCriteria.subject.name"
+	                    ng-options="item for item in qbmMasterData.subjectNames">
+	            </select>
+	           </td>
+	           <td width="10%" class="labelcell">
+	               <label for="topic">Topic</label>
+	           </td>
+	           <td width="1%">:</td>
+	           <td width="39%">
+	            <select id="topic" 
+	                    class="form-control"  
+	                    ng-model="searchCriteria.topic"
+	                    ng-options="item as item.topicName for item in qbmMasterData.topics[searchCriteria.subject.name] track by item.id">
+	            </select>
+	           </td>
+	       </tr>
+	       <!-- Second row -->
+	       <tr>
+	           <td class="labelcell">
+	               <label for="book">Book</label>
+	           </td>
+	           <td>:</td>
+	           <td>
+	            <select id="book" 
+	                    class="form-control"  
+	                    ng-model="searchCriteria.book"
+	                    ng-options="item as item.bookShortName for item in qbmMasterData.books[searchCriteria.subject.name] track by item.id">
+	            </select>
+	           </td>
+	           <td colspan="3">
+	              <input type="checkbox"
+	                     ng-model="searchCriteria.ignoreReviewed">
+	                  Ignore reviewed
+	              </input>
+                  <button type="button" 
+                          class="btn btn-info pull-right"
+			              ng-click="search()">
+			        <span class="glyphicon glyphicon-search"></span>
+			        &nbsp;&nbsp;
+			        Search
+			     </button>
+                 <button type="button" 
+                         class="btn btn-success pull-right"
+                         style="margin-right:30px;"
+                         ng-click="startRevision()"
+                         ng-show="revisionProblems.length > 0">
+                   <span class="glyphicon glyphicon-eye-open"></span>
+                   &nbsp;&nbsp;
+                   Start Revision
+                </button>
+	           </td>
+	       </tr>
+	   </table>
+	 </div>
 </div>
 
 <div ng-view></div>

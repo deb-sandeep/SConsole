@@ -1,1 +1,37 @@
-<h2>Problem List Template</h2>
+<div id="revision_problem_list" ng-show="$parent.revisionProblems.length>0">
+    
+	<table align="center" width="95%" 
+	       class="pure-table pure-table-horizontal table-condensed"
+	       style="font-size:14px;">
+	    <thead>
+	        <tr>
+	            <th>Topic Name</th>
+	            <th>Book</th>
+	            <th>Type</th>
+	            <th>Problem</th>
+	            <th>Outcome</th>
+	            <th>Duration</th>
+	            <th>Date</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        <tr ng-repeat="revQ in $parent.revisionProblems">
+                <td>{{revQ.topicName}}</td>
+                <td>{{revQ.bookShortName}}</td>
+                <td>{{revQ.problemType}}</td>
+                <td> 
+                    {{revQ.exerciseName}} / {{revQ.problemTag}}
+                    &nbsp;&nbsp;
+                    <span class="glyphicon glyphicon-star" 
+                          ng-show="revQ.starred == 1"></span>
+                </td>
+                <td>{{revQ.outcome}}</td>
+                <td style="font-family:Courier">{{revQ.duration | mmss}}</td>
+                <td>{{revQ.startTime | date}}</td>
+	        </tr>        
+	    </tbody>
+	</table>
+</div>
+<div ng-show="$parent.revisionProblems.length == 0">
+    The search fetched no results. Please revise your search criteria.
+</div>
