@@ -38,15 +38,13 @@ public interface TestQuestionBindingRepository
       )
     List<Topic> getTopicsForTest( Integer id ) ;
     
-    @Query( "SELECT tq "
+    @Query( "SELECT tqb.question "
           + "FROM "
-          + "   TestQuestionAttempt tqa, "
-          + "   TestQuestion tq "
+          + "   TestQuestionBinding tqb "
           + "WHERE "
-          + "   tqa.testAttemptId = ?1 AND "
-          + "   tq.id = tqa.testQuestionId "
+          + "   tqb.testConfig.id = ?1 "
           + "ORDER BY "
-          + "   tqa.id "
+          + "   tqb.id ASC "
     )
-    List<TestQuestion> getTestQuestionsForTestAttempt( Integer testAttemptId ) ;
+    List<TestQuestion> getTestQuestionsForTestConfig( Integer testConfigId ) ;
 }

@@ -51,6 +51,7 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
     	}
     	else {
     		computeResult() ;
+    		$scope.$parent.activeTest = null ;
     	}
     }
     
@@ -139,6 +140,9 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
         .then ( 
             function( response ){
                 console.log( "Successfully saved test question attempts." ) ;
+        		$scope.$parent.saveClickStreamEvent( 
+					        				ClickStreamEvent.prototype.SUBMIT, 
+					        				null ) ;
             }, 
             function( error ){
                 console.log( "Error saving test question attempts on server." ) ;

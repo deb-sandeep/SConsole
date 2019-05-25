@@ -39,6 +39,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
 	$scope.testAttemptId = $routeParams.id ;
 	$scope.questions = null ;
 	$scope.clickEvents = null ;
+	$scope.autoRefresh = false ;
 	
 	var questionIdNumMap = {} ;
 	var questionActivityListMap = {} ;
@@ -57,10 +58,20 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     	$location.path( "/" ) ;  
     }
     
+    $scope.autoRefreshChanged = function() {
+    	if( $scope.autoRefresh ) {
+    		autoRefreshGraph() ;
+    	}
+    }
+    
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+    
+    function autoRefreshGraph() {
+    	fetchTestClickEventDetails( $scope.testAttemptId ) ;
+    }
     
     function getQNum( index ) {
     	return "Q-" + (index+1) ;
@@ -77,6 +88,14 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     		
     		var activities = questionActivityListMap[ qNum ] ;
     		var ganttActivities = [] ;
+    		
+    		// If this question has not been visited, no click stream activity
+    		// would have been generated. This would cause RGraph to throw
+    		// and error. We inject a dummy activity of duration 0.
+    		if( activities.length == 0 ) {
+    			activities.push( new Activity( qNum ) ) ;
+    		}
+    		
     		for( var j=0; j<activities.length; j++ ) {
     			var activity = activities[j] ;
     			ganttActivities.push( new GanttActivity( activity ) ) ;
@@ -87,6 +106,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     			}
     			tooltips.push( tooltip ) ;
     		}
+    		
     		data.push( ganttActivities ) ;
     	}
     	
@@ -104,6 +124,9 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     		xLabels.push( "" + (i+1)*5 ) ;
     	}
 
+	    var canvas = document.getElementById( 'testAttemptGantt' ) ;
+	    RGraph.reset( canvas ) ;
+	    
         new RGraph.Gantt({
             id: 'testAttemptGantt',
             data: data,
@@ -136,6 +159,10 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
                 createQuestionMaps( $scope.questions ) ;
                 processClickStreamEvents( $scope.clickEvents, $scope.questions ) ;
                 renderActivityGraph() ;
+                
+            	if( $scope.autoRefresh ) {
+            		setTimeout( autoRefreshGraph, 5000 ) ;
+            	}
             }, 
             function( error ){
                 console.log( "Error getting test attempt click events." ) ;

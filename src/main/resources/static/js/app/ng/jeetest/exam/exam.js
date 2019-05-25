@@ -237,10 +237,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	$scope.timerActive = false ;
     	$scope.answersSubmitted = true ;
     	
-		$scope.saveClickStreamEvent( 
-				ClickStreamEvent.prototype.SUBMIT, 
-				null ) ;
-		
     	if( !$scope.$$phase ) {
     		$scope.$apply(function(){
     			$location.path( "/testResult" ) ;
@@ -270,6 +266,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         .then ( 
             function( response ){
                 $scope.testAttempt = response.data ;
+                $scope.saveClickStreamEvent( 
+                		ClickStreamEvent.prototype.TEST_STARTED, null ) ;
+
+                $scope.showQuestion( $scope.questions[0] ) ;
             }, 
             function( error ){
                 console.log( "Error saving test attempt on server." ) ;
@@ -291,9 +291,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/ClickStreamEvent', {
-        	'eventId'    : eventId,
-        	'timeMarker' : timeMarker,
-        	'payload'    : payload
+        	'eventId'       : eventId,
+        	'timeMarker'    : timeMarker,
+        	'payload'       : payload,
+        	'testAttemptId' : $scope.testAttempt.id
         } )
         .then ( 
             function( response ){
@@ -332,10 +333,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         		startTime = (new Date()).getTime() ;
         		$scope.testAttempt.testConfig = $scope.testConfigIndex ;
         		$scope.saveTestAttempt() ;
-                $scope.saveClickStreamEvent( 
-                		ClickStreamEvent.prototype.TEST_STARTED, null ) ;
-
-                $scope.showQuestion( $scope.questions[0] ) ;
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;

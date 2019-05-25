@@ -9,8 +9,6 @@ sConsoleApp.controller( 'ExamAnalysisController', function( $scope, $http, $loca
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 
-	$location.path( "/" ) ;
-	
 	// --- [END] Controller initialization -----------------------------------
 	
 	// -----------------------------------------------------------------------

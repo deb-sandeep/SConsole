@@ -136,7 +136,9 @@ public class JEETestRestController {
             List<TestQuestion> questions = null ;
             
             questionAttempts = tqaRepo.findAllByTestAttemptId( testAttemptId ) ;
-            questions = tqbRepo.getTestQuestionsForTestAttempt( testAttemptId ) ;
+            
+            TestAttempt testAttempt = taRepo.findById( testAttemptId ).get() ;
+            questions = tqbRepo.getTestQuestionsForTestConfig( testAttempt.getTestConfig().getId() ) ;
             
             List<List<? extends Object>> response = new ArrayList<>() ;
             response.add( questionAttempts ) ;
@@ -162,7 +164,9 @@ public class JEETestRestController {
             List<ClickStreamEvent> events = null ;
             
             events = cseRepo.findAllByTestAttemptIdOrderById( testAttemptId ) ;
-            questions = tqbRepo.getTestQuestionsForTestAttempt( testAttemptId ) ;
+            
+            TestAttempt testAttempt = taRepo.findById( testAttemptId ).get() ;
+            questions = tqbRepo.getTestQuestionsForTestConfig( testAttempt.getTestConfig().getId() ) ;
             
             List<List<? extends Object>> response = new ArrayList<>() ;
             response.add( events ) ;
