@@ -37,3 +37,17 @@
 	padding-top:1px ;
 	padding-bottom:1px;
 }
+
+.question-meta {
+	margin-bottom:20px;
+	width:100%;
+}
+
+.question-meta th,td {
+    padding-top:3px !important;
+    padding-bottom:3px !important;
+}
+
+.question-meta th {
+	background:#e3e2e4;
+}

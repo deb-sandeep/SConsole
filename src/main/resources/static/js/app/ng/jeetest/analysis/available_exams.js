@@ -14,6 +14,7 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
 	// --- [START] Scope functions -------------------------------------------
 	
 	$scope.displayTestAttemptDetails = function( testAttempt ) {
+		$scope.$parent.selectedTestConfigId = testAttempt.testConfig.id ;
 		$location.path( "/attemptDetails/" + testAttempt.id ) ;
 	}
 	

@@ -1,6 +1,6 @@
 sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http, $location, $routeParams ) {
     
-	$scope.$parent.navBarTitle = "Test Attempt Details" ;
+	$scope.$parent.navBarTitle = "Test Attempt Details (Test ID = " + $scope.$parent.selectedTestConfigId + ")" ;
 	$scope.testAttemptId = $routeParams.id ;
 	$scope.questionAttempts = [] ;
 	$scope.questions = [] ;

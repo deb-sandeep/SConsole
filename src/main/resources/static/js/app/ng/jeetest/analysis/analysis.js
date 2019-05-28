@@ -3,8 +3,7 @@ sConsoleApp.controller( 'ExamAnalysisController', function( $scope, $http, $loca
 	$scope.alerts = [] ;
 	$scope.navBarTitle = "Retrospective Analysis" ;
 	$scope.interactingWithServer = false ;
-	
-	$scope.activeTest = null ;
+	$scope.selectedTestConfigId = -1 ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------

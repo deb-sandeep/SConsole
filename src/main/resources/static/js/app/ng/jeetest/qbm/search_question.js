@@ -94,6 +94,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 			showOnlyUnsynched     : $scope.$parent.searchCriteria.showOnlyUnsynched,
 			excludeAttempted      : $scope.$parent.searchCriteria.excludeAttempted,
 			searchText            : $scope.$parent.searchCriteria.searchText,
+			testConfigId          : $scope.$parent.searchCriteria.testConfigId,
 			selectedTopics        : selTopics,
 			selectedBooks         : selBooks
 		} ;

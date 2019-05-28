@@ -13,7 +13,8 @@ sConsoleApp.controller( 'QBMController', function( $scope, $http ) {
 			selectedQuestionTypes : [],
 			showOnlyUnsynched : true,
 			excludeAttempted : true,
-			searchText : ""
+			searchText : "",
+			testConfigId : -1
 		} ;
     
 	$scope.addErrorAlert = function( msgString ) {

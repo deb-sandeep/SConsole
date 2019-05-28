@@ -92,6 +92,18 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
+          <h4 class="panel-title">Assigned to test</h4>
+        </div>
+        <div class="panel-body" style="padding:5px">
+           <input type="text" 
+                  ng-model="$parent.searchCriteria.testConfigId" 
+                  style="width:100%"/>
+           </td>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
           <h4 class="panel-title">Miscellaneous</h4>
         </div>
         <div class="panel-body" style="padding:5px">
@@ -136,7 +148,7 @@
 	  <div class="panel-heading">
         <input type="checkbox" 
                ng-model="question.selected" />
-	    <span class="panel-title">Question</span>
+	    <span class="panel-title">Question - {{question.id}}</span>
 	    &nbsp;
 	    <a ng-hide="question.synched" 
 	       ng-click="syncQuestion( question )"
@@ -155,7 +167,25 @@
 	    </div>
 	  </div>
 	  <div class="panel-body">
-	      <render-test-question-on-search-page></render-test-question-on-search-page>
+        <table class="pure-table pure-table-horizontal question-meta">
+            <tr>
+                <th width="20%">Subject</th>
+                <td width="30%">{{question.subject.name}}</td>
+                <th width="20%">Topic</th>
+                <td width="30%">{{question.topic.topicName}}</td>
+            </tr>
+            <tr>
+                <th>Book</th>
+                <td>{{question.book.bookShortName}}</td>
+                <th>Type</th>
+                <td>{{question.questionType}}</td>
+            </tr>
+            <tr>
+                <th>Reference</th>
+                <td colspan="3">{{question.questionRef}}</td>
+            </tr>
+        </table>
+	    <render-test-question-on-search-page></render-test-question-on-search-page>
 	  </div>
 	</div> 
 </div>

@@ -26,6 +26,7 @@ import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
+import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
 import com.sandy.sconsole.dao.repository.master.BookRepository ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.dao.repository.master.TopicRepository ;
@@ -47,6 +48,9 @@ public class QBMRestController {
     
     @Autowired
     private TestQuestionRepository testQuestionRepo = null ;
+    
+    @Autowired
+    private TestQuestionBindingRepository tqbRepo = null ;
     
     @GetMapping( "/QBTopicInsights" )
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
@@ -181,19 +185,21 @@ public class QBMRestController {
             @RequestParam( value="showOnlyUnsynched",     required=false ) Boolean showOnlyUnsynched,
             @RequestParam( value="excludeAttempted",      required=false ) Boolean excludeAttempted,
             @RequestParam( value="searchText",            required=false ) String searchText,
+            @RequestParam( value="testConfigId",          required=false ) Integer testConfigId,
             @RequestParam( value="selectedTopics",        required=false ) Integer[] topicIds,
             @RequestParam( value="selectedBooks",         required=false ) Integer[] bookIds ) {
         
         TestQuestionSearchEngine searchEngine = null ;
         
         try {
-            searchEngine = new TestQuestionSearchEngine( testQuestionRepo ) ;
+            searchEngine = new TestQuestionSearchEngine( testQuestionRepo, tqbRepo ) ;
             List<TestQuestion> results = searchEngine.search( 
                                                     subjects, 
                                                     selectedQuestionTypes, 
                                                     showOnlyUnsynched, 
                                                     excludeAttempted, 
                                                     searchText, 
+                                                    testConfigId,
                                                     topicIds, 
                                                     bookIds ) ;
             
@@ -218,6 +224,8 @@ public class QBMRestController {
         //   * If the id is <= 0, null it out so that a new question is created
         // * Call on the repository to save the object
         //   * Return the saved object back to the caller.
+        // Also, if the question is not being saved on the server, force the
+        // synched flag to false.
         try {
             question.setQuestionFormattedText( 
                     new QuestionTextFormatter().formatText( question.getQuestionText() ) ) ;
@@ -238,6 +246,16 @@ public class QBMRestController {
                 log.debug( "Hash = " + StringUtil.getHash( hashInput ) ) ;
                 
                 question.setHash( StringUtil.getHash( hashInput ) ) ;
+            }
+            
+            // Why do we do this? To handle the case where I am editing a 
+            // local question which has been previously synched - if we 
+            // don't turn off the synched marker, we won't be able to 
+            // see this question in the list of unsynched questions.
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            String ipAddress = inetAddress.getHostAddress() ;
+            if( !ipAddress.equals( "192.168.0.117" ) ) {
+                question.setSynched( false ) ;
             }
         
             question = testQuestionRepo.save( question ) ;
