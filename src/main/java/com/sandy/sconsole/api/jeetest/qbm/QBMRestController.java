@@ -360,6 +360,9 @@ public class QBMRestController {
             // Total number of questions assigned to tests from this topic's question bank
             Integer assQ = 0 ; 
             
+            // The number of available questions for assignment.
+            Integer avaQ = 0 ;
+            
             QBTopicInsight insight = insightsMap.get( topicId ) ;
             if( insight == null ) {
                 insight = new QBTopicInsight() ;
@@ -368,6 +371,8 @@ public class QBMRestController {
                 for( String qType : QBMMasterData.questionTypes ) {
                     insight.getTotalQuestionsByType().put( qType, 0 ) ;
                     insight.getAttemptedQuestionsByType().put( qType, 0 ) ;
+                    insight.getAvailableQuestionsByType().put( qType, 0 ) ;
+                    insight.getAssignedQuestionsByType().put( qType, 0 ) ;
                 }
             }
             
@@ -379,14 +384,17 @@ public class QBMRestController {
                 numQ = ((BigInteger)tupule[4]).intValue() ;
                 attQ = ((BigDecimal)tupule[5]).intValue() ;
                 assQ = ((BigInteger)tupule[6]).intValue() ;
+                avaQ = numQ - assQ ; 
                 
                 insight.setTotalQuestions( insight.getTotalQuestions() + numQ ) ;
                 insight.setAttemptedQuestions( insight.getAttemptedQuestions() + attQ ) ;
                 insight.setAssignedQuestions( insight.getAssignedQuestions() + assQ ) ;
+                insight.setAvailableQuestions( insight.getAvailableQuestions() + avaQ ) ;
                 
                 insight.getTotalQuestionsByType().put( questionType, numQ ) ;
                 insight.getAttemptedQuestionsByType().put( questionType, attQ ) ;
                 insight.getAssignedQuestionsByType().put( questionType, assQ ) ;
+                insight.getAvailableQuestionsByType().put( questionType, avaQ ) ;
             }
         }
         

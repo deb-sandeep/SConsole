@@ -11,10 +11,12 @@ public class QBTopicInsight {
     private Integer totalQuestions = 0 ;
     private Integer attemptedQuestions = 0 ;
     private Integer assignedQuestions = 0 ;
+    private Integer availableQuestions = 0 ;
     
     private Map<String, Integer> totalQuestionsByType = new HashMap<>() ;
     private Map<String, Integer> attemptedQuestionsByType = new HashMap<>() ;
     private Map<String, Integer> assignedQuestionsByType = new HashMap<>() ;
+    private Map<String, Integer> availableQuestionsByType = new HashMap<>() ;
     
     public Integer getTopicId() {
         return topicId ;
@@ -58,6 +60,13 @@ public class QBTopicInsight {
         this.assignedQuestions = assignedQuestions ;
     }
     
+    public Integer getAvailableQuestions() {
+        return availableQuestions ;
+    }
+    public void setAvailableQuestions( Integer availableQuestions ) {
+        this.availableQuestions = availableQuestions ;
+    }
+    
     public Map<String, Integer> getTotalQuestionsByType() {
         return totalQuestionsByType ;
     }
@@ -81,5 +90,13 @@ public class QBTopicInsight {
     public void setAssignedQuestionsByType(
             Map<String, Integer> assignedQuestionsByType ) {
         this.assignedQuestionsByType = assignedQuestionsByType ;
+    }
+    
+    public Map<String, Integer> getAvailableQuestionsByType() {
+        return availableQuestionsByType ;
+    }
+    public void setAvailableQuestionsByType(
+            Map<String, Integer> availableQuestionsByType ) {
+        this.availableQuestionsByType = availableQuestionsByType ;
     }
 }
