@@ -263,3 +263,44 @@ li {
     font-size:18px;
     line-height : 35px;
 }
+
+.option-table-v {
+	width:100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+}
+
+.option-table-v td, .option-table-v th {
+    font-size: 18px;
+    margin: 0px;
+    overflow: visible;
+    padding: 0.25em 0.25em;
+    text-align:left;
+}
+
+.option-table-h {
+    width:100%;
+    border-collapse: collapse;
+    border:1px solid #d0cfd1;
+    border-spacing: 0;
+    empty-cells: show;
+}
+
+.option-table-h td, .option-table-h th {
+	width:25%;
+    font-size: 18px;
+    margin: 0px;
+    overflow: visible;
+    padding: 0.25em 0.25em;
+    border:1px solid #d0cfd1;
+    text-align:left;
+}
+
+.option-table-h th {
+    background:#e8e7ea;
+}
+
+.MathJax_SVG_Display {
+	text-align:left !important;
+}

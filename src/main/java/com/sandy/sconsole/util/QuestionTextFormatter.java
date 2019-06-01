@@ -171,7 +171,11 @@ public class QuestionTextFormatter {
             return processor.getProcessedText() ;
         }
         else if( type.equals( "opt" ) ) {
-            OptTagProcessor processor = new OptTagProcessor( data, this ) ;
+            OptTagProcessor processor = new OptTagProcessor( data, this, true ) ;
+            return processor.getProcessedText() ;
+        }
+        else if( type.equals( "optv" ) ) {
+            OptTagProcessor processor = new OptTagProcessor( data, this, false ) ;
             return processor.getProcessedText() ;
         }
         
