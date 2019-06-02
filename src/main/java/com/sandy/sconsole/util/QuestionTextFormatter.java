@@ -27,13 +27,17 @@ public class QuestionTextFormatter {
     private static final String MJ_INLINE_MARKER_PATTERN = 
                              "\\\\\\(.*?\\\\\\)" ;
     
+    private static final String SHORTCUT_MARKUP_PATTERN = 
+                             "[^\\{]@[^\\s]+" ;
+    
     public String formatText( String input ) 
         throws Exception {
         
         if( input == null ) return null ;
         
         String output = null ;
-        output = processJoveNotesMarkers( input ) ;
+        output = processShortcutMarkups( input ) ;
+        output = processJoveNotesMarkers( output ) ;
         output = processBlockMathJaxMarkers( output ) ;
         output = processInlineMathJaxMarkers( output ) ;
         
@@ -45,6 +49,34 @@ public class QuestionTextFormatter {
         output = output.replaceAll( "\\\\\\\\", "\\\\" ) ;
         
         return output ;
+    }
+    
+    private String processShortcutMarkups( String input ) {
+        StringBuilder outputBuffer = new StringBuilder() ;
+        
+        Pattern r = Pattern.compile( SHORTCUT_MARKUP_PATTERN, Pattern.DOTALL ) ;
+        Matcher m = r.matcher( input ) ;
+        
+        int lastEndMarker = 0 ;
+        
+        while( m.find() ) {
+            int start = m.start() ;
+            int end   = m.end() ;
+            
+            String processedString = processAtRateMarker( input.substring( start, end ) ) ;
+            if( processedString != null ) {
+                outputBuffer.append( input.substring( lastEndMarker, start ) ) ;
+                outputBuffer.append( processedString ) ;
+                lastEndMarker = end ;
+            }
+        }
+        
+        outputBuffer.append( input.substring(lastEndMarker, input.length() ) ) ;
+        return outputBuffer.toString() ;
+    }
+    
+    private String processAtRateMarker( String input ) {
+        return input.substring( 0,1 ) + "\\(" + input.substring( 2 ) + "\\)" ;
     }
     
     private String processMarkDown( String input ) {
