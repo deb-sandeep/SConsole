@@ -51,3 +51,14 @@
 .question-meta th {
 	background:#e3e2e4;
 }
+
+.latex-snippet {
+	position:relative;
+	border-bottom: solid 1px #d8d7d9;
+    padding-top:10px;
+	padding-bottom:10px;
+}
+
+.latex-snippet-apply {
+	float:right;
+}

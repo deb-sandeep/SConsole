@@ -1,6 +1,8 @@
 sConsoleApp.controller( 'EditQuestionController', 
 		                function( $scope, $http, $sce, $routeParams, $window, $timeout ) {
 	
+	var snippets = new LatexSnippets() ;
+	
 	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
 	$scope.lastSavedQuestion = null ;
@@ -22,6 +24,8 @@ sConsoleApp.controller( 'EditQuestionController',
 			generateFormattedTextAndRenderPreview() ;
 		}
 	}, 3000 ) ;
+	
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub, "latexSnippetDlg"]);
 	
 	// --- [END] Controller initialization
 	
@@ -96,7 +100,41 @@ sConsoleApp.controller( 'EditQuestionController',
     	}) ;
 	}
 	
+	$scope.applyLatexSnippet = function( snippetId ) {
+		var snippet = snippets.getSnippet( snippetId ) ;
+		$( '#latexSnippetsDlg' ).modal( 'hide' ) ;
+		$timeout( function() {
+			insertAtCursor( snippet ) ;
+		}) ;
+	}
+	
 	// --- [START] Internal Questions
+	
+	function insertAtCursor( myValue ) {
+
+		var myField = $window.document.getElementById( "questionText" ) ;
+		
+		//IE support
+	    if (document.selection) {
+	        myField.focus();
+	        sel = document.selection.createRange();
+	        sel.text = myValue;
+	    }
+	    
+	    //MOZILLA and others
+	    else if (myField.selectionStart || myField.selectionStart == '0') {
+	        var startPos = myField.selectionStart;
+	        var endPos = myField.selectionEnd;
+	        myField.value = myField.value.substring(0, startPos)
+	            + myValue
+	            + myField.value.substring(endPos, myField.value.length);
+	    } 
+	    else {
+	        myField.value += myValue;
+	    }
+	    
+	    $scope.question.questionText = myField.value ;
+	}	
 	
 	function inputsValidated() {
 		console.log( "Validating user inputs." ) ;
