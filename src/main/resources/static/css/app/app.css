@@ -304,3 +304,7 @@ li {
 .MathJax_SVG_Display {
 	text-align:left !important;
 }
+
+.full-width {
+	width:100%;
+}

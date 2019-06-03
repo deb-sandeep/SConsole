@@ -27,34 +27,34 @@ public class QuestionTextFormatter {
     private static final String MJ_INLINE_MARKER_PATTERN = 
                              "\\\\\\(.*?\\\\\\)" ;
     
-    private static final String SHORTCUT_MARKUP_PATTERN = 
-                             "[^\\{]@[^\\s]+" ;
-    
+    private static final String SHORTCUT_IMATH_MARKUP_PATTERN = 
+                             "`[^\\s]+" ;
+
+    private static final String SHORTCUT_ICHEM_MARKUP_PATTERN = 
+                             "#[^\\s]+" ;
+
     public String formatText( String input ) 
         throws Exception {
         
         if( input == null ) return null ;
         
-        String output = null ;
-        output = processShortcutMarkups( input ) ;
+        String output = input ;
+        output = processShortcutMarkups( SHORTCUT_IMATH_MARKUP_PATTERN, output ) ;
+        output = processShortcutMarkups( SHORTCUT_ICHEM_MARKUP_PATTERN, output ) ;
         output = processJoveNotesMarkers( output ) ;
         output = processBlockMathJaxMarkers( output ) ;
         output = processInlineMathJaxMarkers( output ) ;
         
         output = processMarkDown( output ) ;
-        
-        // Let's piggy back on bootstrap formatting of tables.
-        String customTableTag = "<table class=\"pure-table pure-table-horizontal\">" ;
-        output = output.replaceAll( "<table>", customTableTag ) ;
         output = output.replaceAll( "\\\\\\\\", "\\\\" ) ;
         
         return output ;
     }
     
-    private String processShortcutMarkups( String input ) {
+    private String processShortcutMarkups( String pattern, String input ) {
         StringBuilder outputBuffer = new StringBuilder() ;
         
-        Pattern r = Pattern.compile( SHORTCUT_MARKUP_PATTERN, Pattern.DOTALL ) ;
+        Pattern r = Pattern.compile( pattern, Pattern.DOTALL ) ;
         Matcher m = r.matcher( input ) ;
         
         int lastEndMarker = 0 ;
@@ -63,7 +63,15 @@ public class QuestionTextFormatter {
             int start = m.start() ;
             int end   = m.end() ;
             
-            String processedString = processAtRateMarker( input.substring( start, end ) ) ;
+            String processedString = "" ;
+            
+            if( pattern.equals( SHORTCUT_IMATH_MARKUP_PATTERN ) ) {
+                processedString = processShortcutIMathMarker( input.substring( start, end ) ) ;
+            }
+            else if( pattern.equals( SHORTCUT_ICHEM_MARKUP_PATTERN ) ) {
+                processedString = processShortcutIChemMarker( input.substring( start, end ) ) ;
+            }
+            
             if( processedString != null ) {
                 outputBuffer.append( input.substring( lastEndMarker, start ) ) ;
                 outputBuffer.append( processedString ) ;
@@ -75,10 +83,14 @@ public class QuestionTextFormatter {
         return outputBuffer.toString() ;
     }
     
-    private String processAtRateMarker( String input ) {
-        return input.substring( 0,1 ) + "\\(" + input.substring( 2 ) + "\\)" ;
+    private String processShortcutIMathMarker( String input ) {
+        return "\\(" + input.substring( 1 ) + "\\)" ;
     }
     
+    private String processShortcutIChemMarker( String input ) {
+        return "{{@ichem " + input.substring( 1 ) + "}}" ;
+    }
+
     private String processMarkDown( String input ) {
         String output = pdProcessor.markdownToHtml( input ) ;
         if( output.startsWith( "<p>" ) && output.endsWith( "</p>" ) ) {

@@ -18,8 +18,9 @@ public class TableTagProcessor {
     private StringBuffer    currentString = new StringBuffer() ;
     private List<String>    currRow       = null ;
     
-    private List<String>       tableHeaders = new ArrayList<String>() ;
-    private List<List<String>> tableRows    = new ArrayList<List<String>>() ;
+    private List<String>       tableHeaders     = new ArrayList<String>() ;
+    private List<List<String>> tableRows        = new ArrayList<List<String>>() ;
+    private String             customTableClass = "" ;
     
     private int currentCellNumber = 0 ;
     
@@ -36,8 +37,24 @@ public class TableTagProcessor {
     
     private void parseMarkupData() throws Exception {
         
-        BufferedReader br = new BufferedReader( new StringReader( this.markupData ) ) ;
+        // See if a CSS class name for the table has been specified. A CSS
+        // class name immediately follows the @table tag and before the first
+        // @th tag. This will be appended to the table class for custom 
+        // rendering.
+        
+        String parseableData = this.markupData ;
+        int firstThIndex = parseableData.indexOf( "@th" ) ;
+        if( firstThIndex > 0 ) {
+            String possibleCustomClassName = parseableData.substring( 0, firstThIndex ) ;
+            if( StringUtil.isNotEmptyOrNull( possibleCustomClassName ) ) {
+                this.customTableClass = possibleCustomClassName.trim() ;
+            }
+            parseableData = parseableData.substring( firstThIndex ) ;
+        }
+        
+        BufferedReader br = new BufferedReader( new StringReader( parseableData ) ) ;
         String line = null ;
+        
         while( ( line = br.readLine() ) != null ) {
             
             if( line.startsWith( "@th" ) ) {
@@ -114,8 +131,11 @@ public class TableTagProcessor {
             return "" ;
         }
         
+        String className = "pure-table pure-table-bordered " + customTableClass ;
+        
         StringBuilder builder = new StringBuilder() ;
-        builder.append( "<table class='pure-table pure-table-bordered'>\n" ) ;
+        
+        builder.append( "<table class='" + className + "'>\n" ) ;
         appendTableHeader( builder ) ;
         appendTableRows( builder ) ;
         builder.append( "</table>\n" ) ;
