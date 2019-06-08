@@ -55,7 +55,6 @@ public class QBMRestController {
     @GetMapping( "/QBTopicInsights" )
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
         try {
-            log.debug( "Fetching QB insights" ) ;
             List<Object[]> results = testQuestionRepo.getTopicBasedInsight() ;
             List<QBTopicInsight> insights = assembleInsights( results ) ;
             return ResponseEntity.status( HttpStatus.OK )
@@ -71,8 +70,6 @@ public class QBMRestController {
     @GetMapping( "/QBMMasterData" )
     public ResponseEntity<QBMMasterData> getQBMMasterData() {
         try {
-            log.debug( "Fetching QBM Master Data" ) ;
-            
             QBMMasterData qbmMaster = new QBMMasterData() ;
             
             for( Topic topic : topicRepo.findAll() ) {
@@ -93,8 +90,6 @@ public class QBMRestController {
     
     @GetMapping( "/TestQuestion/{id}" )
     public ResponseEntity<TestQuestion> getQuestion( @PathVariable Integer id ) {
-        
-        log.debug( "Fetching test question with ID = " + id );
         
         TestQuestion testQuestion = null ;
         
@@ -127,8 +122,6 @@ public class QBMRestController {
                                             @PathVariable Integer topicId,
                                             @RequestParam( "examType" ) String examType ) {
         
-        log.debug( "Fetching test question for topic ID = " + topicId + 
-                   " and exam type = " + examType ) ;
         ResponseEntity<Map<String, List<TestQuestion>>> response = null ;
         
         if( topicId == null ) {
@@ -166,8 +159,6 @@ public class QBMRestController {
     
     @DeleteMapping( "/TestQuestion/{id}" )
     public ResponseEntity<ResponseMsg> deleteQuestion( @PathVariable Integer id ) {
-        
-        log.debug( "Deleting test question with ID = " + id );
         
         if( id == null || id <= 0 ) {
             return ResponseEntity.status( HttpStatus.NOT_FOUND )
@@ -214,9 +205,6 @@ public class QBMRestController {
     @PostMapping( "/TestQuestion" )
     public ResponseEntity<TestQuestion> saveQuestion( @RequestBody TestQuestion question ) {
         
-        log.debug( "POST /TestQuestion called." ) ;
-        log.debug( question ) ;
-        
         // What do we do when saving a question?
         // * Format the question text
         //   * Update the question object with the formatted text
@@ -241,9 +229,6 @@ public class QBMRestController {
                                    question.getBook().getId() + 
                                    question.getQuestionType() + 
                                    question.getQuestionRef() ;  
-                
-                log.debug( "Hash input = " + hashInput ) ;
-                log.debug( "Hash = " + StringUtil.getHash( hashInput ) ) ;
                 
                 question.setHash( StringUtil.getHash( hashInput ) ) ;
             }
@@ -296,7 +281,6 @@ public class QBMRestController {
     public ResponseEntity<ResponseMsg> syncQuestions ( @RequestBody Integer[] ids ) {
         
         try {
-            log.debug( "Received questions to sync.." ) ;
             InetAddress inetAddress = InetAddress.getLocalHost();
             String ipAddress = inetAddress.getHostAddress() ;
             if( ipAddress.equals( "192.168.0.117" ) ) {
@@ -326,7 +310,6 @@ public class QBMRestController {
     public ResponseEntity<ResponseMsg> importNewQuestions( 
                                 @RequestBody List<TestQuestionEx> questions ) {
         
-        log.debug( "Importing new questions..." ) ;
         TestQuestionSynchronizer synchronizer = new TestQuestionSynchronizer() ;
         try {
             synchronizer.importQuestions( questions ) ;

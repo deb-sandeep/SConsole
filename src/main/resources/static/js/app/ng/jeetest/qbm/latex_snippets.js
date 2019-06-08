@@ -22,10 +22,11 @@ $$\n",
 		d2ydx2 :
 "\\frac{d^2}{dx^2}",
 
-		ddx :
-"$$\n" +
-"\\frac{d}{dx}\\left( \\right)\n" +
-"$$\n"
+		limit:
+"$$\n\
+\\lim_{x \\to 0} \\frac{x}{y}\n\
+$$\n"
+
 	} ;
 	
 	this.getSnippet = function( snippetId ) {

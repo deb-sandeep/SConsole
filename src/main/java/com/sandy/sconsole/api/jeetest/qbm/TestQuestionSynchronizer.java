@@ -22,7 +22,7 @@ import okhttp3.RequestBody ;
 
 public class TestQuestionSynchronizer {
     
-    private static final Logger log = Logger.getLogger( TestQuestionSynchronizer.class ) ;
+    static final Logger log = Logger.getLogger( TestQuestionSynchronizer.class ) ;
     
     public static final MediaType JSON
                         = MediaType.parse("application/json; charset=utf-8") ; 
@@ -41,8 +41,6 @@ public class TestQuestionSynchronizer {
     }
 
     public void syncQuestions( Integer[] ids ) throws Exception {
-        
-        log.debug( "Synching test questions to server = " + this.serverName ) ;
         
         List<Integer> qIds = Arrays.asList( ids ) ;
         Iterable<TestQuestion> results = tqRepo.findAllById( qIds ) ;
@@ -67,10 +65,6 @@ public class TestQuestionSynchronizer {
         
         String url = "http://" + this.serverName + "/ImportNewTestQuestions" ;
         
-        log.debug( "Posting to server : " + url ) ;
-        log.debug( "Data size = " + json.length() ) ;
-        
-        
         OkHttpClient client = new OkHttpClient() ;
         RequestBody body = RequestBody.create( JSON, json ) ;
         Request request = new Request.Builder()
@@ -86,22 +80,15 @@ public class TestQuestionSynchronizer {
         TestQuestion tq = null ;
         for( TestQuestionEx tqEx : questions ) {
             
-            log.debug( "Importing question with hash = " + tqEx.getHash() ) ;
             tq = tqRepo.findByHash( tqEx.getHash() ) ;
             if( tq == null ) {
                 tq = new TestQuestion() ;
-                log.debug( "Creating new question" ) ;
-            }
-            else {
-                log.debug( "Question already exists - updating it" ) ;
             }
             tqEx.populate( tq ) ;
             tq.setSynched( true ) ;
             tqRepo.save( tq ) ;
-            log.debug( "Question imported" ) ;
             
             if( !tqEx.getEmbeddedImages().isEmpty() ) {
-                log.debug( "Importing embedded images." ) ;
                 saveEmbeddedImages( tqEx.getEmbeddedImages() ) ;
             }
         }
@@ -111,8 +98,6 @@ public class TestQuestionSynchronizer {
         throws Exception {
         
         for( ImageData eImg : embeddedImages ) {
-            
-            log.debug( "Importing embedded image = " + eImg.getImageName() ) ;
             File destFile = new File( SConsole.JEETEST_IMG_DIR, eImg.getImageName() ) ;
             byte[] data = Hex.decodeHex( eImg.getHexEncodedImageData() ) ;
             FileUtils.writeByteArrayToFile( destFile, data ) ;
