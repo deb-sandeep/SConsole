@@ -3,12 +3,24 @@ sConsoleApp.directive( 'renderQuestionOnFullQuestionPaper', function() {
 	return {
 		restrict : 'E',
 		link : function( $scope, element, attributes ) {
+			
+			var questionEx = $scope.questionEx ;
+			var question = questionEx.question ;
+			
 			if( element.children.length > 0 &&
-				$scope.questionEx.question != null &&
-				$scope.questionEx.question.questionFormattedText != null ) {
+				question != null &&
+				question.questionFormattedText != null ) {
+				
+				var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
 				
 				element.empty() ;
-				element.append( DIV( P( {innerHTML : $scope.questionEx.question.questionFormattedText } ) ) ) ;
+				element.append( 
+					DIV( 
+						P( {
+							innerHTML : qFmtText 
+						} )
+					) 
+				) ;
 				MathJax.Hub.Queue( ["Typeset", MathJax.Hub, element.children()[0]] ) ;
 			}
         }
@@ -23,11 +35,22 @@ sConsoleApp.directive( 'renderTestSummaryQuestion', function() {
 			
 			$scope.$watch( 'selectedQuestion', function( newValue, oldValue ){
 				
+				var questionEx = $scope.selectedQuestion ;
+				
 				if( element.children.length > 0 &&
-					$scope.selectedQuestion != null &&
-					$scope.selectedQuestion.question.questionFormattedText != null ) {
+					questionEx != null &&
+					questionEx.question.questionFormattedText != null ) {
+					
+					var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
+					
 					element.empty() ;
-					element.append( DIV( P( {innerHTML : $scope.selectedQuestion.question.questionFormattedText } ) ) ) ;
+					element.append( 
+						DIV( 
+							P( {
+								innerHTML : qFmtText 
+							} ) 
+						) 
+					) ;
 					MathJax.Hub.Queue( ["Typeset", MathJax.Hub, element.children()[0]] ) ;
 				}
 			}) ; 
@@ -43,12 +66,12 @@ sConsoleApp.directive( 'renderQuestionForAttempt', function() {
 			
 			$scope.$watch( 'currentQuestion', function( newValue, oldValue ){
 				
+				var questionEx = $scope.currentQuestion ;
+				
 				if( element.children.length > 0 &&
-					$scope.currentQuestion != null &&
-					$scope.currentQuestion.question.questionFormattedText != null ) {
+					questionEx != null &&
+					questionEx.question.questionFormattedText != null ) {
 					
-					var questionEx = $scope.currentQuestion ;
-					var question = questionEx.question ;
 					var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
 					
 					element.empty() ;
