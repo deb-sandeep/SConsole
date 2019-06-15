@@ -9,11 +9,17 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	
 	var selectedOption = null ;
 	
-	this.getQuestionFormattedText = function() {
-		return questionEx.question.questionFormattedText ;
+	var helper = new HanlderHelper( questionEx.question.questionFormattedText ) ;
+	
+	this.getQuestionBodyElement = function() {
+		return P( { innerHTML : helper.getQuestionBodyMarkupText() } ) ; 
+	}
+	
+	this.getOptionsBodyElement = function() {
+		return P( { innerHTML : helper.getOptionsMarkupText() } ) ;
 	}
 
-	this.getUserInterface = function() {
+	this.getUserResponseElement = function() {
 		
 		if( this.dom == null ) {
 			option1 = getOption( "1" ) ;

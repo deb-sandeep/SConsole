@@ -11,16 +11,16 @@ sConsoleApp.directive( 'renderQuestionOnFullQuestionPaper', function() {
 				question != null &&
 				question.questionFormattedText != null ) {
 				
-				var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
+				var ih = questionEx.interactionHandler ;
 				
 				element.empty() ;
 				element.append( 
 					DIV( 
-						P( {
-							innerHTML : qFmtText 
-						} )
+						ih.getQuestionBodyElement(),
+						ih.getOptionsBodyElement()
 					) 
 				) ;
+				
 				MathJax.Hub.Queue( ["Typeset", MathJax.Hub, element.children()[0]] ) ;
 			}
         }
@@ -41,16 +41,16 @@ sConsoleApp.directive( 'renderTestSummaryQuestion', function() {
 					questionEx != null &&
 					questionEx.question.questionFormattedText != null ) {
 					
-					var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
-					
+					var ih = questionEx.interactionHandler ;
+
 					element.empty() ;
 					element.append( 
 						DIV( 
-							P( {
-								innerHTML : qFmtText 
-							} ) 
+							ih.getQuestionBodyElement(),
+							ih.getOptionsBodyElement()
 						) 
 					) ;
+					
 					MathJax.Hub.Queue( ["Typeset", MathJax.Hub, element.children()[0]] ) ;
 				}
 			}) ; 
@@ -72,16 +72,16 @@ sConsoleApp.directive( 'renderQuestionForAttempt', function() {
 					questionEx != null &&
 					questionEx.question.questionFormattedText != null ) {
 					
-					var qFmtText = questionEx.interactionHandler.getQuestionFormattedText() ;
+					var ih = questionEx.interactionHandler ;
 					
 					element.empty() ;
 					element.append( 
-						DIV( 
-							P( {
-								innerHTML : qFmtText,
+						DIV( {
 								id : 'q-for-attempt'
-							}),
-							questionEx.interactionHandler.getUserInterface() 
+							}, 
+							ih.getQuestionBodyElement(),
+							ih.getOptionsBodyElement(),
+							ih.getUserResponseElement()
 						) 
 					) ;
 					
