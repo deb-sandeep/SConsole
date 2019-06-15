@@ -142,8 +142,6 @@ sConsoleApp.controller( 'EditQuestionController',
 	}	
 	
 	function inputsValidated() {
-		console.log( "Validating user inputs." ) ;
-		
 		var q = $scope.question ;
 		var errorsFound = false ;
 		
