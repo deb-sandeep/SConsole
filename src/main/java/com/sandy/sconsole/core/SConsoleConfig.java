@@ -8,7 +8,16 @@ import org.springframework.context.annotation.* ;
 @ConfigurationProperties( "sconsole" )
 public class SConsoleConfig {
 
-    private boolean recordTestAttempt = false ;
+    private boolean recordTestAttempt = true ;
+    private boolean showSwingApp = true ;
+
+    public boolean isShowSwingApp() {
+        return showSwingApp ;
+    }
+
+    public void setShowSwingApp( boolean showSwingApp ) {
+        this.showSwingApp = showSwingApp ;
+    }
 
     public boolean isRecordTestAttempt() {
         return recordTestAttempt ;

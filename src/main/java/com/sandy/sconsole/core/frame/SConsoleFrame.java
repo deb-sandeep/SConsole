@@ -45,7 +45,13 @@ public class SConsoleFrame extends JFrame {
         this.dialog = new SConsoleDialog() ;
         
         setUpUI() ;
-        setVisible( true ) ;
+        
+        if( SConsole.getConfig().isShowSwingApp() ) {
+            setVisible( true ) ;
+        }
+        else {
+            log.info( "[*** IMP ***] Application has been configured not to show the Swing UI" ) ;
+        }
         
         screenletPanel.maximizeDefaultScreenlet() ;
         this.toggleScreenletPanelVisibility() ;
