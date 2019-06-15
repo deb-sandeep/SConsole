@@ -9,7 +9,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.isAutoPreviewOn = true ;
 	$scope.formattedContent = null ;
 	$scope.answerType = "" ;
-	$scope.answerTypes = [ "", "iChem", "iMath", "Math" ] ;
+	$scope.answerTypes = [ "", "iChem", "iMath", "Math", "ART" ] ;
 	
 	// --- [START] Controller initialization
 	
@@ -37,17 +37,14 @@ sConsoleApp.controller( 'EditQuestionController',
 	}
 	
 	$scope.editNewQuestion = function() {
-		console.log( "Editing a new quesiton." ) ;
 		loadQuestionForEdit( -1 ) ;
 	}
 	
 	$scope.discardChange = function() {
-		console.log( "discardChange function called." ) ;
 		$scope.question = jQuery.extend(true, {}, $scope.lastSavedQuestion ) ;
 	}
 
 	$scope.save = function() {
-		console.log( "save function called." ) ;
 		if( inputsValidated() ) {
 			// First parameter  - boolean - shouldRenderPreview
 			// Second parameter - boolean - createNewQuestion 
@@ -56,14 +53,12 @@ sConsoleApp.controller( 'EditQuestionController',
 	}
 
 	$scope.saveAndCreateNew = function() {
-		console.log( "saveAndCreateNew function called." ) ;
 		if( inputsValidated() ) {
 			saveQuestionOnServer( false, true ) ;
 		}
 	}
 
 	$scope.preview = function() {
-		console.log( "preview function called." ) ;
 		// Get the question text formatted by the server
 		// Do the following on response receipt
 		// 		Save the formatted text as the question formatted text
@@ -90,6 +85,16 @@ sConsoleApp.controller( 'EditQuestionController',
 			}
 			else if( $scope.answerType == "Math" ) {
 				answerText = "\n\n{{@opt\n1. \n2. \n3. \n4. }}"
+			}
+			else if( $scope.answerType == "ART" ) {
+				answerText = "**Statement-1 :** \n" +
+				"\n" +
+				"**Statement-2 :** \n" + 
+				"\n" + 
+				"1. Statement-1 is True, Statement-2 is True, Statement 2 is a correct explanation for Statement 1\n" + 
+				"2. Statement-1 is True, Statement-2 is True, Statement 2 is NOT a correct explanation for Statement 1\n" + 
+				"3. Statement-1 is True, Statement 2 is False\n" + 
+				"4. Statement-1 is True, Statement 2 is True\n" ; 
 			}
 		}
 		

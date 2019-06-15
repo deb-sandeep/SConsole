@@ -22,6 +22,10 @@ a {
     color: #EEEEEE; 
 }
 
+strong {
+	color: blue;
+}
+
 .header
 {
     position: absolute;
