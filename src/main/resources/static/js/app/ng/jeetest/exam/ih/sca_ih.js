@@ -8,6 +8,10 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	var option4 = null ;
 	
 	var selectedOption = null ;
+	
+	this.getQuestionFormattedText = function() {
+		return questionEx.question.questionFormattedText ;
+	}
 
 	this.getUserInterface = function() {
 		

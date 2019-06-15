@@ -147,7 +147,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.saveAndMarkForReview = function() {
-    	console.log( "Saving answer and marking for review. Showing next question" ) ;
     	if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
         	$scope.currentQuestion.attemptState = AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ;
     		$scope.saveClickStreamEvent( 
@@ -162,7 +161,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.clearResponse = function() {
-    	console.log( "Clearing response." ) ;
     	$scope.currentQuestion.interactionHandler.clearResponse() ;
 		$scope.saveClickStreamEvent( 
 				ClickStreamEvent.prototype.ANSWER_CLEAR_RESPONSE, 
@@ -170,7 +168,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.markForReviewAndNext = function() {
-    	console.log( "Mark question for review and move to next" ) ;
     	$scope.currentQuestion.attemptState = AttemptState.prototype.MARKED_FOR_REVIEW ;
 		$scope.saveClickStreamEvent( 
 				ClickStreamEvent.prototype.ANSWER_MARK_FOR_REVIEW, 

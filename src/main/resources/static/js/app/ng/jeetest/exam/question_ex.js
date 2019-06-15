@@ -14,6 +14,7 @@ function QuestionEx( q ) {
 	this.prevQuestion = null ;
 	this.nextQuestion = null ;
 	this.attemptState = AttemptState.prototype.NOT_VISITED ;
+	this.interactionHandler = null ;
 
     this.getStatusStyle = function() {
     	return this.attemptState ;

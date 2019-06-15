@@ -8,13 +8,13 @@ import org.springframework.context.annotation.* ;
 @ConfigurationProperties( "sconsole" )
 public class SConsoleConfig {
 
-    private String appName = null ;
+    private boolean recordTestAttempt = false ;
 
-    public String getAppName() {
-        return appName;
+    public boolean isRecordTestAttempt() {
+        return recordTestAttempt ;
     }
 
-    public void setAppName( String appName ) {
-        this.appName = appName;
+    public void setRecordTestAttempt( boolean recordTestAttempt ) {
+        this.recordTestAttempt = recordTestAttempt ;
     }
 }

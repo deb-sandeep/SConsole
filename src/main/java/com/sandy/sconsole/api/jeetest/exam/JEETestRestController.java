@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
+import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.dao.entity.ClickStreamEvent ;
 import com.sandy.sconsole.dao.entity.TestAttempt ;
 import com.sandy.sconsole.dao.entity.TestQuestionAttempt ;
@@ -46,6 +47,9 @@ public class JEETestRestController {
     @Autowired
     private TestQuestionBindingRepository tqbRepo = null ;
     
+    @Autowired
+    private SConsoleConfig config = null ;
+    
     @GetMapping( "/TestAttempt" ) 
     public ResponseEntity<List<TestAttempt>> getTestAttempts() {
         try {
@@ -72,7 +76,16 @@ public class JEETestRestController {
                 attempt.setDateAttempted( new Timestamp( new Date().getTime() ) );
             }
             
-            TestAttempt savedAttempt = taRepo.save( attempt ) ;
+            TestAttempt savedAttempt = null ;
+            
+            if( config.isRecordTestAttempt() ) {
+                savedAttempt = taRepo.save( attempt ) ;
+            }
+            else {
+                savedAttempt = attempt ;
+                savedAttempt.setId( 0xBABE ) ;
+                log.info( "Application has been configured not to save test attempts." ) ;
+            }
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( savedAttempt ) ;
         }
@@ -89,15 +102,21 @@ public class JEETestRestController {
         
         try {
             log.debug( "Saving test attempts." ) ;
-            for( TestQuestionAttempt attempt : attempts ) {
-                log.debug( "Saving attempt for quesiton - " + attempt.getTestQuestionId() ) ;
-                tqaRepo.save( attempt ) ; 
-                
-                TestQuestion question = tqRepo.findById( attempt.getTestQuestionId() ).get() ;
-                if( attempt.getTimeSpent() > 0 ) {
-                    question.setAttempted( true ) ;
-                    tqRepo.save( question ) ;
+            
+            if( config.isRecordTestAttempt() ) {
+                for( TestQuestionAttempt attempt : attempts ) {
+                    log.debug( "Saving attempt for quesiton - " + attempt.getTestQuestionId() ) ;
+                    tqaRepo.save( attempt ) ; 
+                    
+                    TestQuestion question = tqRepo.findById( attempt.getTestQuestionId() ).get() ;
+                    if( attempt.getTimeSpent() > 0 ) {
+                        question.setAttempted( true ) ;
+                        tqRepo.save( question ) ;
+                    }
                 }
+            }
+            else {
+                log.info( "Application has been configured not to save test attempts." ) ;
             }
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( ResponseMsg.SUCCESS ) ;
@@ -115,7 +134,12 @@ public class JEETestRestController {
         
         try {
             log.debug( "Saving click stream event." ) ;
-            cseRepo.save( event ) ;
+            if( config.isRecordTestAttempt() ) {
+                cseRepo.save( event ) ;
+            }
+            else {
+                log.info( "Application has been configured not to save test attempts." ) ;
+            }
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( ResponseMsg.SUCCESS ) ;
         }
