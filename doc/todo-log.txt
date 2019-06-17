@@ -31,3 +31,17 @@ ALTER TABLE `sconsole`.`test_question_binding`
 CHANGE COLUMN `section_index` `section_index` INT(11) NOT NULL DEFAULT 1 ,
 CHANGE COLUMN `section_name` `section_name` VARCHAR(45) NOT NULL DEFAULT 'SCA' ;
 
+b) Types of exam questions
+
+JEE exam can have the following type of questions. Enum enforcement is
+updated in mocktest_question_master table
+
+SCA - Single Choice Answer (Only for JEE Main)
+MCA - Multiple Choice Answer (Advanced)
+NT  - Numeric Type (Advanced)
+LCT - Linked Comprehension Type (Advanced)
+MMT - Matrix match type (Advanced)
+
+--- DDL queries ---
+ALTER TABLE `sconsole`.`mocktest_question_master` 
+CHANGE COLUMN `question_type` `question_type` ENUM('SCA', 'MCA', 'NT', 'LCT', 'MMT') NOT NULL DEFAULT 'SCA' ;
