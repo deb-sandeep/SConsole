@@ -164,8 +164,8 @@ public class TestConfiguratorRestController {
         throws Exception {
         
         TestConfiguration config = null ;
-        
         TestConfigIndex tci = tciRepo.findById( id ).get() ;
+        
         if( tci != null ) {
             config = new TestConfiguration() ;
             config.setId( id ) ;
@@ -173,23 +173,103 @@ public class TestConfiguratorRestController {
             config.setTestConfigIndex( tci ) ;
             
             List<TestQuestionBinding> bindings = tqbRepo.findAllByTestConfigId( id ) ;
+            
             if( bindings != null && !bindings.isEmpty() ) {
+                
+                List<TestQuestion> masterQList     = null ;
+                List<String>       sectionNames    = null ;
+                List<Integer>      sectionQIndices = null ;
+                
                 for( TestQuestionBinding binding : bindings ) {
-                    String sName = binding.getSubject().getName() ;
-                    if( sName.equals( QBMMasterData.S_TYPE_PHY ) ) {
-                        config.getPhyQuestions().add( binding.getQuestion() ) ;
-                    }
-                    else if( sName.equals( QBMMasterData.S_TYPE_CHEM ) ) {
-                        config.getChemQuestions().add( binding.getQuestion() ) ;
-                    }
-                    else if( sName.equals( QBMMasterData.S_TYPE_MATHS ) ) {
-                        config.getMathQuestions().add( binding.getQuestion() ) ;
+                    
+                    String  subjectName  = binding.getSubject().getName() ;
+                    String  sectionName  = binding.getSectionName() ;
+                    Integer sectionIndex = binding.getSectionIndex() ;
+                    Integer qMasterIndex = -1 ;
+                    
+                    TestQuestion question = binding.getQuestion() ;
+                    
+                    masterQList = getMasterQuestionList( subjectName, config ) ;
+                    sectionNames = getSectionNames( subjectName, config ) ;
+                    sectionQIndices = getSectionQIndices( subjectName, sectionIndex, config ) ;
+                    
+                    qMasterIndex = masterQList.size() ;
+                    
+                    masterQList.add( question ) ;
+                    sectionQIndices.add( qMasterIndex ) ;
+                    
+                    if( !sectionNames.contains( sectionName ) ) {
+                        sectionNames.add( sectionName ) ;
                     }
                 }
             }
         }
         
         return config ;
+    }
+    
+    private List<TestQuestion> getMasterQuestionList( String subjectName,
+                                                      TestConfiguration config ) {
+        
+        if( subjectName.equals( QBMMasterData.S_TYPE_PHY ) ) {
+            return config.getPhyQuestions() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_CHEM ) ) {
+            return config.getChemQuestions() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_MATHS ) ) {
+            return config.getMathQuestions() ;
+        }
+        else {
+            throw new RuntimeException( "Unknown subject name " + subjectName ) ;
+        }
+    }
+    
+    private List<String> getSectionNames( String subjectName, 
+                                          TestConfiguration config ) {
+        
+        if( subjectName.equals( QBMMasterData.S_TYPE_PHY ) ) {
+            return config.getPhySectionNames() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_CHEM ) ) {
+            return config.getChemSectionNames() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_MATHS ) ) {
+            return config.getMathSectionNames() ;
+        }
+        else {
+            throw new RuntimeException( "Unknown subject name " + subjectName ) ;
+        }
+    }
+    
+    private List<Integer> getSectionQIndices( String subjectName,
+                                              int sectionIndex,
+                                              TestConfiguration config ) {
+        
+        List<List<Integer>> sectionIndexLists = null ;
+        List<Integer> indexList = null ;
+        
+        if( subjectName.equals( QBMMasterData.S_TYPE_PHY ) ) {
+            sectionIndexLists = config.getPhySecQuestionIndices() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_CHEM ) ) {
+            sectionIndexLists = config.getChemSecQuestionIndices() ;
+        }
+        else if( subjectName.equals( QBMMasterData.S_TYPE_MATHS ) ) {
+            sectionIndexLists = config.getMathSecQuestionIndices() ;
+        }
+        else {
+            throw new RuntimeException( "Unknown subject name " + subjectName ) ;
+        }
+        
+        if( sectionIndexLists.size() >= sectionIndex ) {
+            indexList = sectionIndexLists.get( sectionIndex-1 ) ;
+        }
+        else {
+            indexList = new ArrayList<>() ;
+            sectionIndexLists.add( indexList ) ;
+        }
+        return indexList ;
     }
     
     private Integer saveConfig( TestConfiguration config ) 

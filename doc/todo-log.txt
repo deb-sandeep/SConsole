@@ -1,67 +1,33 @@
-Pending log
---------------------------------------------------------------------------------
-* Offline session adding should refresh the 
-    - burn chart for the study screenlet if the topic is currently being displayed
-    - L30 days chart
-    - Fragmentation chart
-  
-* A separate screenlet which should show the problem landscape of the
-  given topic. Which problems are activated, solved, redo ed etc
-  
-Completed log
---------------------------------------------------------------------------------
-* 5/8 - application.properties file and accessing property values
-* 5/8 - Custom properties in application.properties
-        Custom properties file loading in a spring boot application  
-* 5/8 - Accessing container managed beans from non CM classes
-* 5/8 - Serving static content via Spring Boot
-* 5/8 - Building a simple Angular2 web app
-* 5/8 - Communicating with REST endpoints via JSON
-    * URL parameters
-    * POST data
-* 5/8 - Packaging a Spring Boot application
-* 11/8 - Mapping a JPA entity to a database table
-* 11/8 - Master data table for topic and subject
-* 11/8 - Tab in remote to switch fields
-* 11/8 - Parent child - one to many relationship
-* 11/8 - Think about adding Topic, Book, problem drop down
-* @Session play/start - make an entry in the database so that we have a
-   concrete session against which laps can be added.
-    - The end time will be null
-    - End time will be populated at every problem end and again at stop
-        This will ensure resilience against failures
-        
-* @Session stop - Set the session id to null so that at next play a new
-   session will be created.
-   
-1. Problem needs to be forwarded on skip, solved, redo and pigeon
+Database alterations
+-----------------------------------------------------------------------------
 
-24th Sep 2018
-* There should be no lap time counter in self study and lecture session types
+a) Introduction of explicit sections in test papers
 
-* Paint axis on both sides of L30 time dashboard chart to make reading 
-  of bar values easier
-  
-* Intelligent population of book and problem when Topic changes
+Every test has questions grouped under sections belonging to subjects. For
+example in JEE Main, all physics questions are grouped under the SCA section.
+In JEE Main each subject has only one section (SCA) and hence the section is
+muted. However in case of advanced, each subject has three sections - MCA,
+IT/NT and (LCT or MMT). Each of these sections can have questions grouped 
+under them.
 
-* Synchronize thermometer logic on study screenlet with that of dashboard
+To model this, we introduce two new attributes in the test_question_binding
+table, namely
 
-* % remaining marker / progress bar on the topic burn summary in the 
-  dashboard.
+1. section_index (integer) - default 1
+2. section_name  (varchar) - default 'SCA'
 
-* If an offline session for today is added, it should reflect on the 
-  console real time.
+--- DDL queries --- 
+ALTER TABLE `sconsole`.`test_question_binding` 
+CHANGE COLUMN `topic_id` `topic_id` INT(11) NOT NULL AFTER `test_config_id`,
+CHANGE COLUMN `question_id` `question_id` INT(11) NOT NULL AFTER `topic_id`,
+ADD COLUMN `section_index` INT(11) NULL AFTER `subject_name`,
+ADD COLUMN `section_name` VARCHAR(45) NULL AFTER `section_index`;
 
-* Overflowing sessions - sessions which span beyond the 23:59:59 boundary
-  should be reflected in fragmentation and day burn charts
-  
-    - While scooping todays sessions, logic needs to be changed to pick up
-      overflow sessions on both ends
-      
-* L30 charts now need to start accounting for overflow sessions in both
-  days
-      
-* A web UI for burn completion readjustment. Should take care of streams
-  and cascading changes
+--- DML queries ---
+update test_question_binding set section_index=1, section_name='SCA' ;
 
-      
+--- DDL queries --- 
+ALTER TABLE `sconsole`.`test_question_binding` 
+CHANGE COLUMN `section_index` `section_index` INT(11) NOT NULL DEFAULT 1 ,
+CHANGE COLUMN `section_name` `section_name` VARCHAR(45) NOT NULL DEFAULT 'SCA' ;
+

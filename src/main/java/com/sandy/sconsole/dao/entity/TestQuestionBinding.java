@@ -25,10 +25,6 @@ public class TestQuestionBinding {
     private TestConfigIndex testConfig ;
     
     @ManyToOne
-    @JoinColumn( name="subject_name" )
-    private Subject subject ;
-    
-    @ManyToOne
     @JoinColumn( name="topic_id" )
     private Topic topic ;
     
@@ -36,6 +32,12 @@ public class TestQuestionBinding {
     @JoinColumn( name="question_id" )
     private TestQuestion question ;
     
+    @ManyToOne
+    @JoinColumn( name="subject_name" )
+    private Subject subject ;
+    
+    private Integer sectionIndex = null ;
+    private String sectionName = null ;
     private Integer sequence = null ;
     
     public Integer getId() {
@@ -52,13 +54,6 @@ public class TestQuestionBinding {
         this.testConfig = testConfig ;
     }
     
-    public Subject getSubject() {
-        return subject ;
-    }
-    public void setSubject( Subject subject ) {
-        this.subject = subject ;
-    }
-    
     public Topic getTopic() {
         return topic ;
     }
@@ -71,6 +66,27 @@ public class TestQuestionBinding {
     }
     public void setQuestion( TestQuestion question ) {
         this.question = question ;
+    }
+    
+    public Subject getSubject() {
+        return subject ;
+    }
+    public void setSubject( Subject subject ) {
+        this.subject = subject ;
+    }
+    
+    public Integer getSectionIndex() {
+        return sectionIndex ;
+    }
+    public void setSectionIndex( Integer sectionIndex ) {
+        this.sectionIndex = sectionIndex ;
+    }
+    
+    public String getSectionName() {
+        return sectionName ;
+    }
+    public void setSectionName( String sectionName ) {
+        this.sectionName = sectionName ;
     }
     
     public Integer getSequence() {

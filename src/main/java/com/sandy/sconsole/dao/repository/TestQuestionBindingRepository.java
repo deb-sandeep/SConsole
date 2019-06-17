@@ -25,6 +25,7 @@ public interface TestQuestionBindingRepository
           + "WHERE tqb.testConfig.id = ?1 "
           + "ORDER BY "
           + "  tqb.subject.name ASC, "
+          + "  tqb.sectionIndex ASC, "
           + "  tqb.sequence ASC"
     )
     List<TestQuestionBinding> findAllByTestConfigId( Integer id ) ;

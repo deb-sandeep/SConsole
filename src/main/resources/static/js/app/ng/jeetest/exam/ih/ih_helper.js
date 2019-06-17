@@ -49,7 +49,6 @@ function HanlderHelper( fmtText ) {
 			var endIndex = optText.indexOf( endTag, startIndex ) ;
 			var optionText = optText.substring( startIndex + startTag.length, endIndex ) ;
 			
-			console.log( optionText ) ;
 			optionMarkups.push( optionText ) ;
 			
 			startIndex = optText.indexOf( startTag, endIndex + endTag.length ) ;
