@@ -197,7 +197,7 @@ sConsoleApp.controller( 'EditQuestionController',
 			}
 		}
 		else {
-			if( q.lctContext == null || q.lctContext.length > 0 ) {
+			if( q.lctContext != null && q.lctContext.length > 0 ) {
 				errorsFound = true ;
 				$scope.validationErrors.push( "LCT context present in a non LCT question." ) ;
 			}
@@ -225,27 +225,92 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	function isAnswerSemanticallyValid( ansText, qType ) {
 		if( qType == "SCA" || qType == "MMT" ) {
-			// Check if the answer text is numeric and between 1-4
+			return checkValueIsIntegerAndBetween1to4( ansText ) ;
 		}
-		else if( qType = "MCA" ) {
+		else if( qType == "MCA" ) {
 			// Check if multiple answers are provided separated by comma
 			// Check each part is numeric and in [1,4]
 			// Check there are no duplicates
+			return checkMultipleOptions( ansText ) ;
 		}
-		else if( qType = "NT" ) {
+		else if( qType == "NT" ) {
 			// 1. If the answer contains a - in the middle, it implies that a 
 			//    range is specified. If so validate that each part of the range
 			//    is a number and the first part is less than the second
 			// 2. Check if answer is a number
+			return checkNumericType( ansText ) ;
 		}
 		else if( qType == "LCT" ) {
-			// VERIFY : LCT CAN CONTAIN MULTIPLE CHOICES
 			// If the answer contains comma, it implies that it is a multiple
 			// choice answer. If so, the MCA rules appy
-			
-			// In case no comma is there, SCA rules apply
+			if( ansText.indexOf( "," ) > 0 ) {
+				return checkMultipleValues( ansText ) ;
+			}
+			else {
+				// In case no comma is there, SCA rules apply
+				return checkValueIsIntegerAndBetween1to4( ansText ) ;
+			}
 		}
 		
+		return true ;
+	}
+	
+	function checkValueIsIntegerAndBetween1to4( text ) {
+		
+		if( isNaN( text ) ) {
+			$scope.validationErrors.push( "Answer should be an integer" ) ;
+			return false ;
+		}
+		
+		var val = parseInt( text.trim() ) ;
+		if( val == NaN ) {
+			$scope.validationErrors.push( "Answer should be an integer between 1-4" ) ;
+			return false ;
+		}
+		else {
+			if( val < 1 || val > 4 ) {
+				$scope.validationErrors.push( "Answer should be an integer between 1-4" ) ;
+				return false ;
+			}
+		}
+		return true ;
+	}
+	
+	function checkMultipleOptions( text ) {
+		var parts = text.split( "," ) ;
+		if( parts.length < 2 ) {
+			$scope.validationErrors.push( "Answer is MCA but only one answer marked correct." ) ;
+			return false ;
+		}
+		else {
+			for( var i=0; i<parts.length; i++ ) {
+				if( !checkValueIsIntegerAndBetween1to4( parts[i] ) ) {
+					return false ;
+				}
+			}
+		}
+		return true ;
+	}
+	
+	function checkNumericType( text ) {
+		var parts = text.split( "~" ) ;
+		if( parts.length > 2 ) {
+			$scope.validationErrors.push( "Answer is NT but has more than two range markers" ) ;
+			return false ;
+		}
+		else {
+			for( var i=0; i<parts.length; i++ ) {
+				if( isNaN( parts[i].trim() ) ) {
+					$scope.validationErrors.push( "Answer or (part) is not a number." ) ;
+					return false ;
+				}
+				
+				if( parseFloat( parts[i].trim() ) == NaN ) {
+					$scope.validationErrors.push( "NT answer (or part) is not a number." ) ;
+					return false ;
+				}
+			}
+		}
 		return true ;
 	}
 	
@@ -340,6 +405,10 @@ sConsoleApp.controller( 'EditQuestionController',
 	function generateFormattedTextAndRenderPreview() {
 		
 		var questionText = "" ;
+		
+		if( $scope.question == null ) {
+			return ;
+		}
 		
 		if( $scope.question.lctContext != null && 
 			$scope.question.lctContext.length > 0 ) {
