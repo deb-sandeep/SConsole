@@ -313,3 +313,9 @@ li {
 .full-width {
 	width:100%;
 }
+
+.lct-context {
+	padding: 10px 10px;
+	border: 1px solid #a0a0a0;
+	margin-bottom: 20px;
+}

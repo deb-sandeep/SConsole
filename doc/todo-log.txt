@@ -2,7 +2,7 @@ Database alterations
 -----------------------------------------------------------------------------
 
 a) Introduction of explicit sections in test papers
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Every test has questions grouped under sections belonging to subjects. For
 example in JEE Main, all physics questions are grouped under the SCA section.
 In JEE Main each subject has only one section (SCA) and hence the section is
@@ -32,7 +32,7 @@ CHANGE COLUMN `section_index` `section_index` INT(11) NOT NULL DEFAULT 1 ,
 CHANGE COLUMN `section_name` `section_name` VARCHAR(45) NOT NULL DEFAULT 'SCA' ;
 
 b) Types of exam questions
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 JEE exam can have the following type of questions. Enum enforcement is
 updated in mocktest_question_master table
 
@@ -45,3 +45,12 @@ MMT - Matrix match type (Advanced)
 --- DDL queries ---
 ALTER TABLE `sconsole`.`mocktest_question_master` 
 CHANGE COLUMN `question_type` `question_type` ENUM('SCA', 'MCA', 'NT', 'LCT', 'MMT') NOT NULL DEFAULT 'SCA' ;
+
+c) Validation of question inputs while saving
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+d) Mock test question now has lctContext - an additional attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--- DDL queries --- 
+ALTER TABLE `sconsole`.`mocktest_question_master` 
+ADD COLUMN `lct_context` VARCHAR(2048) NULL AFTER `question_text`;

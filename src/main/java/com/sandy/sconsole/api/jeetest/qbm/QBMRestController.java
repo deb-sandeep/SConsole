@@ -215,8 +215,16 @@ public class QBMRestController {
         // Also, if the question is not being saved on the server, force the
         // synched flag to false.
         try {
-            question.setQuestionFormattedText( 
-                    new QuestionTextFormatter().formatText( question.getQuestionText() ) ) ;
+            
+            String questionText = question.getQuestionText() ;
+            if( StringUtil.isNotEmptyOrNull( question.getLctContext() ) ) {
+                questionText = "<div class='lct-context'>" + 
+                               question.getLctContext() + 
+                               "</div>" + 
+                               question.getQuestionText() ;
+            }
+            
+            question.setQuestionFormattedText( new QuestionTextFormatter().formatText( questionText ) ) ;
             question.setCreationTime( null ) ;
             question.setLastUpdateTime( null ) ;
             

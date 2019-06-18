@@ -10,6 +10,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.formattedContent = null ;
 	$scope.answerType = "" ;
 	$scope.answerTypes = [ "", "iChem", "iMath", "Math", "ART" ] ;
+	$scope.validationErrors = [] ;
 	
 	// --- [START] Controller initialization
 	
@@ -43,6 +44,11 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.discardChange = function() {
 		$scope.question = jQuery.extend(true, {}, $scope.lastSavedQuestion ) ;
 	}
+	
+	$scope.closeValidationErrorsDialog = function() {
+		$( '#validationErrorsDialog' ).modal( 'hide' ) ;
+		$scope.validationErrors.length = 0 ;
+	}
 
 	$scope.save = function() {
 		if( inputsValidated() ) {
@@ -50,11 +56,17 @@ sConsoleApp.controller( 'EditQuestionController',
 			// Second parameter - boolean - createNewQuestion 
 			saveQuestionOnServer( true, false ) ;
 		}
+		else {
+			$( '#validationErrorsDialog' ).modal( 'show' ) ;
+		}
 	}
 
 	$scope.saveAndCreateNew = function() {
 		if( inputsValidated() ) {
 			saveQuestionOnServer( false, true ) ;
+		}
+		else {
+			$( '#validationErrorsDialog' ).modal( 'show' ) ;
 		}
 	}
 
@@ -113,6 +125,10 @@ sConsoleApp.controller( 'EditQuestionController',
 		}) ;
 	}
 	
+	$scope.questionTypeChanged = function() {
+		$scope.question.lctContext = "" ;
+	}
+	
 	// --- [START] Internal Questions
 	
 	function insertAtCursor( myValue ) {
@@ -147,45 +163,89 @@ sConsoleApp.controller( 'EditQuestionController',
 		
 		if( q.subject == null || q.subject.name == null ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Subject name should be specified." ) ;
+			$scope.validationErrors.push( "Subject name should be specified." ) ;
 		}
 		
 		if( q.topic == null ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Topic should be specified." ) ;
+			$scope.validationErrors.push( "Topic should be specified." ) ;
 		}
 		
 		if( q.book == null ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Book should be specified." ) ;
+			$scope.validationErrors.push( "Book should be specified." ) ;
 		}
 		
 		if( q.questionRef == null || 
 		    ( typeof q.questionType === 'undefined' ) || 
 		    q.questionRef.trim().length == 0 ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Question Reference should be specified." ) ;
+			$scope.validationErrors.push( "Question Reference should be specified." ) ;
 		}
 		
 		if( q.questionText == null || 
 		    ( typeof q.questionText === 'undefined' ) || 
 		    q.questionText.trim().length == 0 ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Question Text should be specified." ) ;
+			$scope.validationErrors.push( "Question Text should be specified." ) ;
+		}
+		
+		if( q.questionType == "LCT" ) {
+			if( q.lctContext.length == 0 ) {
+				errorsFound = true ;
+				$scope.validationErrors.push( "LCT context is absent." ) ;
+			}
+		}
+		else {
+			if( q.lctContext == null || q.lctContext.length > 0 ) {
+				errorsFound = true ;
+				$scope.validationErrors.push( "LCT context present in a non LCT question." ) ;
+			}
 		}
 
 		if( q.answerText == null || 
 		    ( typeof q.answerText === 'undefined' ) || 
 		    q.answerText.trim().length == 0 ) {
 			errorsFound = true ;
-			$scope.$parent.addErrorAlert( "Answer Text should be specified." ) ;
+			$scope.validationErrors.push( "Answer Text should be specified." ) ;
+		}
+		else {
+			if( !isAnswerSemanticallyValid( q.answerText, $scope.question.questionType ) ) {
+				errorsFound = true ;
+			}
 		}
 
 		if( errorsFound ) {
 			console.log( "Errors found in user inputs." ) ;
 			return false ;
 		}
-		console.log( "No errors found in user inputs." ) ; 
+		
+		return true ;
+	}
+	
+	function isAnswerSemanticallyValid( ansText, qType ) {
+		if( qType == "SCA" || qType == "MMT" ) {
+			// Check if the answer text is numeric and between 1-4
+		}
+		else if( qType = "MCA" ) {
+			// Check if multiple answers are provided separated by comma
+			// Check each part is numeric and in [1,4]
+			// Check there are no duplicates
+		}
+		else if( qType = "NT" ) {
+			// 1. If the answer contains a - in the middle, it implies that a 
+			//    range is specified. If so validate that each part of the range
+			//    is a number and the first part is less than the second
+			// 2. Check if answer is a number
+		}
+		else if( qType == "LCT" ) {
+			// VERIFY : LCT CAN CONTAIN MULTIPLE CHOICES
+			// If the answer contains comma, it implies that it is a multiple
+			// choice answer. If so, the MCA rules appy
+			
+			// In case no comma is there, SCA rules apply
+		}
+		
 		return true ;
 	}
 	
@@ -210,6 +270,7 @@ sConsoleApp.controller( 'EditQuestionController',
                     	$scope.question.book                  = $scope.lastSavedQuestion.book ;
                         $scope.question.targetExam            = $scope.lastSavedQuestion.targetExam ;       
                         $scope.question.questionType          = $scope.lastSavedQuestion.questionType ;         
+                        $scope.question.lctContext            = $scope.lastSavedQuestion.lctContext ;         
                         $scope.question.lateralThinkingLevel  = $scope.lastSavedQuestion.lateralThinkingLevel ;                 
                         $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;
                         $scope.question.questionRef           = $scope.lastSavedQuestion.questionRef ;
@@ -278,12 +339,23 @@ sConsoleApp.controller( 'EditQuestionController',
 	
 	function generateFormattedTextAndRenderPreview() {
 		
-        if( $scope.question.questionText == null || 
-            $scope.question.questionText == "" ) {
+		var questionText = "" ;
+		
+		if( $scope.question.lctContext != null && 
+			$scope.question.lctContext.length > 0 ) {
+			questionText = "<div class='lct-context'>" + $scope.question.lctContext + "</div>" ;
+		}
+		
+		if( $scope.question.questionText != null && 
+		    $scope.question.questionText.length > 0 ) {
+			questionText += $scope.question.questionText ;
+		}
+		
+        if( questionText == "" ) {
         	return ;
         }
         
-        $http.post( '/FormattedText', $scope.question.questionText )        
+        $http.post( '/FormattedText', questionText )        
         .then( 
             function( response ){
                 console.log( "Formatted text received." ) ;

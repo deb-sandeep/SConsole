@@ -37,6 +37,7 @@ public class TestQuestion {
     private Integer   lateralThinkingLevel = 2 ;
     private Integer   projectedSolveTime   = 120 ;
     private String    questionText         = null ;
+    private String    lctContext           = null ;
     private String    questionFormattedText= null ;
     private String    answerText           = null ;
     private Boolean   synched              = Boolean.FALSE ;
@@ -132,6 +133,14 @@ public class TestQuestion {
         this.questionText = questionText ;
     }
     
+    public String getLctContext() {
+        return lctContext ;
+    }
+
+    public void setLctContext( String lctContext ) {
+        this.lctContext = lctContext ;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime ;
     }

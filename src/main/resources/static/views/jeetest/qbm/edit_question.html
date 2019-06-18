@@ -65,7 +65,8 @@
                          class="form-control"  
                          ng-model="question.questionType"
                          ng-options="item for item in $parent.qbmMasterData.questionTypes"
-                         ng-disabled="isExistingQuestion()">
+                         ng-disabled="isExistingQuestion()"
+                         ng-change="questionTypeChanged()">
                  </select>
                 </td>
                 <td class="labelcell"><label for="atype">A Type</label></td>
@@ -130,6 +131,13 @@
 		                     style="padding:0px 5px;">
 		                    <span class="glyphicon glyphicon-th"></span>
 		             </button>
+                     <button class="btn btn-success"
+                             ng-show="question.questionType == 'LCT'"
+                             data-toggle="modal" 
+                             data-target="#lctContext"
+                             style="padding:0px 5px;">
+                            <span class="glyphicon glyphicon-th"></span>
+                     </button>
                 </td>
             </tr>
             <!-- Eighth row -->
@@ -217,3 +225,44 @@
   </div>
 </div>
 
+<div id="validationErrorsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title" style="color:red;">Please correct the errors before submitting</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px;color:blue;">
+        <ol>
+            <li ng-repeat="error in validationErrors">
+                {{error}}
+            </li>
+        </ol>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" 
+                class="btn btn-default" 
+                ng-click="closeValidationErrorsDialog()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lctContext" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Edit LCT context</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px;"">
+          <textarea id="questionText"
+                    rows="15" 
+                    ng-model="question.lctContext"
+                    style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;">
+          </textarea>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
