@@ -34,17 +34,17 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 	
 	$scope.renderPhyInsights = function() {
 		$scope.topicGraphTitle = "Physics" ;
-		renderGraph( 'topic_insight_graph', phyTopicsInsights,  phyTopics, 10 ) ;
+		renderTopicInsightGraph( 'topic_insight_graph', phyTopicsInsights,  phyTopics, 10 ) ;
 	}
 
 	$scope.renderChemInsights = function() {
 		$scope.topicGraphTitle = "Chemistry" ;
-		renderGraph( 'topic_insight_graph', chemTopicsInsights, chemTopics, 10 ) ;
+		renderTopicInsightGraph( 'topic_insight_graph', chemTopicsInsights, chemTopics, 10 ) ;
 	}
 
 	$scope.renderMathsInsights = function() {
 		$scope.topicGraphTitle = "Maths" ;
-		renderGraph( 'topic_insight_graph', mathTopicsInsights, mathTopics, 10 ) ;
+		renderTopicInsightGraph( 'topic_insight_graph', mathTopicsInsights, mathTopics, 10 ) ;
 	}
 
 	// --- [END] Scope functions
@@ -85,9 +85,14 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 				phyAssignedQ  += insight.assignedQuestions ;
 				
 				phyTopics.push( insight.topicName ) ;
-				phyTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
-					                      insight.assignedQuestions - insight.attemptedQuestions,
-					                      insight.attemptedQuestions ] ) ;
+				phyTopicsInsights.push( [ 
+					insight.availableQuestionsByType['SCA'], 
+					insight.availableQuestionsByType['MCA'], 
+					insight.availableQuestionsByType['NT'], 
+					insight.availableQuestionsByType['LCT'], 
+					insight.availableQuestionsByType['MMT'], 
+					insight.assignedQuestions - insight.attemptedQuestions,
+					insight.attemptedQuestions ] ) ;
 			}
 			else if( insight.subjectName == 'IIT - Chemistry' ) {
 				chemTotalQ     += insight.totalQuestions ;
@@ -95,9 +100,14 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 				chemAssignedQ  += insight.assignedQuestions ;
 				
 				chemTopics.push( insight.topicName ) ;
-				chemTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
-						                   insight.assignedQuestions - insight.attemptedQuestions,
-						                   insight.attemptedQuestions ] ) ;
+				chemTopicsInsights.push( [ 
+					insight.availableQuestionsByType['SCA'], 
+					insight.availableQuestionsByType['MCA'], 
+					insight.availableQuestionsByType['NT'], 
+					insight.availableQuestionsByType['LCT'], 
+					insight.availableQuestionsByType['MMT'], 
+					insight.assignedQuestions - insight.attemptedQuestions,
+					insight.attemptedQuestions ] ) ;
 			}
 			else if( insight.subjectName == 'IIT - Maths' ) {
 				mathTotalQ     += insight.totalQuestions ;
@@ -105,9 +115,14 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 				mathAssignedQ  += insight.assignedQuestions ;
 				
 				mathTopics.push( insight.topicName ) ;
-				mathTopicsInsights.push( [ insight.totalQuestions - insight.assignedQuestions, 
-						                   insight.assignedQuestions - insight.attemptedQuestions,
-						                   insight.attemptedQuestions ] ) ;
+				mathTopicsInsights.push( [ 
+					insight.availableQuestionsByType['SCA'], 
+					insight.availableQuestionsByType['MCA'], 
+					insight.availableQuestionsByType['NT'], 
+					insight.availableQuestionsByType['LCT'], 
+					insight.availableQuestionsByType['MMT'], 
+					insight.assignedQuestions - insight.attemptedQuestions,
+					insight.attemptedQuestions ] ) ;
 			}
 			else {
 				console.log( "Invalid subject found. " + insight.subjectName ) ; 
@@ -118,11 +133,11 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 		subjectInsights.push( [ chemTotalQ - chemAssignedQ, chemAssignedQ - chemAttemptedQ, chemAttemptedQ ] ) ;
 		subjectInsights.push( [ mathTotalQ - mathAssignedQ, mathAssignedQ - mathAttemptedQ, mathAttemptedQ ] ) ;
 		
-		renderGraph( 'subject_insight_graph', subjectInsights,  subjectNames, 10 ) ;
+		renderSubjectInsightGraph( 'subject_insight_graph', subjectInsights,  subjectNames, 10 ) ;
 		$scope.renderPhyInsights() ;
 	}
 	
-	function renderGraph( canvasId, dataArray, labels, textSize ) {
+	function renderSubjectInsightGraph( canvasId, dataArray, labels, textSize ) {
 		
 	    var canvas = document.getElementById( canvasId ) ;
 	    RGraph.reset( canvas ) ;
@@ -150,15 +165,54 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 	            yaxisLabelsFont:'Quicksand',
 	            yaxisTitleFont:'Quicksand',
 	            
-	            key: ['Remaining','Assigned','Attempted'],
+	            key: ['Available', 'Assigned', 'Attempted'],
 	            keyHalign: 'middle',
 	            keyPosition: 'margin',
-	            keyColors: ['#00e676','#9F9F9F','#cfd8dc'],
-	            colors: ['#00e676','#9F9F9F','#cfd8dc'],
+	            keyColors: ['#2E773A','#9F9F9F','#cfd8dc'],
+	            colors: ['#2E773A','#9F9F9F','#cfd8dc'],
 	            keyLabelsSize: 10,
 	            keyLabelsFont:'Verdana',
 	        }
 	    }).draw() ;
 	}
+	
+	function renderTopicInsightGraph( canvasId, dataArray, labels, textSize ) {
+		
+	    var canvas = document.getElementById( canvasId ) ;
+	    RGraph.reset( canvas ) ;
+	    
+	    var chart = new RGraph.HBar({
+	        id: canvasId,
+	        data: dataArray,
+	        options: {
+	            textFont:'Quicksand',
+	            titleFont:'Quicksand',
+	            grouping: 'stacked',
+	            hmargin: 0,
+	            axesColor: '#999',
+	            textSize: textSize,
+	            marginTop: 40,
+	            marginBottom: 10,
+	            marginLeft: 10,
+	            marginRight: 10,
+	            labelsAbove: true,
+	            backgroundGridHlines: false,
+	            backgroundGridBorder: false,
+	            yaxis:false,
+	            
+	            yaxisLabels: labels,
+	            yaxisLabelsFont:'Quicksand',
+	            yaxisTitleFont:'Quicksand',
+	            
+	            key: ['SCA', 'MCA', 'NT', 'LCT', 'MMC', 'Assigned', 'Attempted'],
+	            keyHalign: 'middle',
+	            keyPosition: 'margin',
+	            keyColors: ['#4150B7', '#E8DF37', '#19B2CC', '#FC7F47', '#F35844','#9F9F9F','#cfd8dc'],
+	            colors: ['#4150B7', '#E8DF37', '#19B2CC', '#FC7F47', '#F35844','#9F9F9F','#cfd8dc'],
+	            keyLabelsSize: 10,
+	            keyLabelsFont:'Verdana',
+	        }
+	    }).draw() ;
+	}	
 	// --- [END] internal functions
 } ) ;
