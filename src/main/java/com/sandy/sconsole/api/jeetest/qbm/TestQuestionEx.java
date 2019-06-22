@@ -7,6 +7,7 @@ import java.util.List ;
 import org.apache.commons.codec.binary.Hex ;
 import org.apache.commons.io.FileUtils ;
 
+import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.util.QuestionTextFormatter ;
@@ -55,6 +56,9 @@ public class TestQuestionEx extends TestQuestion {
         setAnswerText            ( tq.getAnswerText()            ) ;
         
         populateAttachments( getQuestionText() ) ;
+        if( StringUtil.isNotEmptyOrNull( getLctContext() ) ) {
+            populateAttachments( getLctContext() ) ;
+        }
     }
     
     private void populateAttachments( String questionText ) 
