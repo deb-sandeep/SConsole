@@ -105,8 +105,8 @@ sConsoleApp.controller( 'EditQuestionController',
 				"\n" + 
 				"1. Statement-1 is True, Statement-2 is True, Statement 2 is a correct explanation for Statement 1\n" + 
 				"2. Statement-1 is True, Statement-2 is True, Statement 2 is NOT a correct explanation for Statement 1\n" + 
-				"3. Statement-1 is True, Statement 2 is False\n" + 
-				"4. Statement-1 is True, Statement 2 is True\n" ; 
+				"3. Statement-1 is True, Statement-2 is False\n" + 
+				"4. Statement-1 is False, Statement-2 is True\n" ; 
 			}
 		}
 		

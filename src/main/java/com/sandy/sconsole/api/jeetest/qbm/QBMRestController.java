@@ -12,6 +12,7 @@ import java.util.NoSuchElementException ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
+import org.springframework.dao.DataIntegrityViolationException ;
 import org.springframework.http.HttpStatus ;
 import org.springframework.http.ResponseEntity ;
 import org.springframework.web.bind.annotation.DeleteMapping ;
@@ -254,6 +255,11 @@ public class QBMRestController {
             question = testQuestionRepo.save( question ) ;
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( question ) ;
+        }
+        catch( DataIntegrityViolationException dive ) {
+            log.error( "A question with same meta data is found. Can't update." ) ; 
+            return ResponseEntity.status( HttpStatus.PRECONDITION_FAILED )
+                    .             body( null ) ;
         }
         catch( Exception e ) {
             log.error( "Could not save question.", e ) ;

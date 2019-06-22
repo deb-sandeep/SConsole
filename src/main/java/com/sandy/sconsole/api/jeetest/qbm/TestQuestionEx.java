@@ -49,6 +49,7 @@ public class TestQuestionEx extends TestQuestion {
         setQuestionRef           ( tq.getQuestionRef()           ) ;
         setLateralThinkingLevel  ( tq.getLateralThinkingLevel()  ) ;
         setProjectedSolveTime    ( tq.getProjectedSolveTime()    ) ;
+        setLctContext            ( tq.getLctContext()            ) ;
         setQuestionText          ( tq.getQuestionText()          ) ;
         setQuestionFormattedText ( tq.getQuestionFormattedText() ) ;
         setAnswerText            ( tq.getAnswerText()            ) ;
@@ -102,6 +103,7 @@ public class TestQuestionEx extends TestQuestion {
         tq.setQuestionRef           ( this.getQuestionRef()           ) ;
         tq.setLateralThinkingLevel  ( this.getLateralThinkingLevel()  ) ;
         tq.setProjectedSolveTime    ( this.getProjectedSolveTime()    ) ;
+        tq.setLctContext            ( this.getLctContext()            ) ;
         tq.setQuestionText          ( this.getQuestionText()          ) ;
         tq.setQuestionFormattedText ( this.getQuestionFormattedText() ) ;
         tq.setAnswerText            ( this.getAnswerText()            ) ;

@@ -54,3 +54,7 @@ d) Mock test question now has lctContext - an additional attribute
 --- DDL queries --- 
 ALTER TABLE `sconsole`.`mocktest_question_master` 
 ADD COLUMN `lct_context` VARCHAR(2048) NULL AFTER `question_text`;
+
+d) Insights have been further refined
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -36,8 +36,8 @@ public class TestQuestionBinding {
     @JoinColumn( name="subject_name" )
     private Subject subject ;
     
-    private Integer sectionIndex = null ;
-    private String sectionName = null ;
+    private Integer sectionIndex = 1 ;
+    private String sectionName = "SCA" ;
     private Integer sequence = null ;
     
     public Integer getId() {
