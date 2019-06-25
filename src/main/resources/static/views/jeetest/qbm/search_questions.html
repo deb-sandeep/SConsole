@@ -144,7 +144,8 @@
 	    </div>
     </div>
 	<div class="panel panel-success" 
-	     ng-repeat="question in searchResults">
+	     ng-repeat="question in searchResults"
+	     ng-show="isQuestionVisible( question )">
 	  <div class="panel-heading">
         <input type="checkbox" 
                ng-model="question.selected" />

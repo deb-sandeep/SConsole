@@ -9,7 +9,7 @@ sConsoleApp.controller( 'EditQuestionController',
 	$scope.isAutoPreviewOn = true ;
 	$scope.formattedContent = null ;
 	$scope.answerType = "" ;
-	$scope.answerTypes = [ "", "iChem", "iMath", "Math", "ART" ] ;
+	$scope.answerTypes = [ "", "iChem", "iMath", "Math", "ART", "IMG" ] ;
 	$scope.validationErrors = [] ;
 	
 	// --- [START] Controller initialization
@@ -108,6 +108,12 @@ sConsoleApp.controller( 'EditQuestionController',
 				"3. Statement-1 is True, Statement-2 is False\n" + 
 				"4. Statement-1 is False, Statement-2 is True\n" ; 
 			}
+			else if( $scope.answerType == "IMG" ) {
+				var qImagePath = constructQImagePath( true ) ;
+				if( qImagePath != null ) {
+					answerText = "{{@img " + qImagePath + "}}" ;
+				}
+			}
 		}
 		
 		$scope.question.questionText = answerText ;
@@ -130,6 +136,39 @@ sConsoleApp.controller( 'EditQuestionController',
 	}
 	
 	// --- [START] Internal Questions
+	
+	function constructQImagePath( fullText ) {
+		
+		var subjectName = $scope.question.topic.subject.name ;
+		
+		var path = subjectName + "/" +
+		           $scope.question.topic.topicName + "/" +
+				   $scope.question.book.bookShortName + "/" ;
+		
+		var imgName = "" ;
+		if( subjectName == "IIT - Chemistry" ) {
+			imgName = "Chem_" ;
+		}
+		else if( subjectName == "IIT - Physics" ) {
+			imgName = "Phy_" ;
+		}
+		else if( subjectName == "IIT - Maths" ) {
+			imgName = "Math_" ;
+		}
+		
+		if( fullText ) {
+			imgName += "Q_" ;
+		}
+		
+		if( $scope.question.questionRef != null ) {
+			imgName += $scope.question.questionRef.split( "/" ).join( "_" ) ;
+			imgName += ".png" ;
+			
+			path += imgName ;
+			return path ;
+		}
+		return null ;
+	}
 	
 	function insertAtCursor( myValue ) {
 
@@ -338,7 +377,7 @@ sConsoleApp.controller( 'EditQuestionController',
                         $scope.question.lctContext            = $scope.lastSavedQuestion.lctContext ;         
                         $scope.question.lateralThinkingLevel  = $scope.lastSavedQuestion.lateralThinkingLevel ;                 
                         $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;
-                        $scope.question.questionRef           = $scope.lastSavedQuestion.questionRef ;
+                        $scope.question.questionRef           = nextQRef( $scope.lastSavedQuestion.questionRef ) ;
                     } 
                     
                     if( $scope.question.questionFormattedText == null ) {
@@ -347,7 +386,7 @@ sConsoleApp.controller( 'EditQuestionController',
                     
                     if( questionId == -1 ) {
                     	$timeout( function(){
-                    		var element = $window.document.getElementById( "questionRef" ) ; 
+                    		var element = $window.document.getElementById( "answer" ) ; 
                     		element.focus() ;
                     	}) ;
                     }
@@ -365,6 +404,30 @@ sConsoleApp.controller( 'EditQuestionController',
             $scope.$parent.interactingWithServer = false ;
         }) ;
     }
+	
+	function nextQRef( curQRef ) {
+		var splitChar = '.' ;
+		var splitIdx = curQRef.lastIndexOf( '.' ) ;
+		
+		if( splitIdx == -1 ) {
+			splitChar = '/' ;
+			splitIdx = curQRef.lastIndexOf( '/' ) ;
+			if( splitIdx == -1 ) {
+				return curQRef ;
+			}
+		}
+		
+		var prefix = curQRef.substring( 0, splitIdx ) ;
+		var strCounter = curQRef.substring( splitIdx + 1 ) ;
+		
+		if( isNaN( strCounter ) ) {
+			return curQRef ;
+		}
+		var counter = parseInt( strCounter ) ;
+		var newQRef = prefix + splitChar + (++counter).toString() ;
+		
+		return newQRef ;
+	}
     
     function saveQuestionOnServer( previewRender, newQuestionEdit ) {
     	

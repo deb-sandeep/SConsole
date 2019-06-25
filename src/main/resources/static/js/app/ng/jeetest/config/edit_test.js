@@ -2,7 +2,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
     
 	$scope.$parent.navBarTitle = "Create New Test" ;
 	$scope.examTypes = [ "MAIN", "ADV" ] ;
-	$scope.questionTypes = [ "SCA", "MCA", "IT", "RNT", "MMT" ] ;
+	$scope.questionTypes = [ "SCA", "MCA", "NT", "LCT", "MMT" ] ;
 	
 	$scope.testId = $routeParams.id ;
 	
@@ -13,8 +13,8 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	$scope.questionsForSelectedTopic = {
 		SCA : [],
 		MCA : [],
-		IT  : [],
-		RNT : [],
+		NT  : [],
+		LCT : [],
 		MMT : []
 	} ;
 	

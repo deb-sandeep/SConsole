@@ -43,16 +43,16 @@
   <div class="panel panel-default">
     <div class="panel-heading test-config-qsel-heading">
       <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" data-target="#itChoice">
-        IT
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#ntChoice">
+        NT
         </a>
       </h4>
     </div>
-    <div id="itChoice" class="panel-body test-config-panel-body panel-collapse collapse">
+    <div id="ntChoice" class="panel-body test-config-panel-body panel-collapse collapse">
        <select class="form-control question-select" 
                size=5
                style="padding:3px;"
-               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['IT']"
+               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['NT']"
                ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
@@ -62,16 +62,16 @@
   <div class="panel panel-default">
     <div class="panel-heading test-config-qsel-heading">
       <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" data-target="#rntChoice">
-        RNT
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#lctChoice">
+        LCT
         </a>
       </h4>
     </div>
-    <div id="rntChoice" class="panel-body test-config-panel-body panel-collapse collapse">
+    <div id="lctChoice" class="panel-body test-config-panel-body panel-collapse collapse">
        <select class="form-control" 
                size=5
                style="padding:3px;"
-               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['RNT']"
+               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['LCT']"
                ng-model="$parent.selectedQuestion">
            <option style="display:none" value="">select a type</option>
        </select>
@@ -96,16 +96,4 @@
        </select>
     </div>
   </div>
- 
-</div>
-
-<div style="padding:0px 10px">
-	<div class="panel panel-success">
-	  <div class="panel-heading test-config-qsel-heading">
-	    <span class="panel-title">Question</span>
-	  </div>
-	  <div class="panel-body">
-	      <render-selected-question></render-selected-question>
-	  </div>
-	</div>
 </div>

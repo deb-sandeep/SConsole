@@ -142,6 +142,16 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
         }) ;
 	}
 	
+	$scope.isQuestionVisible = function( question ) {
+		if( $scope.$parent.searchCriteria.showOnlyUnsynched ) {
+			if( question.synched == false ) {
+				return true ;
+			}
+			return false ;
+		} 
+		return true ;
+	}
+	
 	// --- [END] Scope functions
 	
 	function syncSelectedQuestions() {
