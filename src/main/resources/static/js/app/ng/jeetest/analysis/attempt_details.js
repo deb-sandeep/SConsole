@@ -8,6 +8,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 	$scope.selectedIndex = -1 ;
 	$scope.selectedAttempt = null ;
 	$scope.selectedQuestion = null ;
+	$scope.graceScoreForSelectedQuestion = 4 ;
 	
 	$scope.totalScore = 0 ;
 	$scope.totalMarks = 0 ;
@@ -26,6 +27,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 		console.log( "Question attempt selected." ) ;
 		$scope.selectedIndex = index ;
 		$scope.selectedQuestion = $scope.questions[ index ] ;
+		$scope.selectedAttempt = $scope.questionAttempts[ index ] ;
 	}
 	
 	$scope.getRowBackgroundClass = function( index ) {
@@ -60,11 +62,77 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
     	$location.path( "/" ) ;  
     }
     
+	$scope.showAwardGraceDialog = function( qAttemptIndex ) {
+		console.log( "Showing award grace dialog..." ) ;
+		$scope.questionAttemptSelected( qAttemptIndex ) ;
+		$( '#graceInputDialog' ).modal( 'show' ) ;
+	}
+	
+	$scope.awardGraceToSelectedQuestion = function() {
+		console.log( "Awarding grace to selected question ..." ) ;
+		console.log( $scope.graceScoreForSelectedQuestion ) ;
+		
+		var preGraceScore = $scope.selectedAttempt.score ;
+		var preGraceAttemptStatus = $scope.selectedAttempt.attemptStatus ;
+		
+		$scope.selectedAttempt.score = $scope.graceScoreForSelectedQuestion ;
+		$scope.selectedAttempt.attemptStatus = "q-attempted" ;
+		if( $scope.graceScoreForSelectedQuestion > 0 ) {
+			$scope.selectedAttempt.isCorrect = true ;
+		}
+		else {
+			$scope.selectedAttempt.isCorrect = false ;
+		}
+		
+		// Nullify the pre grace score and add the new one
+		$scope.totalScore += ( -1 * preGraceScore ) ;
+		$scope.totalScore += $scope.graceScoreForSelectedQuestion ;
+		
+		updateGraceScoreOnServer( $scope.testAttemptId,
+				                  $scope.selectedAttempt.testQuestionId,
+				                  preGraceAttemptStatus,
+				                  preGraceScore,
+				                  $scope.selectedAttempt.attemptStatus,
+				                  $scope.selectedAttempt.score ) ;
+	}
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
 	
+	function updateGraceScoreOnServer( testAttemptId, 
+			                           testQuestionId,
+			                           preGraceAttemptState,
+			                           preGraceScore,
+			                           postGraceAttemptState,
+			                           postGraceScore ) {
+		
+    	console.log( "Updating grace score on server." ) ;
+        
+    	$scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt/UpdateGraceScore', {
+        	testAttemptId : testAttemptId,
+        	testQuestionId : testQuestionId,
+        	preGraceAttemptState : preGraceAttemptState,
+        	preGraceScore : preGraceScore,
+        	postGraceAttemptState : postGraceAttemptState,
+        	postGraceScore : postGraceScore
+        } )
+        .then ( 
+            function( response ){
+                console.log( "Successfully updated grace score" ) ;
+            }, 
+            function( error ){
+                console.log( "Error saving grace score on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save grace score." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+
     function fetchTestQuestionAttempts( testAttemptId ) {
     	
     	console.log( "Fetching test question attempts from server." ) ;

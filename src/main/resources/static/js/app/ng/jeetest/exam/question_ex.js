@@ -15,6 +15,9 @@ function QuestionEx( q ) {
 	this.nextQuestion = null ;
 	this.attemptState = AttemptState.prototype.NOT_VISITED ;
 	this.interactionHandler = null ;
+	
+	var graceAwarded = false ;
+	var graceScore = 0 ;
 
     this.getStatusStyle = function() {
     	return this.attemptState ;
@@ -38,11 +41,25 @@ function QuestionEx( q ) {
     	}
     }
     
+    this.awardGrace = function( score ) {
+    	graceAwarded = true ;
+    	graceScore = score ;
+    	if( ( this.attemptState != AttemptState.prototype.ATTEMPTED ) ||
+    		( this.attemptState != AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) ) {
+    		this.attemptState = AttemptState.prototype.ATTEMPTED ;
+    	}
+    }
+    
     this.getTotalMarks = function() {
     	return this.interactionHandler.getTotalMarks() ;
     }
     
     this.getScore = function() {
+    	
+    	if( graceAwarded ) {
+    		return graceScore ;
+    	}
+    	
     	if( this.attemptState == AttemptState.prototype.ATTEMPTED ||
     		this.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
     		
@@ -57,6 +74,11 @@ function QuestionEx( q ) {
     }
     
     this.isCorrectlyAnswered = function() {
+    	
+    	if( graceAwarded ) {
+    		return true ;
+    	}
+    	
     	if( this.attemptState == AttemptState.prototype.ATTEMPTED ||
     		this.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
     		

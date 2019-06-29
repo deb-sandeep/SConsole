@@ -10,4 +10,7 @@ public interface TestQuestionAttemptRepository
     extends CrudRepository<TestQuestionAttempt, Integer> {
     
     List<TestQuestionAttempt> findAllByTestAttemptId( Integer testAttemptId ) ;
+    
+    TestQuestionAttempt findByTestAttemptIdAndTestQuestionId( 
+                               Integer testAttemptId, Integer testQuestionId ) ;
 }

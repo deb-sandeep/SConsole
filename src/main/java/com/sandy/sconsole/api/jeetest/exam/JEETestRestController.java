@@ -205,4 +205,70 @@ public class JEETestRestController {
                                  .body( null ) ;
         }
     }
+
+    @PostMapping( "/TestAttempt/UpdateGraceScore" )
+    public ResponseEntity<ResponseMsg> updateGraceScore(
+            @RequestBody GraceScoreInput graceScoreInput ) {
+        
+        try {
+            log.debug( "Updating grace score." ) ;
+            
+            TestAttempt testAttempt = taRepo.findById( graceScoreInput.getTestAttemptId() ).get() ;
+            TestQuestionAttempt tqAttempt = tqaRepo.findByTestAttemptIdAndTestQuestionId( 
+                                                    graceScoreInput.getTestAttemptId(), 
+                                                    graceScoreInput.getTestQuestionId() ) ;
+            
+            String preGraceAttemptState = graceScoreInput.getPreGraceAttemptState() ;
+
+            tqAttempt.setAttemptStatus( graceScoreInput.getPostGraceAttemptState() ) ;
+            tqAttempt.setScore( graceScoreInput.getPostGraceScore() ) ;
+            if( tqAttempt.getScore() <= 0 ) {
+                tqAttempt.setIsCorrect( Boolean.FALSE ) ;
+                if( preGraceAttemptState.equals( "q-ans-and-marked-for-review" ) || 
+                    preGraceAttemptState.equals( "q-attempted" ) ) {
+                    testAttempt.setNumCorrectAnswers( testAttempt.getNumCorrectAnswers()-1 ) ;
+                }
+            }
+            else {
+                tqAttempt.setIsCorrect( Boolean.TRUE ) ;
+                if( preGraceAttemptState.equals( "q-ans-and-marked-for-review" ) || 
+                    preGraceAttemptState.equals( "q-attempted" ) ) {
+                    testAttempt.setNumWrongAnswers( testAttempt.getNumWrongAnswers()-1 ) ;
+                }
+                testAttempt.setNumCorrectAnswers( testAttempt.getNumCorrectAnswers()+1 ) ;
+            }
+            
+            testAttempt.setScore( testAttempt.getScore() + -1*graceScoreInput.getPreGraceScore() ) ;
+            testAttempt.setScore( testAttempt.getScore() + graceScoreInput.getPostGraceScore() ) ;
+            
+            if( preGraceAttemptState.equals( "q-not-visited" ) ) {
+                testAttempt.setNumNotVisited( testAttempt.getNumNotVisited()-1 ) ;
+            }
+            else if( preGraceAttemptState.equals( "q-not-answered" ) ) {
+                testAttempt.setNumNotAnswered( testAttempt.getNumNotAnswered()-1 ) ;
+            }
+            else if( preGraceAttemptState.equals( "q-attempted" ) ) {
+                testAttempt.setNumAttempted( testAttempt.getNumAttempted()-1 ) ;
+            }
+            else if( preGraceAttemptState.equals( "q-marked-for-review" ) ) {
+                testAttempt.setNumMarkedForReview( testAttempt.getNumMarkedForReview()-1 ) ;
+            }
+            else if( preGraceAttemptState.equals( "q-ans-and-marked-for-review" ) ) {
+                testAttempt.setNumAnsAndMarkedForReview( testAttempt.getNumAnsAndMarkedForReview()-1 ) ;
+            }
+            
+            testAttempt.setNumAttempted( testAttempt.getNumAttempted()+1 ) ;
+
+            tqaRepo.save( tqAttempt ) ;
+            taRepo.save( testAttempt ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error saving grace input", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
 }

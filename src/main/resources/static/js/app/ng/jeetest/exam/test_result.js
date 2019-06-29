@@ -6,6 +6,7 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
 	$scope.totalScore = 0 ;
 	$scope.totalNegativeMarks = 0 ;
 	$scope.selectedQuestion = null ;
+	$scope.graceScoreForSelectedQuestion = 4 ;
 	
 	// ---------------- local variables --------------------------------------
 	
@@ -39,6 +40,38 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
 		return "" ;
 	}
 	
+	$scope.showAwardGraceDialog = function( questionEx ) {
+		$scope.selectQuestion( questionEx ) ;
+		$( '#graceInputDialog' ).modal( 'show' ) ;
+	}
+	
+	$scope.awardGraceToSelectedQuestion = function() {
+		console.log( "Awarding grace..." ) ;
+		
+		var preGraceScore = $scope.selectedQuestion.getScore() ;
+		var preGraceAttemptState = $scope.selectedQuestion.attemptState ;
+		if( preGraceScore != 0 ) {
+			// This will ensure that we roll back any negative marking and
+			// since this logic does not take into account the question type
+			// and the attempt state, it is generic and will not break while
+			// awarding grace tp JEE advanced questions 
+			$scope.totalScore += ( -1 * preGraceScore ) ;
+			$scope.totalNegativeMarks += preGraceScore ;
+		}
+		
+		$scope.selectedQuestion.awardGrace( $scope.graceScoreForSelectedQuestion ) ;
+		
+		// Now add the freshly computed score to the total score.
+		$scope.totalScore += $scope.selectedQuestion.getScore() ;
+		
+		updateGraceScoreOnServer( $scope.$parent.testAttempt.id,
+					              $scope.selectedQuestion.question.id,
+					              preGraceAttemptState,
+					              preGraceScore,
+					              $scope.selectedQuestion.attemptState,
+					              $scope.selectedQuestion.getScore() ) ;
+	}
+	
     // --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -55,6 +88,38 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
     	}
     }
     
+	function updateGraceScoreOnServer( testAttemptId, 
+						               testQuestionId,
+							           preGraceAttemptState,
+							           preGraceScore,
+							           postGraceAttemptState,
+							           postGraceScore ) {
+		
+		console.log( "Updating grace score on server." ) ;
+		
+		$scope.$parent.interactingWithServer = true ;
+		$http.post( '/TestAttempt/UpdateGraceScore', {
+			testAttemptId : testAttemptId,
+			testQuestionId : testQuestionId,
+			preGraceAttemptState : preGraceAttemptState,
+			preGraceScore : preGraceScore,
+			postGraceAttemptState : postGraceAttemptState,
+			postGraceScore : postGraceScore
+		} )
+		.then ( 
+			function( response ){
+				console.log( "Successfully updated grace score" ) ;
+			}, 
+			function( error ){
+				console.log( "Error saving grace score on server." ) ;
+				$scope.$parent.addErrorAlert( "Could not save grace score." ) ;
+			}
+		)
+		.finally(function() {
+			$scope.$parent.interactingWithServer = false ;
+		}) ;
+	}
+		
     function computeResult() {
     	
     	var numCorrectAnswers = 0 ;
