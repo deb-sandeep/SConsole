@@ -12,6 +12,10 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/qbm/qbInsight",
 		controller : "QBInsightController"
 	})
+	.when("/bulkEdit", {
+		templateUrl : "/jeetest/qbm/bulkEdit",
+		controller : "BulkEditController"
+	})
 	.when("/editQuestion/:id", {
 		templateUrl : "/jeetest/qbm/editQuestion",
 		controller : "EditQuestionController"

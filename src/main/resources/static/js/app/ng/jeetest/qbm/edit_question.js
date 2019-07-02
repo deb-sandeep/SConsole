@@ -2,6 +2,7 @@ sConsoleApp.controller( 'EditQuestionController',
 		                function( $scope, $http, $sce, $routeParams, $window, $timeout ) {
 	
 	var snippets = new LatexSnippets() ;
+	var editHelper = new EditHelper() ;
 	
 	$scope.$parent.navBarTitle = "Create / Edit Questions" ;
 	$scope.question = null ;
@@ -109,7 +110,7 @@ sConsoleApp.controller( 'EditQuestionController',
 				"4. Statement-1 is False, Statement-2 is True\n" ; 
 			}
 			else if( $scope.answerType == "IMG" ) {
-				var qImagePath = constructQImagePath( true ) ;
+				var qImagePath = editHelper.constructQImagePath( true ) ;
 				if( qImagePath != null ) {
 					answerText = "{{@img " + qImagePath + "}}" ;
 				}
@@ -136,39 +137,6 @@ sConsoleApp.controller( 'EditQuestionController',
 	}
 	
 	// --- [START] Internal Questions
-	
-	function constructQImagePath( fullText ) {
-		
-		var subjectName = $scope.question.topic.subject.name ;
-		
-		var path = subjectName + "/" +
-		           $scope.question.topic.topicName + "/" +
-				   $scope.question.book.bookShortName + "/" ;
-		
-		var imgName = "" ;
-		if( subjectName == "IIT - Chemistry" ) {
-			imgName = "Chem_" ;
-		}
-		else if( subjectName == "IIT - Physics" ) {
-			imgName = "Phy_" ;
-		}
-		else if( subjectName == "IIT - Maths" ) {
-			imgName = "Math_" ;
-		}
-		
-		if( fullText ) {
-			imgName += "Q_" ;
-		}
-		
-		if( $scope.question.questionRef != null ) {
-			imgName += $scope.question.questionRef.split( "/" ).join( "_" ) ;
-			imgName += ".png" ;
-			
-			path += imgName ;
-			return path ;
-		}
-		return null ;
-	}
 	
 	function insertAtCursor( myValue ) {
 
@@ -249,7 +217,9 @@ sConsoleApp.controller( 'EditQuestionController',
 			$scope.validationErrors.push( "Answer Text should be specified." ) ;
 		}
 		else {
-			if( !isAnswerSemanticallyValid( q.answerText, $scope.question.questionType ) ) {
+			if( !editHelper.isAnswerSemanticallyValid( q.answerText, 
+					                                   $scope.question.questionType,
+					                                   $scope.validationErrors ) ) {
 				errorsFound = true ;
 			}
 		}
@@ -259,97 +229,6 @@ sConsoleApp.controller( 'EditQuestionController',
 			return false ;
 		}
 		
-		return true ;
-	}
-	
-	function isAnswerSemanticallyValid( ansText, qType ) {
-		if( qType == "SCA" || qType == "MMT" ) {
-			return checkValueIsIntegerAndBetween1to4( ansText ) ;
-		}
-		else if( qType == "MCA" ) {
-			// Check if multiple answers are provided separated by comma
-			// Check each part is numeric and in [1,4]
-			// Check there are no duplicates
-			return checkMultipleOptions( ansText ) ;
-		}
-		else if( qType == "NT" ) {
-			// 1. If the answer contains a - in the middle, it implies that a 
-			//    range is specified. If so validate that each part of the range
-			//    is a number and the first part is less than the second
-			// 2. Check if answer is a number
-			return checkNumericType( ansText ) ;
-		}
-		else if( qType == "LCT" ) {
-			// If the answer contains comma, it implies that it is a multiple
-			// choice answer. If so, the MCA rules appy
-			if( ansText.indexOf( "," ) > 0 ) {
-				return checkMultipleValues( ansText ) ;
-			}
-			else {
-				// In case no comma is there, SCA rules apply
-				return checkValueIsIntegerAndBetween1to4( ansText ) ;
-			}
-		}
-		
-		return true ;
-	}
-	
-	function checkValueIsIntegerAndBetween1to4( text ) {
-		
-		if( isNaN( text ) ) {
-			$scope.validationErrors.push( "Answer should be an integer" ) ;
-			return false ;
-		}
-		
-		var val = parseInt( text.trim() ) ;
-		if( val == NaN ) {
-			$scope.validationErrors.push( "Answer should be an integer between 1-4" ) ;
-			return false ;
-		}
-		else {
-			if( val < 1 || val > 4 ) {
-				$scope.validationErrors.push( "Answer should be an integer between 1-4" ) ;
-				return false ;
-			}
-		}
-		return true ;
-	}
-	
-	function checkMultipleOptions( text ) {
-		var parts = text.split( "," ) ;
-		if( parts.length < 2 ) {
-			$scope.validationErrors.push( "Answer is MCA but only one answer marked correct." ) ;
-			return false ;
-		}
-		else {
-			for( var i=0; i<parts.length; i++ ) {
-				if( !checkValueIsIntegerAndBetween1to4( parts[i] ) ) {
-					return false ;
-				}
-			}
-		}
-		return true ;
-	}
-	
-	function checkNumericType( text ) {
-		var parts = text.split( "~" ) ;
-		if( parts.length > 2 ) {
-			$scope.validationErrors.push( "Answer is NT but has more than two range markers" ) ;
-			return false ;
-		}
-		else {
-			for( var i=0; i<parts.length; i++ ) {
-				if( isNaN( parts[i].trim() ) ) {
-					$scope.validationErrors.push( "Answer or (part) is not a number." ) ;
-					return false ;
-				}
-				
-				if( parseFloat( parts[i].trim() ) == NaN ) {
-					$scope.validationErrors.push( "NT answer (or part) is not a number." ) ;
-					return false ;
-				}
-			}
-		}
 		return true ;
 	}
 	
@@ -377,7 +256,7 @@ sConsoleApp.controller( 'EditQuestionController',
                         $scope.question.lctContext            = $scope.lastSavedQuestion.lctContext ;         
                         $scope.question.lateralThinkingLevel  = $scope.lastSavedQuestion.lateralThinkingLevel ;                 
                         $scope.question.projectedSolveTime    = $scope.lastSavedQuestion.projectedSolveTime ;
-                        $scope.question.questionRef           = nextQRef( $scope.lastSavedQuestion.questionRef ) ;
+                        $scope.question.questionRef           = editHelper.nextQRef( $scope.lastSavedQuestion.questionRef ) ;
                     } 
                     
                     if( $scope.question.questionFormattedText == null ) {
@@ -405,30 +284,6 @@ sConsoleApp.controller( 'EditQuestionController',
         }) ;
     }
 	
-	function nextQRef( curQRef ) {
-		var splitChar = '.' ;
-		var splitIdx = curQRef.lastIndexOf( '.' ) ;
-		
-		if( splitIdx == -1 ) {
-			splitChar = '/' ;
-			splitIdx = curQRef.lastIndexOf( '/' ) ;
-			if( splitIdx == -1 ) {
-				return curQRef ;
-			}
-		}
-		
-		var prefix = curQRef.substring( 0, splitIdx ) ;
-		var strCounter = curQRef.substring( splitIdx + 1 ) ;
-		
-		if( isNaN( strCounter ) ) {
-			return curQRef ;
-		}
-		var counter = parseInt( strCounter ) ;
-		var newQRef = prefix + splitChar + (++counter).toString() ;
-		
-		return newQRef ;
-	}
-    
     function saveQuestionOnServer( previewRender, newQuestionEdit ) {
     	
     	console.log( "Saving question on server." ) ;

@@ -1,0 +1,174 @@
+<div class="panel panel-default" style="padding:0px; margin:0px">
+  <div class="panel-body" style="padding:5px">
+	  <table style="table-layout: fixed; width:100%;">
+		  <tr>
+		    <td valign="top" width="40%">
+		        <table class="table table-condensed">
+		            <!-- First row -->
+		            <tr>
+		                <td class="labelcell" width="150px"><label for="subject">Subject</label></td>
+		                <td width="10px">:</td>
+		                <td colspan="7">
+		                 <select id="subject" 
+		                         class="form-control"  
+		                         ng-model="baseInput.subjectName"
+		                         ng-options="item for item in $parent.qbmMasterData.subjectNames">
+		                 </select>
+		                </td>
+		            </tr>
+		            <!-- Second row -->
+		            <tr>
+			            <td class="labelcell"><label for="topic">Topic</label></td>
+			            <td>:</td>
+			            <td colspan="7">
+		                 <select id="topic" 
+		                         class="form-control"  
+		                         ng-model="baseInput.topic"
+		                         ng-options="item as item.topicName for item in $parent.qbmMasterData.topics[baseInput.subjectName] track by item.id">
+		                 </select>
+			            </td>
+		            </tr>
+		            <!-- Third row -->
+		            <tr>
+		                <td class="labelcell"><label for="book">Book</label></td>
+		                <td>:</td>
+		                <td colspan="7">
+				         <select id="book" 
+				                 class="form-control"  
+				                 ng-model="baseInput.book"
+				                 ng-options="item as item.bookShortName for item in $parent.qbmMasterData.books[baseInput.subjectName] track by item.id">
+				         </select>
+		                </td>
+		            </tr>
+		            <!-- Fourth row -->
+                    <tr>
+                        <td class="labelcell"><label for="baseQRef">Base QRef</label></td>
+                        <td>:</td>
+                        <td colspan="7">
+		                    <input id="baseQRef"
+		                           type="text" 
+		                           ng-model="baseInput.baseQRef" 
+		                           style="width:100%"/>
+                         </select>
+                        </td>
+                    </tr>
+		            <!-- Fifth row -->
+                    <tr>
+                        <td colspan="9">
+					          <button type="button" class="btn btn-success btn-sm"
+					                  ng-click="applyBaseCriteria()">
+					              <span class="glyphicon glyphicon-ok-circle"></span>
+					              Apply
+					          </button>
+                        </td>
+                    </tr>
+		            <!-- Sixth row -->
+                    <tr>
+                        <td colspan="9">
+							<table class="table table-bordered table-striped table-compact">
+							  <thead>
+							    <tr class="success">
+							      <th width="100px">QRef</th>
+							      <th width="75px">QType</th>
+							      <th>Img name</th>
+							      <th width="100px">Ans</th>
+                                  <th width="50px">Lat</th>
+                                  <th width="75px">Time</th>
+                                  <th></th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr ng-repeat="entry in entries track by $index">
+                                  <td>
+		                            <input class="form-control" type="text" ng-model="entry.qRef" style="width:100%"/>
+                                  </td>
+                                  <td>
+					                 <select class="form-control"  
+					                         ng-model="entry.qType"
+					                         ng-options="item for item in $parent.qbmMasterData.questionTypes">
+					                 </select>
+                                  </td>
+                                  <td>
+                                    <input class="form-control"  type="text" ng-model="entry.imgName" style="width:100%"/>
+                                  </td>
+                                  <td>
+                                    <input class="form-control"  type="text" ng-model="entry.aText" style="width:100%"/>
+                                  </td>
+                                  <td>
+					                 <select class="form-control"  
+					                         ng-model="entry.latLevel"
+					                         ng-options="item for item in $parent.qbmMasterData.lateralLevel">
+					                 </select>
+                                  </td>
+                                  <td>
+					                 <select class="form-control"  
+					                         ng-model="entry.projTime"
+					                         ng-options="item for item in $parent.qbmMasterData.approxSolveTime">
+					                 </select>
+                                  </td>
+                                  <td>
+                                    <span class="glyphicon glyphicon-save"
+                                          ng-show="!entry.saved"
+                                          ng-click="saveEntry( entry )">
+                                    </span>
+                                  </td>
+							    </tr>
+							  </tbody>
+							</table>
+                        </td>
+                    </tr>
+		            <!-- Seventh row -->
+		            <!-- Eighth row -->
+		        </table>
+		    </td>
+		    <td valign="top">
+		        <table class="table table-condensed">
+		            <!-- First row -->
+		            <tr>
+		                <td width="100%" class="labelcell">
+    		                <label for="preview">Preview</label>
+                        </td>
+		            </tr>
+		            <!-- Second row -->
+		            <tr>
+		              <td>
+		              </td>
+		            </tr>
+		        </table>
+		    </td>
+		  </tr>
+	  </table>
+  </div>
+  <div class="panel-footer clearfix">
+	  <div class="pull-left">
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="saveAll()">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              Save all
+          </button>
+	  </div>
+  </div>
+</div>
+
+<div id="validationErrorsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title" style="color:red;">Please correct the errors before submitting</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px;color:blue;">
+        <ol>
+            <li ng-repeat="error in validationErrors">
+                {{error}}
+            </li>
+        </ol>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" 
+                class="btn btn-default" 
+                ng-click="closeValidationErrorsDialog()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

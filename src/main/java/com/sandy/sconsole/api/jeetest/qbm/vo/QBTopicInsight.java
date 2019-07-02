@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.jeetest.qbm;
+package com.sandy.sconsole.api.jeetest.qbm.vo;
 
 import java.util.HashMap ;
 import java.util.Map ;

@@ -1,4 +1,4 @@
-package com.sandy.sconsole.api.jeetest.qbm;
+package com.sandy.sconsole.api.jeetest.qbm.helper;
 
 import java.io.File ;
 import java.util.ArrayList ;
@@ -11,7 +11,8 @@ import org.apache.log4j.Logger ;
 
 import com.fasterxml.jackson.databind.ObjectMapper ;
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.api.jeetest.qbm.TestQuestionEx.ImageData ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.TestQuestionEx ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.TestQuestionEx.ImageData ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 

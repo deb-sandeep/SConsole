@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
-import com.sandy.sconsole.api.jeetest.qbm.QBMMasterData ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.QBMMasterData ;
 import com.sandy.sconsole.dao.entity.TestConfigIndex ;
 import com.sandy.sconsole.dao.entity.TestQuestionBinding ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;

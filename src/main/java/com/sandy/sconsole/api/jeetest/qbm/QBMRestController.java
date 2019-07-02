@@ -24,6 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam ;
 import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.common.util.StringUtil ;
+import com.sandy.sconsole.api.jeetest.qbm.helper.BulkQuestionEntryHelper ;
+import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSearchEngine ;
+import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSynchronizer ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.BulkQEntry ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.QBMMasterData ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.QBTopicInsight ;
+import com.sandy.sconsole.api.jeetest.qbm.vo.TestQuestionEx ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -48,7 +55,7 @@ public class QBMRestController {
     private BookRepository bookRepo = null ;
     
     @Autowired
-    private TestQuestionRepository testQuestionRepo = null ;
+    private TestQuestionRepository tqRepo = null ;
     
     @Autowired
     private TestQuestionBindingRepository tqbRepo = null ;
@@ -56,7 +63,7 @@ public class QBMRestController {
     @GetMapping( "/QBTopicInsights" )
     public ResponseEntity<List<QBTopicInsight>> getQBInsights() {
         try {
-            List<Object[]> results = testQuestionRepo.getTopicBasedInsight() ;
+            List<Object[]> results = tqRepo.getTopicBasedInsight() ;
             List<QBTopicInsight> insights = assembleInsights( results ) ;
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( insights ) ;
@@ -99,7 +106,7 @@ public class QBMRestController {
         }
         else {
             try {
-                testQuestion = testQuestionRepo.findById( id ).get() ;
+                testQuestion = tqRepo.findById( id ).get() ;
             }
             catch( NoSuchElementException e ) {
                 log.error( "No test question found with id = " + id ) ;
@@ -131,7 +138,7 @@ public class QBMRestController {
         }
         else {
             List<TestQuestion> questions = null ;
-            questions = testQuestionRepo.findActiveQuestionsForTopic( topicId ) ;
+            questions = tqRepo.findActiveQuestionsForTopic( topicId ) ;
             
             Map<String,List<TestQuestion>> map = new HashMap<>() ;
             for( String qType : QBMMasterData.questionTypes ) {
@@ -165,7 +172,7 @@ public class QBMRestController {
             return ResponseEntity.status( HttpStatus.NOT_FOUND )
                                  .body( new ResponseMsg( "Question id can't be <=0" ) ) ;
         }
-        testQuestionRepo.deleteById( id ) ;
+        tqRepo.deleteById( id ) ;
         return ResponseEntity.status( HttpStatus.OK )
                              .body( new ResponseMsg( "Successfully deleted" ) ) ;
     }
@@ -184,7 +191,7 @@ public class QBMRestController {
         TestQuestionSearchEngine searchEngine = null ;
         
         try {
-            searchEngine = new TestQuestionSearchEngine( testQuestionRepo, tqbRepo ) ;
+            searchEngine = new TestQuestionSearchEngine( tqRepo, tqbRepo ) ;
             List<TestQuestion> results = searchEngine.search( 
                                                     subjects, 
                                                     selectedQuestionTypes, 
@@ -252,7 +259,7 @@ public class QBMRestController {
                 question.setSynched( false ) ;
             }
         
-            question = testQuestionRepo.save( question ) ;
+            question = tqRepo.save( question ) ;
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( question ) ;
         }
@@ -400,5 +407,31 @@ public class QBMRestController {
         }
         
         return insights ;
+    }
+
+    @GetMapping( "/BulkQuestionsEntryMeta" ) 
+    public ResponseEntity<List<BulkQEntry>> getRevisionQuestions(
+            @RequestParam( name="subjectName",  required=true ) String  subjectName,
+            @RequestParam( name="topicId",      required=true ) Integer topicId,
+            @RequestParam( name="bookId",       required=true ) Integer bookId,
+            @RequestParam( name="baseQRef",     required=false) String  baseQRef ) {
+        
+        try {
+            log.debug( "Getting revision questions." ) ;
+            
+            Topic topic = topicRepo.findById( topicId ).get() ;
+            Book  book  = bookRepo.findById( bookId ).get() ;
+            
+            BulkQuestionEntryHelper helper = new BulkQuestionEntryHelper( tqRepo ) ;
+            List<BulkQEntry> entries = helper.findBulkQuestionEntries( subjectName, topic, book, baseQRef ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( entries ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error getting available test attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
     }
 }
