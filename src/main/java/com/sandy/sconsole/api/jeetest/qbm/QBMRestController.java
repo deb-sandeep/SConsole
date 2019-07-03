@@ -417,8 +417,6 @@ public class QBMRestController {
             @RequestParam( name="baseQRef",     required=false) String  baseQRef ) {
         
         try {
-            log.debug( "Getting revision questions." ) ;
-            
             Topic topic = topicRepo.findById( topicId ).get() ;
             Book  book  = bookRepo.findById( bookId ).get() ;
             

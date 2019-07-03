@@ -27,31 +27,62 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 	$scope.topicGraphTitle = "Physics" ;
 	
 	// --- [START] Controller initialization
-	loadQBInsights() ;
+	loadQBInsights( null ) ;
 	// --- [END] Controller initialization
 	
 	// --- [START] Scope functions
 	
 	$scope.renderPhyInsights = function() {
 		$scope.topicGraphTitle = "Physics" ;
-		renderTopicInsightGraph( 'topic_insight_graph', phyTopicsInsights,  phyTopics, 10 ) ;
+		loadQBInsights( function(){
+			renderTopicInsightGraph( 'topic_insight_graph', phyTopicsInsights,  phyTopics, 10 ) ;
+		}) ;
 	}
 
 	$scope.renderChemInsights = function() {
 		$scope.topicGraphTitle = "Chemistry" ;
-		renderTopicInsightGraph( 'topic_insight_graph', chemTopicsInsights, chemTopics, 10 ) ;
+		loadQBInsights( function(){
+			renderTopicInsightGraph( 'topic_insight_graph', chemTopicsInsights, chemTopics, 10 ) ;
+		}) ;
 	}
 
 	$scope.renderMathsInsights = function() {
 		$scope.topicGraphTitle = "Maths" ;
-		renderTopicInsightGraph( 'topic_insight_graph', mathTopicsInsights, mathTopics, 10 ) ;
+		loadQBInsights( function(){
+			renderTopicInsightGraph( 'topic_insight_graph', mathTopicsInsights, mathTopics, 10 ) ;
+		} ) ;
 	}
 
 	// --- [END] Scope functions
 	
 	// --- [START] internal functions
 	
-	function loadQBInsights() {
+	function clearState() {
+		
+		phyTotalQ = 0 ;
+		phyAttemptedQ = 0 ;
+		phyAssignedQ = 0 ;
+		
+		chemTotalQ = 0 ;
+		chemAttemptedQ = 0 ;
+		chemAssignedQ = 0 ;
+		
+		mathTotalQ = 0 ;
+		mathAttemptedQ = 0 ;
+		mathAssignedQ = 0 ;
+		
+		subjectInsights.length = 0 ;
+
+		phyTopics.length = 0 ;
+        chemTopics.length = 0 ;
+        mathTopics.length = 0 ;
+        
+        phyTopicsInsights.length = 0 ;
+        chemTopicsInsights.length = 0 ;
+        mathTopicsInsights.length = 0 ;
+	}
+	
+	function loadQBInsights( callbackFn ) {
 		
         console.log( "Loading question bank insights from server." ) ;
         
@@ -61,7 +92,8 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
                 function( response ){
                     console.log( "QBM insights received." ) ;
                     console.log( response ) ;
-                    processRawInsightData( response.data ) ;
+                    clearState() ;
+                    processRawInsightData( response.data, callbackFn ) ;
                 }, 
                 function( error ){
                     console.log( "Error getting Q insights data." ) ;
@@ -74,7 +106,7 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
         }) ;
 	}
 	
-	function processRawInsightData( rawData ) {
+	function processRawInsightData( rawData, callbackFn ) {
 		
 		for( i=0; i<rawData.length; i++ ) {
 			var insight = rawData[i] ;
@@ -134,7 +166,13 @@ sConsoleApp.controller( 'QBInsightController', function( $scope, $http, $locatio
 		subjectInsights.push( [ mathTotalQ - mathAssignedQ, mathAssignedQ - mathAttemptedQ, mathAttemptedQ ] ) ;
 		
 		renderSubjectInsightGraph( 'subject_insight_graph', subjectInsights,  subjectNames, 10 ) ;
-		$scope.renderPhyInsights() ;
+		
+		if( callbackFn != null ) {
+			callbackFn() ;
+		}
+		else {
+			$scope.renderPhyInsights() ;
+		}
 	}
 	
 	function renderSubjectInsightGraph( canvasId, dataArray, labels, textSize ) {

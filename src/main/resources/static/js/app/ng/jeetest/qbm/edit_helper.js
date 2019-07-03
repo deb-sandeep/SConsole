@@ -93,13 +93,18 @@ function EditHelper() {
 	
 	function checkValueIsIntegerAndBetween1to4( text, validationErrors ) {
 		
+		if( text.trim() == "" ) {
+			validationErrors.push( "Answer can not be blank" ) ;
+			return false ;
+		}
+		
 		if( isNaN( text ) ) {
 			validationErrors.push( "Answer should be an integer" ) ;
 			return false ;
 		}
 		
 		var val = parseInt( text.trim() ) ;
-		if( val == NaN ) {
+		if( val === NaN ) {
 			validationErrors.push( "Answer should be an integer between 1-4" ) ;
 			return false ;
 		}
