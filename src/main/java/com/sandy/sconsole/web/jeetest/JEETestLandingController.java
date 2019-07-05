@@ -17,9 +17,9 @@ public class JEETestLandingController {
         return "jeetest/qbm/qb_management" ;
     }
     
-    @RequestMapping( "/test-config" )
+    @RequestMapping( "/test-config-main" )
     public String testConfig() {
-        return "jeetest/config/test_config" ;
+        return "jeetest/config_main/test_config" ;
     }
 
     @RequestMapping( "/exam" )

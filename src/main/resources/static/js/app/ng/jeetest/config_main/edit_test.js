@@ -1,5 +1,23 @@
 sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routeParams, $location ) {
+	
+	var scaLatLevelSortDir = "asc" ;
+	var scaProjTimeSortDir = "desc" ;
     
+	$scope.assembledQSortDir = {
+		'IIT - Physics' : {
+			lat : "asc",
+			proj : "asc"
+		},
+		'IIT - Chemistry' : {
+			lat : "asc",
+			proj : "asc"
+		},
+		'IIT - Maths' : {
+			lat : "asc",
+			proj : "asc"
+		}
+	}
+
 	$scope.$parent.navBarTitle = "Create New Test" ;
 	$scope.examTypes = [ "MAIN", "ADV" ] ;
 	$scope.questionTypes = [ "SCA", "MCA", "NT", "LCT", "MMT" ] ;
@@ -27,7 +45,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		'IIT - Chemistry' : [],
 		'IIT - Maths'     : []
 	}
-	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	loadQBInsights() ;
@@ -137,10 +154,86 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		saveTestOnServer() ;
 	}
 	
+	$scope.shuffleQuestions = function( subjectName, qType ) {
+		var questions = null ;
+		if( subjectName != null ) {
+			questions = $scope.assembledQuestions[ subjectName ] ;
+			shuffle( questions ) ;
+			refreshRampGraph( subjectName ) ;
+		}
+		else if( qType != null ) {
+			questions = $scope.questionsForSelectedTopic[ qType ] ;
+			shuffle( questions ) ;
+		}
+	} 
+	
+	$scope.sortQuestionsByLatLevel = function( qType ) {
+		var questions = $scope.questionsForSelectedTopic[ qType ] ;
+		sortQuestionsByAttribute( questions, "lat", scaLatLevelSortDir ) ;
+		scaLatLevelSortDir = toggleSortDirection( scaLatLevelSortDir ) ;
+    }
+    
+	$scope.sortQuestionsByProjTime = function( qType ) {
+		var questions = $scope.questionsForSelectedTopic[ qType ] ;
+		sortQuestionsByAttribute( questions, "proj", scaProjTimeSortDir ) ;
+		scaProjTimeSortDir = toggleSortDirection( scaProjTimeSortDir ) ;
+    }
+
+	$scope.sortAssembledQuestionsByLatLevel = function( subjectName ) {
+		var questions = $scope.assembledQuestions[ subjectName ] ;
+		var sortDir   = $scope.assembledQSortDir[ subjectName ].lat ;
+		sortQuestionsByAttribute( questions, "lat", sortDir ) ;
+		$scope.assembledQSortDir[ subjectName ].lat = toggleSortDirection( sortDir ) ;
+		refreshRampGraph( subjectName ) ;
+    }
+    
+	$scope.sortAssembledQuestionsByProjTime = function( subjectName ) {
+		var questions = $scope.assembledQuestions[ subjectName ] ;
+		var sortDir   = $scope.assembledQSortDir[ subjectName ].proj ;
+		sortQuestionsByAttribute( questions, "proj", sortDir ) ;
+		$scope.assembledQSortDir[ subjectName ].proj = toggleSortDirection( sortDir ) ;
+		refreshRampGraph( subjectName ) ;
+    }
+
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+	
+	function shuffle( array ) {
+		  var currentIndex = array.length, temporaryValue, randomIndex;
+
+		  // While there remain elements to shuffle...
+		  while (0 !== currentIndex) {
+
+		    // Pick a remaining element...
+		    randomIndex = Math.floor(Math.random() * currentIndex);
+		    currentIndex -= 1;
+
+		    // And swap it with the current element.
+		    temporaryValue = array[currentIndex];
+		    array[currentIndex] = array[randomIndex];
+		    array[randomIndex] = temporaryValue;
+		  }
+
+		  return array;
+	}	
+	
+	function sortQuestionsByAttribute( questions, attribute, dir ) {
+		questions.sort( function( q1, q2 ){
+			var val1 = ( attribute == "lat" ) ? q1.lateralThinkingLevel : q1.projectedSolveTime ;
+			var val2 = ( attribute == "lat" ) ? q2.lateralThinkingLevel : q2.projectedSolveTime ;
+			
+			if( dir == "asc" ) {
+				return val1 - val2 ;
+			}
+			return val2 - val1 ;
+		}) ;
+	}
+	
+	function toggleSortDirection( dir ) {
+		return (dir == "asc") ? "desc" : "asc" ;
+	}
 	
 	function setTitle() {
 		if( $scope.testId == -1 ) {
@@ -439,7 +532,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 				}
 			}
 		}
-		
 		return typeQuestionsMap ;
 	}
 	

@@ -7,11 +7,30 @@
         <a data-toggle="collapse" data-parent="#accordion" data-target="#scaChoice">
         SCA
         </a>
+        <div class="pull-right">
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="shuffleQuestions( null, 'SCA' )">
+                    <span class="glyphicon glyphicon-random"></span>
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortQuestionsByLatLevel( 'SCA' )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Lat level
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortQuestionsByProjTime( 'SCA' )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Proj time
+             </button>
+        </div>
       </h4>
     </div>
     <div id="scaChoice" class="panel-body test-config-panel-body panel-collapse collapse in">
        <select class="form-control question-select" 
-               size=5
+               size=40
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['SCA']"
                ng-model="$parent.selectedQuestion"
@@ -21,6 +40,7 @@
     </div>
   </div>
   
+  <!-- 
   <div class="panel panel-default">
     <div class="panel-heading test-config-qsel-heading">
       <h4 class="panel-title">
@@ -96,4 +116,6 @@
        </select>
     </div>
   </div>
+  -->
+  
 </div>

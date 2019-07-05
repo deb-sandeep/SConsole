@@ -37,6 +37,23 @@
 				        </b>
 				        </span>
 				        <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Physics', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+				             <button class="btn btn-warning btn-sm"
+				                     style="padding:0px 5px;"
+				                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Physics' )">
+				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+				                    L
+				             </button>
+				             <button class="btn btn-warning btn-sm"
+				                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Physics' )">
+				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+				                    P
+				             </button>
 				             <button class="btn btn-warning btn-sm"
 				                     style="padding:0px 5px;"
 				                     ng-click="moveQuestionUp()">
@@ -63,7 +80,7 @@
 				</div>
             </td>
             <td valign="top">
-		       <canvas id="phy_ramp_graph" width="380" height="230">
+		       <canvas id="phy_ramp_graph" width="600" height="230">
 		           [No canvas support]
 		       </canvas>
             </td>
@@ -80,6 +97,23 @@
                         </b>
                         </span>
                         <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Chemistry', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Chemistry' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    L
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Chemistry' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    P
+                             </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
                                      ng-click="moveQuestionUp()">
@@ -105,7 +139,7 @@
 				</div>
             </td>
             <td valign="top">
-               <canvas id="chem_ramp_graph" width="380" height="230">
+               <canvas id="chem_ramp_graph" width="600" height="230">
                    [No canvas support]
                </canvas>
             </td>
@@ -122,6 +156,23 @@
                         </b>
                         </span>
                         <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Maths', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Maths' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    L
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Maths' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    P
+                             </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
                                      ng-click="moveQuestionUp()">
@@ -147,7 +198,7 @@
 				</div>
             </td>
             <td valign="top">
-               <canvas id="math_ramp_graph" width="380" height="230">
+               <canvas id="math_ramp_graph" width="600" height="230">
                    [No canvas support]
                </canvas>
             </td>
