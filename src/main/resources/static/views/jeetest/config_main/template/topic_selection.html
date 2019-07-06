@@ -1,17 +1,4 @@
 <div class="panel panel-default">
-    <div class="panel-heading test-config-tsel-heading">
-        <span class="panel-title">Exam Type</span>
-    </div>
-    <div class="panel-body" style="padding:0px">
-	    <select id="exam" 
-	            class="form-control"  
-	            ng-model="$parent.examType"
-	            ng-options="item for item in $parent.examTypes">
-	    </select>
-    </div>
-</div>
-<p/>
-<div class="panel panel-default">
 	<div class="panel-heading test-config-tsel-heading">
 		<span class="panel-title">Physics</span>
 		<div class="pull-right">
@@ -25,7 +12,7 @@
 	</div>
 	<div class="panel-body" style="padding:0px">
            <select class="form-control" 
-                   size=5
+                   size=10
                    style="padding:3px;"
                    ng-options="item as item.topicName for item in phyTopics | filter:filterOnlySelectedTopics"
                    ng-model="$parent.selectedTopic"
@@ -49,7 +36,7 @@
     </div>
     <div class="panel-body" style="padding:0px">
            <select class="form-control" 
-                   size=5
+                   size=10
                    style="padding:3px;"
                    ng-options="item as item.topicName for item in chemTopics | filter:filterOnlySelectedTopics"
                    ng-model="$parent.selectedTopic"
@@ -73,7 +60,7 @@
     </div>
     <div class="panel-body" style="padding:0px">
            <select class="form-control" 
-                   size=5
+                   size=10
                    style="padding:3px;"
                    ng-options="item as item.topicName for item in mathTopics | filter:filterOnlySelectedTopics"
                    ng-model="$parent.selectedTopic"
