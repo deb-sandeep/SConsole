@@ -271,4 +271,29 @@ public class JEETestRestController {
                                  .body( null ) ;
         }
     }
+    
+    @PostMapping( "/TestAttempt/UpdateRootCause" ) 
+    public ResponseEntity<ResponseMsg> updateRootCause( @RequestBody RootCauseInput rcInput ) {
+        
+        try {
+            log.debug( "Updating root cause." ) ;
+            
+            TestQuestionAttempt tqAttempt = null ;
+            tqAttempt = tqaRepo.findByTestAttemptIdAndTestQuestionId( 
+                                            rcInput.getTestAttemptId(), 
+                                            rcInput.getTestQuestionId() ) ;
+            tqAttempt.setRootCause( rcInput.getRootCause() ) ;
+            tqaRepo.save( tqAttempt ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error updating root cause.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+
+    
 }

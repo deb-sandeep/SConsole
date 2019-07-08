@@ -19,6 +19,7 @@ public class TestQuestionAttempt {
     String  attemptStatus = null ;
     String  answerProvided = null ;
     Boolean isCorrect = Boolean.FALSE ;
+    String  rootCause = "" ;
     Integer score = 0 ;
     Integer timeSpent = 0 ;
 
@@ -64,6 +65,13 @@ public class TestQuestionAttempt {
         this.isCorrect = isCorrect ;
     }
     
+    public String getRootCause() {
+        return rootCause ;
+    }
+    public void setRootCause( String rootCause ) {
+        this.rootCause = rootCause ;
+    }
+
     public Integer getScore() {
         return score ;
     }

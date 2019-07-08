@@ -15,6 +15,7 @@ function QuestionEx( q ) {
 	this.nextQuestion = null ;
 	this.attemptState = AttemptState.prototype.NOT_VISITED ;
 	this.interactionHandler = null ;
+	this.rootCause = null ;
 	
 	var graceAwarded = false ;
 	var graceScore = 0 ;

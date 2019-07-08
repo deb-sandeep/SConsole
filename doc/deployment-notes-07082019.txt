@@ -1,0 +1,2 @@
+ALTER TABLE `sconsole`.`test_question_attempt` 
+ADD COLUMN `root_cause` VARCHAR(45) NULL AFTER `is_correct`;

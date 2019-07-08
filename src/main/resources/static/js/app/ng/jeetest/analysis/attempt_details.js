@@ -13,6 +13,9 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 	$scope.totalScore = 0 ;
 	$scope.totalMarks = 0 ;
 	
+	$scope.rcOptions = new RCOptions() ;
+	$scope.rootCause = null ;
+	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	
@@ -68,6 +71,12 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 		$( '#graceInputDialog' ).modal( 'show' ) ;
 	}
 	
+	$scope.showRootCauseDialog = function( qAttemptIndex ) {
+		$scope.questionAttemptSelected( qAttemptIndex ) ;
+		$scope.rootCause = $scope.rcOptions.getOption( $scope.selectedAttempt.rootCause ) ;
+		$( '#rootCauseDialog' ).modal( 'show' ) ;
+	}
+	
 	$scope.awardGraceToSelectedQuestion = function() {
 		console.log( "Awarding grace to selected question ..." ) ;
 		console.log( $scope.graceScoreForSelectedQuestion ) ;
@@ -96,10 +105,49 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 				                  $scope.selectedAttempt.score ) ;
 	}
 	
+	$scope.saveRootCause = function() {
+		console.log( "Saving root cause." ) ;
+		if( $scope.rootCause != null ) {
+			$scope.selectedAttempt.rootCause = $scope.rootCause.id ;
+			updateRootCauseOnServer( parseInt( $scope.testAttemptId ),
+	                                 $scope.selectedAttempt.testQuestionId,
+	                                 $scope.rootCause.id ) ;
+			$( '#rootCauseDialog' ).modal( 'hide' ) ;
+		}
+		else {
+			$scope.$parent.addErrorAlert( "Please provide root cause." ) ;
+		}
+	}
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+	
+	function updateRootCauseOnServer( testAttemptId,
+									  testQuestionId,
+			                          rootCause ) {
+    	console.log( "Updating root cause on server." ) ;
+        
+    	$scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt/UpdateRootCause', {
+        	testAttemptId  : testAttemptId,
+        	testQuestionId : testQuestionId,
+        	rootCause      : rootCause
+        } )
+        .then ( 
+            function( response ){
+                console.log( "Successfully updated root cause" ) ;
+            }, 
+            function( error ){
+                console.log( "Error saving root cause on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save root cause." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
 	
 	function updateGraceScoreOnServer( testAttemptId, 
 			                           testQuestionId,

@@ -1,4 +1,4 @@
-<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}} </h2>
+<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}}</h2>
 <div id="test-result">
     <div id="test-result-summary">
         <table align="center" class="pure-table pure-table-horizontal"
@@ -14,6 +14,7 @@
                     <th>Time</th>
                     <th>Result</th>
                     <th>Marks</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -40,14 +41,19 @@
                         <span ng-if="!questionAttempts[$index].isCorrect" 
                               class="glyphicon glyphicon-remove"
                               style="color:red;"></span>
-                   </td>
-                   <td>{{questionAttempts[$index].score}}</td>
-                   <td>
                         <span ng-show="!questionAttempts[$index].isCorrect"
                               class="glyphicon glyphicon-ok-circle"
                               ng-click="showAwardGraceDialog( $index )">
                         </span>
                    </td>
+                   <td>{{questionAttempts[$index].score}}</td>
+                   <td>
+                        <span ng-show="!questionAttempts[$index].isCorrect"
+                              class="glyphicon glyphicon-tags"
+                              ng-click="showRootCauseDialog( $index )">
+                        </span>
+                   </td>
+                   <td style="text-align:left">{{questionAttempts[$index].rootCause}}</td>
                 </tr>        
             </tbody>
         </table>
@@ -152,6 +158,72 @@
                 data-dismiss="modal"
                 ng-click="awardGraceToSelectedQuestion()">
             Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rootCauseDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:400px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Enter root cause:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:300px;'>
+            <table width="100%" class="pure-table pure-table-horizontal"
+                   ng-show="selectedQuestion != null">
+                <tr>
+                    <td>Question Number</td>
+                    <td><strong>Q {{selectedIndex + 1}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question ID</td>
+                    <td><strong>{{selectedQuestion.id}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Subject</td>
+                    <td><strong>{{selectedQuestion.subject.name}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Topic</td>
+                    <td><strong>{{selectedQuestion.topic.topicName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Book</td>
+                    <td><strong>{{selectedQuestion.book.bookShortName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question type</td>
+                    <td><strong>{{selectedQuestion.questionType}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question reference</td>
+                    <td><strong>{{selectedQuestion.questionRef}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Root cause</td>
+                    <td>
+                         <select id="topic" 
+                                 class="form-control"  
+                                 ng-model="rootCause"
+                                 ng-options="item as item.displayName for item in rcOptions.choices track by item.id">
+                         </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info"
+                ng-click="saveRootCause()">
+            Apply
         </button>
       </div>
     </div>
