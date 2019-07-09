@@ -1,4 +1,11 @@
-<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}}</h2>
+<h2 style="text-align:center;">
+	Score : {{totalScore}} / {{totalMarks}}
+	&nbsp;&nbsp;&nbsp;
+	<button class="btn btn-default btn-md"
+	        ng-click="toggleSummaryDisplay()">
+	    <span class="glyphicon glyphicon-signal"></span>
+	</button>
+</h2>
 <div id="test-result">
     <div id="test-result-summary">
         <table align="center" class="pure-table pure-table-horizontal"
@@ -10,7 +17,7 @@
                     <th class="q-attribute">Solve</br>Time</th>
                     <th class="q-attribute">Correct<br/>Answer</th>
                     <th></th>
-                    <th>Answer</th>
+                    <th>Ans</th>
                     <th>Time</th>
                     <th>Result</th>
                     <th>Marks</th>
@@ -58,7 +65,7 @@
             </tbody>
         </table>
     </div>
-    <div id="test-question-display">
+    <div id="test-question-display" ng-if="!showAttemptSummary">
         <table align="center" class="pure-table pure-table-horizontal"
                ng-show="selectedQuestion != null">
             <tr>
@@ -89,12 +96,16 @@
         <div id="test-question-render">
             <render-test-summary-question></render-test-summary-question>
         </div>
-        <button class="btn btn-info btn-md"
-                ng-click="returnToAttemptIndex()">
-            Return to Test Index
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </button>
     </div>
+    <div id="test-summary-display" ng-if="showAttemptSummary"
+         ng-include="'../views/jeetest/analysis/attempt_summary.html'">
+    </div>
+	<button id="return-to-test-index"
+	        class="btn btn-info btn-md"
+	        ng-click="returnToAttemptIndex()">
+	    Return to Test Index
+	    <span class="glyphicon glyphicon-chevron-right"></span>
+	</button>
 </div>
 
 <div id="graceInputDialog" 

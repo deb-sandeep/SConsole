@@ -16,6 +16,15 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 	$scope.rcOptions = new RCOptions() ;
 	$scope.rootCause = null ;
 	
+	$scope.showAttemptSummary = true ;
+	
+	$scope.testSummary = {
+		overall : new RCACluster(),
+		phy     : new RCACluster(),
+		chem    : new RCACluster(),
+		math    : new RCACluster()
+	} ;
+	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	
@@ -97,6 +106,8 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 		$scope.totalScore += ( -1 * preGraceScore ) ;
 		$scope.totalScore += $scope.graceScoreForSelectedQuestion ;
 		
+		refreshStats() ;
+		
 		updateGraceScoreOnServer( $scope.testAttemptId,
 				                  $scope.selectedAttempt.testQuestionId,
 				                  preGraceAttemptStatus,
@@ -117,6 +128,10 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
 		else {
 			$scope.$parent.addErrorAlert( "Please provide root cause." ) ;
 		}
+	}
+	
+	$scope.toggleSummaryDisplay = function() {
+		$scope.showAttemptSummary = !$scope.showAttemptSummary ;
 	}
 	
 	// --- [END] Scope functions
@@ -203,6 +218,8 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	
                 	$scope.totalScore += attempt.score ;
                 }
+                
+                refreshStats() ;
             }, 
             function( error ){
                 console.log( "Error getting Test Question Attempts." ) ;
@@ -213,6 +230,30 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
         .finally(function() {
             $scope.$parent.interactingWithServer = false ;
         }) ;
+    }
+    
+    function refreshStats() {
+    	
+    	$scope.testSummary.overall.reset() ;
+    	$scope.testSummary.phy.reset() ;
+    	$scope.testSummary.chem.reset() ;
+    	$scope.testSummary.math.reset() ;
+    	
+        for( var i=0; i<$scope.questions.length; i++ ) {
+        	var question = $scope.questions[i] ;
+        	var attempt = $scope.questionAttempts[i] ;
+        	
+        	$scope.testSummary.overall.updateStats( question, attempt ) ;
+        	if( question.subject.name == "IIT - Physics" ) {
+            	$scope.testSummary.phy.updateStats( question, attempt ) ;
+        	}
+        	else if( question.subject.name == "IIT - Chemistry" ) {
+            	$scope.testSummary.chem.updateStats( question, attempt ) ;
+        	}
+        	else if( question.subject.name == "IIT - Maths" ) {
+            	$scope.testSummary.math.updateStats( question, attempt ) ;
+        	}
+        }
     }
     
 	// --- [END] Local functions

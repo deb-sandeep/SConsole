@@ -1,0 +1,179 @@
+<table id="test-attempt-summary"
+       align="center" 
+       class="pure-table pure-table-horizontal">
+    <tr>
+        <td class="empty"></td>
+        <th colspan="2" class="section-header">Overall</th>
+        <th colspan="2" class="section-header">Phy</th>
+        <th colspan="2" class="section-header">Chem</th>
+        <th colspan="2" class="section-header">Math</th>
+    </tr>
+    <tr>
+        <td class="empty"></td>
+        <th width="75px" class="col-header">#</th>
+        <th width="75px" class="col-header">Marks</th>
+        <th width="75px" class="col-header">#</th>
+        <th width="75px" class="col-header">Marks</th>
+        <th width="75px" class="col-header">#</th>
+        <th width="75px" class="col-header">Marks</th>
+        <th width="75px" class="col-header">#</th>
+        <th width="75px" class="col-header">Marks</th>
+    </tr>
+    <tr>
+        <th>Total questions</th>
+        <td>{{testSummary.overall.numQuestions}}</td>
+        <td>{{testSummary.overall.totalMarks}}</td>
+        <td>{{testSummary.phy.numQuestions}}</td>
+        <td>{{testSummary.phy.totalMarks}}</td>
+        <td>{{testSummary.chem.numQuestions}}</td>
+        <td>{{testSummary.chem.totalMarks}}</td>
+        <td>{{testSummary.math.numQuestions}}</td>
+        <td>{{testSummary.math.totalMarks}}</td>
+    </tr>
+    <tr>
+        <th>Net marks</th>
+        <td colspan="2">{{testSummary.overall.totalMarks - testSummary.overall.wrongMks}}</td>
+        <td colspan="2">{{testSummary.phy.totalMarks - testSummary.phy.wrongMks}}</td>
+        <td colspan="2">{{testSummary.chem.totalMarks - testSummary.chem.wrongMks}}</td>
+        <td colspan="2">{{testSummary.math.totalMarks - testSummary.math.wrongMks}}</td>
+    </tr>
+    <tr>
+        <th>Correct</th>
+        <td>{{testSummary.overall.numCorrect}}</td>
+        <td>{{testSummary.overall.correctMks}}</td>
+        <td>{{testSummary.phy.numCorrect}}</td>
+        <td>{{testSummary.phy.correctMks}}</td>
+        <td>{{testSummary.chem.numCorrect}}</td>
+        <td>{{testSummary.chem.correctMks}}</td>
+        <td>{{testSummary.math.numCorrect}}</td>
+        <td>{{testSummary.math.correctMks}}</td>
+    </tr>
+    <tr>
+        <th>Wrong</th>
+        <td>{{testSummary.overall.numWrong}}</td>
+        <td>{{testSummary.overall.wrongMks}}</td>
+        <td>{{testSummary.phy.numWrong}}</td>
+        <td>{{testSummary.phy.wrongMks}}</td>
+        <td>{{testSummary.chem.numWrong}}</td>
+        <td>{{testSummary.chem.wrongMks}}</td>
+        <td>{{testSummary.math.numWrong}}</td>
+        <td>{{testSummary.math.wrongMks}}</td>
+    </tr>
+    <tr>
+        <th>Potential marks</th>
+        <td colspan="2"><strong>{{testSummary.overall.correctMks + testSummary.overall.avoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.phy.correctMks + testSummary.phy.avoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.chem.correctMks + testSummary.chem.avoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.math.correctMks + testSummary.math.avoidableTotalMks}}</strong></td>
+    </tr>
+    <tr class="indent">
+        <th class="indent">Avoidable</th>
+        <td>{{testSummary.overall.numAvoidableTotal}}</td>
+        <td><strong>{{testSummary.overall.avoidableTotalMks}}</strong></td>
+        <td>{{testSummary.phy.numAvoidableTotal}}</td>
+        <td><strong>{{testSummary.phy.avoidableTotalMks}}</strong></td>
+        <td>{{testSummary.chem.numAvoidableTotal}}</td>
+        <td><strong>{{testSummary.chem.avoidableTotalMks}}</strong></td>
+        <td>{{testSummary.math.numAvoidableTotal}}</td>
+        <td><strong>{{testSummary.math.avoidableTotalMks}}</strong></td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Recollection</th>
+        <td>{{testSummary.overall.numRecollection}}</td>
+        <td>{{testSummary.overall.recollectionMks}}</td>
+        <td>{{testSummary.phy.numRecollection}}</td>
+        <td>{{testSummary.phy.recollectionMks}}</td>
+        <td>{{testSummary.chem.numRecollection}}</td>
+        <td>{{testSummary.chem.recollectionMks}}</td>
+        <td>{{testSummary.math.numRecollection}}</td>
+        <td>{{testSummary.math.recollectionMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Calculation</th>
+        <td>{{testSummary.overall.numCalculation}}</td>
+        <td>{{testSummary.overall.calculationMks}}</td>
+        <td>{{testSummary.phy.numCalculation}}</td>
+        <td>{{testSummary.phy.calculationMks}}</td>
+        <td>{{testSummary.chem.numCalculation}}</td>
+        <td>{{testSummary.chem.calculationMks}}</td>
+        <td>{{testSummary.math.numCalculation}}</td>
+        <td>{{testSummary.math.calculationMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Interpretation</th>
+        <td>{{testSummary.overall.numInterpretation}}</td>
+        <td>{{testSummary.overall.interpretationMks}}</td>
+        <td>{{testSummary.phy.numInterpretation}}</td>
+        <td>{{testSummary.phy.interpretationMks}}</td>
+        <td>{{testSummary.chem.numInterpretation}}</td>
+        <td>{{testSummary.chem.interpretationMks}}</td>
+        <td>{{testSummary.math.numInterpretation}}</td>
+        <td>{{testSummary.math.interpretationMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Concept</th>
+        <td>{{testSummary.overall.numConcept}}</td>
+        <td>{{testSummary.overall.conceptMks}}</td>
+        <td>{{testSummary.phy.numConcept}}</td>
+        <td>{{testSummary.phy.conceptMks}}</td>
+        <td>{{testSummary.chem.numConcept}}</td>
+        <td>{{testSummary.chem.conceptMks}}</td>
+        <td>{{testSummary.math.numConcept}}</td>
+        <td>{{testSummary.math.conceptMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Lateral</th>
+        <td>{{testSummary.overall.numLateral}}</td>
+        <td>{{testSummary.overall.lateralMks}}</td>
+        <td>{{testSummary.phy.numLateral}}</td>
+        <td>{{testSummary.phy.lateralMks}}</td>
+        <td>{{testSummary.chem.numLateral}}</td>
+        <td>{{testSummary.chem.lateralMks}}</td>
+        <td>{{testSummary.math.numLateral}}</td>
+        <td>{{testSummary.math.lateralMks}}</td>
+    </tr>
+    <tr class="indent">
+        <th class="indent">Unavoidable</th>
+        <td>{{testSummary.overall.numUnavoidableTotal}}</td>
+        <td>{{testSummary.overall.unavoidableTotalMks}}</td>
+        <td>{{testSummary.phy.numUnavoidableTotal}}</td>
+        <td>{{testSummary.phy.unavoidableTotalMks}}</td>
+        <td>{{testSummary.chem.numUnavoidableTotal}}</td>
+        <td>{{testSummary.chem.unavoidableTotalMks}}</td>
+        <td>{{testSummary.math.numUnavoidableTotal}}</td>
+        <td>{{testSummary.math.unavoidableTotalMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Unknown concept</th>
+        <td>{{testSummary.overall.numUnknownConcept}}</td>
+        <td>{{testSummary.overall.unknownConceptMks}}</td>
+        <td>{{testSummary.phy.numUnknownConcept}}</td>
+        <td>{{testSummary.phy.unknownConceptMks}}</td>
+        <td>{{testSummary.chem.numUnknownConcept}}</td>
+        <td>{{testSummary.chem.unknownConceptMks}}</td>
+        <td>{{testSummary.math.numUnknownConcept}}</td>
+        <td>{{testSummary.math.unknownConceptMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">WTF</th>
+        <td>{{testSummary.overall.numWtf}}</td>
+        <td>{{testSummary.overall.wtfMks}}</td>
+        <td>{{testSummary.phy.numWtf}}</td>
+        <td>{{testSummary.phy.wtfMks}}</td>
+        <td>{{testSummary.chem.numWtf}}</td>
+        <td>{{testSummary.chem.wtfMks}}</td>
+        <td>{{testSummary.math.numWtf}}</td>
+        <td>{{testSummary.math.wtfMks}}</td>
+    </tr>
+    <tr class="double-indent">
+        <th class="double-indent">Abandoned - Lengthy</th>
+        <td>{{testSummary.overall.numLengthy}}</td>
+        <td>{{testSummary.overall.lengthyMks}}</td>
+        <td>{{testSummary.phy.numLengthy}}</td>
+        <td>{{testSummary.phy.lengthyMks}}</td>
+        <td>{{testSummary.chem.numLengthy}}</td>
+        <td>{{testSummary.chem.lengthyMks}}</td>
+        <td>{{testSummary.math.numLengthy}}</td>
+        <td>{{testSummary.math.lengthyMks}}</td>
+    </tr>
+</table>
