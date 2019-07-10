@@ -32,30 +32,32 @@ public class BulkQuestionEntryHelper {
                                                      Book book, 
                                                      String baseQRef ) {
         
+        ArrayList<BulkQEntry> qEntries = new ArrayList<>() ;
         List<String> usedQRefs = getTestQuestionsWithQRefLike( 
                                     topic.getId(), book.getId(), baseQRef ) ;
         
         File[] files = selectUnassignedImages( subjectName, topic, book,
                                                baseQRef, usedQRefs ) ;
-        sortFileArray( files ) ;
-        
-        ArrayList<BulkQEntry> qEntries = new ArrayList<>() ;
-        String subPreamble = getSubjectPreamble( subjectName ) ;
-        
-        for( File file : files ) {
-            BulkQEntry entry = new BulkQEntry() ;
+        if( files != null ) {
+            sortFileArray( files ) ;
             
-            String qRef = file.getName().substring( subPreamble.length() ) ;
-            qRef = qRef.substring( 0, qRef.lastIndexOf( '.' ) ) ;
-            qRef = qRef.replace( '_', '/' ) ;
+            String subPreamble = getSubjectPreamble( subjectName ) ;
             
-            entry.setqRef( qRef ) ;
-            entry.setImgName( file.getName() ) ;
-            entry.setImgPath( file.getAbsolutePath()
-                                  .substring( SConsole.JEETEST_IMG_DIR
-                                                      .getAbsolutePath()
-                                                      .length()+1 ) ) ;
-            qEntries.add( entry ) ;
+            for( File file : files ) {
+                BulkQEntry entry = new BulkQEntry() ;
+                
+                String qRef = file.getName().substring( subPreamble.length() ) ;
+                qRef = qRef.substring( 0, qRef.lastIndexOf( '.' ) ) ;
+                qRef = qRef.replace( '_', '/' ) ;
+                
+                entry.setqRef( qRef ) ;
+                entry.setImgName( file.getName() ) ;
+                entry.setImgPath( file.getAbsolutePath()
+                        .substring( SConsole.JEETEST_IMG_DIR
+                                .getAbsolutePath()
+                                .length()+1 ) ) ;
+                qEntries.add( entry ) ;
+            }
         }
         return qEntries ;
     }
@@ -92,27 +94,32 @@ public class BulkQuestionEntryHelper {
         Arrays.sort( files, new Comparator<File>() {
             public int compare( File f1, File f2 ) {
                 
-                int f1IntId = getIntegerId( f1.getName() ) ;
-                int f2IntId = getIntegerId( f2.getName() ) ;
-                
-                int f1IntPart = (int)Math.floor( f1IntId ) ;
-                int f2IntPart = (int)Math.floor( f2IntId ) ;
-                
-                if( f1IntPart < f2IntPart ) {
-                    return -1 ;
+                try {
+                    int f1IntId = getIntegerId( f1.getName() ) ;
+                    int f2IntId = getIntegerId( f2.getName() ) ;
+                    
+                    int f1IntPart = (int)Math.floor( f1IntId ) ;
+                    int f2IntPart = (int)Math.floor( f2IntId ) ;
+                    
+                    if( f1IntPart < f2IntPart ) {
+                        return -1 ;
+                    }
+                    else if( f1IntPart > f2IntPart ) {
+                        return 1 ;
+                    }
+                    
+                    int f1DecimalId = getDecimalId( f1.getName() ) ;
+                    int f2DecimalId = getDecimalId( f2.getName() ) ;
+                    
+                    if( f1DecimalId < f2DecimalId ) {
+                        return -1 ;
+                    }
+                    else if( f1DecimalId > f2DecimalId ) {
+                        return 1 ;
+                    }
                 }
-                else if( f1IntPart > f2IntPart ) {
-                    return 1 ;
-                }
-                
-                int f1DecimalId = getDecimalId( f1.getName() ) ;
-                int f2DecimalId = getDecimalId( f2.getName() ) ;
-                
-                if( f1DecimalId < f2DecimalId ) {
-                    return -1 ;
-                }
-                else if( f1DecimalId > f2DecimalId ) {
-                    return 1 ;
+                catch( Exception e ) {
+                    log.error( "Error in sort comparision", e ) ;
                 }
 
                 return 0 ;

@@ -94,6 +94,8 @@ function RCACluster() {
     	
     	var option = rcOptions.getOption( rootCause ) ;
     	
+    	if( option == null ) return ;
+    	
     	if( option.isAvoidable ) {
         	this.numAvoidableTotal++ ;
         	this.avoidableTotalMks += marksLost ;
