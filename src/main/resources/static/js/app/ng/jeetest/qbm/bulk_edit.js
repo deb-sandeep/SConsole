@@ -26,7 +26,7 @@ sConsoleApp.controller( 'BulkEditController',
 	} ;
 	
 	$scope.entries = [] ;
-	$scope.hideSaved = false ;
+	$scope.hideSaved = true ;
 	
 	// --- [START] Controller initialization
 	
@@ -70,8 +70,29 @@ sConsoleApp.controller( 'BulkEditController',
 	
 	$scope.qTypeChanged = function( entry ) {
 		var nextEntry = entry.nextEntry ;
+		var projTime = 120 ;
+		
+		if( $scope.baseInput.subjectName == "IIT - Chemistry" ) {
+			if( entry.qType == 'MCA' ) {
+				projTime = 180 ;
+			}
+			else if ( entry.qType == 'NT' ) {
+				projTime = 180 ;
+			}
+		}
+		else {
+			if( entry.qType == 'MCA' ) {
+				projTime = 180 ;
+			}
+			else if ( entry.qType == 'NT' ) {
+				projTime = 240 ;
+			}
+		}
+		
+		entry.projTime = projTime ;
 		while( nextEntry != null ) {
 			nextEntry.qType = entry.qType ;
+			nextEntry.projTime = projTime ;
 			nextEntry = nextEntry.nextEntry ;
 		}
 	}

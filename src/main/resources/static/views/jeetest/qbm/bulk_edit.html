@@ -99,7 +99,11 @@
                                     <input class="form-control"  type="text" ng-model="entry.imgName" style="width:100%"/>
                                   </td>
                                   <td>
-                                    <input class="form-control"  type="text" ng-model="entry.aText" style="width:100%"/>
+                                    <input class="form-control"  
+                                           type="text" 
+                                           ng-model="entry.aText" 
+                                           style="width:100%"
+                                           tabindex={{$index+1}}/>
                                   </td>
                                   <td>
 					                 <select class="form-control"  
