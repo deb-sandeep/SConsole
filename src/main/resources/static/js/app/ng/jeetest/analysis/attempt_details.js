@@ -153,6 +153,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
         .then ( 
             function( response ){
                 console.log( "Successfully updated root cause" ) ;
+                refreshStats() ;
             }, 
             function( error ){
                 console.log( "Error saving root cause on server." ) ;
@@ -185,6 +186,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
         .then ( 
             function( response ){
                 console.log( "Successfully updated grace score" ) ;
+                refreshStats() ;
             }, 
             function( error ){
                 console.log( "Error saving grace score on server." ) ;
