@@ -1,0 +1,15 @@
+* On Adv Test controller loading
+
+If the test id is -1, we show a choice dialog to the user where he can 
+select the three section types.
+
+    - Dialog HTML structure (blank)
+    - On init check for -1 id
+        - Activate dialog (modal)
+    - Dialog UI and features
+        - Section 1, 2, 3 drop down with question types
+        - Pre populated with MCA, NT, MMT
+        - Based on choices, remove options for remaining drop downs
+        - Cancel, Ok
+        - If cancel, return to summary screen
+        - If Ok, show the edit screen

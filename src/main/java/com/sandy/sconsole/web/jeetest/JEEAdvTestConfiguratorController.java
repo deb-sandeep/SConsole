@@ -11,4 +11,9 @@ public class JEEAdvTestConfiguratorController {
     public String jeeMain() {
         return "jeetest/config_adv/summary_dashboard" ;
     }
+    
+    @RequestMapping( "/editTestConfig" )
+    public String newTestConfig() {
+        return "jeetest/config_adv/edit_test" ;
+    }
 }

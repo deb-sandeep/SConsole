@@ -14,18 +14,15 @@ sConsoleApp.controller( 'AdvTestConfigSummaryDashboardController', function( $sc
 	// --- [START] Scope functions -------------------------------------------
 	
 	$scope.deleteTest = function( test ) {
-		console.log( "Delete test clicked." ) ;
 		deleteTestConfiguration( test.id ) ;
 	}
 	
 	$scope.editTest = function( test ) {
-		console.log( "Edit test clicked." ) ;
 		$location.path( "/editTest/" + test.id ) ;
 	}
 	
 	$scope.newTest = function() {
-		console.log( "New test clicked." ) ;
-		$location.path( "/editAdvTest/-1" ) ;
+		$location.path( "/editTest/-1" ) ;
 	}
 	
 	// --- [END] Scope functions

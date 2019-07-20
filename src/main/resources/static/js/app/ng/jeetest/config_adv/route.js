@@ -9,7 +9,3 @@ sConsoleApp.config( function( $routeProvider ) {
 		controller : "EditAdvTestController"
 	})
 }) ;
-
-// Structure of edit test
-// Check for -1
-// If not -1, check for sections etc and organize the controller
