@@ -1,6 +1,6 @@
-sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'AdvTestConfigSummaryDashboardController', function( $scope, $http, $location ) {
     
-	$scope.$parent.navBarTitle = "Test Summary Dashboard" ;
+	$scope.$parent.navBarTitle = "Advanced Test Config Summary Dashboard" ;
 	$scope.testSummaries = [] ;
 	
 	// -----------------------------------------------------------------------
@@ -25,7 +25,7 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
 	
 	$scope.newTest = function() {
 		console.log( "New test clicked." ) ;
-		$location.path( "/editTest/-1" ) ;
+		$location.path( "/editAdvTest/-1" ) ;
 	}
 	
 	// --- [END] Scope functions
@@ -66,7 +66,7 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
                 
                 for( var i=0; i<response.data.length; i++ ) {
                 	var testSummary = response.data[i] ;
-                	if( testSummary.examType == 'MAIN' ) {
+                	if( testSummary.examType == "ADV" ) {
                 		$scope.testSummaries.push( testSummary ) ;
                 	}
                 }

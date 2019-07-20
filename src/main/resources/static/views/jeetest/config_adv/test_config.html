@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SConsole Test Configurator</title>
+
+    <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/app/app.css"/>
+    <link rel="stylesheet" href="/css/app/test_config.css"/>
+    <link rel="stylesheet" href="/css/pure/tables.css"/>
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ TeX: { extensions: ["mhchem.js"] }});
+    </script>
+    <script type="text/javascript" 
+            src="/js/lib/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full">
+    </script>
+    
+    <script src="/js/lib/angular.min.js"></script>
+    <script src="/js/lib/angular-route.min.js"></script>
+    <script src="/js/lib/jquery.min.js"></script>
+    <script src="/js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/lib/dombuilder/DOMBuilder.min.js"></script>
+    <script src="/js/lib/rgraph/RGraph.common.core.js"></script>
+    <script src="/js/lib/rgraph/RGraph.common.key.js"></script>
+    <script src="/js/lib/rgraph/RGraph.bar.js"></script>
+    <script src="/js/lib/rgraph/RGraph.line.js"></script>
+    
+    <script>
+        DOMBuilder.apply( window, 'dom' ) ;
+    </script>
+
+    <script src="/js/app/ng/app-ng.js"></script>
+    <script src="/js/app/ng/jeetest/config_main/directive.js"></script>
+    <script src="/js/app/ng/jeetest/config_main/filter.js"></script>
+    <script src="/js/app/ng/jeetest/config_adv/route.js"></script>
+    <script src="/js/app/ng/jeetest/config_adv/test_config.js"></script>
+    <script src="/js/app/ng/jeetest/config_adv/summary_dashboard.js"></script>
+</head>
+
+<body ng-controller="AdvTestConfiguratorController"
+      style="background-color: #FFFFFF;">
+
+<nav class="navbar navbar-inverse navbar-static-top"
+     style="min-height:0px;margin-bottom:0px;">
+    <div class="container" style="width:100%">
+        <div class="row" >
+            <div class="col-sm-7">
+                {{navBarTitle}}
+            </div>
+            <div class="col-sm-5">
+                <!-- Space for controls common to module -->
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="alert alert-danger alert-dismissible" ng-repeat="alert in alerts">
+<a ng-click="dismissAlert( $index )" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<a ng-click="dismissAllAlerts()" class="close" data-dismiss="alert" aria-label="close">&times;&times;&nbsp;&nbsp;</a>
+{{alert.msg}}
+</div>
+
+<div ng-view></div>
+
+</body>
+</html>

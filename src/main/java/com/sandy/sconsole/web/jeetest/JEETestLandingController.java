@@ -18,8 +18,13 @@ public class JEETestLandingController {
     }
     
     @RequestMapping( "/test-config-main" )
-    public String testConfig() {
+    public String mainTestConfig() {
         return "jeetest/config_main/test_config" ;
+    }
+
+    @RequestMapping( "/test-config-adv" )
+    public String advTestConfig() {
+        return "jeetest/config_adv/test_config" ;
     }
 
     @RequestMapping( "/exam" )
