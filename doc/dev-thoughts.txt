@@ -1,3 +1,11 @@
+------------------------------------------------------------------------------
+- Show the topic selection left pane. This will be the same as main configuration
+- Let the user select the topics
+- Show the questions accordion (structure)
+- Based on topic selection, populate questions in the accordion panes
+
+
+-------------- Completed on 22nd July 2019 -----------------------------------
 * On Adv Test controller loading
 
 If the test id is -1, we show a choice dialog to the user where he can 

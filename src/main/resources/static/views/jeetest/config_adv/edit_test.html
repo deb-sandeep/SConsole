@@ -29,3 +29,59 @@
   </div>
 </div>
 -->
+<div id="sectionSelectionDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:300px;">
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Select exam sections:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+	      <table width="100%">
+	          <tr>
+	              <td width="40%">Section 1</td>
+	              <td>
+	               <select id="section1Type" 
+	                       class="form-control"  
+	                       ng-model="sectionSelectionOptions.section1Type"
+	                       ng-options="item for item in sectionSelectionOptions.sectionTypes">
+	               </select>
+	              </td>
+	          </tr>
+              <tr>
+                  <td width="40%">Section 2</td>
+                  <td>
+                   <select id="section2Type" 
+                           class="form-control"  
+                           ng-model="sectionSelectionOptions.section2Type"
+                           ng-options="item for item in sectionSelectionOptions.sectionTypes">
+                   </select>
+                  </td>
+              </tr>
+              <tr>
+                  <td width="40%">Section 3</td>
+                  <td>
+                   <select id="section3Type" 
+                           class="form-control"  
+                           ng-model="sectionSelectionOptions.section3Type"
+                           ng-options="item for item in sectionSelectionOptions.sectionTypes">
+                   </select>
+                  </td>
+              </tr>
+	      </table>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default"
+                ng-click="dismissSectionSelections()">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-default"
+                ng-click="applySectionSelections()">
+            Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
