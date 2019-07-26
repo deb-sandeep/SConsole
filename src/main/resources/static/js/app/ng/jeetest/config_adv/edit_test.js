@@ -14,9 +14,9 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	} ;
 	
 	$scope.selectedSectionTypes = {
-		section1Type : null,
-		section2Type : null,
-		section3Type : null
+		section1Type : "XXX",
+		section2Type : "XXX",
+		section3Type : "XXX"
 	} ;
 	
 	$scope.phyTopics = [] ;
@@ -39,6 +39,8 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		'IIT - Chemistry' : {},
 		'IIT - Maths'     : {}
 	}
+	
+	var topicQSortDir = {} ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -77,6 +79,11 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 			$scope.assembledQuestions[ 'IIT - Physics'   ][ sels[i] ] = [] ;
 			$scope.assembledQuestions[ 'IIT - Chemistry' ][ sels[i] ] = [] ;
 			$scope.assembledQuestions[ 'IIT - Maths'     ][ sels[i] ] = [] ;
+			
+			topicQSortDir[ sels[i] ] = {
+				projTimeSortDir : 'asc',
+				latLevelSortDir : 'asc'
+			} ;
 		}
 
 		$scope.selectedSectionTypes.section1Type = sels[0] ;
@@ -106,6 +113,25 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
 	}
 	
+	$scope.shuffleTopicQuestions = function( qType ) {
+		var questions = $scope.questionsForSelectedTopic[ qType ] ;
+		shuffle( questions ) ;
+	} 
+	
+	$scope.sortTopicQuestionsByLatLevel = function( qType ) {
+		var curSortDir = topicQSortDir[ qType ].latLevelSortDir ;
+		var questions = $scope.questionsForSelectedTopic[ qType ] ;
+		sortQuestionsByAttribute( questions, "lat", curSortDir ) ;
+		topicQSortDir[ qType ].latLevelSortDir = toggleSortDirection( curSortDir ) ;
+    }
+    
+	$scope.sortTopicQuestionsByProjTime = function( qType ) {
+		var curSortDir = topicQSortDir[ qType ].projTimeSortDir ;
+		var questions = $scope.questionsForSelectedTopic[ qType ] ;
+		sortQuestionsByAttribute( questions, "proj", curSortDir ) ;
+		topicQSortDir[ qType ].projTimeSortDir = toggleSortDirection( curSortDir ) ;
+    }
+
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -240,6 +266,41 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 			}
 		}
 		return typeQuestionsMap ;
+	}
+	
+	function shuffle( array ) {
+		  var currentIndex = array.length, temporaryValue, randomIndex;
+
+		  // While there remain elements to shuffle...
+		  while (0 !== currentIndex) {
+
+		    // Pick a remaining element...
+		    randomIndex = Math.floor(Math.random() * currentIndex);
+		    currentIndex -= 1;
+
+		    // And swap it with the current element.
+		    temporaryValue = array[currentIndex];
+		    array[currentIndex] = array[randomIndex];
+		    array[randomIndex] = temporaryValue;
+		  }
+
+		  return array;
+	}	
+	
+	function sortQuestionsByAttribute( questions, attribute, dir ) {
+		questions.sort( function( q1, q2 ){
+			var val1 = ( attribute == "lat" ) ? q1.lateralThinkingLevel : q1.projectedSolveTime ;
+			var val2 = ( attribute == "lat" ) ? q2.lateralThinkingLevel : q2.projectedSolveTime ;
+			
+			if( dir == "asc" ) {
+				return val1 - val2 ;
+			}
+			return val2 - val1 ;
+		}) ;
+	}
+	
+	function toggleSortDirection( dir ) {
+		return (dir == "asc") ? "desc" : "asc" ;
 	}
 	
 	// --- [END] Local functions

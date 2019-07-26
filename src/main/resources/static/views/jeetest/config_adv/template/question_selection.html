@@ -1,0 +1,121 @@
+<div class="panel-group" id="accordion"
+     style="padding:0px 10px">
+  
+  <div class="panel panel-default">
+    <div class="panel-heading test-config-qsel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#section1Choice">
+        {{selectedSectionTypes.section1Type}}
+        </a>
+        <div class="pull-right">
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="shuffleTopicQuestions( selectedSectionTypes.section1Type )">
+                    <span class="glyphicon glyphicon-random"></span>
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByLatLevel( selectedSectionTypes.section1Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Lat level
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByProjTime( selectedSectionTypes.section1Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Proj time
+             </button>
+        </div>
+      </h4>
+    </div>
+    <div id="section1Choice" class="panel-body test-config-panel-body panel-collapse collapse in">
+       <select class="form-control question-select" 
+               size=36
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic[selectedSectionTypes.section1Type]"
+               ng-model="$parent.selectedQuestion"
+               ng-dblclick="questionSelectedForTest()">
+           <option style="display:none" value="">select a type</option>
+       </select>
+    </div>
+  </div>
+  <p/>
+  <div class="panel panel-default">
+    <div class="panel-heading test-config-qsel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#section2Choice">
+        {{selectedSectionTypes.section2Type}}
+        </a>
+        <div class="pull-right">
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="shuffleTopicQuestions( selectedSectionTypes.section2Type )">
+                    <span class="glyphicon glyphicon-random"></span>
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByLatLevel( selectedSectionTypes.section2Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Lat level
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByProjTime( selectedSectionTypes.section2Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Proj time
+             </button>
+        </div>
+      </h4>
+    </div>
+    <div id="section2Choice" class="panel-body test-config-panel-body panel-collapse collapse">
+       <select class="form-control question-select" 
+               size=36
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic[selectedSectionTypes.section2Type]"
+               ng-model="$parent.selectedQuestion"
+               ng-dblclick="questionSelectedForTest()">
+           <option style="display:none" value="">select a type</option>
+       </select>
+    </div>
+  </div>
+  <p/>
+  <div class="panel panel-default">
+    <div class="panel-heading test-config-qsel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#section3Choice">
+        {{selectedSectionTypes.section3Type}}
+        </a>
+        <div class="pull-right">
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="shuffleTopicQuestions( selectedSectionTypes.section3Type )">
+                    <span class="glyphicon glyphicon-random"></span>
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByLatLevel( selectedSectionTypes.section3Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Lat level
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortTopicQuestionsByProjTime( selectedSectionTypes.section3Type )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Proj time
+             </button>
+        </div>
+      </h4>
+    </div>
+    <div id="section3Choice" class="panel-body test-config-panel-body panel-collapse collapse">
+       <select class="form-control question-select" 
+               size=36
+               style="padding:3px;"
+               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic[selectedSectionTypes.section3Type]"
+               ng-model="$parent.selectedQuestion"
+               ng-dblclick="questionSelectedForTest()">
+           <option style="display:none" value="">select a type</option>
+       </select>
+    </div>
+  </div>
+
+</div>
