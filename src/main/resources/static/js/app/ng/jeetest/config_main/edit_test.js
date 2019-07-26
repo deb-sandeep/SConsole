@@ -484,7 +484,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	function loadQuestionsForTopic( topicId, examType ) {
 		
         $scope.$parent.interactingWithServer = true ;
-        $http.get( '/TestQuestion/Topic/' + topicId + "?examType=" + examType )
+        $http.get( '/TestQuestion/Topic/' + topicId + "?questionTypes=SCA" )
         .then( 
                 function( response ){
                     console.log( response ) ;

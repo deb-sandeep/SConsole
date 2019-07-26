@@ -1,12 +1,11 @@
 sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $routeParams, $location ) {
 	
-	$scope.$parent.navBarTitle = "Edit JEE Adv Test Configuration" ;
-	$scope.testId = $routeParams.id ;
-
-	$scope.phyTopics = [] ;
-	$scope.chemTopics = [] ;
-	$scope.mathTopics = [] ;
+	$scope.$parent.navBarTitle = "Create New Test" ;
+	$scope.questionTypes = [ "SCA", "MCA", "NT", "LCT", "MMT" ] ;
 	
+	$scope.testId = $routeParams.id ;
+	$scope.examType = "ADV" ;
+
 	$scope.sectionSelectionOptions = {
 		sectionTypes : [ 'SCA', 'MCA', 'NT', 'LCT', 'MMT' ],
 		section1Type : 'MCA',
@@ -19,6 +18,27 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		section2Type : null,
 		section3Type : null
 	} ;
+	
+	$scope.phyTopics = [] ;
+	$scope.chemTopics = [] ;
+	$scope.mathTopics = [] ;
+	
+	$scope.selectedTopic = null ;
+	$scope.questionsForSelectedTopic = {
+		SCA : [],
+		MCA : [],
+		NT  : [],
+		LCT : [],
+		MMT : []
+	} ;
+	
+	$scope.selectedQuestion = null ;
+		
+	$scope.assembledQuestions = {
+		'IIT - Physics'   : {},
+		'IIT - Chemistry' : {},
+		'IIT - Maths'     : {}
+	}
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -52,13 +72,40 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 				types.push( sels[i] ) ;
 			}
 		}
+		
+		for( var i=0; i<sels.length; i++ ) {
+			$scope.assembledQuestions[ 'IIT - Physics'   ][ sels[i] ] = [] ;
+			$scope.assembledQuestions[ 'IIT - Chemistry' ][ sels[i] ] = [] ;
+			$scope.assembledQuestions[ 'IIT - Maths'     ][ sels[i] ] = [] ;
+		}
 
 		$scope.selectedSectionTypes.section1Type = sels[0] ;
 		$scope.selectedSectionTypes.section2Type = sels[1] ;
 		$scope.selectedSectionTypes.section3Type = sels[2] ;
 		
+		
 		$( '#sectionSelectionDialog' ).modal( 'hide' ) ;
 	}
+	
+	$scope.toggleTopicSelection = function( topic ) {
+		topic.selected = !topic.selected ;
+	}
+	
+	$scope.getTopicRowStyle = function( topic ) {
+		if( topic.selected ) {
+			return "topic-sel-dlg-row" ;
+		}
+		return "topic-dlg-row" ;
+	}
+	
+	$scope.filterOnlySelectedTopics = function( topic ) {
+		return topic.selected ;
+	}
+	
+	$scope.topicSelectionChanged = function() {
+		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
+	}
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -116,6 +163,83 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 				console.log( "Invalid subject found. " + insight.subjectName ) ; 
 			}
 		}
+	}
+	
+	function loadQuestionsForTopic( topicId, examType ) {
+		
+		var qTypes = $scope.selectedSectionTypes.section1Type + "," +
+		             $scope.selectedSectionTypes.section2Type + "," +
+		             $scope.selectedSectionTypes.section3Type ;
+		
+        $scope.$parent.interactingWithServer = true ;
+        $http.get( '/TestQuestion/Topic/' + topicId + "?questionTypes=" + qTypes )
+        .then( 
+                function( response ){
+                    console.log( response ) ;
+                    
+                    // Need to filter the response based on what questions are
+                    // already selected, so that the questions are note
+                    // repeated across the question combo and assembled lists.
+                    $scope.questionsForSelectedTopic = 
+                    	filterFreshlyLoadedTopicQuestions( topicId, response.data ) ;
+                }, 
+                function( error ){
+                    console.log( error ) ;
+                    $scope.addErrorAlert( "Could not load questions for topic." ) ;
+                }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+	
+	// Filter (prune/remove) the questions from typeQuestionsMap which are
+	// present in the assembled questions map. This will ensure that we 
+	// do not create a situation where the user can add duplicate questions.
+	function filterFreshlyLoadedTopicQuestions( topicId, typeQuestionsMap ) {
+		
+		for( var i=0; i<$scope.questionTypes.length; i++ ) {
+			
+			var qType = $scope.questionTypes[i] ;
+			var srcArray = typeQuestionsMap[ qType ] ;
+			
+			// If there are no questions for the question type, continue
+			if( srcArray.length == 0 ) continue ;
+			
+			// If there are questions, find the subject name which will be
+			// used to lookup assembled questions
+			var sType = srcArray[0].subject.name ;
+			
+			var assembledQuestionsMap = $scope.assembledQuestions[ sType ] ;
+			
+			// Remember that JEE advanced is section based and during configuration
+			// the user is allowed to choose sections. The following check
+			// ensures that if the question belongs to a type which is not
+			// selected, we don't really care - it will never be shown to the user.
+			if( !assembledQuestionsMap.hasOwnProperty( qType ) ) {
+				continue ;
+			}
+			
+			var assembledQuestions = assembledQuestionsMap[ qType ] ;
+			if( assembledQuestions.length == 0 ) continue ;
+			
+			for( var j=0; j<assembledQuestions.length; j++ ) {
+				var assQ = assembledQuestions[j] ;
+				
+				if( assQ.topic.id == topicId ) {
+					
+					for( var k=0; k<srcArray.length; k++ ) {
+						var srcQ = srcArray[k] ;
+						
+						if( srcQ.id == assQ.id ) {
+							srcArray.splice( k, 1 ) ;
+							k-- ;
+						}
+					}
+				}
+			}
+		}
+		return typeQuestionsMap ;
 	}
 	
 	// --- [END] Local functions

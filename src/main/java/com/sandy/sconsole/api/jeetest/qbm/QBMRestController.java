@@ -4,6 +4,7 @@ import java.math.BigDecimal ;
 import java.math.BigInteger ;
 import java.net.InetAddress ;
 import java.util.ArrayList ;
+import java.util.Arrays ;
 import java.util.HashMap ;
 import java.util.LinkedHashMap ;
 import java.util.List ;
@@ -128,7 +129,7 @@ public class QBMRestController {
     @GetMapping( "/TestQuestion/Topic/{topicId}" )
     public ResponseEntity<Map<String, List<TestQuestion>>> getUnassignedQuestionsByTopic( 
                                             @PathVariable Integer topicId,
-                                            @RequestParam( "examType" ) String examType ) {
+                                            @RequestParam( "questionTypes" ) String questionTypes ) {
         
         ResponseEntity<Map<String, List<TestQuestion>>> response = null ;
         
@@ -145,15 +146,11 @@ public class QBMRestController {
                 map.put( qType, new ArrayList<>() ) ;
             }
             
+            List<String> qTypes = Arrays.asList( questionTypes.split( "," ) ) ;
             List<TestQuestion> questionList = null ;
             for( TestQuestion q : questions ) {
                 questionList = map.get( q.getQuestionType() ) ;
-                if( examType.equals( QBMMasterData.EXAM_TYPE_MAIN ) ) {
-                    if( q.getQuestionType().equals( QBMMasterData.Q_TYPE_SCA ) ) {
-                        questionList.add( q ) ;
-                    }
-                }
-                else {
+                if( qTypes.contains( q.getQuestionType() ) ) {
                     questionList.add( q ) ;
                 }
             }
@@ -163,7 +160,6 @@ public class QBMRestController {
         }
         return response ;
     }
-    
     
     @DeleteMapping( "/TestQuestion/{id}" )
     public ResponseEntity<ResponseMsg> deleteQuestion( @PathVariable Integer id ) {
