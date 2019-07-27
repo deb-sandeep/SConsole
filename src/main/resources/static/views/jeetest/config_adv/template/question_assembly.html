@@ -1,0 +1,189 @@
+<table>
+    <tbody>
+        <tr>
+            <td colspan="2">
+                <div class="panel panel-default">
+                    <div class="panel-heading test-config-qass-heading">
+                        <button class="btn btn-warning btn-sm"
+                                style="padding:0px 5px;"
+                                ng-click="saveTest()">
+                               <span class="glyphicon glyphicon-floppy-save"></span>
+                               Save
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="panel-title">Num Questions = TODO
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        Projected time = TODO min
+                        </span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td width="350px">
+				<div class="panel panel-default">
+				    <div class="panel-heading test-config-qass-heading">
+				        <span class="panel-title">
+				        {{selectedSubject}} - {{selectedSectionTypes.section1Type}}
+				        </span>
+				        <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Physics', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+				             <button class="btn btn-warning btn-sm"
+				                     style="padding:0px 5px;"
+				                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Physics' )">
+				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+				                    L
+				             </button>
+				             <button class="btn btn-warning btn-sm"
+				                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Physics' )">
+				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+				                    P
+				             </button>
+				             <button class="btn btn-warning btn-sm"
+				                     style="padding:0px 5px;"
+				                     ng-click="moveQuestionUp()">
+				                    <span class="glyphicon glyphicon-menu-up"></span>
+				             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="moveQuestionDown()">
+                                    <span class="glyphicon glyphicon-menu-down"></span>
+                             </button>
+				        </div>
+				    </div>
+				    <div class="panel-body" style="padding:0px">
+				       <select class="form-control question-select" 
+				               size=7
+				               style="padding:3px;"
+				               ng-options="item as item|qSelFmt for item in assembledQuestions[ selectedSubject ][ selectedSectionTypes.section1Type ]"
+				               ng-model="$parent.selectedQuestion"
+				               ng-change="questionSelectionChanged()"
+				               ng-dblclick="removeAssembledQuestion()">
+				           <option style="display:none" value="">select a type</option>
+				       </select>
+				    </div>
+				</div>
+            </td>
+            <td valign="top">
+		       <canvas id="phy_ramp_graph" width="600" height="170">
+		           [No canvas support]
+		       </canvas>
+            </td>
+        </tr>
+        <tr>
+            <td>
+				<div class="panel panel-default">
+				    <div class="panel-heading test-config-qass-heading">
+                        <span class="panel-title">
+                        {{selectedSubject}} - {{selectedSectionTypes.section2Type}}
+                        </span>
+                        <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Chemistry', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Chemistry' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    L
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Chemistry' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    P
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="moveQuestionUp()">
+                                    <span class="glyphicon glyphicon-menu-up"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="moveQuestionDown()">
+                                    <span class="glyphicon glyphicon-menu-down"></span>
+                             </button>
+                        </div>
+				    </div>
+				    <div class="panel-body" style="padding:0px">
+				       <select class="form-control question-select" 
+				               size=7
+				               style="padding:3px;"
+                               ng-options="item as item|qSelFmt for item in assembledQuestions[ selectedSubject ][ selectedSectionTypes.section2Type ]"
+				               ng-model="$parent.selectedQuestion"
+				               ng-dblclick="removeAssembledQuestion()">
+				           <option style="display:none" value="">select a type</option>
+				       </select>
+				    </div>
+				</div>
+            </td>
+            <td valign="top">
+               <canvas id="chem_ramp_graph" width="600" height="170">
+                   [No canvas support]
+               </canvas>
+            </td>
+        </tr>
+        <tr>
+            <td>
+				<div class="panel panel-default">
+				    <div class="panel-heading test-config-qass-heading">
+                        <span class="panel-title">
+                        {{selectedSubject}} - {{selectedSectionTypes.section3Type}}
+                        </span>
+                        <div class="pull-right">
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="shuffleQuestions( 'IIT - Maths', null )">
+                                    <span class="glyphicon glyphicon-random"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Maths' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    L
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Maths' )">
+                                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                                    P
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="moveQuestionUp()">
+                                    <span class="glyphicon glyphicon-menu-up"></span>
+                             </button>
+                             <button class="btn btn-warning btn-sm"
+                                     style="padding:0px 5px;"
+                                     ng-click="moveQuestionDown()">
+                                    <span class="glyphicon glyphicon-menu-down"></span>
+                             </button>
+                        </div>
+				    </div>
+				    <div class="panel-body" style="padding:0px">
+				       <select class="form-control question-select" 
+				               size=7
+				               style="padding:3px;"
+                               ng-options="item as item|qSelFmt for item in assembledQuestions[ selectedSubject ][ selectedSectionTypes.section3Type ]"
+				               ng-model="$parent.selectedQuestion"
+				               ng-dblclick="removeAssembledQuestion()">
+				           <option style="display:none" value="">select a type</option>
+				       </select>
+				    </div>
+				</div>
+            </td>
+            <td valign="top">
+               <canvas id="math_ramp_graph" width="600" height="170">
+                   [No canvas support]
+               </canvas>
+            </td>
+        </tr>
+    </tbody>
+</table>

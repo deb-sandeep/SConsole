@@ -23,7 +23,14 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	$scope.chemTopics = [] ;
 	$scope.mathTopics = [] ;
 	
+	$scope.assembledQuestions = {
+		'IIT - Physics'   : {},
+		'IIT - Chemistry' : {},
+		'IIT - Maths'     : {}
+	}
+	
 	$scope.selectedTopic = null ;
+	$scope.selectedSubject = null ;
 	$scope.questionsForSelectedTopic = {
 		SCA : [],
 		MCA : [],
@@ -31,15 +38,10 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		LCT : [],
 		MMT : []
 	} ;
+	$scope.assembledQuestionsForSelectedSubject = null ;
 	
 	$scope.selectedQuestion = null ;
 		
-	$scope.assembledQuestions = {
-		'IIT - Physics'   : {},
-		'IIT - Chemistry' : {},
-		'IIT - Maths'     : {}
-	}
-	
 	var topicQSortDir = {} ;
 	
 	// -----------------------------------------------------------------------
@@ -90,7 +92,6 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		$scope.selectedSectionTypes.section2Type = sels[1] ;
 		$scope.selectedSectionTypes.section3Type = sels[2] ;
 		
-		
 		$( '#sectionSelectionDialog' ).modal( 'hide' ) ;
 	}
 	
@@ -110,6 +111,8 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	}
 	
 	$scope.topicSelectionChanged = function() {
+		$scope.selectedSubject = $scope.selectedTopic.subjectName ;
+		$scope.assembledQuestionsForSelectedSubject = $scope.assembledQuestions[ $scope.selectedSubject ] ;
 		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
 	}
 	
@@ -132,6 +135,31 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		topicQSortDir[ qType ].projTimeSortDir = toggleSortDirection( curSortDir ) ;
     }
 
+	$scope.questionSelectedForTest = function() {
+		
+		if( $scope.selectedQuestion == null ) return ;
+		
+		var qType = $scope.selectedQuestion.questionType ;
+		var sType = $scope.selectedQuestion.subject.name ;
+		
+		var srcArray = $scope.questionsForSelectedTopic[ qType ] ;
+		var tgtArray = $scope.assembledQuestions[ sType ][ qType ] ;
+		
+		var question = $scope.selectedQuestion ;
+		
+		// Remove the selected question from the source array
+		for( var i=0; i<srcArray.length; i++ ) {
+			if( srcArray[i] == question ) {
+				srcArray.splice( i, 1 ) ;
+				i-- ;
+				break ;
+			}
+		}
+		
+		// Add the selected question to the target array 
+		tgtArray.push( question ) ;
+	}
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
