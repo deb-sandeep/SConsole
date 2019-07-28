@@ -74,3 +74,8 @@
     color:#e6e389;
     height:70px;
 }
+
+#revision_problem_list tr.selected-rev-q-row {
+    background-color:yellow;
+}
+

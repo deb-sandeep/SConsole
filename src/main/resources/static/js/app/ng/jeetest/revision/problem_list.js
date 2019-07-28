@@ -15,6 +15,17 @@ sConsoleApp.controller( 'RevisionProblemListController', function( $scope, $http
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
+	$scope.selectQuestion = function( revQ ) {
+		$scope.$parent.selectedProblem = revQ ;
+	}
+	
+	$scope.getRevQBackgroundClass = function( revQ ) {
+		if( revQ == $scope.$parent.selectedProblem ) {
+			return "selected-rev-q-row" ;
+		}
+		return "" ;
+	}
+	
 	// --- [END] Scope functions
 
 	// -----------------------------------------------------------------------

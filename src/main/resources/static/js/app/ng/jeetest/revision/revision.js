@@ -13,6 +13,7 @@ sConsoleApp.controller( 'RevisionController', function( $scope, $http, $route, $
 		ignoreReviewed : true
 	} ;
 	
+	$scope.selectedProblem = null ;
 	$scope.revisionProblems = [] ;
 	$scope.revisionInProgress = false ;
 	
@@ -35,6 +36,7 @@ sConsoleApp.controller( 'RevisionController', function( $scope, $http, $route, $
 	}
     
 	$scope.search = function() {
+		$scope.selectedProblem = null ;
 		fetchSearchResults() ;
 	}
 	
@@ -146,6 +148,10 @@ sConsoleApp.controller( 'RevisionController', function( $scope, $http, $route, $
     				earlierQ.starred = true ;
     			}
     		}
+    	}
+    	
+    	if( $scope.revisionProblems.length > 0 ) {
+    		$scope.selectedProblem = $scope.revisionProblems[0] ;
     	}
     }
 
