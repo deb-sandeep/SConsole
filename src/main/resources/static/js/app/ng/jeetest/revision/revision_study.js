@@ -17,6 +17,8 @@ sConsoleApp.controller( 'RevisionStudyController', function( $scope, $http, $loc
 		$location.path( "/" ) ;
 	}
 	else {
+		rotateRevisionProblemsAsPerSelection() ;
+		
 		$scope.$parent.revisionInProgress = true ;
 		$scope.numQuestionsRemaining = $scope.$parent.revisionProblems.length ;
 		$scope.numQuestionsRevised = 0 ;
@@ -128,5 +130,14 @@ sConsoleApp.controller( 'RevisionStudyController', function( $scope, $http, $loc
 		}
 	}
     
+	function rotateRevisionProblemsAsPerSelection() {
+		var selectedProblem = $scope.$parent.selectedProblem ;
+		
+		while( $scope.$parent.revisionProblems[0] != selectedProblem ) {
+			var head = $scope.$parent.revisionProblems.shift() ;
+			$scope.$parent.revisionProblems.push( head ) ;
+		}
+	}
+	
 	// --- [END] Local functions
 } ) ;

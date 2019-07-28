@@ -1,5 +1,4 @@
 <div id="revision_problem_list" ng-show="$parent.revisionProblems.length>0">
-    
 	<table align="center" width="95%" 
 	       class="pure-table pure-table-horizontal table-condensed"
 	       style="font-size:14px;">
@@ -15,7 +14,9 @@
 	        </tr>
 	    </thead>
 	    <tbody>
-	        <tr ng-repeat="revQ in $parent.revisionProblems">
+	        <tr ng-repeat="revQ in $parent.revisionProblems"
+	            ng-click="selectQuestion( revQ )"
+	            ng-class="getRevQBackgroundClass( revQ )">
                 <td>{{revQ.topicName}}</td>
                 <td>{{revQ.bookShortName}}</td>
                 <td>{{revQ.problemType}}</td>
