@@ -10,12 +10,77 @@
                                <span class="glyphicon glyphicon-floppy-save"></span>
                                Save
                         </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="panel-title">Num Questions = TODO
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        Projected time = TODO min
-                        </span>
                     </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="panel panel-default">
+                    <table class="jee-adv-config-summary-table">
+                        <tr>
+                            <th></th>
+                            <th colspan=2>Total</th>
+                            <th colspan=2>Physics</th>
+                            <th colspan=2>Chem</th>
+                            <th colspan=2>Maths</th>
+                        </tr>
+                        <tr>
+                            <th>QType</th>
+                            <th># Q</th>
+                            <th># T</th>
+                            <th># Q</th>
+                            <th># T</th>
+                            <th># Q</th>
+                            <th># T</th>
+                            <th># Q</th>
+                            <th># T</th>
+                        </tr>
+                        <tr>
+                            <td>{{selectedSectionTypes.section1Type}}</td>
+                            <td>{{getTotalQuestions( null, selectedSectionTypes.section1Type )}}</td>
+                            <td>{{getTotalTime( null, selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section1Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section1Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section1Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section1Type ) | mmss }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{selectedSectionTypes.section2Type}}</td>
+                            <td>{{getTotalQuestions( null, selectedSectionTypes.section2Type )}}</td>
+                            <td>{{getTotalTime( null, selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section2Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section2Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section2Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section2Type ) | mmss }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{selectedSectionTypes.section3Type}}</td>
+                            <td>{{getTotalQuestions( null, selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalTime( null, selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section3Type ) | mmss }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <th>{{getTotalQuestions( null, null)}}</th>
+                            <th>{{getTotalTime( null, null) | mmss }}</th>
+                            <th>{{getTotalQuestions( 'IIT - Physics', null )}}</th>
+                            <th>{{getTotalTime( 'IIT - Physics', null ) | mmss }}</th>
+                            <th>{{getTotalQuestions( 'IIT - Chemistry', null )}}</th>
+                            <th>{{getTotalTime( 'IIT - Chemistry', null ) | mmss }}</th>
+                            <th>{{getTotalQuestions( 'IIT - Maths', null )}}</th>
+                            <th>{{getTotalTime( 'IIT - Maths', null ) | mmss }}</th>
+                        </tr>
+                    </table>
                 </div>
             </td>
         </tr>
@@ -70,7 +135,7 @@
 				</div>
             </td>
             <td valign="top">
-		       <canvas id="phy_ramp_graph" width="600" height="170">
+               <canvas ng-attr-id="{{selectedSectionTypes.section1Type}}_ramp_graph" width="600" height="170">
 		           [No canvas support]
 		       </canvas>
             </td>
@@ -125,7 +190,7 @@
 				</div>
             </td>
             <td valign="top">
-               <canvas id="chem_ramp_graph" width="600" height="170">
+               <canvas ng-attr-id="{{selectedSectionTypes.section2Type}}_ramp_graph" width="600" height="170">
                    [No canvas support]
                </canvas>
             </td>
@@ -180,7 +245,7 @@
 				</div>
             </td>
             <td valign="top">
-               <canvas id="math_ramp_graph" width="600" height="170">
+               <canvas ng-attr-id="{{selectedSectionTypes.section3Type}}_ramp_graph" width="600" height="170">
                    [No canvas support]
                </canvas>
             </td>

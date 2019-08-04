@@ -38,3 +38,31 @@
 .test-summary-ADV {
 	background-color:#faf2f1;
 }
+
+.jee-adv-config-summary-table {
+	width: 100%;
+}
+
+.jee-adv-config-summary-table td {
+    padding-left:5px;
+    padding-right:5px;
+    border: solid 1px #feca30;
+    text-align:right;
+}
+
+.jee-adv-config-summary-table th {
+    background-color: #fdeca8;
+    padding-left:5px;
+    padding-right:5px;
+    border: solid 1px #feca30;
+    text-align:right;
+}
+
+.jee-adv-config-summary-table tr:first-child>th {
+    text-align:center;
+}
+
+.topic-sel-dlg-table {
+    width:100%;
+}
+

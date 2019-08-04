@@ -114,6 +114,10 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		$scope.selectedSubject = $scope.selectedTopic.subjectName ;
 		$scope.assembledQuestionsForSelectedSubject = $scope.assembledQuestions[ $scope.selectedSubject ] ;
 		loadQuestionsForTopic( $scope.selectedTopic.topicId, $scope.examType ) ;
+		
+		refreshRampGraph( $scope.selectedSectionTypes.section1Type ) ;
+		refreshRampGraph( $scope.selectedSectionTypes.section2Type ) ;
+		refreshRampGraph( $scope.selectedSectionTypes.section3Type ) ;
 	}
 	
 	$scope.shuffleTopicQuestions = function( qType ) {
@@ -158,6 +162,72 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		
 		// Add the selected question to the target array 
 		tgtArray.push( question ) ;
+		
+		refreshRampGraph( qType ) ;
+	}
+	
+	$scope.getTotalQuestions = function( subject, qType ) {
+		
+		if( $scope.selectedSectionTypes.section1Type == 'XXX' ) return 0 ;
+		
+		if( subject == null && qType == null ) {
+			
+			return $scope.getTotalQuestions( 'IIT - Physics', null ) + 
+		           $scope.getTotalQuestions( 'IIT - Chemistry', null ) + 
+		           $scope.getTotalQuestions( 'IIT - Maths', null ) ;
+		}
+		else if( subject != null && qType == null ) {
+			
+			var subAssembledQs = $scope.assembledQuestions[subject] ;
+			var qTypes = $scope.selectedSectionTypes ;
+			
+			return subAssembledQs[qTypes.section1Type].length + 
+				   subAssembledQs[qTypes.section2Type].length + 
+			       subAssembledQs[qTypes.section3Type].length ;
+		}
+		else if( subject == null && qType != null ) {
+			
+			return $scope.getTotalQuestions( 'IIT - Physics', qType ) + 
+			       $scope.getTotalQuestions( 'IIT - Chemistry', qType ) + 
+			       $scope.getTotalQuestions( 'IIT - Maths', qType ) ;
+		}
+		else {
+			return $scope.assembledQuestions[subject][qType].length ;
+		}
+	}
+	
+	$scope.getTotalTime = function( subject, qType ) {
+		
+		if( $scope.selectedSectionTypes.section1Type == 'XXX' ) return 0 ;
+		
+		if( subject == null && qType == null ) {
+			
+			return $scope.getTotalTime( 'IIT - Physics', null ) + 
+		           $scope.getTotalTime( 'IIT - Chemistry', null ) + 
+		           $scope.getTotalTime( 'IIT - Maths', null ) ;
+		}
+		else if( subject != null && qType == null ) {
+			
+			return $scope.getTotalTime( subject, $scope.selectedSectionTypes.section1Type ) + 
+			       $scope.getTotalTime( subject, $scope.selectedSectionTypes.section2Type ) +
+			       $scope.getTotalTime( subject, $scope.selectedSectionTypes.section3Type ) ;
+		}
+		else if( subject == null && qType != null ) {
+			
+			return $scope.getTotalTime( 'IIT - Physics', qType ) + 
+			       $scope.getTotalTime( 'IIT - Chemistry', qType ) + 
+			       $scope.getTotalTime( 'IIT - Maths', qType ) ;
+		}
+		else {
+			
+			var questions = $scope.assembledQuestions[subject][qType] ;
+			var time = 0 ;
+			
+			for( var i=0; i<questions.length; i++ ) {
+				time += questions[i].projectedSolveTime ;
+			}
+			return time ;
+		}
 	}
 	
 	// --- [END] Scope functions
@@ -329,6 +399,85 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	
 	function toggleSortDirection( dir ) {
 		return (dir == "asc") ? "desc" : "asc" ;
+	}
+	
+	function refreshRampGraph( qType ) {
+		
+		if( $scope.selectedSubject == null ) return ;
+		
+		var canvasId = qType + "_ramp_graph" ;
+		
+		tgtArray = $scope.assembledQuestionsForSelectedSubject[ qType ] ;
+		
+	    var canvas = document.getElementById( canvasId ) ;
+	    RGraph.reset( canvas ) ;
+	    
+	    var timeArray = [] ;
+	    var latArray = [] ;
+	    var xTicks = [] ;
+	    
+	    for( var i=0; i<tgtArray.length; i++ ) {
+	    	xTicks.push( "" + (i+1) ) ;
+	    	latArray.push( tgtArray[i].lateralThinkingLevel ) ;
+	    	timeArray.push( tgtArray[i].projectedSolveTime ) ;
+	    }
+	    
+	    bar = new RGraph.Bar({
+	        id: canvasId,
+	        data: latArray,
+	        options: {
+	            backgroundGridVlines: false,
+	            backgroundGridBorder: true,
+	            backgroundGridColor: '#999',
+	            xaxisLabels: xTicks,
+	            hmargin: 2,
+	            marginLeft: 30,
+	            marginRight: 50,
+	            marginBottom: 20,
+	            colors: ['Gradient(#E0E0E0:#FEFEFE)'],
+	            textColor: '#ccc',
+	            axesColor: '#999',
+	            xaxisTickmarksCount: 0,
+	            yaxisTickmarksCount: 0,
+	            shadowColor: 'black',
+	            shadowOffsetx: 0,
+	            shadowOffsety: 0,
+	            shadowBlur: 5,
+	            colorsStroke: 'rgba(0,0,0,0)',
+	            combinedEffect: 'wave',
+	            combinedEffectOptions: '{frames: 30}',
+	            textSize: 12
+	        }
+	    });
+	    var line = new RGraph.Line({
+	        id: canvasId,
+	        data: timeArray,
+	        options: {
+	            axes: false,
+	            backgroundGrid: false,
+	            linewidth: 2,
+	            colors: ['#0b0'],
+	            yaxisPosition: 'right',
+	            axesColor: '#999',
+	            textColor: '#ccc',
+	            marginLeft: 5,
+	            marginRight: 5,
+	            tickmarksStyle: null,
+	            spline: true,
+	            combinedEffect: 'trace',
+	            textSize: 12
+	        }
+	    });
+	    
+	    var combo = new RGraph.CombinedChart([bar, line]).draw() ;
+	    
+	    // Because the combo class turns the Line chart labels off,
+	    // turn them back on
+	    line.set({
+	        yaxisLabels: true
+	    });
+
+	    RGraph.redraw();
 	}
 	
 	// --- [END] Local functions
