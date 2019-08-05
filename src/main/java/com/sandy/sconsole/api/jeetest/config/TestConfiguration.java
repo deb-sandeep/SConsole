@@ -28,6 +28,63 @@ public class TestConfiguration {
     private List<List<Integer>> chemSecQuestionIndices = new ArrayList<>() ;
     private List<List<Integer>> mathSecQuestionIndices = new ArrayList<>() ;
     
+    private List<TestQuestion> allQuestions = null ;
+    
+    public List<TestQuestion> getAllQuestions() {
+        if( allQuestions == null ) {
+            allQuestions = new ArrayList<>() ;
+            allQuestions.addAll( phyQuestions ) ;
+            allQuestions.addAll( chemQuestions ) ;
+            allQuestions.addAll( mathQuestions ) ;
+        }
+        return allQuestions ;
+    }
+    
+    public int getDuration() {
+        
+        int duration = 0 ;
+        List<TestQuestion> questions = getAllQuestions() ;
+        
+        if( getExamType().equals( "MAIN" ) ) {
+            duration = questions.size() * 2 ;
+        }
+        else {
+            duration = (int)Math.ceil( questions.size() * 3.333 ) ;
+        }
+        return duration ;
+    }
+    
+    public int getTotalMarks() {
+        
+        int totalMarks = 0 ;
+        List<TestQuestion> questions = getAllQuestions() ;
+        
+        if( getExamType().equals( "MAIN" ) ) {
+            totalMarks = questions.size() * 4 ;
+        }
+        else {
+            for( TestQuestion q : questions ) {
+                String qType = q.getQuestionType() ;
+                if     ( qType.equals( "SCA" ) ) { totalMarks += 3 ; }
+                else if( qType.equals( "MCA" ) ) { totalMarks += 4 ; }
+                else if( qType.equals( "NT"  ) ) { totalMarks += 3 ; }
+                else if( qType.equals( "LCT" ) ) { totalMarks += 3 ; }
+                else if( qType.equals( "MMT" ) ) { totalMarks += 3 ; }
+            }
+        }
+        return totalMarks ;
+    }
+    
+    public int getProjectedSolveTime() {
+        
+        int projectedSolveTime = 0 ;
+        List<TestQuestion> questions = getAllQuestions() ;
+        for( TestQuestion q : questions ) {
+            projectedSolveTime += q.getProjectedSolveTime() ;
+        }
+        return projectedSolveTime ;
+    }
+    
     public Integer getId() {
         return id ;
     }

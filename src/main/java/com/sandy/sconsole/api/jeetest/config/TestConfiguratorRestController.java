@@ -204,7 +204,6 @@ public class TestConfiguratorRestController {
                 }
             }
         }
-        
         return config ;
     }
     
@@ -295,84 +294,67 @@ public class TestConfiguratorRestController {
             ci = new TestConfigIndex() ;
         }
         
-        // Save the test config index - get the id
         ci.setExamType( config.getExamType() ) ;
         ci.setNumPhyQuestions( config.getPhyQuestions().size() ) ;
         ci.setNumChemQuestions( config.getChemQuestions().size() ) ;
         ci.setNumMathQuestions( config.getMathQuestions().size() ) ;
-        
-        // Recreate all question mapping rows
-        List<TestQuestionBinding> tqbList = new ArrayList<>() ;
-        int projectedSolveTime = 0 ;
-        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getPhyQuestions() ) ;
-        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getChemQuestions() ) ;
-        projectedSolveTime += assembleTestQuestionBinding( tqbList, config.getMathQuestions() ) ;
-        ci.setProjectedSolveTime( projectedSolveTime ) ;
-        
-        ci.setTotalMarks( computeTotalMarks( ci ) );
-        ci.setDuration( computeDuration( ci ) ) ;
+        ci.setTotalMarks( config.getTotalMarks() );
+        ci.setDuration( config.getDuration() ) ;
+        ci.setProjectedSolveTime( config.getProjectedSolveTime() ) ;
         
         ci = tciRepo.save( ci ) ;
         
-        // Associate the config index with the question bindings
-        for( TestQuestionBinding tqb : tqbList ) {
-            tqb.setTestConfig( ci ) ;
-        }
-        
-        // Save the mappings
+        // Recreate all question mapping rows and save them.
+        List<TestQuestionBinding> tqbList = null ;
+        tqbList = assembleTestQuestionBindings( config.getAllQuestions(), ci ) ;
         tqbRepo.saveAll( tqbList ) ;
         
         return ci.getId() ;
     }
-    
-    private int computeTotalMarks( TestConfigIndex ci ) {
+
+    private List<TestQuestionBinding> assembleTestQuestionBindings( 
+                                             List<TestQuestion> questionList,
+                                             TestConfigIndex ci ) {
         
-        int totalMarks = 0 ;
-        if( ci.getExamType().equals( "MAIN" ) ) {
-            int numQuestions = ci.getNumPhyQuestions() +  
-                               ci.getNumChemQuestions() + 
-                               ci.getNumMathQuestions() ;
-            totalMarks = numQuestions * 4 ;
-        }
-        else {
-            throw new RuntimeException( "TOTO: Total mark computation of ADV test" ) ;
-        }
-        return totalMarks ;
-    }
-    
-    // Note that this returns the duration in minutes.
-    private int computeDuration( TestConfigIndex ci ) {
+        List<TestQuestionBinding> tqbList = new ArrayList<>() ;
         
-        int duration = 0 ;
-        if( ci.getExamType().equals( "MAIN" ) ) {
-            int numQuestions = ci.getNumPhyQuestions() +  
-                               ci.getNumChemQuestions() + 
-                               ci.getNumMathQuestions() ;
-            duration = numQuestions * 2 ;
-        }
-        else {
-            throw new RuntimeException( "TOTO: Total duration computation of ADV test" ) ;
-        }
-        return duration ;
-    }
-    
-    private int assembleTestQuestionBinding( List<TestQuestionBinding> tqbList,
-                                             List<TestQuestion> questionList ) {
-        int duration = 0 ;
+        String subjectName = null ;
+        int sectionIndex = 1 ;
+        String sectionName = null ;
+        int sequence = 1 ;
+        
         for( int i=0; i<questionList.size(); i++ ) {
             
             TestQuestion q = questionList.get( i ) ;
             
-            duration += q.getProjectedSolveTime() ;
+            if( subjectName == null || 
+                !subjectName.equals( q.getSubject().getName() ) ) {
+                
+                subjectName = q.getSubject().getName() ;
+                sectionName = q.getQuestionType() ;
+                sectionIndex = 1 ;
+                sequence = 1 ;
+            }
+            else if( !q.getQuestionType().equals( sectionName ) ) {
+                sectionName = q.getQuestionType() ;
+                sectionIndex++ ;
+                sequence = 1 ;
+            }
+            else {
+                sequence++ ;
+            }
             
             TestQuestionBinding tqb = new TestQuestionBinding() ;
-            tqb.setSubject( q.getSubject() ) ;
+            tqb.setTestConfig( ci ) ;
             tqb.setTopic( q.getTopic() ) ;
             tqb.setQuestion( q ) ;
-            tqb.setSequence( i+1 ) ;
+            tqb.setSubject( q.getSubject() ) ;
+            tqb.setSectionIndex( sectionIndex ) ;
+            tqb.setSectionName( sectionName ) ;
+            tqb.setSequence( sequence ) ;
             
             tqbList.add( tqb ) ;
         }
-        return duration ;
+        return tqbList ;
     }
 }

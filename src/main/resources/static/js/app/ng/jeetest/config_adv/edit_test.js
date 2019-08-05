@@ -364,6 +364,10 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		}
 	}
 	
+	$scope.saveTest = function() {
+		saveTestOnServer() ;
+	}
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -650,6 +654,60 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 				refreshRampGraph( qType ) ;
 				return ;
 			}
+		}
+	}
+	
+    function saveTestOnServer() {
+    	
+    	console.log( "Saving test on server." ) ;
+    	
+    	var phyQs  = getConcatenatedAssembledQuestions( 'IIT - Physics' ) ;
+    	var chemQs = getConcatenatedAssembledQuestions( 'IIT - Chemistry' ) ;
+    	var mathQs = getConcatenatedAssembledQuestions( 'IIT - Maths' ) ;
+    	
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestConfiguration', {
+        	id            : $scope.testId,
+        	examType      : $scope.examType,
+        	phyQuestions  : phyQs,
+	    	chemQuestions : chemQs,
+	    	mathQuestions : mathQs
+        })
+        .then( 
+            function( response ){
+                console.log( "Successfully saved test configuration." ) ;
+                $scope.testId = response.data.id ;
+                setTitle() ;
+            }, 
+            function( error ){
+                console.log( "Error saving test on server." + error ) ;
+                $scope.$parent.addErrorAlert( "Could not save test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function getConcatenatedAssembledQuestions( subjectName ) {
+    	
+    	var qMap = $scope.assembledQuestions[ subjectName ] ;
+    	var secTypes = $scope.selectedSectionTypes ;
+    	
+    	var sec1Qs = qMap[ secTypes.section1Type ] ;
+    	var sec2Qs = qMap[ secTypes.section2Type ] ;
+    	var sec3Qs = qMap[ secTypes.section3Type ] ;
+    	
+    	var questions = sec1Qs.concat( sec2Qs ).concat( sec3Qs ) ;
+    	return questions ;
+    }
+    
+	function setTitle() {
+		if( $scope.testId == -1 ) {
+			$scope.$parent.navBarTitle = "Editing <NEW TEST>" ;
+		}
+		else {
+			$scope.$parent.navBarTitle = "Editing Test - " + $scope.testId ;			
 		}
 	}
 	
