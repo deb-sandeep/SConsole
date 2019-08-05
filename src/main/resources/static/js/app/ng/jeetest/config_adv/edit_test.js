@@ -277,6 +277,54 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		}
 	}
 	
+	$scope.getTotalMarks = function( subject, qType ) {
+		
+		if( $scope.selectedSectionTypes.section1Type == 'XXX' ) return 0 ;
+		
+		if( subject == null && qType == null ) {
+			
+			return $scope.getTotalMarks( 'IIT - Physics', null ) + 
+		           $scope.getTotalMarks( 'IIT - Chemistry', null ) + 
+		           $scope.getTotalMarks( 'IIT - Maths', null ) ;
+		}
+		else if( subject != null && qType == null ) {
+			
+			return $scope.getTotalMarks( subject, $scope.selectedSectionTypes.section1Type ) + 
+			       $scope.getTotalMarks( subject, $scope.selectedSectionTypes.section2Type ) +
+			       $scope.getTotalMarks( subject, $scope.selectedSectionTypes.section3Type ) ;
+		}
+		else if( subject == null && qType != null ) {
+			
+			return $scope.getTotalMarks( 'IIT - Physics', qType ) + 
+			       $scope.getTotalMarks( 'IIT - Chemistry', qType ) + 
+			       $scope.getTotalMarks( 'IIT - Maths', qType ) ;
+		}
+		else {
+			var numQuestions = $scope.assembledQuestions[subject][qType].length ;
+			var marksPerQuestion = 0 ;
+			
+			if( numQuestions == 0 ) return 0 ;
+			
+		    if( qType == 'SCA' ) {
+		        marksPerQuestion = 3 ;
+		    }
+		    else if( qType == 'MCA' ) {
+		        marksPerQuestion = 4 ;
+		    }
+		    else if( qType == 'NT' ) {
+		        marksPerQuestion = 3 ;
+		    }
+		    else if( qType == 'LCT' ) {
+		        marksPerQuestion = 3 ;
+		    }
+		    else if( qType == 'MMT' ) {
+		        marksPerQuestion = 3 ;
+		    }
+		    
+		    return numQuestions * marksPerQuestion ;
+		}
+	}
+	
 	$scope.moveQuestionUp = function() {
 		changeSelectedQuestionSequence( true ) ;
 	}

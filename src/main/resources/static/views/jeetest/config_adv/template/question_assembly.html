@@ -20,65 +20,85 @@
                     <table class="jee-adv-config-summary-table">
                         <tr>
                             <th></th>
-                            <th colspan=2>Total</th>
-                            <th colspan=2>Physics</th>
-                            <th colspan=2>Chem</th>
-                            <th colspan=2>Maths</th>
+                            <th colspan=3>Total</th>
+                            <th colspan=3>Physics</th>
+                            <th colspan=3>Chem</th>
+                            <th colspan=3>Maths</th>
                         </tr>
                         <tr>
                             <th>QType</th>
                             <th># Q</th>
                             <th># T</th>
+                            <th># M</th>
                             <th># Q</th>
                             <th># T</th>
+                            <th># M</th>
                             <th># Q</th>
                             <th># T</th>
+                            <th># M</th>
                             <th># Q</th>
                             <th># T</th>
+                            <th># M</th>
                         </tr>
                         <tr>
                             <td>{{selectedSectionTypes.section1Type}}</td>
                             <td>{{getTotalQuestions( null, selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalTime( null, selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( null, selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Physics', selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Chemistry', selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section1Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section1Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Maths', selectedSectionTypes.section1Type )}}</td>
                         </tr>
                         <tr>
                             <td>{{selectedSectionTypes.section2Type}}</td>
                             <td>{{getTotalQuestions( null, selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalTime( null, selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( null, selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Physics', selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Chemistry', selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section2Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section2Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Maths', selectedSectionTypes.section2Type )}}</td>
                         </tr>
                         <tr>
                             <td>{{selectedSectionTypes.section3Type}}</td>
                             <td>{{getTotalQuestions( null, selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalTime( null, selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( null, selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Physics', selectedSectionTypes.section3Type ) | mmss }}</td>
-                            <td>{{getTotalQuestions( 'IIT - Chemistry', selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalMarks( 'IIT - Physics', selectedSectionTypes.section3Type )}}</td>
+                            <td>{{getTotalQuestions( 'IIT - Physics', selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Chemistry', selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Physics', selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalQuestions( 'IIT - Maths', selectedSectionTypes.section3Type )}}</td>
                             <td>{{getTotalTime( 'IIT - Maths', selectedSectionTypes.section3Type ) | mmss }}</td>
+                            <td>{{getTotalMarks( 'IIT - Maths', selectedSectionTypes.section3Type )}}</td>
                         </tr>
                         <tr>
                             <th>Total</th>
                             <th>{{getTotalQuestions( null, null)}}</th>
                             <th>{{getTotalTime( null, null) | mmss }}</th>
+                            <th>{{getTotalMarks( null, null)}}</th>
                             <th>{{getTotalQuestions( 'IIT - Physics', null )}}</th>
                             <th>{{getTotalTime( 'IIT - Physics', null ) | mmss }}</th>
+                            <th>{{getTotalMarks( 'IIT - Physics', null )}}</th>
                             <th>{{getTotalQuestions( 'IIT - Chemistry', null )}}</th>
                             <th>{{getTotalTime( 'IIT - Chemistry', null ) | mmss }}</th>
+                            <th>{{getTotalMarks( 'IIT - Chemistry', null )}}</th>
                             <th>{{getTotalQuestions( 'IIT - Maths', null )}}</th>
                             <th>{{getTotalTime( 'IIT - Maths', null ) | mmss }}</th>
+                            <th>{{getTotalMarks( 'IIT - Maths', null )}}</th>
                         </tr>
                     </table>
                 </div>

@@ -1,7 +1,9 @@
+- Compute marks for the assembled questions
 - Save the test configuration
 - Load a given test configuration
 
 ------------------ Completed on 5th Aug 2019 ---------------------------------
+- Render the selected question
 - Double click on assembled questions removes it to the approprirate topic questions array
 - Sort, shuffle assembled questions and refresh ramp graphs
 - Width of the page - restricted by canvas - fix
