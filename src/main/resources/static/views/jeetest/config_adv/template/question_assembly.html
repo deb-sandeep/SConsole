@@ -1,4 +1,4 @@
-<table>
+<table width="100%">
     <tbody>
         <tr>
             <td colspan="2">
@@ -94,18 +94,18 @@
 				        <div class="pull-right">
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="shuffleQuestions( 'IIT - Physics', null )">
+                                     ng-click="shuffleAssembledQuestions( selectedSectionTypes.section1Type )">
                                     <span class="glyphicon glyphicon-random"></span>
                              </button>
 				             <button class="btn btn-warning btn-sm"
 				                     style="padding:0px 5px;"
-				                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Physics' )">
+                                     ng-click="sortAssembledQuestionsByLatLevel( selectedSectionTypes.section1Type )">
 				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
 				                    L
 				             </button>
 				             <button class="btn btn-warning btn-sm"
 				                     style="padding:0px 5px;"
-                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Physics' )">
+                                     ng-click="sortAssembledQuestionsByProjTime( selectedSectionTypes.section1Type )">
 				                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
 				                    P
 				             </button>
@@ -150,18 +150,18 @@
                         <div class="pull-right">
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="shuffleQuestions( 'IIT - Chemistry', null )">
+                                     ng-click="shuffleAssembledQuestions( selectedSectionTypes.section2Type )">
                                     <span class="glyphicon glyphicon-random"></span>
                              </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Chemistry' )">
+                                     ng-click="sortAssembledQuestionsByLatLevel( selectedSectionTypes.section2Type )">
                                     <span class="glyphicon glyphicon-sort-by-attributes"></span>
                                     L
                              </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Chemistry' )">
+                                     ng-click="sortAssembledQuestionsByProjTime( selectedSectionTypes.section2Type )">
                                     <span class="glyphicon glyphicon-sort-by-attributes"></span>
                                     P
                              </button>
@@ -205,18 +205,18 @@
                         <div class="pull-right">
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="shuffleQuestions( 'IIT - Maths', null )">
+                                     ng-click="shuffleAssembledQuestions( selectedSectionTypes.section3Type )">
                                     <span class="glyphicon glyphicon-random"></span>
                              </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="sortAssembledQuestionsByLatLevel( 'IIT - Maths' )">
+                                     ng-click="sortAssembledQuestionsByLatLevel( selectedSectionTypes.section3Type )">
                                     <span class="glyphicon glyphicon-sort-by-attributes"></span>
                                     L
                              </button>
                              <button class="btn btn-warning btn-sm"
                                      style="padding:0px 5px;"
-                                     ng-click="sortAssembledQuestionsByProjTime( 'IIT - Maths' )">
+                                     ng-click="sortAssembledQuestionsByProjTime( selectedSectionTypes.section3Type )">
                                     <span class="glyphicon glyphicon-sort-by-attributes"></span>
                                     P
                              </button>

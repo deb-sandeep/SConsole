@@ -27,7 +27,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		'IIT - Physics'   : {},
 		'IIT - Chemistry' : {},
 		'IIT - Maths'     : {}
-	}
+	} ;
 	
 	$scope.selectedTopic = null ;
 	$scope.selectedSubject = null ;
@@ -43,6 +43,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	$scope.selectedQuestion = null ;
 		
 	var topicQSortDir = {} ;
+	var assembledQSortDir = {} ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -86,6 +87,10 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 				projTimeSortDir : 'asc',
 				latLevelSortDir : 'asc'
 			} ;
+			assembledQSortDir[ sels[i] ] = {
+				projTimeSortDir : 'asc',
+				latLevelSortDir : 'asc'
+			} ;
 		}
 
 		$scope.selectedSectionTypes.section1Type = sels[0] ;
@@ -93,6 +98,12 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		$scope.selectedSectionTypes.section3Type = sels[2] ;
 		
 		$( '#sectionSelectionDialog' ).modal( 'hide' ) ;
+		
+		setTimeout( function(){
+			for( var i=0; i<sels.length; i++ ) {
+				adjustCanvasWidth( sels[i] ) ;
+			}
+		}, 100 ) ;
 	}
 	
 	$scope.toggleTopicSelection = function( topic ) {
@@ -125,18 +136,54 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		shuffle( questions ) ;
 	} 
 	
+	$scope.shuffleAssembledQuestions = function( secType ) {
+		
+		var questionsForAllSections = $scope.assembledQuestionsForSelectedSubject ;
+		var questions = questionsForAllSections[ secType ] ;
+		
+		if( questions.length > 0 ) {
+			shuffle( questions ) ;
+			refreshRampGraph( secType ) ;
+		}
+	}
+	
 	$scope.sortTopicQuestionsByLatLevel = function( qType ) {
+		
 		var curSortDir = topicQSortDir[ qType ].latLevelSortDir ;
 		var questions = $scope.questionsForSelectedTopic[ qType ] ;
 		sortQuestionsByAttribute( questions, "lat", curSortDir ) ;
 		topicQSortDir[ qType ].latLevelSortDir = toggleSortDirection( curSortDir ) ;
     }
+	
+	$scope.sortAssembledQuestionsByLatLevel = function( qType ) {
+		
+		var curSortDir = assembledQSortDir[ qType ].latLevelSortDir ;
+		var questionsForAllSections = $scope.assembledQuestionsForSelectedSubject ;
+		var questions = questionsForAllSections[ qType ] ;
+		
+		sortQuestionsByAttribute( questions, "lat", curSortDir ) ;
+		assembledQSortDir[ qType ].latLevelSortDir = toggleSortDirection( curSortDir ) ;
+		
+		refreshRampGraph( qType ) ;
+	}
     
 	$scope.sortTopicQuestionsByProjTime = function( qType ) {
 		var curSortDir = topicQSortDir[ qType ].projTimeSortDir ;
 		var questions = $scope.questionsForSelectedTopic[ qType ] ;
 		sortQuestionsByAttribute( questions, "proj", curSortDir ) ;
 		topicQSortDir[ qType ].projTimeSortDir = toggleSortDirection( curSortDir ) ;
+    }
+
+	$scope.sortAssembledQuestionsByProjTime = function( qType ) {
+		
+		var curSortDir = assembledQSortDir[ qType ].projTimeSortDir ;
+		var questionsForAllSections = $scope.assembledQuestionsForSelectedSubject ;
+		var questions = questionsForAllSections[ qType ] ;
+		
+		sortQuestionsByAttribute( questions, "proj", curSortDir ) ;
+		assembledQSortDir[ qType ].projTimeSortDir = toggleSortDirection( curSortDir ) ;
+		
+		refreshRampGraph( qType ) ;
     }
 
 	$scope.questionSelectedForTest = function() {
@@ -227,6 +274,45 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 				time += questions[i].projectedSolveTime ;
 			}
 			return time ;
+		}
+	}
+	
+	$scope.moveQuestionUp = function() {
+		changeSelectedQuestionSequence( true ) ;
+	}
+	
+	$scope.moveQuestionDown = function() {
+		changeSelectedQuestionSequence( false ) ;
+	}
+	
+	$scope.removeAssembledQuestion = function() {
+		
+		var question = $scope.selectedQuestion ;
+		var sType = question.subject.name ;
+		var qType = question.questionType ;
+		
+		var srcArray = $scope.assembledQuestions[ sType ][ qType ] ;
+		
+		for( var i=0; i<srcArray.length; i++ ) {
+			if( srcArray[i] == question ) {
+				srcArray.splice( i, 1 ) ;
+				if( $scope.selectedTopic != null ) {
+					if( question.topic.id == $scope.selectedTopic.topicId ) {
+						$scope.questionsForSelectedTopic[ qType ].push( question ) ;
+					}
+				}
+				
+				if( i < srcArray.length ) {
+					$scope.selectedQuestion = srcArray[i] ;
+				}
+				else {
+					if( srcArray.length > 0 ) {
+						$scope.selectedQuestion = srcArray[i-1] ;
+					}
+				}
+				refreshRampGraph( qType ) ;
+				break ;
+			}
 		}
 	}
 	
@@ -478,6 +564,45 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	    });
 
 	    RGraph.redraw();
+	}
+	
+	function adjustCanvasWidth( secType ) {
+		var canvasId = secType + "_ramp_graph" ;
+		var canvas = document.getElementById( canvasId ) ;
+		var $td = $('canvas').parent() ;
+		canvas.width = $td.width() ;
+		canvas.height = $td.height() ;		
+	}
+	
+	function changeSelectedQuestionSequence( up ) {
+		
+		if( $scope.selectedQuestion == null ) return ;
+		
+		var question = $scope.selectedQuestion ;
+		var sType = question.subject.name ;
+		var qType = question.questionType ;
+		var tgtQArray = $scope.assembledQuestions[ sType ][ qType ] ;
+		
+		for( var i=0; i<tgtQArray.length; i++ ) {
+			if( tgtQArray[i] == question ) {
+				if( up ) {
+					if( i > 0 ) {
+						var temp = tgtQArray[i-1] ;
+						tgtQArray[i-1] = question ;
+						tgtQArray[i] = temp ;
+					}
+				} 
+				else {
+					if( i < tgtQArray.length-1 ) {
+						var temp = tgtQArray[i+1] ;
+						tgtQArray[i+1] = question ;
+						tgtQArray[i] = temp ;
+					}
+				}
+				refreshRampGraph( qType ) ;
+				return ;
+			}
+		}
 	}
 	
 	// --- [END] Local functions

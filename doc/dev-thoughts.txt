@@ -1,11 +1,18 @@
-------------------------------------------------------------------------------
+- Save the test configuration
+- Load a given test configuration
+
+------------------ Completed on 5th Aug 2019 ---------------------------------
+- Double click on assembled questions removes it to the approprirate topic questions array
+- Sort, shuffle assembled questions and refresh ramp graphs
+- Width of the page - restricted by canvas - fix
+
+------------------ Completed on 4th Aug 2019 ---------------------------------
 - Data structure for assembled questions
 - Map double click on topic questions
     - Insert into assembled questions array
 - Based on which topic is selected show the assembled questions for that subject
     - Exactly like the topic questions
     - Also the chart
-- Double click on assembled questions removes it to the approprirate topic questions array
 - Show statistics of assembled questions
 - Show actions to save
 
