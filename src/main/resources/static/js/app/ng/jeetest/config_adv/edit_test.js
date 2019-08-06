@@ -388,6 +388,10 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
                 function( response ){
                     console.log( response ) ;
                     processRawInsightData( response.data ) ;
+            		
+            		if( $scope.testId > 0 ) {
+            			loadTestConfiguration( $scope.testId ) ;
+            		}
                 }, 
                 function( error ){
                     console.log( error ) ;
@@ -424,6 +428,99 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 			else {
 				console.log( "Invalid subject found. " + insight.subjectName ) ; 
 			}
+		}
+	}
+	
+	function loadTestConfiguration( testId ) {
+		
+        $scope.$parent.interactingWithServer = true ;
+        $http.get( '/TestConfiguration/' + testId )
+        .then( 
+            function( response ){
+                console.log( "Successfully loaded test configuration." ) ;
+                console.log( response ) ;
+                deserializeTestConfiguration( response.data ) ;
+            }, 
+            function( error ){
+                console.log( "Error getting test configuration from server." + error ) ;
+                $scope.$parent.addErrorAlert( "Could not fetch test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+
+	function deserializeTestConfiguration( config ) {
+		
+		$scope.testId = config.id ;
+		$scope.examType = config.examType ;
+		setTitle() ;
+
+		// Identify and select the topics for which there are assembled questions
+        deserializeSelectedTopics( config.phyQuestions,  $scope.phyTopics  ) ;
+		deserializeSelectedTopics( config.chemQuestions, $scope.chemTopics ) ;
+		deserializeSelectedTopics( config.mathQuestions, $scope.mathTopics ) ;
+		
+		reverseEngineerSectionTypes( config.allQuestions ) ;
+		$scope.applySectionSelections() ;
+		
+	    arrangeAssembledQuestions( config.allQuestions ) ;
+	}
+	
+	function deserializeSelectedTopics( questions, topics ) {
+		
+		for( var i=0; i<questions.length; i++ ) {
+			var question = questions[i] ;
+			for( var j=0; j<topics.length; j++ ) {
+				var topic = topics[j] ;
+				if( question.topic.id == topic.topicId ) {
+					topic.selected = true ;
+				}
+			}
+		}
+	}
+	
+	function reverseEngineerSectionTypes( allQuestions ) {
+		
+		var sectionTypeSet = new Set() ;
+		for( var i=0; i<allQuestions.length; i++ ) {
+			sectionTypeSet.add( allQuestions[i].questionType ) ;
+		}
+		
+		var index = 0 ;
+		while( sectionTypeSet.size < 3 && index < $scope.questionTypes.length ) {
+			sectionTypeSet.add( $scope.questionTypes[index] ) ;
+			index++;
+		}
+		
+		var sectionTypeArray = Array.from( sectionTypeSet ) ;
+		var sectionSequenceLookup = {
+			'SCA' : 1,
+			'MCA' : 2,
+			'NT'  : 3,
+			'LCT' : 4,
+			'MMT' : 5
+		} ;
+		
+		sectionTypeArray.sort( function( typeA, typeB ) {
+			return sectionSequenceLookup[typeA] - sectionSequenceLookup[typeB] ;
+		} ) ;
+		
+		$scope.sectionSelectionOptions.section1Type = sectionTypeArray[0] ;
+		$scope.sectionSelectionOptions.section2Type = sectionTypeArray[1] ;
+		$scope.sectionSelectionOptions.section3Type = sectionTypeArray[2] ;
+	}
+	
+	function arrangeAssembledQuestions( allQuestions ) {
+		
+		for( var i=0; i<allQuestions.length; i++ ) {
+			var question = allQuestions[i] ;
+			var sType = question.subject.name ;
+			var qType = question.questionType ;
+			
+			var tgtArray = $scope.assembledQuestions[ sType ][ qType ] ;
+			tgtArray.push( question ) ;
 		}
 	}
 	

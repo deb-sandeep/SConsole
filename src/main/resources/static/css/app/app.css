@@ -319,3 +319,7 @@ li {
 	border: 1px solid #a0a0a0;
 	margin-bottom: 20px;
 }
+
+.fixed-font {
+	font-family:Courier;
+}
