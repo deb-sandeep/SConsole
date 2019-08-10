@@ -1,28 +1,34 @@
 package com.sandy.sconsole.api.jeetest.qbm.vo;
 
+import java.util.ArrayList ;
+import java.util.List ;
+
+import com.sandy.sconsole.api.jeetest.qbm.helper.BulkQuestionEntryHelper.FileInfo ;
+
 public class BulkQEntry {
 
     private String  qRef     = "" ;
-    private String  imgName  = "" ;
     private String  qType    = "SCA" ;
     private String  aText    = "" ;
     private Integer latLevel = 3 ;
     private Integer projTime = 120 ;
     private Boolean saved    = false ;
-    private String  imgPath  = "" ;
+    
+    private List<String> imgPaths  = new ArrayList<>() ;
+    private List<String> imgNames  = new ArrayList<>() ;
+    
+    public BulkQEntry() {
+    }
+    
+    public BulkQEntry( FileInfo fi ) {
+        this.qRef = fi.qRef ;
+    }
     
     public String getqRef() {
         return qRef ;
     }
     public void setqRef( String qRef ) {
         this.qRef = qRef ;
-    }
-    
-    public String getImgName() {
-        return imgName ;
-    }
-    public void setImgName( String imgName ) {
-        this.imgName = imgName ;
     }
     
     public String getqType() {
@@ -59,11 +65,20 @@ public class BulkQEntry {
     public void setSaved( Boolean saved ) {
         this.saved = saved ;
     }
-    
-    public String getImgPath() {
-        return imgPath ;
+
+    public List<String> getImgNames() {
+        return imgNames ;
     }
-    public void setImgPath( String imgPath ) {
-        this.imgPath = imgPath ;
+
+    public void setImgNames( List<String> imgNames ) {
+        this.imgNames = imgNames ;
+    }
+
+    public List<String> getImgPaths() {
+        return imgPaths;
+    }
+
+    public void setImgPaths( List<String> imgPaths ) {
+        this.imgPaths = imgPaths;
     }
 }

@@ -1,8 +1,8 @@
 sConsoleApp.config( function( $routeProvider ) {
 	$routeProvider
 	.when("/", {
-		templateUrl : "/jeetest/qbm/editQuestion",
-		controller : "EditQuestionController"
+		templateUrl : "/jeetest/qbm/qbInsight",
+		controller : "QBInsightController"
 	})
 	.when("/searchQuestions", {
 		templateUrl : "/jeetest/qbm/searchQuestions",

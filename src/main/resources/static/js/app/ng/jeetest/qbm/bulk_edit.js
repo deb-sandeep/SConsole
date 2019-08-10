@@ -1,12 +1,12 @@
 function BulkQEntry( entry ) {
 	this.qRef     = entry.qRef ;
-	this.imgName  = entry.imgName ;
 	this.qType    = entry.qType ;
 	this.aText    = entry.aText ;
 	this.latLevel = entry.latLevel ;
 	this.projTime = entry.projTime ;
 	this.saved    = entry.saved ;
-	this.imgPath  = entry.imgPath ;
+	this.imgNames = entry.imgNames ;
+	this.imgPaths = entry.imgPaths ;
 	
 	this.nextEntry = null ;
 }
@@ -155,7 +155,14 @@ sConsoleApp.controller( 'BulkEditController',
     	console.log( "Saving entrh on server." ) ;
     	
     	var tgtExam = ( entry.qType != "SCA" ) ? "ADV" : "MAIN" ;
-    	var qText = "{{@img " + entry.imgPath + "}}" ;
+    	var qText = "" ;
+    	
+    	for( var i=0; i<entry.imgPaths.length; i++ ) {
+    		qText += "{{@img " + entry.imgPaths[i] + "}}" ;
+    		if( i < entry.imgPaths.length - 1 ) {
+    			qText += "<br/>" ;
+    		}
+    	}
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestQuestion', {

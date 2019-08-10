@@ -96,7 +96,7 @@
 					                 </select>
                                   </td>
                                   <td>
-                                    <input class="form-control"  type="text" ng-model="entry.imgName" style="width:100%"/>
+                                    <input class="form-control"  type="text" ng-model="entry.imgNames" style="width:100%"/>
                                   </td>
                                   <td>
                                     <input class="form-control"  
@@ -154,7 +154,8 @@
                             </span>
 					      </div>
 					      <div class="panel-body">
-					        <img ng-src="/jeetest/images/{{entry.imgPath}}"/>
+					        <img ng-repeat="imgPath in entry.imgPaths track by $index"
+					             ng-src="/jeetest/images/{{imgPath}}"/>
 					        <br>
 					        <table class="pure-table pure-table-horizontal" width="100%">
 					            <tr>

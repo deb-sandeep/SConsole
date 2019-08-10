@@ -5,7 +5,9 @@ import java.io.FileFilter ;
 import java.util.ArrayList ;
 import java.util.Arrays ;
 import java.util.Comparator ;
+import java.util.LinkedHashMap ;
 import java.util.List ;
+import java.util.Map ;
 
 import org.apache.log4j.Logger ;
 
@@ -18,6 +20,13 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 
 public class BulkQuestionEntryHelper {
+    
+    public static class FileInfo {
+        public String qRef = null ;
+        public boolean isPart = false ;
+        public int intId = -1 ;
+        public int decimalId = -1 ;
+    }
     
     static final Logger log = Logger.getLogger( BulkQuestionEntryHelper.class ) ;
     
@@ -38,28 +47,40 @@ public class BulkQuestionEntryHelper {
         
         File[] files = selectUnassignedImages( subjectName, topic, book,
                                                baseQRef, usedQRefs ) ;
+        
+        Map<String, BulkQEntry> entriesMap = new LinkedHashMap<String, BulkQEntry>() ;
+        
         if( files != null ) {
-            sortFileArray( files ) ;
             
             String subPreamble = getSubjectPreamble( subjectName ) ;
+            sortFileArray( subPreamble, files ) ;
             
             for( File file : files ) {
-                BulkQEntry entry = new BulkQEntry() ;
                 
-                String qRef = file.getName().substring( subPreamble.length() ) ;
-                qRef = qRef.substring( 0, qRef.lastIndexOf( '.' ) ) ;
-                qRef = qRef.replace( '_', '/' ) ;
+                FileInfo fi = parseFileInfo( subPreamble, file.getName() ) ;
+                BulkQEntry entry = getBulkQEntry( entriesMap, fi ) ;
                 
-                entry.setqRef( qRef ) ;
-                entry.setImgName( file.getName() ) ;
-                entry.setImgPath( file.getAbsolutePath()
-                        .substring( SConsole.JEETEST_IMG_DIR
-                                .getAbsolutePath()
-                                .length()+1 ) ) ;
+                entry.getImgNames().add( file.getName() ) ;
+                entry.getImgPaths().add( file.getAbsolutePath()
+                                             .substring( SConsole.JEETEST_IMG_DIR.getAbsolutePath().length()+1 ) ) ;
+            }
+            
+            for( BulkQEntry entry : entriesMap.values() ) {
                 qEntries.add( entry ) ;
             }
         }
         return qEntries ;
+    }
+    
+    private BulkQEntry getBulkQEntry( Map<String, BulkQEntry> entriesMap, 
+                                      FileInfo fi ) {
+        
+        BulkQEntry entry = entriesMap.get( fi.qRef ) ;
+        if( entry == null ) {
+            entry = new BulkQEntry( fi ) ;
+            entriesMap.put( fi.qRef, entry ) ;
+        }
+        return entry ;
     }
 
     private File[] selectUnassignedImages( String subjectName, Topic topic,
@@ -89,17 +110,17 @@ public class BulkQuestionEntryHelper {
         return files ;
     }
     
-    private void sortFileArray( File[] files ) {
+    private void sortFileArray( String subPreamble, File[] files ) {
         
         Arrays.sort( files, new Comparator<File>() {
             public int compare( File f1, File f2 ) {
                 
                 try {
-                    int f1IntId = getIntegerId( f1.getName() ) ;
-                    int f2IntId = getIntegerId( f2.getName() ) ;
+                    FileInfo fi1 = parseFileInfo( subPreamble, f1.getName() ) ;
+                    FileInfo fi2 = parseFileInfo( subPreamble, f2.getName() ) ;
                     
-                    int f1IntPart = (int)Math.floor( f1IntId ) ;
-                    int f2IntPart = (int)Math.floor( f2IntId ) ;
+                    int f1IntPart = fi1.intId ;
+                    int f2IntPart = fi2.intId ;
                     
                     if( f1IntPart < f2IntPart ) {
                         return -1 ;
@@ -108,8 +129,8 @@ public class BulkQuestionEntryHelper {
                         return 1 ;
                     }
                     
-                    int f1DecimalId = getDecimalId( f1.getName() ) ;
-                    int f2DecimalId = getDecimalId( f2.getName() ) ;
+                    int f1DecimalId = fi1.decimalId ;
+                    int f2DecimalId = fi2.decimalId ;
                     
                     if( f1DecimalId < f2DecimalId ) {
                         return -1 ;
@@ -121,26 +142,35 @@ public class BulkQuestionEntryHelper {
                 catch( Exception e ) {
                     log.error( "Error in sort comparision", e ) ;
                 }
-
                 return 0 ;
             }
         } ) ;
     }
     
-    private int getIntegerId( String fileName ) {
-        String intStr = fileName.substring( fileName.lastIndexOf( "_" ) + 1 ) ;
-        intStr = intStr.substring( 0, intStr.indexOf( '.' )  ) ;
-        return Integer.parseInt( intStr ) ;
-    }
-    
-    private int getDecimalId( String fileName ) {
-        String intStr = fileName.substring( fileName.lastIndexOf( "_" ) + 1 ) ;
-        intStr = intStr.substring( intStr.indexOf( '.' )+1  ) ;
-        if( intStr.contains( "." ) ) {
-            intStr = intStr.substring( 0, intStr.indexOf( "." ) ) ;
-            return Integer.parseInt( intStr ) ;
+    private FileInfo parseFileInfo( String subPreamble, String fileName ) {
+        
+        String idStr = fileName.substring( fileName.lastIndexOf( "_" ) + 1 ) ;
+        idStr = idStr.substring( 0, idStr.lastIndexOf( '.' ) ) ;
+        
+        String intStr = idStr ;
+        String decStr = "-1" ;
+        
+        if( idStr.contains( "." ) ) {
+            intStr = idStr.substring( 0, idStr.indexOf( '.' ) ) ;
+            decStr = idStr.substring( idStr.indexOf( '.' ) + 1 ) ;
         }
-        return 0 ;
+        
+        String qRef = fileName.substring( subPreamble.length() ) ;
+        qRef = qRef.substring( 0, qRef.indexOf( '.' ) ) ;
+        qRef = qRef.replace( '_', '/' ) ;
+        
+        FileInfo fi = new FileInfo() ;
+        fi.qRef      = qRef ;
+        fi.intId     = Integer.parseInt( intStr ) ;
+        fi.decimalId = Integer.parseInt( decStr ) ;
+        fi.isPart    = !decStr.equals( "-1" ) ;
+        
+        return fi ;
     }
     
     private List<String> getTestQuestionsWithQRefLike( 
