@@ -1,3 +1,13 @@
+<Sub>_Q_[Section]*_[<LCT>]_<QID>[Part].png
+
+Sub : Phy | Chem | Math
+Section : [A-Z0-9]+_ // No LCT
+LCT : LCT_[QID]
+QID : INT_ID.DEC_ID
+Part : [0-9]
+
+
+
 ------------------ Completed on 6th Aug 2019 ---------------------------------
 - Load a given test configuration
 

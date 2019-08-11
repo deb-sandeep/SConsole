@@ -1,5 +1,6 @@
 package com.sandy.sconsole.api.jeetest.qbm.helper;
 
+import java.awt.Point ;
 import java.io.File ;
 import java.io.FileFilter ;
 import java.util.ArrayList ;
@@ -22,10 +23,33 @@ import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 public class BulkQuestionEntryHelper {
     
     public static class FileInfo {
-        public String qRef = null ;
-        public boolean isPart = false ;
-        public int intId = -1 ;
-        public int decimalId = -1 ;
+        public String   qRef = null ;
+        public Point    qNo = null ;
+        public int      partNum = -1 ;
+        public String   lctRef = null ;
+        public boolean  isLCTQuestion = false ;
+        public boolean  isLCTContext = false ;
+        public Point    lctNo = null ;
+        
+        public boolean isLCT() {
+            return lctRef != null ;
+        }
+        
+        public boolean isPart() { 
+            return partNum != -1 ;
+        }
+        
+        public String toString() {
+            StringBuffer buffer = new StringBuffer() ;
+            buffer.append( "\nQRef   = " + qRef ).append( "\n" )
+                  .append( "QNo    = " + qNo.x + "." + qNo.y ).append( "\n" )
+                  .append( "Part # = " + partNum ).append( "\n" )
+                  .append( "lctRef = " + lctRef ).append( "\n" )
+                  .append( "lct Q? = " + isLCTQuestion ).append( "\n" )
+                  .append( "lct C? = " + isLCTContext ).append( "\n" )
+                  .append( "lctNo  = " + lctNo ).append( "\n" ) ;
+            return buffer.toString() ;
+        }
     }
     
     static final Logger log = Logger.getLogger( BulkQuestionEntryHelper.class ) ;
@@ -48,7 +72,8 @@ public class BulkQuestionEntryHelper {
         File[] files = selectUnassignedImages( subjectName, topic, book,
                                                baseQRef, usedQRefs ) ;
         
-        Map<String, BulkQEntry> entriesMap = new LinkedHashMap<String, BulkQEntry>() ;
+        Map<String, BulkQEntry> entriesMap = new LinkedHashMap<>() ;
+        Map<String, BulkQEntry> lctContextMap = new LinkedHashMap<>() ;
         
         if( files != null ) {
             
@@ -58,11 +83,42 @@ public class BulkQuestionEntryHelper {
             for( File file : files ) {
                 
                 FileInfo fi = parseFileInfo( subPreamble, file.getName() ) ;
-                BulkQEntry entry = getBulkQEntry( entriesMap, fi ) ;
                 
-                entry.getImgNames().add( file.getName() ) ;
-                entry.getImgPaths().add( file.getAbsolutePath()
-                                             .substring( SConsole.JEETEST_IMG_DIR.getAbsolutePath().length()+1 ) ) ;
+                if( fi.isLCTContext ) {
+                    BulkQEntry lctCtxEntry = lctContextMap.get( fi.lctRef ) ;
+                    if( lctCtxEntry == null ) {
+                        lctCtxEntry = new BulkQEntry() ;
+                        lctContextMap.put( fi.lctRef, lctCtxEntry ) ;
+                    }
+                    lctCtxEntry.getImgNames().add( file.getName() ) ;
+                    lctCtxEntry.getImgPaths().add( file.getAbsolutePath()
+                                .substring( SConsole.JEETEST_IMG_DIR
+                                                    .getAbsolutePath()
+                                                    .length()+1 ) ) ;
+                }
+                else {
+                    BulkQEntry entry = getBulkQEntry( entriesMap, fi ) ;
+                    
+                    if( fi.isLCTQuestion ) {
+                        if( ( fi.isPart() && fi.partNum == 1 ) ||
+                              !fi.isPart() ) {
+                            
+                            BulkQEntry lctCtx = lctContextMap.get( fi.lctRef ) ;
+                            for( String imgName : lctCtx.getImgNames() ) {
+                                entry.getImgNames().add( imgName ) ;
+                            }
+                            for( String imgPath : lctCtx.getImgPaths() ) {
+                                entry.getImgPaths().add( imgPath ) ;
+                            }
+                        }
+                    }
+                    
+                    entry.getImgNames().add( file.getName() ) ;
+                    entry.getImgPaths().add( file.getAbsolutePath()
+                                                 .substring( SConsole.JEETEST_IMG_DIR
+                                                                     .getAbsolutePath()
+                                                                     .length()+1 ) ) ;
+                }
             }
             
             for( BulkQEntry entry : entriesMap.values() ) {
@@ -119,24 +175,22 @@ public class BulkQuestionEntryHelper {
                     FileInfo fi1 = parseFileInfo( subPreamble, f1.getName() ) ;
                     FileInfo fi2 = parseFileInfo( subPreamble, f2.getName() ) ;
                     
-                    int f1IntPart = fi1.intId ;
-                    int f2IntPart = fi2.intId ;
-                    
-                    if( f1IntPart < f2IntPart ) {
+                    if( fi1.isLCTContext && !fi2.isLCTContext ) {
                         return -1 ;
                     }
-                    else if( f1IntPart > f2IntPart ) {
+                    else if( !fi1.isLCTContext && fi2.isLCTContext ) {
                         return 1 ;
                     }
                     
-                    int f1DecimalId = fi1.decimalId ;
-                    int f2DecimalId = fi2.decimalId ;
-                    
-                    if( f1DecimalId < f2DecimalId ) {
-                        return -1 ;
+                    if( fi1.qNo.equals( fi2.qNo ) ) {
+                        return fi1.partNum - fi2.partNum ;
                     }
-                    else if( f1DecimalId > f2DecimalId ) {
-                        return 1 ;
+                    
+                    if( fi1.qNo.x == fi2.qNo.x ) {
+                        return fi1.qNo.y - fi2.qNo.y ;
+                    }
+                    else {
+                        return fi1.qNo.x - fi2.qNo.x ;
                     }
                 }
                 catch( Exception e ) {
@@ -147,30 +201,94 @@ public class BulkQuestionEntryHelper {
         } ) ;
     }
     
+    public static void main( String[] args ) {
+        BulkQuestionEntryHelper obj = new BulkQuestionEntryHelper( null ) ;
+        FileInfo fi = obj.parseFileInfo( "Chem_Q_", "Chem_Q_IC_1_LCT_1(2).png" ) ;
+        log.debug( fi ) ;
+    }
+    
+    //    <Sub>_Q_[Section]*_[<LCT>]_<QID>(Part).png
+    //
+    //    Sub : Phy | Chem | Math
+    //    Section : [A-Z0-9]+_ // No LCT
+    //    LCT : LCT_[QID]
+    //    QID : INT_ID.DEC_ID
+    //    Part : [0-9]
     private FileInfo parseFileInfo( String subPreamble, String fileName ) {
+
+        // Strip off the filename extension (.png)
+        fileName = fileName.substring( 0, fileName.lastIndexOf( '.' ) ) ;
         
-        String idStr = fileName.substring( fileName.lastIndexOf( "_" ) + 1 ) ;
-        idStr = idStr.substring( 0, idStr.lastIndexOf( '.' ) ) ;
+        // Strip off the subject preamble
+        fileName = fileName.substring( subPreamble.length() ) ;
         
-        String intStr = idStr ;
-        String decStr = "-1" ;
+        // Determine if this is a part file
+        boolean isPart = fileName.matches( ".+\\([0-9]+\\)" ) ;
+        int partNum = -1 ;
         
-        if( idStr.contains( "." ) ) {
-            intStr = idStr.substring( 0, idStr.indexOf( '.' ) ) ;
-            decStr = idStr.substring( idStr.indexOf( '.' ) + 1 ) ;
+        // If this is a part file, extract the part number
+        if( isPart ) {
+            int i1 = fileName.lastIndexOf( '(' ) ;
+            int i2 = fileName.lastIndexOf( ')' ) ;
+            partNum = Integer.parseInt( fileName.substring( i1+1, i2 ) ) ;
+            
+            fileName = fileName.substring( 0, i1 ) ;
         }
         
-        String qRef = fileName.substring( subPreamble.length() ) ;
-        qRef = qRef.substring( 0, qRef.indexOf( '.' ) ) ;
+        // Now the last part contains the question number in the x.y format
+        String qNoPart = fileName.substring( fileName.lastIndexOf( '_' )+1 ) ;
+        Point qNo = parsePoint( qNoPart ) ;
+        
+        fileName = fileName.substring( 0, fileName.lastIndexOf( '_' ) ) ;
+        
+        boolean isLCTContext = false ;
+        boolean isLCTQuestion = false ;
+        String lctRef = null ;
+        Point lctNo = null ;
+        
+        if( fileName.contains( "_LCT" ) ) {
+            isLCTContext = fileName.endsWith( "_LCT" ) ;
+            isLCTQuestion = !isLCTContext ;
+            lctRef = fileName ;
+            
+            if( isLCTContext ) {
+                lctRef = lctRef + "_" + qNoPart ;
+            }
+            
+            lctRef = lctRef.replace( '_', '/' ) ;
+            lctNo = parsePoint( lctRef.substring( lctRef.lastIndexOf( '/' ) + 1 ) ) ; 
+        }
+        
+        String qRef = null ;
+        qRef = fileName + "_" + qNoPart ;
         qRef = qRef.replace( '_', '/' ) ;
         
         FileInfo fi = new FileInfo() ;
-        fi.qRef      = qRef ;
-        fi.intId     = Integer.parseInt( intStr ) ;
-        fi.decimalId = Integer.parseInt( decStr ) ;
-        fi.isPart    = !decStr.equals( "-1" ) ;
+        fi.qRef = qRef ;
+        fi.partNum = partNum ;
+        fi.lctRef = lctRef ;
+        fi.isLCTQuestion = isLCTQuestion ;
+        fi.isLCTContext = isLCTContext ;
+        fi.qNo = qNo ;
+        fi.lctNo = lctNo ;
         
         return fi ;
+    }
+    
+    private Point parsePoint( String input ) {
+        
+        String intStr = input ;
+        String decStr = "-1" ;
+        
+        if( input.contains( "." ) ) {
+            intStr = input.substring( 0, input.indexOf( '.' ) ) ;
+            decStr = input.substring( input.indexOf( '.' ) + 1 ) ;
+        }
+        
+        Point point = new Point() ;
+        point.x = Integer.parseInt( intStr ) ;
+        point.y = Integer.parseInt( decStr ) ;
+        return point ;
     }
     
     private List<String> getTestQuestionsWithQRefLike( 
