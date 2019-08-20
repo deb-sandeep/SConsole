@@ -39,6 +39,10 @@ public class BulkQuestionEntryHelper {
             return partNum != -1 ;
         }
         
+        public String getQRefBase() {
+            return qRef.substring( 0, qRef.lastIndexOf( '/' ) ) ;
+        }
+        
         public String toString() {
             StringBuffer buffer = new StringBuffer() ;
             buffer.append( "\nQRef   = " + qRef ).append( "\n" )
@@ -182,15 +186,20 @@ public class BulkQuestionEntryHelper {
                         return 1 ;
                     }
                     
-                    if( fi1.qNo.equals( fi2.qNo ) ) {
-                        return fi1.partNum - fi2.partNum ;
-                    }
-                    
-                    if( fi1.qNo.x == fi2.qNo.x ) {
-                        return fi1.qNo.y - fi2.qNo.y ;
+                    if( fi1.getQRefBase().equals( fi2.getQRefBase() ) ) {
+                        if( fi1.qNo.equals( fi2.qNo ) ) {
+                            return fi1.partNum - fi2.partNum ;
+                        }
+                        
+                        if( fi1.qNo.x == fi2.qNo.x ) {
+                            return fi1.qNo.y - fi2.qNo.y ;
+                        }
+                        else {
+                            return fi1.qNo.x - fi2.qNo.x ;
+                        }
                     }
                     else {
-                        return fi1.qNo.x - fi2.qNo.x ;
+                        return fi1.getQRefBase().compareTo( fi2.getQRefBase() ) ;
                     }
                 }
                 catch( Exception e ) {

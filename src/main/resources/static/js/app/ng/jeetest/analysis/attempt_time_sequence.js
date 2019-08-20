@@ -140,7 +140,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
             	tooltipsEvent : 'mousemove', 
                 hmargin: 5,
                 colorsDefault: 'green',
-                vmargin: 5
+                vmargin: 1
             }
         }).draw();
     }

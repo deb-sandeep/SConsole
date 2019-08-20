@@ -61,10 +61,10 @@
     </tr>
     <tr>
         <th>Potential marks</th>
-        <td colspan="2"><strong>{{testSummary.overall.correctMks + testSummary.overall.avoidableTotalMks}}</strong></td>
-        <td colspan="2"><strong>{{testSummary.phy.correctMks + testSummary.phy.avoidableTotalMks}}</strong></td>
-        <td colspan="2"><strong>{{testSummary.chem.correctMks + testSummary.chem.avoidableTotalMks}}</strong></td>
-        <td colspan="2"><strong>{{testSummary.math.correctMks + testSummary.math.avoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.overall.totalMarks - testSummary.overall.unavoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.phy.totalMarks - testSummary.phy.unavoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.chem.totalMarks - testSummary.chem.unavoidableTotalMks}}</strong></td>
+        <td colspan="2"><strong>{{testSummary.math.totalMarks - testSummary.math.unavoidableTotalMks}}</strong></td>
     </tr>
     <tr class="indent">
         <th class="indent">Avoidable</th>
