@@ -161,6 +161,13 @@ public class BulkQuestionEntryHelper {
                         if( fName.endsWith( usedQRef ) ) {
                             return false ;
                         }
+                        else if( fName.indexOf( '(' ) != -1 ) {
+                            fName = fName.substring( 0, fName.indexOf( '(' ) ) ;
+                            fName += ".png" ;
+                            if( fName.endsWith( usedQRef ) ) {
+                                return false ;
+                            }
+                        }
                     }
                     return true ;
                 }
