@@ -319,6 +319,9 @@ public class SConsole
 
     public static void main( String[] args ) {
         log.debug( "Starting Spring Booot..." ) ;
+        
+        System.setProperty("java.awt.headless", "false");
+        
         SpringApplication.run( SConsole.class, args ) ;
 
         log.debug( "Starting SConsole.." ) ;
