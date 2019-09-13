@@ -94,7 +94,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		}
 		
 		// Add the selected question to the target array 
-		tgtArray.push( question ) ;
+		addQuestionToTargetArray( question, tgtArray ) ;
 		
 		refreshRampGraph( sType ) ;
 	}
@@ -157,7 +157,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		var questions = null ;
 		if( subjectName != null ) {
 			questions = $scope.assembledQuestions[ subjectName ] ;
-			shuffle( questions ) ;
+			shuffleAssembledQuestionsArray( questions ) ;
 			refreshRampGraph( subjectName ) ;
 		}
 		else if( qType != null ) {
@@ -199,6 +199,46 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
 	
+	function addQuestionToTargetArray( question, tgtArray )  {
+		
+		var qType = question.questionType ;
+		
+		if( qType == "NT" ) {
+			tgtArray.push( question ) ;
+		}
+		else {
+			var i=0 ;
+			for( ; i<tgtArray.length; i++ ) {
+				if( tgtArray[i].questionType == "NT" ) {
+					break ;
+				}
+			}
+			tgtArray.splice( i, 0, question ) ;
+		}
+	}
+	
+	function shuffleAssembledQuestionsArray( questions ) {
+		var scaQuestions = [] ;
+		var ntQuestions = [] ;
+		
+		for( var i=0; i<questions.length; i++ ) {
+			var question = questions[i] ;
+			if( question.questionType == "SCA" ) {
+				scaQuestions.push(  question ) ;
+			}
+			else {
+				ntQuestions.push( question ) ;
+			}
+		} 
+		
+		shuffle( scaQuestions ) ;
+		shuffle( ntQuestions ) ;
+		
+		questions.length = 0 ;
+		questions.push.apply( questions, scaQuestions ) ;
+		questions.push.apply( questions, ntQuestions ) ;
+	}
+	
 	function shuffle( array ) {
 		  var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -214,7 +254,6 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		    array[currentIndex] = array[randomIndex];
 		    array[randomIndex] = temporaryValue;
 		  }
-
 		  return array;
 	}	
 	
@@ -223,10 +262,18 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 			var val1 = ( attribute == "lat" ) ? q1.lateralThinkingLevel : q1.projectedSolveTime ;
 			var val2 = ( attribute == "lat" ) ? q2.lateralThinkingLevel : q2.projectedSolveTime ;
 			
-			if( dir == "asc" ) {
-				return val1 - val2 ;
+			if( q1.questionType == q2.questionType ) {
+				if( dir == "asc" ) {
+					return val1 - val2 ;
+				}
+				return val2 - val1 ;
 			}
-			return val2 - val1 ;
+			else {
+				if( q1.questionType == 'SCA' ) {
+					return -1 ;
+				}
+				return 1 ;
+			}
 		}) ;
 	}
 	
@@ -326,18 +373,42 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		var qType = question.questionType ;
 		
 		var tgtQArray = $scope.assembledQuestions[ sType ] ;
+
+		var scaQuestions = [] ;
+		var ntQuestions = [] ;
+		for( var i=0; i<tgtQArray.length; i++ ) {
+			var q = tgtQArray[i] ;
+			if( q.questionType == "SCA" ) {
+				scaQuestions.push( q ) ;
+			}
+			else {
+				ntQuestions.push( q ) ;
+			}
+		}
+		
+		var lowerBound = -1 ;
+		var upperBound = -1 ;
+		
+		if( qType == "SCA" ) {
+			lowerBound = 0 ;
+			upperBound = scaQuestions.length - 1 ;
+		}
+		else {
+			lowerBound = scaQuestions.length ;
+			upperBound = tgtQArray.length - 1 ;
+		}
+		
 		for( var i=0; i<tgtQArray.length; i++ ) {
 			if( tgtQArray[i] == question ) {
-				
 				if( up ) {
-					if( i > 0 ) {
+					if( i > lowerBound ) {
 						var temp = tgtQArray[i-1] ;
 						tgtQArray[i-1] = question ;
 						tgtQArray[i] = temp ;
 					}
 				} 
 				else {
-					if( i < tgtQArray.length-1 ) {
+					if( i < upperBound ) {
 						var temp = tgtQArray[i+1] ;
 						tgtQArray[i+1] = question ;
 						tgtQArray[i] = temp ;
@@ -484,7 +555,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 	function loadQuestionsForTopic( topicId, examType ) {
 		
         $scope.$parent.interactingWithServer = true ;
-        $http.get( '/TestQuestion/Topic/' + topicId + "?questionTypes=SCA" )
+        $http.get( '/TestQuestion/Topic/' + topicId + "?questionTypes=SCA,NT" )
         .then( 
                 function( response ){
                     console.log( response ) ;

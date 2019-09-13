@@ -1,5 +1,6 @@
 package com.sandy.sconsole.api.jeetest.config;
 
+import java.sql.Timestamp ;
 import java.util.ArrayList ;
 import java.util.HashMap ;
 import java.util.List ;
@@ -292,6 +293,7 @@ public class TestConfiguratorRestController {
         }
         else {
             ci = new TestConfigIndex() ;
+            ci.setCreationDate( new Timestamp( System.currentTimeMillis() ) ) ;
         }
         
         ci.setExamType( config.getExamType() ) ;
@@ -301,6 +303,7 @@ public class TestConfiguratorRestController {
         ci.setTotalMarks( config.getTotalMarks() );
         ci.setDuration( config.getDuration() ) ;
         ci.setProjectedSolveTime( config.getProjectedSolveTime() ) ;
+        ci.setLastUpdateDate( new Timestamp( System.currentTimeMillis() ) ) ;
         
         ci = tciRepo.save( ci ) ;
         

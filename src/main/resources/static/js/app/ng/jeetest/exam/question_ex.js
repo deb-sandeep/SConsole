@@ -64,14 +64,51 @@ function QuestionEx( q ) {
     	if( this.attemptState == AttemptState.prototype.ATTEMPTED ||
     		this.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
     		
-    		if( this.question.answerText == this.interactionHandler.getAnswer() ) {
-    			return 4 ;
-    		}
-    		else {
-    			return -1 ;
-    		}
+    	    if( this.question.questionType == "SCA" ) {
+    	        return this.getSCAScore() ;
+    	    }
+    	    else if( this.question.questionType == "NT" ) {
+    	        return this.getNTScore() ;
+    	    }
     	}
     	return 0 ;
+    }
+    
+    this.getSCAScore = function() {
+        if( this.question.answerText == this.interactionHandler.getAnswer() ) {
+            return 4 ;
+        }
+        else {
+            return -1 ;
+        }
+    }
+    
+    this.getNTScore = function() {
+        var providedAnsText = this.interactionHandler.getAnswer() ;
+        var answerRange = this.question.answerText ;
+        
+        var upperBound = null ;
+        var lowerBound = null ;
+        
+        var rangeSepIndex = answerRange.indexOf( '~' ) ;
+        if( rangeSepIndex != -1 ) {
+            var lbText = answerRange.substring( 0, rangeSepIndex ) ;
+            var ubText = answerRange.substring( rangeSepIndex+1 ) ;
+            
+            upperBound = parseFloat( ubText ) ;
+            lowerBound = parseFloat( lbText ) ;
+        }
+        else {
+            var val = parseFloat( answerRange ) ;
+            upperBound = val + 0.1 ;
+            lowerBound = val - 0.1 ;
+        }
+        
+        var ansValue = parseFloat( providedAnsText ) ;
+        if( ansValue >= lowerBound && ansValue <= upperBound ) {
+            return 4 ;
+        }
+        return 0 ;
     }
     
     this.isCorrectlyAnswered = function() {
@@ -83,10 +120,10 @@ function QuestionEx( q ) {
     	if( this.attemptState == AttemptState.prototype.ATTEMPTED ||
     		this.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
     		
-    		if( this.question.answerText == this.interactionHandler.getAnswer() ) {
-    			return true ;
-    		}
-    	}
+    		var score = this.getScore() ;
+    		return score == 4 ;
+        }
+    	
     	return false ;
     }
 }

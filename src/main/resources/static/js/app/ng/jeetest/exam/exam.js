@@ -142,7 +142,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     	}
     	else {
-    		alert( "Please answer the question before saving." ) ;
+            alert( "Please provide a valid answer before saving." ) ;
     	}
     }
     
@@ -156,7 +156,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         	$scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     	}
     	else {
-    		alert( "Please answer the question before saving." ) ;
+    		alert( "Please provide a valid answer before saving." ) ;
     	}
     }
     
@@ -324,7 +324,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
                 
                 $scope.$broadcast( 'computeSectionIndices' ) ;
                 
-                $scope.secondsRemaining = $scope.questions.length * 2 * 60 ;
+                $scope.secondsRemaining = $scope.activeTest.duration * 60 ;
                 $scope.startTimer() ;
                 
         		startTime = (new Date()).getTime() ;
@@ -389,9 +389,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		questionEx.interactionHandler = new SCAInteractionHandler( questionEx, $rootScope ) ;
     	}
     	else {
-    		console.log( "ERROR: Main can't have questions of type other " +
-    				     "than SCA" ) ;
-    		alert( "Non SCA type question found in Main exam." ) ;
+    		questionEx.interactionHandler = new NTInteractionHandler( questionEx, $rootScope ) ;
     	}
     }
     

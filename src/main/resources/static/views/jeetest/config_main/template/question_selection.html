@@ -30,7 +30,7 @@
     </div>
     <div id="scaChoice" class="panel-body test-config-panel-body panel-collapse collapse in">
        <select class="form-control question-select" 
-               size=41
+               size=39
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['SCA']"
                ng-model="$parent.selectedQuestion"
@@ -40,82 +40,44 @@
     </div>
   </div>
   
-  <!-- 
-  <div class="panel panel-default">
-    <div class="panel-heading test-config-qsel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" data-target="#mcaChoice">
-        MCA
-        </a>
-      </h4>
-    </div>
-    <div id="mcaChoice" class="panel-body test-config-panel-body panel-collapse collapse">
-       <select class="form-control" 
-               size=5
-               style="padding:3px;"
-               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['MCA']"
-               ng-model="$parent.selectedQuestion">
-           <option style="display:none" value="">select a type</option>
-       </select>
-    </div>
-  </div>
- 
   <div class="panel panel-default">
     <div class="panel-heading test-config-qsel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" data-target="#ntChoice">
         NT
         </a>
+        <div class="pull-right">
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="shuffleQuestions( null, 'NT' )">
+                    <span class="glyphicon glyphicon-random"></span>
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortQuestionsByLatLevel( 'NT' )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Lat level
+             </button>
+             <button class="btn btn-warning btn-sm"
+                     style="padding:0px 5px;"
+                     ng-click="sortQuestionsByProjTime( 'NT' )">
+                    <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    Proj time
+             </button>
+        </div>
       </h4>
     </div>
     <div id="ntChoice" class="panel-body test-config-panel-body panel-collapse collapse">
        <select class="form-control question-select" 
-               size=5
+               size=39
                style="padding:3px;"
                ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['NT']"
-               ng-model="$parent.selectedQuestion">
+               ng-model="$parent.selectedQuestion"
+               ng-dblclick="questionSelectedForTest()">
            <option style="display:none" value="">select a type</option>
        </select>
     </div>
   </div>
- 
-  <div class="panel panel-default">
-    <div class="panel-heading test-config-qsel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" data-target="#lctChoice">
-        LCT
-        </a>
-      </h4>
-    </div>
-    <div id="lctChoice" class="panel-body test-config-panel-body panel-collapse collapse">
-       <select class="form-control" 
-               size=5
-               style="padding:3px;"
-               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['LCT']"
-               ng-model="$parent.selectedQuestion">
-           <option style="display:none" value="">select a type</option>
-       </select>
-    </div>
-  </div>
- 
-  <div class="panel panel-default">
-    <div class="panel-heading test-config-qsel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" data-target="#mmtChoice">
-        MMT
-        </a>
-      </h4>
-    </div>
-    <div id="mmtChoice" class="panel-body test-config-panel-body panel-collapse collapse">
-       <select class="form-control" 
-               size=5
-               style="padding:3px;"
-               ng-options="item as item|qSelFmt for item in questionsForSelectedTopic['MMT']"
-               ng-model="$parent.selectedQuestion">
-           <option style="display:none" value="">select a type</option>
-       </select>
-    </div>
-  </div>
-  -->
+  
   
 </div>

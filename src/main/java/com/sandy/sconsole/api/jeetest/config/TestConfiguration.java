@@ -46,7 +46,14 @@ public class TestConfiguration {
         List<TestQuestion> questions = getAllQuestions() ;
         
         if( getExamType().equals( "MAIN" ) ) {
-            duration = questions.size() * 2 ;
+            for( TestQuestion question : questions ) {
+                if( question.getQuestionType().equals( "SCA" ) ) {
+                    duration += 2 ;
+                }
+                else if( question.getQuestionType().equals( "NT" ) ) {
+                    duration += 4 ;
+                }
+            }
         }
         else {
             duration = (int)Math.ceil( questions.size() * 3.333 ) ;

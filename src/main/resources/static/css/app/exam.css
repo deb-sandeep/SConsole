@@ -472,5 +472,18 @@
 #test-attempt-summary th.col-header {
     text-align:center;
     width:60px;
+}
+
+.ntui_table td {
+    padding: 2px 2px;
 }  
 
+.ntui_textfield {
+    font-size:20px;
+    font-family:Courier New;
+}
+
+.ntui_btn {
+	width : 100%;
+	background-color : #e7e6e8;
+}

@@ -1,6 +1,7 @@
 sConsoleApp.filter( "qSelFmt", function() {
     return function( question ) {
-    	var fmt = question.questionRef.padEnd( 30, '.' ) ;
+    	var fmt = question.questionType.padEnd( 4, '_' ) ;
+    	fmt += question.questionRef.padEnd( 30, '.' ) ;
     	fmt += " | " ;
     	fmt += ( question.lateralThinkingLevel + "" ).padStart( 3 ) ;
     	fmt += " | " ;

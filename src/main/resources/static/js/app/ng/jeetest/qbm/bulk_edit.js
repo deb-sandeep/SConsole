@@ -154,8 +154,10 @@ sConsoleApp.controller( 'BulkEditController',
     	
     	console.log( "Saving entrh on server." ) ;
     	
-    	var tgtExam = ( entry.qType != "SCA" ) ? "ADV" : "MAIN" ;
     	var qText = "" ;
+    	var tgtExam = ( entry.qType == "MCA" || 
+    	                entry.qType == "LCT" || 
+    	                entry.qType == "MMT" ) ? "ADV" : "MAIN" ;
     	
     	for( var i=0; i<entry.imgPaths.length; i++ ) {
     		qText += "{{@img " + entry.imgPaths[i] + "}}" ;
