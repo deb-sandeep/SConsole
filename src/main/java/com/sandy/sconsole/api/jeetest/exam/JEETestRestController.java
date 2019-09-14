@@ -135,6 +135,7 @@ public class JEETestRestController {
         try {
             log.debug( "Saving click stream event." ) ;
             if( config.isRecordTestAttempt() ) {
+                event.setCreationTimestamp( new Timestamp( System.currentTimeMillis() ) );
                 cseRepo.save( event ) ;
             }
             else {

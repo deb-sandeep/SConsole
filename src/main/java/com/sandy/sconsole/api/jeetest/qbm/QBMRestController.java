@@ -3,6 +3,7 @@ package com.sandy.sconsole.api.jeetest.qbm;
 import java.math.BigDecimal ;
 import java.math.BigInteger ;
 import java.net.InetAddress ;
+import java.sql.Timestamp ;
 import java.util.ArrayList ;
 import java.util.Arrays ;
 import java.util.HashMap ;
@@ -229,8 +230,10 @@ public class QBMRestController {
             }
             
             question.setQuestionFormattedText( new QuestionTextFormatter().formatText( questionText ) ) ;
-            question.setCreationTime( null ) ;
-            question.setLastUpdateTime( null ) ;
+            if( question.getId() == -1 ) {
+                question.setCreationTime( new Timestamp( System.currentTimeMillis() ) ) ;
+            }
+            question.setLastUpdateTime( new Timestamp( System.currentTimeMillis() ) ) ;
             
             if( question.getId() <= 0 ) {
                 question.setId( null ) ;
