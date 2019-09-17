@@ -22,6 +22,35 @@ public class BulkQEntry {
     
     public BulkQEntry( FileInfo fi ) {
         this.qRef = fi.qRef ;
+        prePopulateAttributesBasedOnDeducedQType( fi.qRef ) ;
+    }
+    
+    private void prePopulateAttributesBasedOnDeducedQType( String qRef ) {
+        this.latLevel = 3 ;
+        this.projTime = 120 ;
+        
+        if( qRef.contains( "/SCA/" ) ) {
+            this.qType = "SCA" ;
+        }
+        else if( qRef.contains( "/MCA/" ) ) {
+            this.qType = "MCA" ;
+            this.projTime = 240 ;
+        }
+        else if( qRef.contains( "/MMT/" ) ) {
+            this.qType = "MMT" ;
+            this.projTime = 240 ;
+        }
+        else if( qRef.contains( "/LCT/" ) ) {
+            this.qType = "LCT" ;
+            this.projTime = 180 ;
+        }
+        else if( qRef.contains( "/NT/" ) ) {
+            this.qType = "NT" ;
+            this.projTime = 240 ;
+        }
+        else {
+            this.qType = "SCA" ;
+        }
     }
     
     public String getqRef() {
