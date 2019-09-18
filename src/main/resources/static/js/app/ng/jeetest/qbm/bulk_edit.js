@@ -97,6 +97,26 @@ sConsoleApp.controller( 'BulkEditController',
 		}
 	}
 	
+	$scope.answerEntered = function( entry ) {
+	    if( entry.aText.indexOf( ',' ) != -1 ) {
+	        entry.qType = 'MCA' ;
+	        entry.projTime = 180 ;
+	    }
+	    
+	    if( entry.aText.includes( '-' ) && 
+	        entry.aText.indexOf( '-' ) != 0 ) {
+	        
+	        var parts = entry.aText.split( '-' ) ;
+	        entry.aText = parts[0] ;
+	        if( parts.length > 1 ) {
+	            entry.latLevel = parseInt( parts[1] ) ;
+	        }
+	        if( parts.length > 2 ) {
+	            entry.projTime = parseInt( parts[2] ) ;
+	        }
+	    }
+	}
+	
 	// --- [START] Internal functions
 	function validateBaseCriteria() {
 		

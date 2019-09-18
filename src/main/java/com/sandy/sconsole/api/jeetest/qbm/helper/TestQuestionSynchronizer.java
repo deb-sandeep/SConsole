@@ -20,6 +20,7 @@ import okhttp3.MediaType ;
 import okhttp3.OkHttpClient ;
 import okhttp3.Request ;
 import okhttp3.RequestBody ;
+import okhttp3.Response ;
 
 public class TestQuestionSynchronizer {
     
@@ -72,7 +73,16 @@ public class TestQuestionSynchronizer {
                                      .url( url )
                                      .post( body )
                                      .build() ;
-        client.newCall( request ).execute() ;
+        Response response = null ;
+        
+        try {
+            response = client.newCall( request ).execute() ;
+        }
+        finally {
+            if( response != null ) {
+                response.body().close() ;
+            }
+        }
     }
 
     public void importQuestions( List<TestQuestionEx> questions ) 

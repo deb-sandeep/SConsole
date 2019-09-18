@@ -74,8 +74,8 @@
 							  <thead>
 							    <tr class="success">
 							      <th width="150px">QRef</th>
-							      <th width="75px">QType</th>
 							      <th>Img name</th>
+							      <th width="75px">QType</th>
 							      <th width="100px">Ans</th>
                                   <th width="50px">Lat</th>
                                   <th width="75px">Time</th>
@@ -89,6 +89,9 @@
 		                            <input class="form-control" type="text" ng-model="entry.qRef" style="width:100%"/>
                                   </td>
                                   <td>
+                                    <input class="form-control"  type="text" ng-model="entry.imgNames" style="width:100%"/>
+                                  </td>
+                                  <td>
 					                 <select class="form-control"  
 					                         ng-model="entry.qType"
 					                         ng-options="item for item in $parent.qbmMasterData.questionTypes"
@@ -96,12 +99,10 @@
 					                 </select>
                                   </td>
                                   <td>
-                                    <input class="form-control"  type="text" ng-model="entry.imgNames" style="width:100%"/>
-                                  </td>
-                                  <td>
                                     <input class="form-control"  
                                            type="text" 
                                            ng-model="entry.aText" 
+                                           ng-blur="answerEntered( entry )"
                                            style="width:100%"
                                            tabindex={{$index+1}}/>
                                   </td>
