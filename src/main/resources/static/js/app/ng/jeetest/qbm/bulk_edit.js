@@ -100,7 +100,7 @@ sConsoleApp.controller( 'BulkEditController',
 	$scope.answerEntered = function( entry ) {
 	    if( entry.aText.indexOf( ',' ) != -1 ) {
 	        entry.qType = 'MCA' ;
-	        entry.projTime = 180 ;
+	        entry.projTime = 240 ;
 	    }
 	    
 	    if( entry.aText.includes( '-' ) && 
