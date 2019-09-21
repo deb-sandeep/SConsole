@@ -29,14 +29,17 @@ public class BulkQEntry {
         this.latLevel = 3 ;
         this.projTime = 120 ;
         
-        if( qRef.contains( "/SCA/" ) ) {
+        if( qRef.contains( "/SCA/" ) || 
+            qRef.contains( "/ART/" ) ) {
             this.qType = "SCA" ;
         }
-        else if( qRef.contains( "/MCA/" ) ) {
+        else if( qRef.contains( "/MCA/" ) || 
+                 qRef.contains( "/MCQ/" ) ) {
             this.qType = "MCA" ;
             this.projTime = 240 ;
         }
-        else if( qRef.contains( "/MMT/" ) ) {
+        else if( qRef.contains( "/MMT/" ) ||
+                 qRef.contains( "/MLT/" ) ) {
             this.qType = "MMT" ;
             this.projTime = 240 ;
         }

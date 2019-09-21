@@ -7,7 +7,8 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	$scope.searchResults = [] ;
 	$scope.actionCmd = "" ;
 	$scope.actionCmdList = [ "", 
-		"Select All", 
+		"Select All",
+		"Sync top 10",
 		"Unselect All", 
 		"Sync Selected" 
 	] ;
@@ -111,6 +112,19 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 			}
 			$scope.actionCmd = "" ;
 		}
+        else if( $scope.actionCmd == "Sync top 10" ) {
+            var numSelected = 0 ;
+            for( i=0; i<$scope.searchResults.length; i++ ) {
+                if( numSelected > 10 ) break ;
+                var question = $scope.searchResults[i] ;
+                if( !question.selected ) {
+                    question.selected = true ;
+                    numSelected++ ;
+                }
+            }
+            $scope.actionCmd = "" ;
+            syncSelectedQuestions() ;
+        }
 		else if( $scope.actionCmd == "Unselect All" ) {
 			for( i=0; i<$scope.searchResults.length; i++ ) {
 				var question = $scope.searchResults[i] ;
@@ -160,7 +174,7 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 		
 		for( i=0; i<$scope.searchResults.length; i++ ) {
 			var question = $scope.searchResults[i] ;
-			if( question.selected ) {
+			if( question.selected && !question.synched ) {
 				selectedQuestionIds.push( question.id ) ;
 				selectedQuestions.push( question ) ;
 			}
