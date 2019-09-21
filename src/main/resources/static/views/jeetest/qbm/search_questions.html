@@ -134,13 +134,25 @@
 
 <div class="split right">
     <div style="height:36px">
-	    <div ng-show="searchResults.length > 0" class="pull-right" >
-	        <select id="actionList" 
-	                class="form-control" 
-	                ng-model="actionCmd"
-	                ng-options="item for item in actionCmdList"
-	                ng-change="actionCmdChanged()">
-	        </select>
+	    <div>
+	       <table width="25%">
+            <tr>
+                <td>
+		            <button type="button" class="btn btn-info btn-md"
+		                  ng-click="syncTop10Questions()">
+		              <span class="glyphicon glyphicon-share-alt"></span>
+		            </button>
+		       </td>
+		       <td>
+		            <select id="actionList" 
+		                    class="form-control" 
+		                    ng-model="actionCmd"
+		                    ng-options="item for item in actionCmdList"
+		                    ng-change="actionCmdChanged()">
+		            </select>
+                </td>
+            </tr>
+	       </table>
 	    </div>
     </div>
 	<div class="panel panel-success" 
