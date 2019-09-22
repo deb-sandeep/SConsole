@@ -39,7 +39,8 @@ public class BulkQEntry {
             this.projTime = 240 ;
         }
         else if( qRef.contains( "/MMT/" ) ||
-                 qRef.contains( "/MLT/" ) ) {
+                 qRef.contains( "/MLT/" ) || 
+                 qRef.contains( "/CMT/" ) ) {
             this.qType = "MMT" ;
             this.projTime = 240 ;
         }
