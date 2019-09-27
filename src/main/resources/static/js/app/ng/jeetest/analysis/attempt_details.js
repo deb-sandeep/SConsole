@@ -213,8 +213,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	var question = $scope.questions[i] ;
                 	var attempt = $scope.questionAttempts[i] ;
                 	
-                	if( question.targetExam == "MAIN" && 
-                		question.questionType == "SCA" ) {
+                	if( question.targetExam == "MAIN" ) {
                 		$scope.totalMarks += 4 ;
                 	}
                 	
