@@ -21,4 +21,9 @@ public class JEEExamAnalysisController {
     public String testAttemptTimeSequence() {
         return "jeetest/analysis/attempt_time_sequence" ;
     }
+
+    @RequestMapping( "/testAttemptLapDetails" )
+    public String testAttemptLapDetails() {
+        return "jeetest/analysis/attempt_lap_details" ;
+    }
 }

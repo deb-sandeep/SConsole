@@ -68,9 +68,13 @@ order by
 
 Deleting a test question
 -----------------------------------------------------------------------------
-delete FROM sconsole.click_stream_event where test_attempt_id = 104751 ;
-delete FROM sconsole.test_question_attempt where test_attempt_id = 104751;
-delete FROM sconsole.test_attempt where id = 104751 ;
-delete FROM sconsole.test_question_binding where test_config_id = 104749 ;
-delete FROM sconsole.test_config_index where id = 104749 ;
-delete FROM sconsole.mocktest_question_master where id = 104748 ;
+set @test_config_id = XXX ;
+set @test_attempt_id = XXX ;
+
+delete FROM sconsole.test_attempt_lap_snapshot where test_attempt_id = @test_attempt_id ;
+delete FROM sconsole.click_stream_event where test_attempt_id = @test_attempt_id ;
+delete FROM sconsole.test_question_attempt where test_attempt_id = @test_attempt_id ;
+delete FROM sconsole.test_attempt where id = @test_attempt_id ;
+delete FROM sconsole.test_question_binding where test_config_id = @test_config_id ;
+delete FROM sconsole.test_config_index where id = @test_config_id ;
+

@@ -87,7 +87,7 @@
             </button>
             <button type="button" 
                     class="btn btn-success btn-lg pull-right action-btn"
-                    ng-click="$parent.startNextLap()"
+                    ng-click="$parent.endCurrentLapAndStartNextLap()"
                     ng-disabled="$parent.currentLapName == 'L3'">
             Next Lap 
             ( {{$parent.currentLapName}} 

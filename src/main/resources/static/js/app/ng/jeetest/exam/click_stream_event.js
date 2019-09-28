@@ -16,3 +16,6 @@ ClickStreamEvent.prototype.BACK_QUESTION               = "BACK_QUESTION" ;
 ClickStreamEvent.prototype.NEXT_QUESTION               = "NEXT_QUESTION" ;
 ClickStreamEvent.prototype.SCROLL_BOTTOM               = "SCROLL_BOTTOM" ;
 ClickStreamEvent.prototype.SCROLL_TOP                  = "SCROLL_TOP" ;
+ClickStreamEvent.prototype.LAP_START                   = "LAP_START" ;
+ClickStreamEvent.prototype.LAP_END                     = "LAP_END" ;
+

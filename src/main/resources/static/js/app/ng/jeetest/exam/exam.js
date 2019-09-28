@@ -2,7 +2,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     
     // ---------------- Local variables --------------------------------------
     var startTime = 0 ;
-    var currentLapIndex = 0 ;
+    var currentLapIndex = -1 ;
     
     // ---------------- Scope variables --------------------------------------
 	
@@ -35,9 +35,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	    numAnsAndMarkedForReview : 0
 	} ;
 	
-	$scope.attemptLaps = [] ;
+	$scope.attemptLapNames = [] ;
 	$scope.currentLapName = null ;
 	$scope.nextLapName = null ;
+	$scope.attemptLapDetails = {} ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -71,6 +72,11 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		    numAnsAndMarkedForReview : 0
 		} ;
 
+	    $scope.attemptLapNames = [] ;
+	    $scope.currentLapName = null ;
+	    $scope.nextLapName = null ;
+	    $scope.attemptLapDetails = {} ;
+
 		startTime = 0 ;
 	}
 	
@@ -82,7 +88,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		$scope.alerts.splice( index, 1 ) ;
 	}
 
-    $scope.initializeController = function( attemptLaps ) {
+    $scope.initializeController = function( attemptLapNames ) {
     	if( $scope.activeTest == null ) {
     		$location.path( "/" ) ;
     	}
@@ -107,8 +113,14 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     			$scope.showQuestion( $scope.questions[0] ) ;
     		}
     		
-    		$scope.attemptLaps = attemptLaps ;
-    		setLapNames() ;
+    		$scope.attemptLapNames = attemptLapNames ;
+    		for( var i=0; i<attemptLapNames.length; i++ ) {
+    		    $scope.attemptLapDetails[ attemptLapNames[i] ] = {
+    		        startTime : null,
+    		        endTime : null,
+    		        timeSpent : 0
+    		    }
+    		}
     	}
     }
     
@@ -241,6 +253,8 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     }
     
     $scope.submitAnswers = function() {
+        
+        endCurrentLap() ;
     	
     	$scope.timerActive = false ;
     	$scope.answersSubmitted = true ;
@@ -277,6 +291,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
                 $scope.saveClickStreamEvent( 
                 		ClickStreamEvent.prototype.TEST_STARTED, null ) ;
 
+                startNextLap() ;
                 $scope.showQuestion( $scope.questions[0] ) ;
             }, 
             function( error ){
@@ -317,13 +332,9 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         }) ;
     }
     
-    $scope.startNextLap = function() {
-        
-        if( currentLapIndex < $scope.attemptLaps.length - 1 ) {
-            takeLapSnapshot() ;
-            currentLapIndex++ ;
-            setLapNames() ;
-        }
+    $scope.endCurrentLapAndStartNextLap = function() {
+        endCurrentLap() ;
+        startNextLap() ;
     }
     
 	// --- [END] Scope functions
@@ -331,10 +342,77 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
     
-    function takeLapSnapshot() {
-        
+    function startNextLap() {
+        if( currentLapIndex < $scope.attemptLapNames.length-1 ) {
+            currentLapIndex++ ;
+            
+            // Set the lap names, so that the UI displays properly
+            $scope.currentLapName = $scope.attemptLapNames[ currentLapIndex ] ;
+            if( currentLapIndex < $scope.attemptLapNames.length-1 ) {
+                $scope.nextLapName = $scope.attemptLapNames[ currentLapIndex + 1 ] ;
+            }
+            else {
+                $scope.nextLapName = "" ;
+            }
+            
+            var attemptDetail = $scope.attemptLapDetails[ $scope.currentLapName ] ;
+            attemptDetail.startTime = new Date() ;
+            $scope.saveClickStreamEvent( ClickStreamEvent.prototype.LAP_START, 
+                                         $scope.currentLapNam ) ;
+        }
     }
     
+    function endCurrentLap() {
+        
+        var attemptDetail = $scope.attemptLapDetails[ $scope.currentLapName ] ;
+        attemptDetail.endTime = new Date() ;
+        
+        $scope.saveClickStreamEvent( ClickStreamEvent.prototype.LAP_END, 
+                                     $scope.currentLapNam ) ;
+
+        console.log( "Ending lap - " + $scope.currentLapName ) ;
+        console.log( "Time spent - " + attemptDetail.timeSpent ) ;
+        
+        var snapshots = [] ;
+        
+        for( var i=0; i<$scope.questions.length; i++ ) {
+            var q = $scope.questions[i] ;
+            var lapDetails = q.lapDetails[ $scope.currentLapName ] ;
+            
+            lapDetails.attemptState = q.attemptState ;
+            
+            snapshots.push({
+                testAttemptId  : $scope.testAttempt.id ,
+                questionId     : q.question.id ,
+                lapName        : $scope.currentLapName,
+                timeSpent      : lapDetails.timeSpent, 
+                attemptStatus  : q.attemptState
+            }) ;
+        }
+        
+        saveTestAttemptLapSnapshots( snapshots ) ;
+    }
+    
+    function saveTestAttemptLapSnapshots( snapshots ) {
+        
+        console.log( "Saving test attempt lap snapshots." ) ;
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt/LapSnapshot', snapshots )
+        .then ( 
+            function( response ){
+                console.log( "Successfully saved test lap snapshot." ) ;
+            }, 
+            function( error ){
+                console.log( "Error saving test lap snapshot on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save test attempt lap snapshot." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+
     function loadTestConfiguration() {
     	
         $scope.interactingWithServer = true ;
@@ -389,7 +467,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	for( var i=0; i<questions.length; i++ ) {
     		
     		var question = questions[i] ;
-    		var questionEx = new QuestionEx( question, $scope.attemptLaps ) ;
+    		var questionEx = new QuestionEx( question, $scope.attemptLapNames ) ;
     		var lastQuestionEx = null ;
     		
     		if( $scope.questions.length > 0 ) {
@@ -427,8 +505,11 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	$scope.secondsRemaining-- ;
     	$scope.timeSpent++ ;
     	
+    	$scope.attemptLapDetails[ $scope.currentLapName ].timeSpent++ ;
+    	
     	if( $scope.currentQuestion != null ) {
     		$scope.currentQuestion.timeSpent++ ;
+    		$scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
     	}
     	
     	if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
@@ -442,16 +523,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		}
     	}
     	$scope.$digest() ;
-    }
-    
-    function setLapNames() {
-        $scope.currentLapName = $scope.attemptLaps[ currentLapIndex ] ;
-        if( currentLapIndex < $scope.attemptLaps.length-1 ) {
-            $scope.nextLapName = $scope.attemptLaps[ currentLapIndex + 1 ] ;
-        }
-        else {
-            $scope.nextLapName = "" ;
-        }
     }
     
 	// --- [END] Local functions

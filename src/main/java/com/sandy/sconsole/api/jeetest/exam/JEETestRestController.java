@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController ;
 import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.dao.entity.ClickStreamEvent ;
 import com.sandy.sconsole.dao.entity.TestAttempt ;
+import com.sandy.sconsole.dao.entity.TestAttemptLapSnapshot ;
 import com.sandy.sconsole.dao.entity.TestQuestionAttempt ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.repository.ClickStreamEventRepository ;
+import com.sandy.sconsole.dao.repository.TestAttemptLapSnapshotRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
@@ -46,6 +48,9 @@ public class JEETestRestController {
     
     @Autowired
     private TestQuestionBindingRepository tqbRepo = null ;
+    
+    @Autowired
+    private TestAttemptLapSnapshotRepository talsRepo = null ;
     
     @Autowired
     private SConsoleConfig config = null ;
@@ -128,12 +133,34 @@ public class JEETestRestController {
         }
     }
     
+    @PostMapping( "/TestAttempt/LapSnapshot" )
+    public ResponseEntity<ResponseMsg> saveTestAttemptLapSnapshot(
+            @RequestBody List<TestAttemptLapSnapshot> snapshots ) {
+        
+        try {
+            log.debug( "Saving test attempt lap snapshots." ) ;
+            
+            if( config.isRecordTestAttempt() ) {
+                talsRepo.saveAll( snapshots ) ;
+            }
+            else {
+                log.info( "Application has been configured not to save test lap attemps." ) ;
+            }
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error saving test configuration", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
     @PostMapping( "/ClickStreamEvent" ) 
     public ResponseEntity<ResponseMsg> saveClickStreamEvent(
             @RequestBody ClickStreamEvent event ) {
         
         try {
-            log.debug( "Saving click stream event." ) ;
             if( config.isRecordTestAttempt() ) {
                 event.setCreationTimestamp( new Timestamp( System.currentTimeMillis() ) );
                 cseRepo.save( event ) ;
@@ -156,7 +183,6 @@ public class JEETestRestController {
                 @PathVariable Integer testAttemptId ) {
         
         try {
-            log.debug( "Fetching test quesiton attempts." ) ;
             List<TestQuestionAttempt> questionAttempts = null ;
             List<TestQuestion> questions = null ;
             
