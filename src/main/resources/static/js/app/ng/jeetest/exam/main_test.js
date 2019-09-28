@@ -1,4 +1,12 @@
 sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
+
+    // These are the strategy based attempt laps
+    // L1  - Level 1
+    // L2  - Level 2
+    // AMR - Answers marked for review
+    // L3P - Level 3 prioritization
+    // L2  - Level 3
+    var attemptLaps = [ "L1", "L2", "AMR", "L3P", "Purple", "L3" ] ;
     
 	$scope.$parent.navBarTitle = "Main" ;
 	
@@ -19,7 +27,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
-	$scope.$parent.initializeController() ;
+	$scope.$parent.initializeController( attemptLaps ) ;
 	
 	// --- [END] Controller initialization -----------------------------------
 	

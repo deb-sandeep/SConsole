@@ -6,7 +6,7 @@ AttemptState.prototype.ATTEMPTED                 = "q-attempted" ;
 AttemptState.prototype.MARKED_FOR_REVIEW         = "q-marked-for-review" ;
 AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW = "q-ans-and-marked-for-review" ;
 
-function QuestionEx( q ) {
+function QuestionEx( q, attemptLaps ) {
 	
 	this.index = 0 ;
 	this.question = q ;
@@ -16,9 +16,14 @@ function QuestionEx( q ) {
 	this.attemptState = AttemptState.prototype.NOT_VISITED ;
 	this.interactionHandler = null ;
 	this.rootCause = null ;
+	this.lapDetails = {} ;
 	
 	var graceAwarded = false ;
 	var graceScore = 0 ;
+	
+	// --------- Initialization ---------------
+	initialize( this ) ;
+	// ----------------------------------------
 
     this.getStatusStyle = function() {
     	return this.attemptState ;
@@ -125,5 +130,14 @@ function QuestionEx( q ) {
         }
     	
     	return false ;
+    }
+    
+    function initialize( questionEx ) {
+        for( var i=0; i<attemptLaps.length; i++ ) {
+            questionEx.lapDetails[ attemptLaps[i] ] = {
+                timeSpent : 0,
+                attemptState : null
+            }
+        }
     }
 }

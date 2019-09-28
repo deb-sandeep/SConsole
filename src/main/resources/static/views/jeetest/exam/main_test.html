@@ -85,6 +85,15 @@
 	                data-target="#submitConfirmationDialog">
             SUBMIT
             </button>
+            <button type="button" 
+                    class="btn btn-success btn-lg pull-right action-btn"
+                    ng-click="$parent.startNextLap()"
+                    ng-disabled="$parent.currentLapName == 'L3'">
+            Next Lap 
+            ( {{$parent.currentLapName}} 
+            <span class="glyphicon glyphicon-chevron-right"></span> 
+            {{$parent.nextLapName}} )
+            </button>
         </div>        
         <div id="pane-toggle-tab"
              ng-click="$parent.toggleQuestionPalette()">

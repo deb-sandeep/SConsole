@@ -1,4 +1,10 @@
 sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $location ) {
+    
+    // ---------------- Local variables --------------------------------------
+    var startTime = 0 ;
+    var currentLapIndex = 0 ;
+    
+    // ---------------- Scope variables --------------------------------------
 	
 	$scope.alerts = [] ;
 	$scope.navBarTitle = "Landing" ;
@@ -29,7 +35,9 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	    numAnsAndMarkedForReview : 0
 	} ;
 	
-	var startTime = 0 ;
+	$scope.attemptLaps = [] ;
+	$scope.currentLapName = null ;
+	$scope.nextLapName = null ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -74,7 +82,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 		$scope.alerts.splice( index, 1 ) ;
 	}
 
-    $scope.initializeController = function() {
+    $scope.initializeController = function( attemptLaps ) {
     	if( $scope.activeTest == null ) {
     		$location.path( "/" ) ;
     	}
@@ -98,6 +106,9 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     			$scope.$broadcast( 'computeSectionIndices' ) ;
     			$scope.showQuestion( $scope.questions[0] ) ;
     		}
+    		
+    		$scope.attemptLaps = attemptLaps ;
+    		setLapNames() ;
     	}
     }
     
@@ -306,10 +317,23 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         }) ;
     }
     
+    $scope.startNextLap = function() {
+        
+        if( currentLapIndex < $scope.attemptLaps.length - 1 ) {
+            takeLapSnapshot() ;
+            currentLapIndex++ ;
+            setLapNames() ;
+        }
+    }
+    
 	// --- [END] Scope functions
 
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+    
+    function takeLapSnapshot() {
+        
+    }
     
     function loadTestConfiguration() {
     	
@@ -365,7 +389,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     	for( var i=0; i<questions.length; i++ ) {
     		
     		var question = questions[i] ;
-    		var questionEx = new QuestionEx( question ) ;
+    		var questionEx = new QuestionEx( question, $scope.attemptLaps ) ;
     		var lastQuestionEx = null ;
     		
     		if( $scope.questions.length > 0 ) {
@@ -418,6 +442,16 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     		}
     	}
     	$scope.$digest() ;
+    }
+    
+    function setLapNames() {
+        $scope.currentLapName = $scope.attemptLaps[ currentLapIndex ] ;
+        if( currentLapIndex < $scope.attemptLaps.length-1 ) {
+            $scope.nextLapName = $scope.attemptLaps[ currentLapIndex + 1 ] ;
+        }
+        else {
+            $scope.nextLapName = "" ;
+        }
     }
     
 	// --- [END] Local functions
