@@ -38,11 +38,23 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
 	$scope.$parent.navBarTitle = "Test Attempt Time Sequence" ;
 	$scope.testAttemptId = $routeParams.id ;
 	$scope.questions = null ;
+	$scope.questionAttempts = null ;
 	$scope.clickEvents = null ;
 	$scope.autoRefresh = false ;
 	
+	var lapColors = [
+	    'rgba(51,255,0,0.4)',
+	    'rgba(204,102,255,0.4)',
+	    'rgba(0,0,255,0.4)',
+	    'rgba(204,255,0,0.4)',
+	    'rgba(102,102,255,0.4)',
+	    'rgba(255,51,102,0.4)',
+	    'rgba(204,0,0,0.4)'
+	] ;
+	
 	var questionIdNumMap = {} ;
 	var questionActivityListMap = {} ;
+	var lapMarkers = [] ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -84,6 +96,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     	
     	for( var i=0; i<$scope.questions.length; i++ ) {
     		var question = $scope.questions[i] ;
+    		var attempt = $scope.questionAttempts[i] ;
     		var qNum = getQNum( i ) ;
     		
     		var activities = questionActivityListMap[ qNum ] ;
@@ -100,10 +113,19 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     			var activity = activities[j] ;
     			ganttActivities.push( new GanttActivity( activity ) ) ;
     			
-    			var tooltip = activity.duration + " sec" ;
+    			var tooltip = qNum ;
+    			tooltip += "<br>" + activity.duration + " sec" ;
     			if( activity.transitionEvent != null ) {
-    				tooltip += "<br>" + activity.transitionEvent ;
+    			    tooltip += "<br>" + activity.transitionEvent ;
     			}
+    			if( !attempt.isCorrect ) {
+                    tooltip += "<br> Incorrect answer" ;
+                    tooltip += "<br> Root cause - " + attempt.rootCause ;
+    			}
+    			else {
+                    tooltip += "<br> Correct answer" ;
+    			}
+    			tooltip += "<br> Total time = " + attempt.timeSpent ;
     			tooltips.push( tooltip ) ;
     		}
     		
@@ -140,7 +162,8 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
             	tooltipsEvent : 'mousemove', 
                 hmargin: 5,
                 colorsDefault: 'green',
-                vmargin: 1
+                vmargin: 1,
+                backgroundVbars: lapMarkers            
             }
         }).draw();
     }
@@ -155,6 +178,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
                 console.log( response ) ;
                 $scope.clickEvents = response.data[0] ;
                 $scope.questions = response.data[1] ;
+                $scope.questionAttempts = response.data[2] ;
                 
                 createQuestionMaps( $scope.questions ) ;
                 processClickStreamEvents( $scope.clickEvents, $scope.questions ) ;
@@ -176,6 +200,7 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     }
     
     function createQuestionMaps( questions ) {
+        lapMarkers.length = 0 ;
     	for( var i=0; i<questions.length; i++ ) {
     		var question = questions[i] ;
     		var qNum = getQNum( i ) ;
@@ -188,6 +213,9 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     function processClickStreamEvents( clickEvents, questions ) {
     	
     	var lastActivity = null ;
+    	var currentLapStartTime = 0 ;
+    	var currentLapEndTime = 0 ;
+    	var currentLapIndex = -1 ;
     	
     	for( var i=0; i<clickEvents.length; i++ ) {
     		
@@ -222,6 +250,18 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     				activity.transitionEvent = eventType ;
     			}
     		}
+    		else if( eventType == ClickStreamEvent.prototype.LAP_START ) {
+    		    currentLapIndex++ ;
+    		    currentLapStartTime = event.timeMarker/1000 ;
+    		}
+            else if( eventType == ClickStreamEvent.prototype.LAP_END ) {
+                currentLapEndTime = event.timeMarker/1000 ;
+                lapMarkers.push( [
+                    currentLapStartTime,
+                    (currentLapEndTime - currentLapStartTime),
+                    lapColors[ currentLapIndex ]
+                ]) ;
+            }
     	}
     }
     

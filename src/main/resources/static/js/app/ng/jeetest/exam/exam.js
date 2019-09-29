@@ -304,6 +304,28 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         }) ;
     }
     
+    $scope.endTestAttempt = function() {
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt', $scope.testAttempt )
+        .then ( 
+            function( response ){
+                $scope.testAttempt = response.data ;
+                $scope.saveClickStreamEvent( 
+                        ClickStreamEvent.prototype.TEST_ENDED, null ) ;
+
+                endCurrentLap() ;
+            }, 
+            function( error ){
+                console.log( "Error saving test attempt on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save test attempt." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
     $scope.saveClickStreamEvent = function( eventId, payload ) {
     	
     	var timeMarker = (new Date()).getTime() - startTime ;

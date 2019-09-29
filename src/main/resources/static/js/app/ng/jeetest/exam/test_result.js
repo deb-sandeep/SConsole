@@ -239,7 +239,7 @@ sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $loc
         testAttempt.numMarkedForReview = numMarkedForReview ;
         testAttempt.numAnsAndMarkedForReview = numAnsAndMarkedForReview ;
         
-        $scope.$parent.saveTestAttempt() ;
+        $scope.$parent.endTestAttempt() ;
         saveTestQuestionAttempts( testQuestionAttempts ) ;
     }
     

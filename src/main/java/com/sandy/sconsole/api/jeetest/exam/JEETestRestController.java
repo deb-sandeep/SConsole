@@ -213,15 +213,19 @@ public class JEETestRestController {
             log.debug( "Fetching click stream events." ) ;
             List<TestQuestion> questions = null ;
             List<ClickStreamEvent> events = null ;
+            List<TestQuestionAttempt> questionAttempts = null ;
             
             events = cseRepo.findAllByTestAttemptIdOrderById( testAttemptId ) ;
             
             TestAttempt testAttempt = taRepo.findById( testAttemptId ).get() ;
             questions = tqbRepo.getTestQuestionsForTestConfig( testAttempt.getTestConfig().getId() ) ;
+
+            questionAttempts = tqaRepo.findAllByTestAttemptId( testAttemptId ) ;
             
             List<List<? extends Object>> response = new ArrayList<>() ;
             response.add( events ) ;
             response.add( questions ) ;
+            response.add( questionAttempts ) ;
             
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( response ) ;

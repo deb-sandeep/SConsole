@@ -1,6 +1,7 @@
 function ClickStreamEvent(){} ;
 
 ClickStreamEvent.prototype.TEST_STARTED                = "TEST_STARTED" ;
+ClickStreamEvent.prototype.TEST_ENDED                  = "TEST_ENDED" ;
 ClickStreamEvent.prototype.QUESTION_VISITED            = "QUESTION_VISITED" ;
 ClickStreamEvent.prototype.ANSWER_SAVE                 = "ANSWER_SAVE" ;
 ClickStreamEvent.prototype.ANSWER_SAVE_AND_MARK_REVIEW = "ANSWER_SAVE_AND_MARK_REVIEW" ;
