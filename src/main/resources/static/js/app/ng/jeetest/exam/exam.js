@@ -358,7 +358,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             var attemptDetail = $scope.attemptLapDetails[ $scope.currentLapName ] ;
             attemptDetail.startTime = new Date() ;
             $scope.saveClickStreamEvent( ClickStreamEvent.prototype.LAP_START, 
-                                         $scope.currentLapNam ) ;
+                                         $scope.currentLapName ) ;
         }
     }
     
@@ -368,7 +368,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         attemptDetail.endTime = new Date() ;
         
         $scope.saveClickStreamEvent( ClickStreamEvent.prototype.LAP_END, 
-                                     $scope.currentLapNam ) ;
+                                     $scope.currentLapName ) ;
 
         console.log( "Ending lap - " + $scope.currentLapName ) ;
         console.log( "Time spent - " + attemptDetail.timeSpent ) ;

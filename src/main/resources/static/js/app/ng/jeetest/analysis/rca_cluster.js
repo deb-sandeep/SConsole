@@ -39,6 +39,19 @@ function RCACluster() {
     this.numUnavoidableTotal  = 0 ;
     this.unavoidableTotalMks  = 0 ;
     
+    this.numStupid            = 0 ;
+    this.stupidMks            = 0 ;
+    
+    this.numJudgementError    = 0 ;
+    this.judgementErrorMks    = 0 ;
+    
+    this.numUnwarrantedRisk   = 0 ;
+    this.unwarrantedRiskMks   = 0 ;
+    
+    this.numWtfLateral        = 0 ;
+    this.wtfLateralMks        = 0 ;
+    
+    
     var rcOptions = new RCOptions() ;
     
     this.reset = function() {
@@ -68,6 +81,14 @@ function RCACluster() {
         this.avoidableTotalMks    = 0 ;
         this.numUnavoidableTotal  = 0 ;
         this.unavoidableTotalMks  = 0 ;
+        this.numStupid            = 0 ;
+        this.stupidMks            = 0 ;
+        this.numJudgementError    = 0 ;
+        this.judgementErrorMks    = 0 ;
+        this.numUnwarrantedRisk   = 0 ;
+        this.unwarrantedRiskMks   = 0 ;
+        this.numWtfLateral        = 0 ;
+        this.wtfLateralMks        = 0 ;
     }
     
     this.updateStats = function( question, attempt ) {
@@ -136,6 +157,22 @@ function RCACluster() {
         else if( rootCause == 'LENGTHY' ) {
             this.numLengthy++ ;
             this.lengthyMks += marksLost ;
+        }
+        else if( rootCause == 'STUPID' ) {
+            this.numStupid++ ;
+            this.stupidMks += marksLost ;
+        }
+        else if( rootCause == 'JUDGEMENT_ERROR' ) {
+            this.numJudgementError++ ;
+            this.judgementErrorMks += marksLost ;
+        }
+        else if( rootCause == 'UNWARRANTED_RISK' ) {
+            this.numUnwarrantedRisk++ ;
+            this.unwarrantedRiskMks += marksLost ;
+        }
+        else if( rootCause == 'WTF_LATERAL' ) {
+            this.numWtfLateral++ ;
+            this.wtfLateralMks += marksLost ;
         }
     }
 

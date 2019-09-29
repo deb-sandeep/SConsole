@@ -10,6 +10,11 @@ function RCOptions() {
 			displayName : '[A] Calculation error',
 			id          : 'CALCULATION'
 		},
+        {
+            isAvoidable : true,
+            displayName : '[A] Stupid error',
+            id          : 'STUPID'
+        },
 		{
 			isAvoidable : true,
 			displayName : '[A] Question misinterpretation',
@@ -22,9 +27,19 @@ function RCOptions() {
 		},
 		{
 			isAvoidable : true,
-			displayName : '[A] Lateral approach missed',
+			displayName : '[A] Simple lateral missed',
 			id          : 'LATERAL'
 		},
+        {
+            isAvoidable : true,
+            displayName : '[A] Judgement error',
+            id          : 'JUDGEMENT_ERROR'
+        },
+        {
+            isAvoidable : true,
+            displayName : '[A] Unwarranted risk',
+            id          : 'UNWARRANTED_RISK'
+        },
 		{
 			isAvoidable : false,
 			displayName : '[U] Unknown Concept',
@@ -35,6 +50,11 @@ function RCOptions() {
 			displayName : '[U] WTF',
 			id          : 'WTF'
 		},
+        {
+            isAvoidable : false,
+            displayName : '[U] WTF lateral',
+            id          : 'WTF_LATERAL'
+        },
 		{
 			isAvoidable : false,
 			displayName : '[U] Abandoned - Lengthy',
