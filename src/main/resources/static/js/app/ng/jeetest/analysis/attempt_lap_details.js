@@ -3,6 +3,11 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
 	$scope.$parent.navBarTitle = "Test Attempt Lap Details (Test ID = " + $scope.$parent.selectedTestConfigId + ")" ;
 	$scope.testAttemptId = $routeParams.id ;
 	
+	// Questions
+	// Question Attempts
+	// Lap time markers
+	// Lap snapshots
+	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	// --- [END] Controller initialization -----------------------------------
