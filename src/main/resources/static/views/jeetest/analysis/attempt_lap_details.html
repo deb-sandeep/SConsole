@@ -1,3 +1,18 @@
-<h2 style="text-align:center;">
-    Hi there!
+<h2 style="text-align:center;"
+    ng-if="lapEvents.length == 0">
+    This is not a lap based test. Analysis is not available.
 </h2>
+<div ng-if="lapEvents.length > 0">
+<table width="100%" border>
+ <tr>
+  <td width="350px">
+    <div ng-include="'../views/jeetest/analysis/template/lap_table_filter.html'">
+    </div>
+  </td>
+  <td width="*">
+    <div ng-include="'../views/jeetest/analysis/template/lap_table.html'">
+    </div>
+  </td>
+ </tr>
+</table>
+</div>

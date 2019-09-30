@@ -10,4 +10,6 @@ public interface TestAttemptLapSnapshotRepository
     extends CrudRepository<TestAttemptLapSnapshot, Integer> {
     
     List<TestAttemptLapSnapshot> findAllByTestAttemptId( Integer testAttemptId ) ;
+
+    List<TestAttemptLapSnapshot> findAllByTestAttemptIdOrderById( Integer testAttemptId ) ;
 }

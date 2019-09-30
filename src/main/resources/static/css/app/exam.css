@@ -487,3 +487,69 @@
 	width : 100%;
 	background-color : #e7e6e8;
 }
+
+.lap-detail-table {}
+
+.lap-detail-table td,
+.lap-detail-table th {
+    border: 1px solid #dad9dc !important;
+    border-width: 1px 1px 1px 1px !important;
+	padding: 0.2em 0.5em !important; /* cell padding */
+}
+
+.lap-detail-cell-bg-a {
+	background-color:#00FF00 !important;
+}
+
+.lap-detail-cell-bg-b {
+    background-color:#d5fbad !important;
+}
+
+.lap-detail-cell-bg-c {
+    background-color:#f2fba3 !important;
+}
+
+.lap-detail-cell-bg-d {
+    background-color:#fbc782 !important;
+}
+
+.lap-detail-cell-bg-e {
+    background-color:#fb7d46 !important;
+}
+
+.lap-detail-cell-bg-ANS {
+    background-color:#00FF00 !important;
+}
+
+.lap-detail-cell-bg-L1 {
+    background-color:#00FF00 !important;
+}
+
+.lap-detail-cell-bg-L2 {
+    background-color:#cefba2 !important;
+}
+
+.lap-detail-cell-bg-AMR {
+    background-color:#f9fa71 !important;
+}
+
+.lap-detail-cell-bg-L3P {
+    background-color:#c5f8fb !important;
+}
+
+.lap-detail-cell-bg-Purple {
+    background-color:#c0acfb !important;
+}
+
+.lap-detail-cell-bg-L3 {
+    background-color:#ffc0ca !important;
+}
+
+.lap-detail-cell-bg-XXX {
+    background-color:#a8a8a8 !important;
+}
+
+.lap-detail-cell-fixed-font {
+    font-family:Courier New;
+}
+

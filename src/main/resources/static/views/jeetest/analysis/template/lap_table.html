@@ -1,0 +1,56 @@
+<table align="center" class="pure-table pure-table-horizontal lap-detail-table"
+       style="font-size:12px;">
+  <thead>
+      <tr>
+          <th colspan="4"></th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName">
+              {{lapName}}
+          </th>
+          <th colspan="2"></th>
+      </tr>
+      <tr>
+          <th>Q</th>
+          <th>Lap</th>
+          <th>Time</th>
+          <th width="2px"></th>
+          <th ng-repeat="x in [].constructor(lapNames.length*2) track by $index"
+              ng-class="getLapSubHeaderClass($index)"
+              width="40px">
+              {{getLapSubHeader($index)}}
+          </th>
+          <th></th>
+          <th>RC</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="qaDetail in qaDetails">
+         <td>Q {{$index + 1}}</td>
+         <td ng-class="'lap-detail-cell-bg-' + qaDetail.answeredInLap">
+              {{qaDetail.answeredInLap}}
+         </td>
+         <td ng-class="attemptDetailTimeHighlight(qaDetail.totalTimeSpent)"
+             style="text-align:right;font-family:Courier;">
+              {{qaDetail.totalTimeSpent | mmss}}
+         </td>
+         <td></td>
+         <td ng-repeat="x in [].constructor(lapNames.length*2) track by $index"
+             ng-class="getLapDetailCellClass( qaDetail, $index )">
+              {{getLapDetail( qaDetail, $index, true )}}
+         </td>
+         <td>
+            <span ng-if="qaDetail.attempt.isCorrect"  
+                  class="glyphicon glyphicon-ok"
+                  style="color:green;"></span>
+            <span ng-if="!qaDetail.attempt.isCorrect && qaDetail.attempt.attemptStatus == 'q-attempted'" 
+                  class="glyphicon glyphicon-remove"
+                  style="color:red;"></span>
+            <span ng-if="!qaDetail.attempt.isCorrect && qaDetail.attempt.attemptStatus != 'q-attempted'" 
+                  class="glyphicon glyphicon-remove"
+                  style="color:blue;"></span>
+         </td>
+         <td>{{qaDetail.attempt.rootCause}}</td>
+      </tr>        
+  </tbody>
+</table>

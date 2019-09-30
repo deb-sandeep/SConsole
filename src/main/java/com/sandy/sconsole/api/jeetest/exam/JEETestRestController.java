@@ -325,4 +325,39 @@ public class JEETestRestController {
                                  .body( null ) ;
         }
     }
+
+    @GetMapping( "/TestAttempt/LapDetails/{testAttemptId}" )
+    public ResponseEntity<List<List<? extends Object>>> getLapDetailsRawData( 
+                @PathVariable Integer testAttemptId ) {
+        
+        try {
+            log.debug( "Fetching lap details raw data." ) ;
+            
+            List<TestQuestion> questions = null ;
+            List<TestQuestionAttempt> questionAttempts = null ;
+            List<TestAttemptLapSnapshot> lapSnapshots = null ;
+            List<ClickStreamEvent> events = null ;
+            
+            TestAttempt testAttempt = taRepo.findById( testAttemptId ).get() ;
+            
+            events = cseRepo.findLapEvents( testAttemptId ) ;
+            questions = tqbRepo.getTestQuestionsForTestConfig( testAttempt.getTestConfig().getId() ) ;
+            questionAttempts = tqaRepo.findAllByTestAttemptId( testAttemptId ) ;
+            lapSnapshots = talsRepo.findAllByTestAttemptIdOrderById( testAttemptId ) ;
+            
+            List<List<? extends Object>> response = new ArrayList<>() ;
+            response.add( events ) ;
+            response.add( questions ) ;
+            response.add( questionAttempts ) ;
+            response.add( lapSnapshots ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( response ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error fetching test question attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
 }
