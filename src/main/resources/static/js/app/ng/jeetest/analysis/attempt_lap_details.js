@@ -123,6 +123,17 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     
     // --------------- Local variables ---------------------------------------
     
+    // ------------------ Master reference data -----------------------------
+    $scope.searchMaster = {
+        subjectNames : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
+        resultTypes : [ "All", "Only Correct", "Only Wrong" ],
+        attemptLaps : [ "L1", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
+        timeSpentChoices : [ "Any",
+                      "< 1 min", "< 2 min", "< 3 min", "< 5 min", 
+                      "> 1 min", "> 2 min", "> 3 min", "> 5 min" ],
+        rcOptions : new RCOptions().choices 
+    } ;
+    
     // --------------- Scope variables ---------------------------------------
 	$scope.$parent.navBarTitle = "Test Attempt Lap Details (Test ID = " + 
 	                             $scope.$parent.selectedTestConfigId + ") " + 
@@ -138,7 +149,22 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     
     $scope.qaDetails = [] ;
     
-	// -----------------------------------------------------------------------
+    $scope.searchCriteria = {
+        selectedSubjects : [],
+        resultType : $scope.searchMaster.resultTypes[0],
+        attemptLaps : [],
+        timeSpentChoice : $scope.searchMaster.timeSpentChoices[0],
+        errorRCAChoices : []
+    } ;
+    
+    $scope.selectedQuestion = null ;
+    $scope.lapTimes    = {} ;
+    $scope.lapAttempts = {} ;
+    $scope.lapCorrects = {} ;
+    $scope.lapAvgQTime = {} ;
+    $scope.numAbandoned = 0 ;
+
+    // -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
     fetchLapDetailsRawData( $scope.testAttemptId ) ;
 	// --- [END] Controller initialization -----------------------------------
@@ -226,15 +252,169 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             return "lap-detail-cell-fixed-font " +
                    "lap-detail-cell-bg-" + state ;
         }
-        
         return "" ;
     }    
+    
+    $scope.determineVisibility = function( qaDetail ) {
+        
+        if( isFilteredBySelectedSubjects( qaDetail ) ) {
+            return false ;
+        }
+        
+        if( isFilteredByResultType( qaDetail ) ) {
+            return false ;
+        }
+        
+        if( isFilteredByAttemptLaps( qaDetail ) ) {
+            return false ;
+        }
+        
+        if( isFilteredByTimeSpent( qaDetail ) ) {
+            return false ;
+        }
+        
+        if( isFilteredByErrorRCChoices( qaDetail ) ) {
+            return false ;
+        }
+        
+        return true ;
+    }
+    
+    $scope.showQuestion = function( question ) {
+        $scope.selectedQuestion = question ;
+        $( '#questionDisplayDialog' ).modal( 'show' ) ;
+    }
+    
+    $scope.getTimeSpentForVisibleQuestions = function( lapName ) {
+        var lapTime = 0 ;
+        for( var j=0; j<$scope.qaDetails.length; j++ ) {
+            var qaDetail = $scope.qaDetails[ j ] ;
+            if( $scope.determineVisibility( qaDetail ) ) {
+                var lapAttemptDetail = qaDetail.lapAttemptDetailMap[ lapName ] ;
+                lapTime += lapAttemptDetail.timeSpent ;
+            }
+        }
+        return lapTime ;
+    }
     
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
+    
+    function isFilteredBySelectedSubjects( qaDetail ) {
+        
+        var selectedSubjects = $scope.searchCriteria.selectedSubjects ;
+        
+        var isMatched = false ;
+        
+        if( selectedSubjects.length != 0 ) {
+            for( var i=0; i<selectedSubjects.length; i++ ) {
+                if( qaDetail.question.subject.name == selectedSubjects[i] ) {
+                    isMatched = true ;
+                    break ;
+                }
+            }
+        }
+        else {
+            isMatched = true ;
+        }
+        return !isMatched ;
+    }
 
+    function isFilteredByResultType( qaDetail ) {
+        
+        var isFiltered = false ;
+        var selectedType = $scope.searchCriteria.resultType ;
+        
+        if( selectedType != "All" ) {
+            if( qaDetail.attempt.isCorrect ) {
+                if( selectedType == "Only Wrong" ) {
+                    isFiltered = true ;
+                }
+            } 
+            else {
+                if( selectedType == "Only Correct" ) {
+                    isFiltered = true ;
+                }
+            }
+        }
+        return isFiltered ;
+    }
+        
+    function isFilteredByAttemptLaps( qaDetail ) {
+        
+        var isMatched = false ;
+        var selectedLaps = $scope.searchCriteria.attemptLaps ;
+        
+        if( selectedLaps.length != 0 ) {
+            for( var i=0; i<selectedLaps.length; i++ ) {
+                var selectedLap = selectedLaps[i] ;
+                if( selectedLap == "Abandoned" ) {
+                    if( qaDetail.answeredInLap == "" ) {
+                        isMatched = true ;
+                        break ;
+                    }
+                }
+                else if( qaDetail.answeredInLap == selectedLaps[i] ) {
+                    isMatched = true ;
+                    break ;
+                }
+            }
+        }
+        else {
+            isMatched = true ;
+        }
+        
+        return !isMatched ;
+    }
+        
+    function isFilteredByTimeSpent( qaDetail ) {
+        
+        var isMatched = true ;
+        var choice = $scope.searchCriteria.timeSpentChoice ;
+        
+        var isLessThan = choice.startsWith( "<" ) ;
+        var timeLimit = parseInt( choice.substring( 2, 3 ) )*60 ;
+        var timeSpent = qaDetail.totalTimeSpent ;
+        
+        if( choice != "Any" ) {
+            isMatched = false ;
+            if( isLessThan ) {
+                if( timeSpent < timeLimit ) {
+                    isMatched = true ;
+                }
+            }
+            else {
+                if( timeSpent >= timeLimit ) {
+                    isMatched = true ;
+                }
+            }
+        }
+        
+        return !isMatched ;
+    }
+    
+    function isFilteredByErrorRCChoices( qaDetail ) {
+        
+        var isMatched = true ;
+        var rcaChoices = $scope.searchCriteria.errorRCAChoices ;
+        
+        if( rcaChoices.length > 0 ) {
+            isMatched = false ;
+            if( !qaDetail.attempt.isCorrect ) {
+                for( var i=0; i<rcaChoices.length; i++ ) {
+                    if( qaDetail.attempt.rootCause == rcaChoices[i].id ) {
+                        isMatched = true ;
+                        break ;
+                    }
+                }
+            }
+        }
+        
+        return !isMatched ;
+    }
+        
     function fetchLapDetailsRawData( testAttemptId ) {
         
         console.log( "Fetching lap details raw data for test attempt : " + testAttemptId ) ;
@@ -269,6 +449,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         extractLapNames() ;
         constructQuestionAttemptDetails() ;
         processLapSnapshots() ;
+        collectLapStatistics() ;
         
         console.log( "Raw data processed." ) ;
     }
@@ -307,6 +488,46 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                 var lapSnapshot = $scope.lapSnapshots[ lapSnapshotIndex ] ;
                 
                 qaDetail.ingestLapSnapshot( lapSnapshot ) ;
+            }
+        }
+    }
+    
+    function collectLapStatistics() {
+        
+        for( var i=0; i<$scope.lapNames.length; i++ ) {
+            var lapName = $scope.lapNames[i] ;
+            var lapTime = 0 ;
+            var numAnswered = 0 ;
+            var numCorrect = 0 ;
+            
+            for( var j=0; j<$scope.qaDetails.length; j++ ) {
+                var qaDetail = $scope.qaDetails[ j ] ;
+                var lapAttemptDetail = qaDetail.lapAttemptDetailMap[ lapName ] ;
+                
+                lapTime += lapAttemptDetail.timeSpent ;
+                if( qaDetail.answeredInLap == lapName ) {
+                    numAnswered++ ;
+                    if( qaDetail.attempt.isCorrect ) {
+                        numCorrect++ ;
+                    }
+                }
+            }
+            $scope.lapTimes[ lapName ] = lapTime ;
+            $scope.lapAttempts[ lapName ] = numAnswered ;
+            $scope.lapCorrects[ lapName ] = numCorrect ;
+            
+            var avgQTime = 0 ;
+            if( numAnswered > 0 ) {
+                avgQTime = Math.ceil( lapTime / numAnswered ) ;
+            }
+            $scope.lapAvgQTime[ lapName ] = avgQTime ;
+        }
+        
+        for( var j=0; j<$scope.qaDetails.length; j++ ) {
+            var qaDetail = $scope.qaDetails[ j ] ;
+            if( qaDetail.answeredInLap == "" && 
+                !qaDetail.attempt.isCorrect ) {
+                $scope.numAbandoned++ ;
             }
         }
     }

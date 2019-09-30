@@ -2,7 +2,7 @@
        style="font-size:12px;">
   <thead>
       <tr>
-          <th colspan="4"></th>
+          <th colspan="7"style="text-align:left;">Lap name</th>
           <th colspan="2"
               ng-repeat="lapName in lapNames"
               ng-class="'lap-detail-cell-bg-' + lapName">
@@ -11,13 +11,65 @@
           <th colspan="2"></th>
       </tr>
       <tr>
+          <th colspan="7"style="text-align:left;">Lap times</th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName"
+              style="font-family:Courier New;">
+              {{lapTimes[lapName] | duration}}
+          </th>
+          <th colspan="2"></th>
+      </tr>
+      <tr>
+          <th colspan="7"style="text-align:left;">Lap times (visible rows)</th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName"
+              style="font-family:Courier New;">
+              {{getTimeSpentForVisibleQuestions( lapName ) | duration}}
+          </th>
+          <th colspan="2"></th>
+      </tr>
+      <tr>
+          <th colspan="7"style="text-align:left;">Num questions answered</th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName">
+              {{lapAttempts[lapName]}}
+          </th>
+          <th colspan="2"></th>
+      </tr>
+      <tr>
+          <th colspan="7"style="text-align:left;">Num wrong answers</th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName">
+              {{lapAttempts[lapName] - lapCorrects[lapName]}}
+          </th>
+          <th>{{numAbandoned}}</th>
+          <th></th>
+      </tr>
+      <tr>
+          <th colspan="7"style="text-align:left;">Average time per questiom</th>
+          <th colspan="2"
+              ng-repeat="lapName in lapNames"
+              ng-class="'lap-detail-cell-bg-' + lapName"
+              style="font-family:Courier New;">
+              {{lapAvgQTime[lapName] | mmss}}
+          </th>
+          <th colspan="2"></th>
+      </tr>
+      <tr>
+          <th>Subject</th>
+          <th></th>
           <th>Q</th>
+          <th></th>
           <th>Lap</th>
           <th>Time</th>
           <th width="2px"></th>
           <th ng-repeat="x in [].constructor(lapNames.length*2) track by $index"
               ng-class="getLapSubHeaderClass($index)"
-              width="40px">
+              width="50px">
               {{getLapSubHeader($index)}}
           </th>
           <th></th>
@@ -25,8 +77,18 @@
       </tr>
   </thead>
   <tbody>
-      <tr ng-repeat="qaDetail in qaDetails">
+      <tr ng-repeat="qaDetail in qaDetails"
+          ng-show="determineVisibility( qaDetail )">
+          
+         <td>{{qaDetail.question.subject.name.substring( 5 )}}</td>
+         <td>{{qaDetail.question.questionType}}</td>
          <td>Q {{$index + 1}}</td>
+         <td>
+            <span class="glyphicon glyphicon-eye-open"
+                  ng-click="showQuestion( qaDetail.question )"
+                  style="color:#A0A0A0;">
+            </span>
+         </td>
          <td ng-class="'lap-detail-cell-bg-' + qaDetail.answeredInLap">
               {{qaDetail.answeredInLap}}
          </td>
