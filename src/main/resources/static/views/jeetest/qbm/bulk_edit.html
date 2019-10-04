@@ -73,18 +73,26 @@
 							<table class="table table-bordered table-striped table-compact">
 							  <thead>
 							    <tr class="success">
-							      <th>Img name</th>
+                                  <th width="30px"></th>
+							      <th width="300px">Img name</th>
 							      <th width="150px">QRef</th>
-							      <th width="75px">QType</th>
+							      <th width="100px">QType</th>
 							      <th width="100px">Ans</th>
-                                  <th width="50px">Lat</th>
-                                  <th width="75px">Time</th>
+                                  <th width="75px">Lat</th>
+                                  <th width="100px">Time</th>
                                   <th></th>
 							    </tr>
 							  </thead>
 							  <tbody>
 							    <tr ng-repeat="entry in entries track by $index"
 							        ng-hide="hideSaved && entry.saved">
+                                  <td>
+                                    <span class="glyphicon glyphicon-trash"
+                                          ng-show="!entry.saved"
+                                          ng-click="deleteBulkEntryMetaData( $index )"
+                                          style="color:red;">
+                                    </span>
+                                  </td>
                                   <td>
                                     <input class="form-control"  type="text" ng-model="entry.imgNames" style="width:100%;font-size:10px"/>
                                   </td>
@@ -152,6 +160,12 @@
                             <span class="glyphicon glyphicon-save"
                                   ng-show="!entry.saved"
                                   ng-click="saveEntry( entry )">
+                            </span>
+					        &nbsp;
+                            <span class="glyphicon glyphicon-trash pull-right"
+                                  ng-show="!entry.saved"
+                                  ng-click="deleteBulkEntryMetaData( $index )"
+                                  style="color:red;">
                             </span>
 					      </div>
 					      <div class="panel-body">

@@ -1,6 +1,7 @@
 package com.sandy.sconsole ;
 
 import java.io.File ;
+import java.io.IOException ;
 import java.sql.Timestamp ;
 import java.text.ParseException ;
 import java.text.SimpleDateFormat ;
@@ -10,6 +11,7 @@ import java.util.Date ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
+import java.util.Properties ;
 import java.util.Timer ;
 import java.util.TimerTask ;
 import java.util.concurrent.LinkedBlockingQueue ;
@@ -79,6 +81,7 @@ public class SConsole
     public static long TODAY_LAST_MIL = TODAY.getLastMillisecond() ;
     public static Timestamp TODAY_FIRST_TS = new Timestamp( TODAY_FIRST_MIL ) ;
     public static Timestamp TODAY_LAST_TS  = new Timestamp( TODAY_LAST_MIL ) ;
+    public static Properties BULK_ANS_LOOKUP = new Properties() ;
     
     static {
         SEC_TIMER.scheduleAtFixedRate( new TimerTask() {
@@ -123,6 +126,13 @@ public class SConsole
                 }
             }
         }, new Date(), 1000 ) ;
+        
+        try {
+            BULK_ANS_LOOKUP.load( SConsole.class.getResourceAsStream( "/ans_lookup.properties" ) );
+        }
+        catch( IOException e ) {
+            log.error( "Could not load bulk answer lookup properties.", e ) ;
+        }
     }
 
     public static void addSecTimerTask( SecondTickListener task ) {

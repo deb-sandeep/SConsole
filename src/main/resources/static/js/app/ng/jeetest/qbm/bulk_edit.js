@@ -68,6 +68,30 @@ sConsoleApp.controller( 'BulkEditController',
 		}
 	}
 	
+	$scope.deleteBulkEntryMetaData = function( entryIndex ) {
+		
+    	console.log( "Deleting bulk entry meta data." ) ;
+
+    	var entry = $scope.entries[ entryIndex ] ;
+    	
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/DeleteTestQuestionImages', entry.imgPaths )
+        .then( 
+            function( response ){
+                console.log( "Successfully deleted question images." ) ;
+                $scope.entries.splice( entryIndex, 1 ) ;
+            }, 
+            function( error ){
+                console.log( "Error deleting question images." + error ) ;
+                var errMsg = "Server error." ;
+                $scope.$parent.addErrorAlert( "Could not delete question images. " + errMsg ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+	}
+	
 	$scope.qTypeChanged = function( entry ) {
 		var nextEntry = entry.nextEntry ;
 		var projTime = 120 ;

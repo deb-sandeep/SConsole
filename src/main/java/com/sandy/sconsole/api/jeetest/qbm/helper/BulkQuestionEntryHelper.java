@@ -122,6 +122,12 @@ public class BulkQuestionEntryHelper {
                                                  .substring( SConsole.JEETEST_IMG_DIR
                                                                      .getAbsolutePath()
                                                                      .length()+1 ) ) ;
+                    String ansLookupKey = file.getName() ;
+                    ansLookupKey = ansLookupKey.substring( 0, ansLookupKey.length()-4 ) ;
+                    
+                    if( SConsole.BULK_ANS_LOOKUP.containsKey( ansLookupKey ) ) {
+                        entry.setaText( SConsole.BULK_ANS_LOOKUP.getProperty( ansLookupKey ) ) ;
+                    }
                 }
             }
             
@@ -215,12 +221,6 @@ public class BulkQuestionEntryHelper {
                 return 0 ;
             }
         } ) ;
-    }
-    
-    public static void main( String[] args ) {
-        BulkQuestionEntryHelper obj = new BulkQuestionEntryHelper( null ) ;
-        FileInfo fi = obj.parseFileInfo( "Chem_Q_", "Chem_Q_IC_1_LCT_1(2).png" ) ;
-        log.debug( fi ) ;
     }
     
     //    <Sub>_Q_[Section]*_[<LCT>]_<QID>(Part).png

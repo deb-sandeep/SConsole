@@ -1,5 +1,6 @@
 package com.sandy.sconsole.api.jeetest.qbm;
 
+import java.io.File ;
 import java.math.BigDecimal ;
 import java.math.BigInteger ;
 import java.net.InetAddress ;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam ;
 import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.common.util.StringUtil ;
+import com.sandy.sconsole.SConsole ;
 import com.sandy.sconsole.api.jeetest.qbm.helper.BulkQuestionEntryHelper ;
 import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSearchEngine ;
 import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSynchronizer ;
@@ -333,6 +335,30 @@ public class QBMRestController {
         TestQuestionSynchronizer synchronizer = new TestQuestionSynchronizer() ;
         try {
             synchronizer.importQuestions( questions ) ;
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( ResponseMsg.SUCCESS ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error formatting input", e ) ;
+            return ResponseEntity.status( 500 )
+                                 .body( new ResponseMsg( e.getMessage() ) ) ;
+        }
+    }
+
+    /**
+     * This function is called upon by some local server in the network in
+     * an attempt to delete the specified images.
+     */
+    @PostMapping( "/DeleteTestQuestionImages" ) 
+    public ResponseEntity<ResponseMsg> deleteTestQuestionImages( 
+                                @RequestBody List<String> imgPaths ) {
+        
+        try {
+            for( String path : imgPaths ) {
+                File file = new File( SConsole.JEETEST_IMG_DIR, path ) ;
+                log.debug( "Deleting " + file.getAbsolutePath() ) ;
+                file.delete() ;
+            }
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( ResponseMsg.SUCCESS ) ;
         }
