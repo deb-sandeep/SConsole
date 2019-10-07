@@ -128,10 +128,27 @@ public class SConsole
         }, new Date(), 1000 ) ;
         
         try {
-            BULK_ANS_LOOKUP.load( SConsole.class.getResourceAsStream( "/ans_lookup.properties" ) );
+            BULK_ANS_LOOKUP.load( SConsole.class.getResourceAsStream( "/ans_lookup.properties" ) ) ;
+            SConsole.preProcessBulkAnswers() ;
         }
         catch( IOException e ) {
             log.error( "Could not load bulk answer lookup properties.", e ) ;
+        }
+    }
+    
+    public static void preProcessBulkAnswers() {
+        
+        for( Object key : BULK_ANS_LOOKUP.keySet() ) {
+            String value = BULK_ANS_LOOKUP.getProperty( (String)key ) ;
+            
+            value = value.replace( "(", "" ) ;
+            value = value.replace( ")", "" ) ;
+            value = value.replace( "A", "1" ) ;
+            value = value.replace( "B", "2" ) ;
+            value = value.replace( "C", "3" ) ;
+            value = value.replace( "D", "4" ) ;
+            
+            BULK_ANS_LOOKUP.put( key, value ) ;
         }
     }
 
