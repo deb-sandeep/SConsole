@@ -141,6 +141,7 @@ public class SConsole
         for( Object key : BULK_ANS_LOOKUP.keySet() ) {
             String value = BULK_ANS_LOOKUP.getProperty( (String)key ) ;
             
+            value = value.trim() ;
             value = value.replace( "(", "" ) ;
             value = value.replace( ")", "" ) ;
             value = value.replace( "A", "1" ) ;

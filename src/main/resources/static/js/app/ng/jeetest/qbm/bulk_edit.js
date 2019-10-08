@@ -7,6 +7,7 @@ function BulkQEntry( entry ) {
 	this.saved    = entry.saved ;
 	this.imgNames = entry.imgNames ;
 	this.imgPaths = entry.imgPaths ;
+	this.hidden   = false ;
 	
 	this.nextEntry = null ;
 }
@@ -139,6 +140,10 @@ sConsoleApp.controller( 'BulkEditController',
 	            entry.projTime = parseInt( parts[2] ) ;
 	        }
 	    }
+	}
+	
+	$scope.hideEntry = function( entry ) {
+		entry.hidden = true ;
 	}
 	
 	// --- [START] Internal functions

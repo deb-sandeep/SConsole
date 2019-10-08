@@ -73,7 +73,8 @@
 							<table class="table table-bordered table-striped table-compact">
 							  <thead>
 							    <tr class="success">
-                                  <th width="30px"></th>
+                                  <th width="25px"></th>
+                                  <th width="25px"></th>
 							      <th width="300px">Img name</th>
 							      <th width="150px">QRef</th>
 							      <th width="100px">QType</th>
@@ -85,12 +86,18 @@
 							  </thead>
 							  <tbody>
 							    <tr ng-repeat="entry in entries track by $index"
-							        ng-hide="hideSaved && entry.saved">
+							        ng-hide="( hideSaved && entry.saved ) || entry.hidden">
                                   <td>
                                     <span class="glyphicon glyphicon-trash"
                                           ng-show="!entry.saved"
                                           ng-click="deleteBulkEntryMetaData( $index )"
                                           style="color:red;">
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span class="glyphicon glyphicon-eye-close"
+                                          ng-click="hideEntry( entry )"
+                                          style="color:green;">
                                     </span>
                                   </td>
                                   <td>
@@ -153,7 +160,7 @@
 		              <td width="100%">
 					    <div class="panel panel-success" 
 					         ng-repeat="entry in entries track by $index"
-					         ng-hide="hideSaved && entry.saved">
+					         ng-hide="( hideSaved && entry.saved ) || entry.hidden">
 					      <div class="panel-heading">
 					        <span class="panel-title">{{entry.qRef}}</span>
 					        &nbsp;
