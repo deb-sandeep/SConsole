@@ -126,6 +126,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     // ------------------ Master reference data -----------------------------
     $scope.searchMaster = {
         subjectNames : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
+        questionTypes : [ "All", "SCA", "NT" ],
         resultTypes : [ "All", "Only Correct", "Only Wrong" ],
         attemptLaps : [ "L1", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
         timeSpentChoices : [ "Any",
@@ -151,6 +152,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     
     $scope.searchCriteria = {
         selectedSubjects : [],
+        questionType : $scope.searchMaster.questionTypes[0],
         resultType : $scope.searchMaster.resultTypes[0],
         attemptLaps : [],
         timeSpentChoice : $scope.searchMaster.timeSpentChoices[0],
@@ -261,6 +263,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             return false ;
         }
         
+        if( isFilteredByQuestionType( qaDetail ) ) {
+            return false ;
+        }
+        
         if( isFilteredByResultType( qaDetail ) ) {
             return false ;
         }
@@ -320,6 +326,23 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             isMatched = true ;
         }
         return !isMatched ;
+    }
+    
+    function isFilteredByQuestionType( qaDetail ) {
+        
+        var questionType = $scope.searchCriteria.questionType ;
+        
+        var isFiltered = false ;
+        
+        if( questionType != "All" ) {
+            if( qaDetail.question.questionType == questionType ) {
+                isFiltered = false ;
+            }
+            else {
+                isFiltered = true ;
+            }
+        }
+        return isFiltered ;
     }
 
     function isFilteredByResultType( qaDetail ) {

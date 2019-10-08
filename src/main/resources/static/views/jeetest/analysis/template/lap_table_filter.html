@@ -23,6 +23,24 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#questionTypeChoice">
+        Question Type
+        </a>
+      </h4>
+    </div>
+    <div id="questionTypeChoice" class="panel-collapse collapse">
+        <select id="questionTypeList" 
+                class="form-control" 
+                size=3
+                ng-model="searchCriteria.questionType"
+                ng-options="obj for obj in searchMaster.questionTypes">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" data-target="#resultChoice">
         Result
         </a>
