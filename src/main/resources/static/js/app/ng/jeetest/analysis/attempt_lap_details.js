@@ -135,6 +135,8 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         rcOptions : new RCOptions().choices 
     } ;
     
+    $scope.rcOptions = new RCOptions() ;
+    
     // --------------- Scope variables ---------------------------------------
 	$scope.$parent.navBarTitle = "Test Attempt Lap Details (Test ID = " + 
 	                             $scope.$parent.selectedTestConfigId + ") " + 
@@ -159,7 +161,12 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         errorRCAChoices : []
     } ;
     
-    $scope.selectedQuestion = null ;
+    $scope.selectedQADetail      = null ;
+    $scope.selectedQuestion      = null ;
+    $scope.selectedAttempt       = null ;
+    $scope.selectedQuestionIndex = -1 ;
+    $scope.rootCause             = null ;
+    
     $scope.lapTimes    = {} ;
     $scope.lapAttempts = {} ;
     $scope.lapCorrects = {} ;
@@ -286,11 +293,6 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         return true ;
     }
     
-    $scope.showQuestion = function( question ) {
-        $scope.selectedQuestion = question ;
-        $( '#questionDisplayDialog' ).modal( 'show' ) ;
-    }
-    
     $scope.getTimeSpentForVisibleQuestions = function( lapName ) {
         var lapTime = 0 ;
         for( var j=0; j<$scope.qaDetails.length; j++ ) {
@@ -303,11 +305,74 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         return lapTime ;
     }
     
+    $scope.showQuestion = function( index ) {
+         
+        selectQADetail( index ) ;
+        $( '#questionDisplayDialog' ).modal( 'show' ) ;
+    }
+    
+    $scope.showRootCauseDialog = function( index ) {
+        selectQADetail( index ) ;
+        $scope.rootCause = $scope.rcOptions
+                                 .getOption( $scope.selectedAttempt
+                                                   .rootCause ) ;
+        $( '#rootCauseDialog' ).modal( 'show' ) ;
+    }
+    
+    $scope.saveRootCause = function() {
+        console.log( "Saving root cause." ) ;
+        if( $scope.rootCause != null ) {
+            $scope.selectedAttempt.rootCause = $scope.rootCause.id ;
+            updateRootCauseOnServer( parseInt( $scope.testAttemptId ),
+                                     $scope.selectedAttempt.testQuestionId,
+                                     $scope.rootCause.id ) ;
+            $( '#rootCauseDialog' ).modal( 'hide' ) ;
+        }
+        else {
+            $scope.$parent.addErrorAlert( "Please provide root cause." ) ;
+        }
+    }
+    
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
     
+    function selectQADetail( index ) {
+        
+        $scope.selectedQADetail      = $scope.qaDetails[index] ;
+        $scope.selectedQuestion      = $scope.selectedQADetail.question ;
+        $scope.selectedAttempt       = $scope.selectedQADetail.attempt ;
+        $scope.selectedQuestionIndex = index ;
+        $scope.rootCause             = null ;
+    }
+    
+    function updateRootCauseOnServer( testAttemptId,
+                                      testQuestionId,
+                                      rootCause ) {
+        console.log( "Updating root cause on server." ) ;
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt/UpdateRootCause', {
+            testAttemptId  : testAttemptId,
+            testQuestionId : testQuestionId,
+            rootCause      : rootCause
+        } )
+        .then ( 
+            function( response ){
+                console.log( "Successfully updated root cause" ) ;
+                $scope.rootCause = null ;
+            }, 
+            function( error ){
+                console.log( "Error saving root cause on server." ) ;
+                $scope.$parent.addErrorAlert( "Could not save root cause." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        } ) ;
+    }
+
     function isFilteredBySelectedSubjects( qaDetail ) {
         
         var selectedSubjects = $scope.searchCriteria.selectedSubjects ;

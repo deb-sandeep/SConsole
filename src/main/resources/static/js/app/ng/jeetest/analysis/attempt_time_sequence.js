@@ -252,10 +252,10 @@ sConsoleApp.controller( 'TestAttemptTimeSequenceController', function( $scope, $
     		}
     		else if( eventType == ClickStreamEvent.prototype.LAP_START ) {
     		    currentLapIndex++ ;
-    		    currentLapStartTime = event.timeMarker/1000 ;
+    		    currentLapStartTime = Math.floor( event.timeMarker/1000 ) ;
     		}
             else if( eventType == ClickStreamEvent.prototype.LAP_END ) {
-                currentLapEndTime = event.timeMarker/1000 ;
+                currentLapEndTime = Math.floor( event.timeMarker/1000 ) ;
                 lapMarkers.push( [
                     currentLapStartTime,
                     (currentLapEndTime - currentLapStartTime),

@@ -553,3 +553,23 @@
     font-family:Courier New;
 }
 
+#test-question-display-in-lap-analysis {
+    overflow:auto;
+    height:400px;	
+}
+
+#test-question-display-in-lap-analysis table {
+    width:100%;
+    font-size:12px;
+}
+
+#test-question-display-in-lap-analysis th {
+    background-color:#edebeb;
+    text-align:left;
+    padding: 2px 2px;
+}
+
+#test-question-display-in-lap-analysis td {
+    padding: 2px 2px;
+}
+

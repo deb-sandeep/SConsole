@@ -313,8 +313,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
                 $scope.testAttempt = response.data ;
                 $scope.saveClickStreamEvent( 
                         ClickStreamEvent.prototype.TEST_ENDED, null ) ;
-
-                endCurrentLap() ;
             }, 
             function( error ){
                 console.log( "Error saving test attempt on server." ) ;
@@ -392,9 +390,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         $scope.saveClickStreamEvent( ClickStreamEvent.prototype.LAP_END, 
                                      $scope.currentLapName ) ;
 
-        console.log( "Ending lap - " + $scope.currentLapName ) ;
-        console.log( "Time spent - " + attemptDetail.timeSpent ) ;
-        
         var snapshots = [] ;
         
         for( var i=0; i<$scope.questions.length; i++ ) {

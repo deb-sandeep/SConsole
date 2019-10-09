@@ -85,7 +85,7 @@
          <td>Q {{$index + 1}}</td>
          <td>
             <span class="glyphicon glyphicon-eye-open"
-                  ng-click="showQuestion( qaDetail.question )"
+                  ng-click="showQuestion( $index )"
                   style="color:#A0A0A0;">
             </span>
          </td>
@@ -112,7 +112,13 @@
                   class="glyphicon glyphicon-remove"
                   style="color:blue;"></span>
          </td>
-         <td>{{qaDetail.attempt.rootCause}}</td>
+         <td>
+             <span ng-show="!qaDetail.attempt.isCorrect"
+                   class="glyphicon glyphicon-tags"
+                   ng-click="showRootCauseDialog( $index )">
+             </span>&nbsp;
+             {{qaDetail.attempt.rootCause}}
+         </td>
       </tr>        
   </tbody>
 </table>

@@ -25,14 +25,105 @@
     <div class="modal-content" >
       <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Selected question:</h4>
+        <h4 class="modal-title">Selected question: Q-{{selectedQuestionIndex + 1}}</h4>
       </div>
       <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
-        <div style='overflow:auto;height:400px;'>
+        <div id="test-question-display-in-lap-analysis">
+	        <table align="center" class="pure-table pure-table-horizontal">
+	            <tr>
+	                <th width="20%">Question ID</th>
+	                <td width="30%">{{selectedQuestion.id}}</td>
+	                <th width="20%">Subject</th>
+	                <td width="30%">{{selectedQuestion.subject.name}}</td>
+	            </tr>
+	            <tr>
+	                <th>Topic</th>
+	                <td>{{selectedQuestion.topic.topicName}}</td>
+	                <th>Book</th>
+	                <td>{{selectedQuestion.book.bookShortName}}</td>
+	            </tr>
+	            <tr>
+	                <th>Question type</th>
+	                <td>{{selectedQuestion.questionType}}</td>
+	                <th>Question reference</th>
+	                <td>{{selectedQuestion.questionRef}}</td>
+	            </tr>
+                <tr>
+                    <th>Correct answer</th>
+                    <td>{{selectedQuestion.answerText}}</td>
+                    <th>Answer provided</th>
+                    <td>{{selectedAttempt.answerProvided}}</td>
+                </tr>
+	        </table>
 	        <div id="test-question-render">
 	            <render-test-summary-question></render-test-summary-question>
 	        </div>        
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rootCauseDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:450px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Enter root cause:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:300px;'>
+            <table width="100%" class="pure-table pure-table-horizontal">
+                <tr>
+                    <td>Question Number</td>
+                    <td><strong>Q {{selectedQuestionIndex + 1}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question ID</td>
+                    <td><strong>{{selectedQuestion.id}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Subject</td>
+                    <td><strong>{{selectedQuestion.subject.name}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Topic</td>
+                    <td><strong>{{selectedQuestion.topic.topicName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Book</td>
+                    <td><strong>{{selectedQuestion.book.bookShortName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question type</td>
+                    <td><strong>{{selectedQuestion.questionType}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question reference</td>
+                    <td><strong>{{selectedQuestion.questionRef}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Root cause</td>
+                    <td>
+                         <select id="topic" 
+                                 class="form-control"  
+                                 ng-model="rootCause"
+                                 ng-options="item as item.displayName for item in rcOptions.choices track by item.id">
+                         </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info"
+                ng-click="saveRootCause()">
+            Apply
+        </button>
       </div>
     </div>
   </div>
