@@ -4,6 +4,10 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/analysis/availableAttempts",
 		controller : "AvailableTestAttemptsController"
 	})
+    .when("/wrongAnswersAnalysis", {
+        templateUrl : "/jeetest/analysis/wrongAnswersAnalysis",
+        controller : "WrongAnswersAnalysisController"
+    })
 	.when("/attemptDetails/:id", {
 		templateUrl : "/jeetest/analysis/attemptDetails",
 		controller : "TestAttemptDetailsController"

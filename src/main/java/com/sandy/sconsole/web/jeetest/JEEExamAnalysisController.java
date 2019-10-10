@@ -17,6 +17,11 @@ public class JEEExamAnalysisController {
         return "jeetest/analysis/attempt_details" ;
     }
 
+    @RequestMapping( "/wrongAnswersAnalysis" )
+    public String wrongAnswersAnalysis() {
+        return "jeetest/analysis/wrong_answer_analysis" ;
+    }
+
     @RequestMapping( "/testAttemptTimeSequence" )
     public String testAttemptTimeSequence() {
         return "jeetest/analysis/attempt_time_sequence" ;
