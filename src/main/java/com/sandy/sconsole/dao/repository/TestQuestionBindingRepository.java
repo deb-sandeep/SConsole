@@ -15,6 +15,13 @@ import com.sandy.sconsole.dao.entity.master.Topic ;
 public interface TestQuestionBindingRepository 
     extends CrudRepository<TestQuestionBinding, Integer> {
     
+    public interface TopicTestQuestionCount {
+        String getSubjectName() ;
+        Integer getTopicId() ;
+        String getTopicName() ;
+        Integer getNumQuestions() ;
+    }
+    
     @Transactional
     @Modifying
     @Query( "DELETE from TestQuestionBinding tqb WHERE tqb.testConfig.id = ?1" )
@@ -48,4 +55,29 @@ public interface TestQuestionBindingRepository
           + "   tqb.id ASC "
     )
     List<TestQuestion> getTestQuestionsForTestConfig( Integer testConfigId ) ;
+
+    @Query( nativeQuery=true,
+            value = 
+              "SELECT "
+            + "    tm.subject_name as subjectName, "
+            + "    tm.id as topicId, "
+            + "    tm.topic_name as topicName, "
+            + "    count( tqb.question_id ) as numQuestions "
+            + "FROM "
+            + "    test_question_binding tqb, "
+            + "    topic_master tm, "
+            + "    mocktest_question_master mqm "
+            + "WHERE "
+            + "    tqb.topic_id = tm.id AND "
+            + "    tqb.question_id = mqm.id AND "
+            + "    mqm.attempted = 1 "
+            + "GROUP BY "
+            + "    tm.subject_name, "
+            + "    tm.id, "
+            + "    tm.topic_name "
+            + "ORDER BY "
+            + "    tm.subject_name ASC, "
+            + "    tm.id ASC "
+    )
+    List<TopicTestQuestionCount> getTestQuestionCountPerTopic() ;
 }

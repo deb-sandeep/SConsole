@@ -3,7 +3,9 @@ package com.sandy.sconsole.api.jeetest.exam;
 import java.sql.Timestamp ;
 import java.util.ArrayList ;
 import java.util.Date ;
+import java.util.HashMap ;
 import java.util.List ;
+import java.util.Map ;
 
 import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
@@ -25,7 +27,9 @@ import com.sandy.sconsole.dao.repository.ClickStreamEventRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptLapSnapshotRepository ;
 import com.sandy.sconsole.dao.repository.TestAttemptRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository.IncorrectTestAnswerRC ;
 import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository.TopicTestQuestionCount ;
 import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
 
@@ -358,6 +362,75 @@ public class JEETestRestController {
             log.error( "Error fetching test question attempts.", e ) ;
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
                                  .body( null ) ;
+        }
+    }
+
+    @GetMapping( "/TestAttempt/TopicWiseTestQuestionErrorDetails" )
+    public ResponseEntity<List<TopicWiseTestQuestionErrorDetails>> 
+                getTopicWiseTestQuestionErrorDetails() {
+        
+        try {
+            log.debug( "Fetching topic wise test question error details." ) ;
+            
+            List<TopicTestQuestionCount> topicQCounts ;
+            List<IncorrectTestAnswerRC> wrongAnswerRCs ;
+            List<TopicWiseTestQuestionErrorDetails> details = null ;
+            details = new ArrayList<>() ;
+            
+            topicQCounts = tqbRepo.getTestQuestionCountPerTopic() ;
+            wrongAnswerRCs = tqaRepo.getIncorrectTestAnswersRC() ;
+            
+            populateTopicWiseQuestionErrorDetails( details, topicQCounts, 
+                                                   wrongAnswerRCs ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( details ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error fetching test question attempts.", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
+    private void populateTopicWiseQuestionErrorDetails( 
+            List<TopicWiseTestQuestionErrorDetails> details,
+            List<TopicTestQuestionCount> topicQCounts,
+            List<IncorrectTestAnswerRC> wrongAnswerRCs ) {
+        
+        Map<Integer, TopicWiseTestQuestionErrorDetails> map = new HashMap<>() ;
+        TopicWiseTestQuestionErrorDetails detail = null ;
+        Map<Integer, String> qRCMap = null ;
+        Map<String, List<Integer>> rcClusters = null ;
+        
+        for( TopicTestQuestionCount ttqc : topicQCounts ) {
+            detail = new TopicWiseTestQuestionErrorDetails( ttqc ) ;
+            map.put( ttqc.getTopicId(), detail ) ;
+            details.add( detail ) ;
+        }
+        
+        for( IncorrectTestAnswerRC rc : wrongAnswerRCs ) {
+            
+            List<Integer> questionList = null ;
+            
+            qRCMap = map.get( rc.getTopicId() ).getErrorDetails() ;
+            rcClusters = map.get( rc.getTopicId() ).getRcClusters() ;
+            
+            Integer questionId = rc.getTestQuestionId() ;
+            String rootCause = rc.getRootCause() ;
+            
+            if( rootCause == null ) {
+                rootCause = "-UNASSIGNED-" ;
+            }
+            
+            qRCMap.put( questionId, rc.getRootCause() ) ;
+            
+            questionList = rcClusters.get( rootCause ) ;
+            if( questionList == null ) {
+                questionList = new ArrayList<>() ;
+                rcClusters.put( rootCause, questionList ) ;
+            }
+            questionList.add( questionId ) ;
         }
     }
 }
