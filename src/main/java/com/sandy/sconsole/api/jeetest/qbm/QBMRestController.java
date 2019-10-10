@@ -176,6 +176,30 @@ public class QBMRestController {
                              .body( new ResponseMsg( "Successfully deleted" ) ) ;
     }
     
+    @GetMapping( "/TestQuestion/Ids" )
+    public ResponseEntity<List<TestQuestion>> searchQuestions(
+                 @RequestParam( value="ids", required=true ) String[] ids ) {
+        
+        TestQuestionSearchEngine searchEngine = null ;
+        
+        try {
+            searchEngine = new TestQuestionSearchEngine( tqRepo, tqbRepo ) ;
+            List<Integer> idList = new ArrayList<>() ;
+            for( String id : ids ) {
+                idList.add( Integer.parseInt( id ) ) ;
+            }
+            
+            List<TestQuestion> results = searchEngine.search( idList ) ;
+            
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( results ) ;
+        }
+        catch( Exception e ) {
+            return ResponseEntity.status( 500 ).body( null ) ;
+        }
+    }
+    
+    
     @GetMapping( "/TestQuestion" )
     public ResponseEntity<List<TestQuestion>> searchQuestions(
             @RequestParam( value="subjects",              required=false ) String[] subjects,

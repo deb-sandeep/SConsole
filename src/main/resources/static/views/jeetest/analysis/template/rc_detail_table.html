@@ -1,0 +1,44 @@
+<table align="center" class="pure-table pure-table-horizontal lap-detail-table"
+       style="font-size:12px;">
+  <thead>
+   <tr height="100">
+     <th>Subject</th>
+     <th>Topic</th>
+     <th>#Q</th>
+     <th>X</th>
+     <th width="50px">Eff</th>
+     <th ng-repeat="option in searchMaster.rcOptions track by $index"
+         width="30px" style="text-align:right;" valign="top">
+         <span class="vertical-text">{{option.shortName}}</span>
+     </th>
+     <th width="30px" style="text-align:right;" valign="top">
+         <span style="color:red;" class="vertical-text">UNASSIGNED</span>
+     </th>
+     <th>#W</th>
+   </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="topicDetail in topicDetails"
+          ng-show="determineVisibility( topicDetail )">
+        <td>{{topicDetail.subjectName.substring( 5 )}}</td>          
+        <td>{{topicDetail.topicName}}</td>          
+        <td style="text-align:right;">{{topicDetail.numQuestions}}</td>
+        <td style="text-align:right;">{{getNumErrorsForChosenRCs( topicDetail )}}</td>          
+        <td style="text-align:right;"
+            ng-class="getEffectivenessClass( topicDetail )">
+            {{getTopicEffectiveness( topicDetail )}} %
+        </td>          
+	    <td ng-repeat="option in searchMaster.rcOptions track by $index"
+	        style="text-align:right;">
+	        <a ng-click="showQuestions( topicDetail, option.id )"
+	           style="color:blue;">
+	        {{getNumErrorsForRC( topicDetail, option.id )}}
+	        </a>
+	    </td>
+        <td>
+            <span style="color:red">{{getNumErrorsForRC( topicDetail, '-UNASSIGNED-' )}}</span>
+        </td>
+        <td style="text-align:right;">{{topicDetail.numWrongAnswers}}</td>          
+      </tr>        
+  </tbody>
+</table>

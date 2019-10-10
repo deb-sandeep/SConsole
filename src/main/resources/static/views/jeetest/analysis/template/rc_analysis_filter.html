@@ -1,0 +1,59 @@
+<div class="panel-group" id="accordion"
+     style="font-size:12px;padding:10px;">
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#subjectChoice">
+        Subject
+        </a>
+      </h4>
+    </div>
+    <div id="subjectChoice" class="panel-collapse collapse in">
+        <select id="subjectChoiceList" 
+                class="form-control" 
+                multiple="true" 
+                size=3
+                ng-model="searchCriteria.selectedSubjects"
+                ng-options="obj for obj in searchMaster.subjectNames">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#numQuestionsChoice">
+        Num questions
+        </a>
+      </h4>
+    </div>
+    <div id="numQuestionsChoice" class="panel-collapse collapse">
+        <select id="numQuestionsChoiceList" 
+                class="form-control" 
+                size=5
+                ng-model="searchCriteria.numQuestion"
+                ng-options="obj for obj in searchMaster.numQuestions">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#rcaChoice">
+        Effectiveness RC inclusions
+        </a>
+      </h4>
+    </div>
+    <div id="rcaChoice" class="panel-collapse collapse">
+        <select id="rcaList" 
+                class="form-control" 
+                size=10
+                multiple
+                ng-model="searchCriteria.errorRCAChoices"
+                ng-options="item as item.displayName for item in searchMaster.rcOptions track by item.id">
+        </select>
+    </div>
+  </div>
+</div>

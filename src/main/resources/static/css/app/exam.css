@@ -550,12 +550,11 @@
 }
 
 .lap-detail-cell-fixed-font {
-    font-family:Courier New;
 }
 
 #test-question-display-in-lap-analysis {
     overflow:auto;
-    height:400px;	
+    height:600px;	
 }
 
 #test-question-display-in-lap-analysis table {
@@ -573,3 +572,40 @@
     padding: 2px 2px;
 }
 
+#test-question-display-in-lap-analysis hr { 	
+    border-top: 10px solid #d1daff;
+}
+
+.vertical-text {
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform: rotate(90deg);
+    white-space:nowrap;
+    display:block;
+    bottom:0;
+    padding:0px;
+    margin:0px;
+    width:10px;
+}
+
+.eff-bad {
+    background-color:#fa402c !important;
+}
+
+.eff-vpoor {
+    background-color:#fa847f !important;
+}
+
+.eff-poor {
+    background-color:#fac4c3 !important;
+}
+
+.eff-ok {
+    background-color:#b9f8bf !important;
+}
+
+.eff-good {
+    background-color:#21fa39 !important;
+}

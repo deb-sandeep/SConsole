@@ -21,6 +21,16 @@ public class TestQuestionSearchEngine {
         this.tqbRepo = tqbRepo ;
     }
     
+    public List<TestQuestion> search( List<Integer> ids ) {
+        
+        Iterable<TestQuestion> results = questionRepo.findAllById( ids ) ;
+        List<TestQuestion> questions = new ArrayList<>() ;
+        for( TestQuestion question : results ) {
+            questions.add( question ) ;
+        }
+        return questions ;
+    }
+    
     public List<TestQuestion> search( String[] subjects,
                                       String[] selectedQuestionTypes,
                                       Boolean showOnlyUnsynched,
