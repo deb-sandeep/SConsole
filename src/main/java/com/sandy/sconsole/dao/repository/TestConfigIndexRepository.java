@@ -22,7 +22,7 @@ public interface TestConfigIndexRepository
           + "    ) "
           + "ORDER BY "
           + "    tci.examType ASC, "
-          + "    tci.id DESC "
+          + "    tci.id ASC "
     )
     List<TestConfigIndex> findUnattemptedTests() ;
 }
