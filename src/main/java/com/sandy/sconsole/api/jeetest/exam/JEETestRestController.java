@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
+import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.core.SConsoleConfig ;
 import com.sandy.sconsole.dao.entity.ClickStreamEvent ;
 import com.sandy.sconsole.dao.entity.TestAttempt ;
@@ -118,10 +119,8 @@ public class JEETestRestController {
                     tqaRepo.save( attempt ) ; 
                     
                     TestQuestion question = tqRepo.findById( attempt.getTestQuestionId() ).get() ;
-                    if( attempt.getTimeSpent() > 0 ) {
-                        question.setAttempted( true ) ;
-                        tqRepo.save( question ) ;
-                    }
+                    question.setAttempted( true ) ;
+                    tqRepo.save( question ) ;
                 }
             }
             else {
@@ -419,7 +418,7 @@ public class JEETestRestController {
             Integer questionId = rc.getTestQuestionId() ;
             String rootCause = rc.getRootCause() ;
             
-            if( rootCause == null ) {
+            if( StringUtil.isEmptyOrNull( rootCause ) ) {
                 rootCause = "-UNASSIGNED-" ;
             }
             
