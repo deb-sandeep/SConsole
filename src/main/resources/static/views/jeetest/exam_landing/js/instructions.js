@@ -1,6 +1,6 @@
-sConsoleApp.controller( 'MainInstructionController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'InstructionsController', function( $scope, $http, $location, $window ) {
     
-	$scope.$parent.navBarTitle = "Instructions for JEE Main" ;
+	$scope.$parent.navBarTitle = "Exam Instructions" ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -14,8 +14,8 @@ sConsoleApp.controller( 'MainInstructionController', function( $scope, $http, $l
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
-	$scope.startTest = function() {
-		$location.path( "/startMainTest" ) ;
+	$scope.startTest = function( testType ) {
+	    $window.location.href = "/jeetest/exam/" + testType + "Test" ;
 	}
 	
 	// --- [END] Scope functions

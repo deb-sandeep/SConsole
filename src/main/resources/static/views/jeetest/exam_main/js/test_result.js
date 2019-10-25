@@ -1,7 +1,7 @@
-sConsoleApp.controller( 'JEETestResultController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, $location ) {
     
 	// ---------------- Scope variables --------------------------------------
-	$scope.$parent.navBarTitle = "Test Results" ;
+	$scope.$parent.navBarTitle = "JEE Main Test Results" ;
 	$scope.totalMarks = 0 ;
 	$scope.totalScore = 0 ;
 	$scope.totalNegativeMarks = 0 ;

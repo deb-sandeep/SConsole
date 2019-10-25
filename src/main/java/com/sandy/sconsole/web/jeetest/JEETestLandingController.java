@@ -27,16 +27,31 @@ public class JEETestLandingController {
         return "jeetest/config_adv/test_config" ;
     }
 
-    @RequestMapping( "/exam" )
-    public String exam() {
-        return "jeetest/exam/exam" ;
+    @RequestMapping( "/exam-landing" )
+    public String examLanding() {
+        return "jeetest/exam_landing/exam_landing" ;
+    }
+
+    @RequestMapping( "/exam-landing/availableExams" )
+    public String availableExams() {
+        return "jeetest/exam_landing/available_exams" ;
+    }
+
+    @RequestMapping( "/exam-landing/instructionsMain" )
+    public String instructionsJEEMain() {
+        return "jeetest/exam_landing/instructions_main" ;
+    }
+
+    @RequestMapping( "/exam-landing/instructionsAdv" )
+    public String instructionsJEEAdv() {
+        return "jeetest/exam_landing/instructions_adv" ;
     }
 
     @RequestMapping( "/analysis" )
     public String analysis() {
         return "jeetest/analysis/analysis" ;
     }
-    
+        
     @RequestMapping( "/revision" )
     public String revision() {
         return "jeetest/revision/revision" ;

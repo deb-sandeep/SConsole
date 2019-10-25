@@ -1,0 +1,257 @@
+<div id="section-tab-panel" class="container">
+  <div class="row">
+    <div class="col-sm-8">
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Physics' )"
+                ng-if="phySectionQuestionIndex > -1">
+        Physics
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Chemistry' )"
+                ng-if="chemSectionQuestionIndex > -1">
+        Chemistry
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Maths' )"
+                ng-if="mathSectionQuestionIndex > -1">
+        Mathematics
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" 
+                class="btn btn-info btn-lg action-btn"
+                data-toggle="modal" 
+                data-target="#questionPaperDialog"
+                ng-click="$parent.showQuestionPaper()">
+        <span class="glyphicon glyphicon-save"></span>
+        Download Question
+        </button>
+    </div>
+    <div class="col-sm-2" style="text-align:right;">
+        <span id="timer" class="badge">{{ secondsRemaining | duration }}</span>
+    </div>
+  </div>
+</div>
+
+<div id="split-pane">
+    <div id="question-display-panel">
+        <div id="question-display-scroll-pane">
+            <div id="q_top"></div>
+            <h3>Question {{$parent.currentQuestion.index + 1}}</h3>
+            <div class="rendered-question">
+	            <render-question-for-attempt></render-question-for-attempt>
+            </div>
+            <div id="q_bottom"></div>
+
+            <div id="scroll-bottom"
+                 ng-click="$parent.scrollBottom()">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span>
+            </div>
+            <div id="scroll-top"
+                 ng-click="$parent.scrollTop()">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span>
+            </div>
+        </div>
+        <div id="question-action-panel">
+            <button type="button" class="btn btn-success btn-lg action-btn"
+                    ng-click="$parent.saveAndNext()">
+            Save & Next
+            </button>
+            <button type="button" class="btn btn-warning btn-lg action-btn"
+                    ng-click="$parent.saveAndMarkForReview()">
+            Save & Mark for Review
+            </button>
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="$parent.clearResponse()">
+            Clear Response
+            </button>
+            <button type="button" class="btn btn-info btn-lg action-btn"
+                    ng-click="$parent.markForReviewAndNext()">
+            Mark for Review & Next
+            </button>
+        </div>
+        <div id="back-next-submit-panel">
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="$parent.showPreviousQuestion()">
+             &#8810; BACK
+            </button>
+            <button type="button" class="btn btn-default btn-lg action-btn"
+                    ng-click="$parent.showNextQuestion()">
+            NEXT &#8811;
+            </button>
+            <button type="button" 
+                    class="btn btn-success btn-lg pull-right action-btn"
+	                data-toggle="modal" 
+	                data-target="#submitConfirmationDialog">
+            SUBMIT
+            </button>
+            <button type="button" 
+                    class="btn btn-success btn-lg pull-right action-btn"
+                    ng-click="$parent.endCurrentLapAndStartNextLap()"
+                    ng-disabled="$parent.currentLapName == 'L3'">
+            Next Lap 
+            ( {{$parent.currentLapName}} 
+            <span class="glyphicon glyphicon-chevron-right"></span> 
+            {{$parent.nextLapName}} )
+            </button>
+        </div>        
+        <div id="pane-toggle-tab"
+             ng-click="$parent.toggleQuestionPalette()">
+            <span class="glyphicon glyphicon-menu-right"
+                  ng-show="!$parent.paletteHidden"></span>
+            <span class="glyphicon glyphicon-menu-left"
+                  ng-show="$parent.paletteHidden"></span>
+        </div>
+    </div>
+    <div id="question-palette-panel">
+        <div id="attempt-stat-panel">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="40px">
+                            <span class="ans-stat-symbol stat-not-visited">
+                            {{attemptSummary.notVisited}}
+                            </span>
+                        </td>
+                        <td>Not Visited</td>
+                        <td width="40px">
+                            <span class="ans-stat-symbol stat-not-answered">
+                            {{attemptSummary.notAnswered}}
+                            </span>
+                        </td>
+                        <td>Not Answered</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="ans-stat-symbol stat-attempted">
+                            {{attemptSummary.attempted}}
+                            </span>
+                        </td>
+                        <td>Attempted</td>
+                        <td>
+                            <span class="ans-stat-symbol stat-marked-for-review">
+                            {{attemptSummary.markedForReview}}
+                            </span>
+                        </td>
+                        <td>Marked for Review</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="ans-stat-symbol stat-ans-and-marked-for-review">
+                            {{attemptSummary.answeredAndMarkedForReview}}
+                            </span>
+                        </td>
+                        <td colspan="3">Answered & Marked for Review</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        </div>
+        <div id="question-control-dashboard">
+            <div>
+                <button ng-repeat="questionEx in $parent.questions"
+                        type="button" 
+                        class="btn btn-default q-control"
+                        ng-click="showQuestion( questionEx )"
+                        ng-class="getControlDashboardQuestionButtonStyle( questionEx )">
+                {{$index + 1}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="questionPaperDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:1000px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" 
+                class="close" 
+                data-dismiss="modal"
+                ng-click="$parent.hideQuestionPaper()">
+            &times;
+        </button>
+        <h4 class="modal-title">Question Paper:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:85vh;'>
+		    <div class="question-listing" 
+		         ng-repeat="questionEx in $parent.questions">
+		      <h4>Question {{$index + 1}}</h4>
+	          <render-question-on-full-question-paper></render-question-on-full-question-paper>
+		    </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="submitConfirmationDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:600px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Confirm submission</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div id="pre-submission-summary">
+            <h3>Exam Summary</h3>
+            <table align="center" class="pure-table pure-table-horizontal">
+                <tbody>
+                    <tr>
+                        <th>No of Questions</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{$parent.questions.length}}</td>
+                    </tr>
+                    <tr>
+                        <th>Answered</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{attemptSummary.attempted}}</td>
+                    </tr>
+                    <tr>
+                        <th>Not Answered</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{attemptSummary.notAnswered}}</td>
+                    </tr>
+                    <tr>
+                        <th>Marked for Review</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{attemptSummary.markedForReview}}</td>
+                    </tr>
+                    <tr>
+                        <th>Answered and Marked for Review</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{attemptSummary.answeredAndMarkedForReview}}</td>
+                    </tr>
+                    <tr>
+                        <th>Not Visited</th>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>{{attemptSummary.notVisited}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4>Are you sure you want to submit for final marking?</h4>
+            <h4>No changes will be allowed after submission.</h4>
+            <button type="button" 
+                    class="btn btn-default btn-md"
+                    data-dismiss="modal"
+                    ng-click="$parent.submitAnswers()">
+                YES
+            </button>
+            <button type="button" 
+                    class="btn btn-default btn-md"
+                    data-dismiss="modal">
+                NO
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

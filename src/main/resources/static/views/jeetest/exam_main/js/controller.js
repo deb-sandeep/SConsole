@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $location ) {
+sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $rootScope, $location ) {
     
     // ---------------- Local variables --------------------------------------
     var startTime = 0 ;
@@ -7,7 +7,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     // ---------------- Scope variables --------------------------------------
 	
 	$scope.alerts = [] ;
-	$scope.navBarTitle = "Landing" ;
+	$scope.navBarTitle = "JEEMain Practice Test" ;
 	$scope.interactingWithServer = false ;
 	
 	$scope.paletteHidden = false ;

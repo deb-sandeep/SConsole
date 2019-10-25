@@ -1,0 +1,76 @@
+<div style="padding: 0px; margin: 10px" align="center">
+	<table class="table table-bordered table-compact"
+		style="width: auto !important;">
+		<thead>
+			<tr class="success">
+				<th>ID</th>
+				<th>Type</th>
+				<th>Dur (min)</th>
+				<th>#Q Phy</th>
+				<th>#Q Chem</th>
+				<th>#Q Math</th>
+				<th>Topics</th>
+				<th>Take</th>
+			</tr>
+		</thead>
+		<tbody>
+	        <tr ng-repeat="test in testSummaries"
+	            class="test-summary-{{test.examType}}">
+	           <td>{{test.id}}</td>
+	           <td>{{test.examType}}</td>
+	           <td style="text-align:right;font-family:Courier;">{{test.duration*60 | duration}}</td>
+	           <td style="text-align:right;">{{test.numPhyQuestions}}</td>
+	           <td style="text-align:right;">{{test.numChemQuestions}}</td>
+	           <td style="text-align:right;">{{test.numMathQuestions}}</td>
+	           <td style="text-align:center;">
+	              <span class="glyphicon glyphicon-info-sign"
+	                    ng-click="showTopics( test )"
+	                    data-toggle="modal" 
+	                    data-target="#topicsDialog"
+	                    ng-show="actionVisible( test )"></span>
+	           </td>
+               <td style="text-align:center;">
+                  <span class="glyphicon glyphicon-paste"
+                        ng-click="takeTest( test )"
+                        ng-show="actionVisible( test )"></span>
+               </td>
+	        </tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="topicsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Topics covered:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:400px;'>
+        <h4>Physics</h4>
+        <ol>
+            <ul ng-repeat="topic in includedTopics[ 'IIT - Physics' ]">
+                {{topic}}
+            </ul>
+        </ol>
+        <hr>
+        <h4>Chemistry</h4>
+        <ol>
+            <ul ng-repeat="topic in includedTopics[ 'IIT - Chemistry' ]">
+                {{topic}}
+            </ul>
+        </ol>
+        <hr>
+        <h4>Maths</h4>
+        <ol>
+            <ul ng-repeat="topic in includedTopics[ 'IIT - Maths' ]">
+                {{topic}}
+            </ul>
+        </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
