@@ -27,6 +27,11 @@ public class JEEExamController {
         return "jeetest/exam/main_test" ;
     }
 
+    @RequestMapping( "/advTest" )
+    public String advTest() {
+        return "jeetest/exam/adv_test" ;
+    }
+
     @RequestMapping( "/testResult" )
     public String testResult() {
         return "jeetest/exam/test_result" ;
