@@ -1,1 +1,31 @@
-<h2>Advanced test exam page</h2>
+<div id="section-tab-panel" class="container">
+  <div class="row">
+    <div class="col-sm-9">
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Physics' )">
+        Physics
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Chemistry' )">
+        Chemistry
+        </button>
+        <button type="button" class="btn btn-default btn-lg action-btn"
+                ng-click="activateSection( 'IIT - Maths' )">
+        Mathematics
+        </button>
+    </div>
+    <div class="col-sm-1">
+        <button type="button" 
+                class="btn btn-info btn-lg action-btn"
+                data-toggle="modal" 
+                data-target="#questionPaperDialog"
+                ng-click="$parent.showQuestionPaper()">
+        <span class="glyphicon glyphicon-save"></span>
+        Question Paper
+        </button>
+    </div>
+    <div class="col-sm-2" style="text-align:right;">
+        <span id="timer" class="badge">{{ secondsRemaining | duration }}</span>
+    </div>
+  </div>
+</div>
