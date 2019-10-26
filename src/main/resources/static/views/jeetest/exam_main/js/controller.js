@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $rootScope, $location ) {
+sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $rootScope, $location, $window ) {
     
     // ---------------- Local variables --------------------------------------
     var startTime = 0 ;
@@ -91,8 +91,8 @@ sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $r
         var parameters = new URLSearchParams( window.location.search ) ;
         var testId = parameters.get( 'id' ) ;
         
-    	if( testId == null ) {
-    		$location.path( "/" ) ;
+    	if( testId == null || $scope.answersSubmitted == true ) {
+    	    $window.location.href = "/jeetest" ;
     	}
     	else {
     		// Remove any scrollbars from the viewport - this is a full screen SPA
@@ -426,18 +426,23 @@ sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $r
             function( response ){
                 console.log( response.data ) ;
                 
-                preProcessQuestions( response.data ) ;
                 $scope.testConfigIndex = response.data.testConfigIndex ;
-                
-                $scope.$broadcast( 'computeSectionIndices' ) ;
-                startTime = (new Date()).getTime() ;
-                $scope.showQuestion( $scope.questions[0] ) ;
-                
-                $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
-                $scope.startTimer() ;
-                
-        		$scope.testAttempt.testConfig = $scope.testConfigIndex ;
-        		$scope.saveTestAttempt() ;
+                if( $scope.testConfigIndex.attempted == true ) {
+                    console.log( "This test has already been attempted." ) ;
+                    $window.location.href = "/jeetest" ;
+                }
+                else {
+                    preProcessQuestions( response.data ) ;
+                    
+                    $scope.$broadcast( 'computeSectionIndices' ) ;
+                    startTime = (new Date()).getTime() ;
+                    
+                    $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
+                    $scope.startTimer() ;
+                    
+                    $scope.testAttempt.testConfig = $scope.testConfigIndex ;
+                    $scope.saveTestAttempt() ;
+                }
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;

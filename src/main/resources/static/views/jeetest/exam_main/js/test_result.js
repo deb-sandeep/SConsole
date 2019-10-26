@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, $location, $window ) {
     
 	// ---------------- Scope variables --------------------------------------
 	$scope.$parent.navBarTitle = "JEE Main Test Results" ;
@@ -28,8 +28,8 @@ sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, 
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
-	$scope.returnToTestIndex = function() {
-		$location.path( "/" ) ;
+	$scope.returnToDashboard = function() {
+	    $window.location.href = "/jeetest" ;
 	}
 	
 	$scope.selectQuestion = function( questionEx ) {
