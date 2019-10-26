@@ -42,7 +42,7 @@
                               style="color:red;"></span>
                         <span ng-show="!questionEx.isCorrectlyAnswered()"
                               class="glyphicon glyphicon-ok-circle"
-                              ng-click="showAwardGraceDialog( $index )">
+                              ng-click="showAwardGraceDialog( questionEx )">
                         </span>
                    </td>
                    <td>{{questionEx.getScore()}}</td>
@@ -90,8 +90,8 @@
         </div>
 	    <button id="return-to-test-index"
 	            class="btn btn-info btn-md"
-	            ng-click="returnToTestIndex()">
-	        Return to Test Index
+	            ng-click="returnToDashboard()">
+	        Return to Dashboard
 	        <span class="glyphicon glyphicon-chevron-right"></span>
 	    </button>
     </div>

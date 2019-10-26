@@ -1,4 +1,4 @@
-sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $location ) {
+sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $rootScope, $location, $window ) {
     
     // ---------------- Local variables --------------------------------------
     var startTime = 0 ;
@@ -7,11 +7,10 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     // ---------------- Scope variables --------------------------------------
 	
 	$scope.alerts = [] ;
-	$scope.navBarTitle = "Landing" ;
+	$scope.navBarTitle = "JEEMain Practice Test" ;
 	$scope.interactingWithServer = false ;
 	
 	$scope.paletteHidden = false ;
-	$scope.activeTest = null ;
 	
 	// This is populated with instances of QuestionEx
 	$scope.questions = [] ;
@@ -49,7 +48,6 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	// --- [START] Scope functions -------------------------------------------
 	
 	$scope.resetState = function() {
-		$scope.activeTest = null ;
 		$scope.alerts.length = 0 ;
 		$scope.paletteHidden = false ;
 		$scope.questions = [] ;
@@ -89,30 +87,20 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
 	}
 
     $scope.initializeController = function( attemptLapNames ) {
-    	if( $scope.activeTest == null ) {
-    		$location.path( "/" ) ;
+        
+        var parameters = new URLSearchParams( window.location.search ) ;
+        var testId = parameters.get( 'id' ) ;
+        
+    	if( testId == null || $scope.answersSubmitted == true ) {
+    	    $window.location.href = "/jeetest" ;
     	}
     	else {
     		// Remove any scrollbars from the viewport - this is a full screen SPA
     		var elements = document.getElementsByTagName( "body" ) ;
     		elements[0].style.overflowY = "hidden" ;
     		
-    		// Note that this route can get transitioned in from either the
-    		// instructions page or from the submit confirmation page.
-    		// In case we are coming in from the instruction page, the 
-    		// questions would need to be freshly loaded and the test started
-    		// afresh. However, if we are coming back from the submit confirmation
-    		// page, we don't have to recreate the full state - only 
-    		// the attempt summary and the section indexes.
-    		
-    		if( $scope.questions.length == 0 ) {
-    			loadTestConfiguration() ;
-    		}
-    		else {
-    			$scope.$broadcast( 'computeSectionIndices' ) ;
-    			$scope.showQuestion( $scope.questions[0] ) ;
-    		}
-    		
+            loadTestConfiguration( testId ) ;
+
     		$scope.attemptLapNames = attemptLapNames ;
     		for( var i=0; i<attemptLapNames.length; i++ ) {
     		    $scope.attemptLapDetails[ attemptLapNames[i] ] = {
@@ -283,7 +271,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     
     $scope.saveTestAttempt = function() {
     	
-        $scope.$parent.interactingWithServer = true ;
+        $scope.interactingWithServer = true ;
         $http.post( '/TestAttempt', $scope.testAttempt )
         .then ( 
             function( response ){
@@ -296,17 +284,17 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             }, 
             function( error ){
                 console.log( "Error saving test attempt on server." ) ;
-                $scope.$parent.addErrorAlert( "Could not save test attempt." ) ;
+                $scope.addErrorAlert( "Could not save test attempt." ) ;
             }
         )
         .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
+            $scope.interactingWithServer = false ;
         }) ;
     }
     
     $scope.endTestAttempt = function() {
         
-        $scope.$parent.interactingWithServer = true ;
+        $scope.interactingWithServer = true ;
         $http.post( '/TestAttempt', $scope.testAttempt )
         .then ( 
             function( response ){
@@ -316,11 +304,11 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             }, 
             function( error ){
                 console.log( "Error saving test attempt on server." ) ;
-                $scope.$parent.addErrorAlert( "Could not save test attempt." ) ;
+                $scope.addErrorAlert( "Could not save test attempt." ) ;
             }
         )
         .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
+            $scope.interactingWithServer = false ;
         }) ;
     }
     
@@ -332,7 +320,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
     			        "timeMarker = " + timeMarker + ", " + 
     			        "payload = " + payload + "]" ) ;
     	
-        $scope.$parent.interactingWithServer = true ;
+        $scope.interactingWithServer = true ;
         $http.post( '/ClickStreamEvent', {
         	'eventId'       : eventId,
         	'timeMarker'    : timeMarker,
@@ -344,11 +332,11 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             }, 
             function( error ){
                 console.log( "Error saving click stream event." ) ;
-                $scope.$parent.addErrorAlert( "Could not save click stream event." ) ;
+                $scope.addErrorAlert( "Could not save click stream event." ) ;
             }
         )
         .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
+            $scope.interactingWithServer = false ;
         }) ;
     }
     
@@ -414,7 +402,7 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
         
         console.log( "Saving test attempt lap snapshots." ) ;
         
-        $scope.$parent.interactingWithServer = true ;
+        $scope.interactingWithServer = true ;
         $http.post( '/TestAttempt/LapSnapshot', snapshots )
         .then ( 
             function( response ){
@@ -422,33 +410,39 @@ sConsoleApp.controller( 'ExamController', function( $scope, $http, $rootScope, $
             }, 
             function( error ){
                 console.log( "Error saving test lap snapshot on server." ) ;
-                $scope.$parent.addErrorAlert( "Could not save test attempt lap snapshot." ) ;
+                $scope.addErrorAlert( "Could not save test attempt lap snapshot." ) ;
             }
         )
         .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
+            $scope.interactingWithServer = false ;
         }) ;
     }
 
-    function loadTestConfiguration() {
+    function loadTestConfiguration( testId ) {
     	
         $scope.interactingWithServer = true ;
-        $http.get( '/TestConfiguration/' + $scope.activeTest.id )
+        $http.get( '/TestConfiguration/' + testId )
         .then( 
             function( response ){
                 console.log( response.data ) ;
                 
-                preProcessQuestions( response.data ) ;
                 $scope.testConfigIndex = response.data.testConfigIndex ;
-                
-                $scope.$broadcast( 'computeSectionIndices' ) ;
-                
-                $scope.secondsRemaining = $scope.activeTest.duration * 60 ;
-                $scope.startTimer() ;
-                
-        		startTime = (new Date()).getTime() ;
-        		$scope.testAttempt.testConfig = $scope.testConfigIndex ;
-        		$scope.saveTestAttempt() ;
+                if( $scope.testConfigIndex.attempted == true ) {
+                    console.log( "This test has already been attempted." ) ;
+                    $window.location.href = "/jeetest" ;
+                }
+                else {
+                    preProcessQuestions( response.data ) ;
+                    
+                    $scope.$broadcast( 'computeSectionIndices' ) ;
+                    startTime = (new Date()).getTime() ;
+                    
+                    $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
+                    $scope.startTimer() ;
+                    
+                    $scope.testAttempt.testConfig = $scope.testConfigIndex ;
+                    $scope.saveTestAttempt() ;
+                }
             }, 
             function( error ){
                 console.log( "Error getting test configuration from server." + error ) ;

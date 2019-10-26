@@ -408,7 +408,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		for( i=0; i<rawData.length; i++ ) {
 			var insight = rawData[i] ;
 			
-			insight.selected = false ;
+			insight.selected = true ;
 			
 			if( insight.subjectName == 'IIT - Physics' ) {
 				if( insight.totalQuestions > 0 ) {

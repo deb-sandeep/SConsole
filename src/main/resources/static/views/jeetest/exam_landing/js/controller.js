@@ -1,6 +1,11 @@
-sConsoleApp.controller( 'AdvInstructionController', function( $scope, $http, $location ) {
+sConsoleApp.controller( 'ExamLandingController', function( $scope, $http, $rootScope, $location ) {
     
-	$scope.$parent.navBarTitle = "Instructions for JEE Advanced" ;
+    // ---------------- Local variables --------------------------------------
+    
+    // ---------------- Scope variables --------------------------------------
+	
+	$scope.navBarTitle = "Landing" ;
+	$scope.activeTest = null ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -10,10 +15,14 @@ sConsoleApp.controller( 'AdvInstructionController', function( $scope, $http, $lo
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
-	// --- [END] Scope functions
-	
+    $scope.resetState = function() {
+        $scope.activeTest = null ;
+    }
+
+    // --- [END] Scope functions
+
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------
-	
+    
 	// --- [END] Local functions
 } ) ;

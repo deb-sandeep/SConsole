@@ -7,28 +7,18 @@ import org.springframework.web.bind.annotation.* ;
 @RequestMapping( "/jeetest/exam" )
 public class JEEExamController {
     
-    @RequestMapping( "/availableExams" )
-    public String availableExams() {
-        return "jeetest/exam/available_exams" ;
-    }
-    
-    @RequestMapping( "/instructionsMain" )
-    public String mainInstructions() {
-        return "jeetest/exam/instruction_main" ;
-    }
-    
-    @RequestMapping( "/instructionsAdv" )
-    public String advInstructions() {
-        return "jeetest/exam/instruction_adv" ;
-    }
-
     @RequestMapping( "/mainTest" )
     public String mainTest() {
-        return "jeetest/exam/main_test" ;
+        return "jeetest/exam_main/exam_main_base" ;
     }
 
-    @RequestMapping( "/testResult" )
-    public String testResult() {
-        return "jeetest/exam/test_result" ;
+    @RequestMapping( "/mainTestExam" )
+    public String mainTestExam() {
+        return "jeetest/exam_main/exam_main_test" ;
+    }
+
+    @RequestMapping( "/mainTestResult" )
+    public String mainTestResult() {
+        return "jeetest/exam_main/exam_main_result" ;
     }
 }

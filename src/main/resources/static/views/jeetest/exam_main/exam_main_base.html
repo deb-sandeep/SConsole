@@ -1,9 +1,10 @@
+<!-- Main JEE Exam page -->
 <!DOCTYPE html>
 <html ng-app="sConsoleApp">
 <head>
     <meta charset="ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Mock</title>
+    <title>JEE Mains - Practice Test</title>
 
     <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/app/app.css"/>
@@ -28,24 +29,24 @@
     </script>
 
     <script src="/js/app/ng/app-ng.js"></script>
-    <script src="/js/app/ng/jeetest/exam/rc_options.js"></script>
-    <script src="/js/app/ng/jeetest/exam/directive.js"></script>
-    <script src="/js/app/ng/jeetest/exam/route.js"></script>
-    <script src="/js/app/ng/jeetest/exam/filter.js"></script>
-    <script src="/js/app/ng/jeetest/exam/click_stream_event.js"></script>
-    <script src="/js/app/ng/jeetest/exam/exam.js"></script>
-    <script src="/js/app/ng/jeetest/exam/available_exams.js"></script>
-    <script src="/js/app/ng/jeetest/exam/instruction_main.js"></script>
-    <script src="/js/app/ng/jeetest/exam/instruction_adv.js"></script>
-    <script src="/js/app/ng/jeetest/exam/question_ex.js"></script>
-    <script src="/js/app/ng/jeetest/exam/ih/ih_helper.js"></script>
-    <script src="/js/app/ng/jeetest/exam/ih/sca_ih.js"></script>
-    <script src="/js/app/ng/jeetest/exam/ih/nt_ih.js"></script>
-    <script src="/js/app/ng/jeetest/exam/test_result.js"></script>
-    <script src="/js/app/ng/jeetest/exam/main_test.js"></script>
+    
+    <script src="/views/jeetest/exam_landing/js/common/click_stream_event.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/question_ex.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/rc_options.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/ih/ih_helper.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/ih/sca_ih.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/ih/nt_ih.js"></script>
+
+    <script src="/views/jeetest/exam_main/js/controller.js"></script>
+    <script src="/views/jeetest/exam_main/js/directive.js"></script>
+    <script src="/views/jeetest/exam_main/js/route.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/filter.js"></script>
+    <script src="/views/jeetest/exam_main/js/main_test.js"></script>
+    <script src="/views/jeetest/exam_main/js/test_result.js"></script>
+
 </head>
 
-<body ng-controller="ExamController"
+<body ng-controller="JEEMainExamBaseController"
       style="background-color: #FFFFFF;">
 
 <nav class="navbar navbar-inverse navbar-static-top"

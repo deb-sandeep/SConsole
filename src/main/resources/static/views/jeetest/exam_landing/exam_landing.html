@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="sConsoleApp">
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Mock</title>
+
+    <link rel="stylesheet" href="/js/lib/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/app/app.css"/>
+    <link rel="stylesheet" href="/css/app/exam.css"/>
+    <link rel="stylesheet" href="/css/pure/tables.css"/>
+    
+    <script src="/js/lib/angular.min.js"></script>
+    <script src="/js/lib/angular-route.min.js"></script>
+    <script src="/js/lib/jquery.min.js"></script>
+    <script src="/js/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/lib/dombuilder/DOMBuilder.min.js"></script>
+    
+    <script>
+        DOMBuilder.apply( window, 'dom' ) ;
+    </script>
+
+    <script src="/js/app/ng/app-ng.js"></script>
+    
+    <script src="/views/jeetest/exam_landing/js/controller.js"></script>
+    <script src="/views/jeetest/exam_landing/js/route.js"></script>
+    <script src="/views/jeetest/exam_landing/js/common/filter.js"></script>
+    <script src="/views/jeetest/exam_landing/js/available_exams.js"></script>
+    <script src="/views/jeetest/exam_landing/js/instructions.js"></script>
+</head>
+
+<body ng-controller="ExamLandingController"
+      style="background-color: #FFFFFF;">
+
+<nav class="navbar navbar-inverse navbar-static-top"
+     style="min-height:0px;margin-bottom:0px;">
+    <div class="container" style="width:100%">
+        <div class="row" >
+            <div class="col-sm-7">
+                [ <a href="/jeetest">JEE Exam</a> ] - {{navBarTitle}}
+            </div>
+            <div class="col-sm-5">
+                <!-- Space for controls common to module -->
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div ng-view></div>
+
+</body>
+</html>
