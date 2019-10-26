@@ -1,7 +1,7 @@
 sConsoleApp.config( function( $routeProvider ) {
 	$routeProvider
 	.when("/", {
-        templateUrl : "/jeetest/exam/mainTest",
+        templateUrl : "/jeetest/exam/mainTestExam",
         controller : "JEEMainTestController"
 	})
 	.when("/testResult", {

@@ -11,4 +11,14 @@ public class JEEExamController {
     public String mainTest() {
         return "jeetest/exam_main/exam_main_base" ;
     }
+
+    @RequestMapping( "/mainTestExam" )
+    public String mainTestExam() {
+        return "jeetest/exam_main/exam_main_test" ;
+    }
+
+    @RequestMapping( "/mainTestResult" )
+    public String mainTestResult() {
+        return "jeetest/exam_main/exam_main_result" ;
+    }
 }

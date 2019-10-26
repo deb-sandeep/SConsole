@@ -54,7 +54,6 @@ sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, 
 	}
 	
 	$scope.awardGraceToSelectedQuestion = function() {
-		console.log( "Awarding grace..." ) ;
 		
 		var preGraceScore = $scope.selectedQuestion.getScore() ;
 		var preGraceAttemptState = $scope.selectedQuestion.attemptState ;
@@ -100,21 +99,18 @@ sConsoleApp.controller( 'JEEMainTestResultController', function( $scope, $http, 
 	// --- [START] Local functions -------------------------------------------
     
     function initializeController() {
-    	if( $scope.$parent.activeTest == null || 
-    		$scope.$parent.questions.length == 0 ) {
+    	if( $scope.$parent.questions.length == 0 ) {
     		$location.path( "/" ) ;
     	}
     	else {
     		computeResult() ;
-    		$scope.$parent.activeTest = null ;
     	}
     }
     
 	function updateRootCauseOnServer( testAttemptId,
 									  testQuestionId,
 									  rootCause ) {
-		console.log( "Updating root cause on server." ) ;
-		
+	    
 		$scope.$parent.interactingWithServer = true ;
 		$http.post( '/TestAttempt/UpdateRootCause', {
 			testAttemptId  : testAttemptId,
