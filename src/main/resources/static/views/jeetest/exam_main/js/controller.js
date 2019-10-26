@@ -7,7 +7,7 @@ sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $r
     // ---------------- Scope variables --------------------------------------
 	
 	$scope.alerts = [] ;
-	$scope.navBarTitle = "JEEMain Practice Test" ;
+	$scope.navBarTitle = "JEE Main Practice Test" ;
 	$scope.interactingWithServer = false ;
 	
 	$scope.paletteHidden = false ;
