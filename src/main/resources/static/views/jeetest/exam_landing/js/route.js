@@ -8,8 +8,4 @@ sConsoleApp.config( function( $routeProvider ) {
 		templateUrl : "/jeetest/exam-landing/instructionsMain",
 		controller : "InstructionsController"
 	})
-	.when("/instructionsAdv", {
-		templateUrl : "/jeetest/exam-landing/instructionsAdv",
-		controller : "InstructionsController"
-	})
 });

@@ -5,6 +5,7 @@ sConsoleApp.controller( 'ExamLandingController', function( $scope, $http, $rootS
     // ---------------- Scope variables --------------------------------------
 	
 	$scope.navBarTitle = "Landing" ;
+	$scope.activeTest = null ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -14,7 +15,11 @@ sConsoleApp.controller( 'ExamLandingController', function( $scope, $http, $rootS
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
 	
-	// --- [END] Scope functions
+    $scope.resetState = function() {
+        $scope.activeTest = null ;
+    }
+
+    // --- [END] Scope functions
 
 	// -----------------------------------------------------------------------
 	// --- [START] Local functions -------------------------------------------

@@ -15,7 +15,8 @@ sConsoleApp.controller( 'InstructionsController', function( $scope, $http, $loca
 	// --- [START] Scope functions -------------------------------------------
 	
 	$scope.startTest = function( testType ) {
-	    $window.location.href = "/jeetest/exam/" + testType + "Test" ;
+	    $window.location.href = "/jeetest/exam/" + testType + "Test" + 
+	                            "?id=" + $scope.$parent.activeTest.id ;
 	}
 	
 	// --- [END] Scope functions
