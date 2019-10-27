@@ -5,3 +5,7 @@
 * Create data structure in controller
    - Section instances, linking
    - Section based question state stats
+* Test configuration loading and test level 
+  data structure initialization
+
+   

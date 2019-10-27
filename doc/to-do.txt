@@ -1,6 +1,3 @@
-* Test configuration loading and test level 
-  data structure initialization
-
 * Section tab 1 - overall sections information
    - UI
    - Button (no action)

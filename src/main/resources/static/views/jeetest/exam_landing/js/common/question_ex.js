@@ -17,6 +17,7 @@ function QuestionEx( q, attemptLaps ) {
 	this.interactionHandler = null ;
 	this.rootCause = null ;
 	this.lapDetails = {} ;
+    this.section = null ;
 	
 	var graceAwarded = false ;
 	var graceScore = 0 ;
