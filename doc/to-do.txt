@@ -1,6 +1,12 @@
-* section tab 1 - overall sections information
+* Test configuration loading and test level 
+  data structure initialization
+
+* Section tab 1 - overall sections information
    - UI
    - Button (no action)
    - Hover (i) - div show/hide
    - Question paper dialog button
-* section tab 2 - Lay out the sections as per test configuration
+   - Timer in minutes mm:ss
+   
+* Section tab 2 - Lay out the sections as per test configuration
+

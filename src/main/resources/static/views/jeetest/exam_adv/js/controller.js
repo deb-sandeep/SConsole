@@ -1,3 +1,24 @@
+function SectionStats() {
+    
+    this.numQuestions = 0 ;
+    this.numCorrectAnswers = 0 ;
+    this.numWrongAnswers = 0 ;
+    this.numNotVisited = 0 ;
+    this.numNotAnswered = 0 ;
+    this.numAttempted = 0 ;
+    this.numMarkedForReview = 0 ;
+    this.numAnsAndMarkedForReview = 0 ;
+}
+
+function Section() {
+    
+    this.displayName = null ;
+    this.subject = null ;
+    this.questions = [] ;
+    this.stats = new SectionStats() ;
+    this.nextSection = null ;
+}
+
 sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $rootScope, $location, $window ) {
     
     // ---------------- Local variables --------------------------------------
@@ -5,17 +26,21 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     var currentLapIndex = -1 ;
     
     // ---------------- Scope variables --------------------------------------
+
+    // Initialization context - these are populated during initialization
+    // and are considered read only going forward.
+    $scope.testConfigIndex = null ;
+    $scope.attemptLapNames = [] ;
+    $scope.overallSection = new Section() ;
+    $scope.sections = [] ;
     
+    // UI related variables. 
     $scope.alerts = [] ;
     $scope.navBarTitle = "JEE Advanced Practice Test" ;
-    $scope.interactingWithServer = false ;
-    
     $scope.paletteHidden = false ;
     
-    // This is populated with instances of QuestionEx
-    $scope.questions = [] ;
-    $scope.testConfigIndex = null ;
-    $scope.currentQuestion = null ;
+    // Exam scope related variables.
+    $scope.interactingWithServer = false ;
     $scope.secondsRemaining = 0 ;
     $scope.timeSpent = 0 ;
     $scope.timerActive = false ;
@@ -33,11 +58,12 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         numMarkedForReview : 0,
         numAnsAndMarkedForReview : 0
     } ;
+    $scope.attemptLapDetails = {} ;
     
-    $scope.attemptLapNames = [] ;
+    // Current question scope related variables
+    $scope.currentQuestion = null ;
     $scope.currentLapName = null ;
     $scope.nextLapName = null ;
-    $scope.attemptLapDetails = {} ;
     
     // -----------------------------------------------------------------------
     // --- [START] Controller initialization ---------------------------------
@@ -49,45 +75,8 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     // -----------------------------------------------------------------------
     // --- [START] Scope functions -------------------------------------------
     
-    $scope.resetState = function() {
-        $scope.alerts.length = 0 ;
-        $scope.paletteHidden = false ;
-        $scope.questions = [] ;
-        $scope.testConfigIndex = null ;
-        $scope.currentQuestion = null ;
-        $scope.secondsRemaining = 0 ;
-        $scope.timerActive = false ;
-        $scope.answersSubmitted = false ;
-        $scope.testAttempt = {
-            id : 0,
-            testConfig : null,
-            score : 0,
-            timeTaken : 0, 
-            numCorrectAnswers : 0,
-            numWrongAnswers : 0,
-            numNotVisited : 0,
-            numNotAnswered : 0,
-            numAttempted : 0,
-            numMarkedForReview : 0,
-            numAnsAndMarkedForReview : 0
-        } ;
-
-        $scope.attemptLapNames = [] ;
-        $scope.currentLapName = null ;
-        $scope.nextLapName = null ;
-        $scope.attemptLapDetails = {} ;
-
-        startTime = 0 ;
-    }
-    
-    $scope.addErrorAlert = function( msgString ) {
-        $scope.alerts.push( { type: 'danger', msg: msgString } ) ;
-    } ;
-    
-    $scope.dismissAlert = function( index ) {
-        $scope.alerts.splice( index, 1 ) ;
-    }
-
+    // This is called from the initialization logic of the JEEAdvTestController
+    // as JEEAdvTestController is loaded as the default route
     $scope.initializeController = function( attemptLapNames ) {
         
         console.log( "Initializing JEEAdvExamBaseController" ) ;
@@ -99,7 +88,8 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
             $window.location.href = "/jeetest" ;
         }
         else {
-            // Remove any scrollbars from the viewport - this is a full screen SPA
+            // Remove any scroll bars from the viewport - this is a 
+            // full screen single page application.
             var elements = document.getElementsByTagName( "body" ) ;
             elements[0].style.overflowY = "hidden" ;
             
@@ -116,29 +106,45 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         }
     }
     
-    $scope.toggleQuestionPalette = function() {
+    $scope.resetState = function() {
         
-        var palette = document.getElementById( "question-palette-panel" ) ;
-        var display = document.getElementById( "question-display-panel" ) ;
+        $scope.testConfigIndex = null ;
+        $scope.attemptLapNames = [] ;
+        $scope.overallSection = new Section() ;
+        $scope.sections = [] ;
         
-        if( $scope.paletteHidden ) {
-            palette.style.display = "block" ;
-            palette.style.width = "25%" ;
-            display.style.width = "75%" ;
-            $scope.paletteHidden = false ;
-            $scope.saveClickStreamEvent( 
-                    ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED, 
-                    null ) ;
-        }
-        else {
-            palette.style.display = "none" ;
-            palette.style.width = "0%" ;
-            display.style.width = "100%" ;
-            $scope.paletteHidden = true ;
-            $scope.saveClickStreamEvent( 
-                    ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED, 
-                    null ) ;
-        }
+        $scope.alerts.length = 0 ;
+        $scope.paletteHidden = false ;
+        
+        $scope.interactingWithServer = false ;
+        $scope.secondsRemaining = 0 ;
+        $scope.timeSpent = 0 ;
+        $scope.timerActive = false ;
+        $scope.answersSubmitted = false ;
+        $scope.testAttempt = {
+            id : 0,
+            testConfig : null,
+            score : 0,
+            timeTaken : 0, 
+            numCorrectAnswers : 0,
+            numWrongAnswers : 0,
+            numNotVisited : 0,
+            numNotAnswered : 0,
+            numAttempted : 0,
+            numMarkedForReview : 0,
+            numAnsAndMarkedForReview : 0
+        } ;
+        
+        // This contains an array of objects, each tracking start time, 
+        // end time and time spent for each corresponding lap
+        $scope.attemptLapDetails = {} ;
+
+        $scope.currentQuestion = null ;
+        $scope.currentLapName = null ;
+        $scope.nextLapName = null ;
+
+        startTime = 0 ;
+        currentLapIndex = -1 ;
     }
     
     $scope.startTimer = function() {
@@ -146,6 +152,35 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         setTimeout( handleTimerEvent, 1000 ) ;
     }
 
+    $scope.saveClickStreamEvent = function( eventId, payload ) {
+        
+        var timeMarker = (new Date()).getTime() - startTime ;
+        console.log( "ClickStreamEvent[ " + 
+                        "eventId = " + eventId + "," + 
+                        "timeMarker = " + timeMarker + ", " + 
+                        "payload = " + payload + "]" ) ;
+        
+        $scope.interactingWithServer = true ;
+        $http.post( '/ClickStreamEvent', {
+            'eventId'       : eventId,
+            'timeMarker'    : timeMarker,
+            'payload'       : payload,
+            'testAttemptId' : $scope.testAttempt.id
+        } )
+        .then ( 
+            function( response ){
+            }, 
+            function( error ){
+                console.log( "Error saving click stream event." ) ;
+                $scope.addErrorAlert( "Could not save click stream event." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
+    }
+    
+    // ----------- Question response related scope functions -----------------
     $scope.saveAndNext = function() {
         console.log( "Saving answer and showing next question." ) ;
     }
@@ -169,41 +204,9 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     $scope.showPreviousQuestion = function() {
     }
     
-    $scope.scrollBottom = function() {
-        $scope.saveClickStreamEvent( 
-                ClickStreamEvent.prototype.SCROLL_BOTTOM, 
-                $scope.currentQuestion.question.id ) ;
-        scrollToElement( "q_bottom" ) ;
-    }
-    
-    $scope.scrollTop = function() {
-        $scope.saveClickStreamEvent( 
-                ClickStreamEvent.prototype.SCROLL_TOP, 
-                $scope.currentQuestion.question.id ) ;
-        scrollToElement( "q_top" ) ;
-    }
-    
-    $scope.showQuestionPaper = function() {
-        $scope.saveClickStreamEvent( 
-                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
-                null ) ;
-    }
-    
-    $scope.hideQuestionPaper = function() {
-        $scope.saveClickStreamEvent( 
-                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
-                null ) ;
-    }
+    // ----------- Exam related scope functions -----------------------------
     
     $scope.submitAnswers = function() {
-    }
-    
-    $scope.getControlDashboardQuestionButtonStyle = function( questionEx ) {
-        var style = questionEx.getStatusStyle() ;
-        if( $scope.currentQuestion == questionEx ) {
-            style += " q-control-border" ;
-        }
-        return style ;
     }
     
     $scope.saveTestAttempt = function() {
@@ -234,37 +237,78 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     $scope.endTestAttempt = function() {
     }
     
-    $scope.saveClickStreamEvent = function( eventId, payload ) {
-        
-        var timeMarker = (new Date()).getTime() - startTime ;
-        console.log( "ClickStreamEvent[ " + 
-                        "eventId = " + eventId + "," + 
-                        "timeMarker = " + timeMarker + ", " + 
-                        "payload = " + payload + "]" ) ;
-        
-        $scope.interactingWithServer = true ;
-        $http.post( '/ClickStreamEvent', {
-            'eventId'       : eventId,
-            'timeMarker'    : timeMarker,
-            'payload'       : payload,
-            'testAttemptId' : $scope.testAttempt.id
-        } )
-        .then ( 
-            function( response ){
-            }, 
-            function( error ){
-                console.log( "Error saving click stream event." ) ;
-                $scope.addErrorAlert( "Could not save click stream event." ) ;
-            }
-        )
-        .finally(function() {
-            $scope.interactingWithServer = false ;
-        }) ;
-    }
-    
     $scope.endCurrentLapAndStartNextLap = function() {
         endCurrentLap() ;
         startNextLap() ;
+    }
+    
+    // ----------- UI related scope functions --------------------------------
+
+    $scope.addErrorAlert = function( msgString ) {
+        $scope.alerts.push( { type: 'danger', msg: msgString } ) ;
+    } ;
+    
+    $scope.dismissAlert = function( index ) {
+        $scope.alerts.splice( index, 1 ) ;
+    }
+    
+    $scope.toggleQuestionPalette = function() {
+        
+        var palette = document.getElementById( "question-palette-panel" ) ;
+        var display = document.getElementById( "question-display-panel" ) ;
+        
+        if( $scope.paletteHidden ) {
+            palette.style.display = "block" ;
+            palette.style.width = "25%" ;
+            display.style.width = "75%" ;
+            $scope.paletteHidden = false ;
+            $scope.saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED, 
+                    null ) ;
+        }
+        else {
+            palette.style.display = "none" ;
+            palette.style.width = "0%" ;
+            display.style.width = "100%" ;
+            $scope.paletteHidden = true ;
+            $scope.saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED, 
+                    null ) ;
+        }
+    }
+    
+    $scope.scrollBottom = function() {
+        $scope.saveClickStreamEvent( 
+                ClickStreamEvent.prototype.SCROLL_BOTTOM, 
+                $scope.currentQuestion.question.id ) ;
+        scrollToElement( "q_bottom" ) ;
+    }
+    
+    $scope.scrollTop = function() {
+        $scope.saveClickStreamEvent( 
+                ClickStreamEvent.prototype.SCROLL_TOP, 
+                $scope.currentQuestion.question.id ) ;
+        scrollToElement( "q_top" ) ;
+    }
+    
+    $scope.showQuestionPaper = function() {
+        $scope.saveClickStreamEvent( 
+                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
+                null ) ;
+    }
+    
+    $scope.hideQuestionPaper = function() {
+        $scope.saveClickStreamEvent( 
+                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
+                null ) ;
+    }
+    
+    $scope.getControlDashboardQuestionButtonStyle = function( questionEx ) {
+        var style = questionEx.getStatusStyle() ;
+        if( $scope.currentQuestion == questionEx ) {
+            style += " q-control-border" ;
+        }
+        return style ;
     }
     
     // --- [END] Scope functions
@@ -340,6 +384,37 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         }) ;
     }
 
+    function scrollToElement( id ) {
+        var myElement = document.getElementById( id ) ;
+        var topPos = myElement.offsetTop ;
+        document.getElementById( 'question-display-scroll-pane' ).scrollTop = topPos ;
+    }
+    
+    function handleTimerEvent() {
+        $scope.secondsRemaining-- ;
+        $scope.timeSpent++ ;
+        
+        $scope.attemptLapDetails[ $scope.currentLapName ].timeSpent++ ;
+        
+        if( $scope.currentQuestion != null ) {
+            $scope.currentQuestion.timeSpent++ ;
+            $scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
+        }
+        
+        if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
+            setTimeout( handleTimerEvent, 1000 ) ;
+        }
+        else {
+            $scope.timerActive = false ;
+            $scope.secondsRemaining = 0 ;
+            if( !$scope.answersSubmitted ) {
+                $scope.submitAnswers() ;
+            }
+        }
+        $scope.$digest() ;
+    }
+    
+    // ------------------- Initialization helpers ----------------------------
     function loadTestConfiguration( testId ) {
         
         console.log( "Loading test configuration - " + testId ) ;
@@ -432,36 +507,6 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         else {
             questionEx.interactionHandler = new NTInteractionHandler( questionEx, $rootScope ) ;
         }
-    }
-    
-    function scrollToElement( id ) {
-        var myElement = document.getElementById( id ) ;
-        var topPos = myElement.offsetTop ;
-        document.getElementById( 'question-display-scroll-pane' ).scrollTop = topPos ;
-    }
-    
-    function handleTimerEvent() {
-        $scope.secondsRemaining-- ;
-        $scope.timeSpent++ ;
-        
-        $scope.attemptLapDetails[ $scope.currentLapName ].timeSpent++ ;
-        
-        if( $scope.currentQuestion != null ) {
-            $scope.currentQuestion.timeSpent++ ;
-            $scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
-        }
-        
-        if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
-            setTimeout( handleTimerEvent, 1000 ) ;
-        }
-        else {
-            $scope.timerActive = false ;
-            $scope.secondsRemaining = 0 ;
-            if( !$scope.answersSubmitted ) {
-                $scope.submitAnswers() ;
-            }
-        }
-        $scope.$digest() ;
     }
     
     // --- [END] Local functions

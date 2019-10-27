@@ -1,0 +1,7 @@
+27/Oct
+---------------
+* Study the test configuration
+* Refactor existing controller
+* Create data structure in controller
+   - Section instances, linking
+   - Section based question state stats
