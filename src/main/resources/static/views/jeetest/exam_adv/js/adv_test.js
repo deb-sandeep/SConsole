@@ -70,6 +70,8 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                     timeSpent : 0
                 }
             }
+            
+            initializeHovers() ;
         }
     }
     
@@ -217,6 +219,27 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         else {
             qEx.interactionHandler = new NTInteractionHandler( qEx, $rootScope ) ;
         }
+    }
+    
+    function initializeHovers() {
+        
+        $( "#divtoshow" ).hide() ;
+        $( "#spanhovering" ).hover( function(event) {
+            console.log( event.clientY + ", " + event.clientX ) ;
+            
+            var leftPos  = $("#adv-sections-btn")[0].getBoundingClientRect().left   + $(window)['scrollLeft']();
+            var rightPos = $("#adv-sections-btn")[0].getBoundingClientRect().right  + $(window)['scrollLeft']();
+            var topPos   = $("#adv-sections-btn")[0].getBoundingClientRect().top    + $(window)['scrollTop']();
+            var bottomPos= $("#adv-sections-btn")[0].getBoundingClientRect().bottom + $(window)['scrollTop']();
+            
+            $( "#divtoshow" ).css( {
+                top: bottomPos + 2, 
+                left: leftPos 
+            }).show() ;
+        }, 
+        function() {
+            $("#divtoshow").hide();
+        });
     }
     
     // --- [END] Local functions
