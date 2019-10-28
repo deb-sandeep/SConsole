@@ -1,15 +1,14 @@
-* Section tab 2 - 
-    - Lay out the sections as per test configuration
-    - Check individual hovers
-
 * Split pane
     - User image section
     - Stats section
     - Section pallete    
     
+* Clicking on individual sections loads the section as active
+
 * Handling timer event
    - Add time spent to current question, current lap
    - Submit answers on timer expiry
+   
 * Lap transitions
     - tracking
     - snapshot

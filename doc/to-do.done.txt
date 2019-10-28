@@ -8,6 +8,10 @@
    - Hover (i) - div show/hide
    - Question paper dialog button
    - Timer in minutes mm:ss
+* Section tab 2 - 
+    - Lay out the sections as per test configuration
+    - Check individual hovers
+
    
 27/Oct
 ---------------
