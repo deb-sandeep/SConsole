@@ -41,6 +41,19 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // ----------- Exam related scope functions -----------------------------
     
     // ----------- UI related scope functions --------------------------------
+    $scope.initializeSectionHovers = function() {
+        setTimeout( function(){
+            var allSections = [ $scope.$parent.overallSection ] ;
+            allSections = allSections.concat( $scope.$parent.sections ) ;
+            
+            $( SEC_INFO_DIV_ID ).hide() ;
+            
+            for( var i=0; i<allSections.length; i++ ) {
+                initializeHoverForSection( allSections[i] ) ;
+            }
+        }, 100 ) ;
+    }
+    
     $scope.showQuestionPaper = function() {
         saveClickStreamEvent( 
                 ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
@@ -167,7 +180,6 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 }
                 else {
                     initializeExamDataStructures( response.data ) ;
-                    initializeSectionHovers() ;
                     
                     startTime = (new Date()).getTime() ;
                     
@@ -299,20 +311,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         }
     }
     
-    function initializeSectionHovers() {
-        var allSections = [ $scope.$parent.overallSection ] ;
-        allSections = allSections.concat( $scope.$parent.sections ) ;
-        
-        $( SEC_INFO_DIV_ID ).hide() ;
-
-        for( var i=0; i<allSections.length; i++ ) {
-            initializeHoverForSection( allSections[i] ) ;
-        }
-    }
-    
     function initializeHoverForSection( section ) {
-        
-        console.log( "Initializing hover for " + section.id ) ;
         
         var secBtnId = "#" + section.id + "-btn" ;
         var secInfoSpanId = "#" + section.id + "-info-span" ;
