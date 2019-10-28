@@ -192,7 +192,10 @@
     float: left;
     width: 29px;
     height: 29px;
+    padding-left:10px;
+    padding-top:3px;
     margin-right: 10px;
+    font-size:14px;
 }
 
 .answered {
@@ -201,6 +204,7 @@
 
 .not-answered {
     background-position: -42px -56px;
+    color:white;
 }
 
 .not-visited {
@@ -209,10 +213,12 @@
 
 .review {
     background-position: -75px -54px;
+    color:white;
 }
 
 .review-answered {
     background-position: -9px -87px;
+    color:white;
 }
 
 /* These are for showing status of answered questions in palette */

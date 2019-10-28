@@ -1,9 +1,9 @@
 <div id="adv-section-tab-panel" class="container">
   <div class="row">
     <div class="col-sm-9">
-        <button id="adv-sections-btn" type="button" class="btn btn-info btn-md action-btn">
+        <button id="overall-sec-btn" type="button" class="btn btn-info btn-md action-btn">
         Sections &nbsp;
-        <span id="spanhovering" class="glyphicon glyphicon-info-sign"></span>
+        <span id="overall-sec-info-span" class="glyphicon glyphicon-info-sign"></span>
         </button>
     </div>
     <div class="col-sm-1">
@@ -11,7 +11,7 @@
                 class="btn btn-info btn-md action-btn"
                 data-toggle="modal" 
                 data-target="#questionPaperDialog"
-                ng-click="$parent.showQuestionPaper()">
+                ng-click="showQuestionPaper()">
         <span class="glyphicon glyphicon-save"></span>
         Question Paper
         </button>
@@ -22,6 +22,86 @@
   </div>
 </div>
 
-<div id="divtoshow">
-    Hello there
+<div id="sec-info-div">
+  <div class="section-hover-div-header" style="width:100%">
+      {{currentHoverSection.displayName}}
+  </div>
+  <table width="100%"">
+    <tbody>
+      <tr>
+          <td width="40px">
+              <span class="stat-icon-small not-visited">
+              {{currentHoverSection.stats.numNotVisited}}
+              </span>
+          </td>
+          <td>Not Visited</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small not-answered">
+              {{currentHoverSection.stats.numNotAnswered}}
+              </span>
+          </td>
+          <td>Not Answered</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small answered">
+              {{currentHoverSection.stats.numAttempted}}
+              </span>
+          </td>
+          <td>Attempted</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small review">
+              {{currentHoverSection.stats.numMarkedForReview}}
+              </span>
+          </td>
+          <td>Marked for Review</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small review-answered">
+              {{currentHoverSection.stats.numAnsAndMarkedForReview}}
+              </span>
+          </td>
+          <td>Ans & Marked for Review</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="questionPaperDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:1000px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" 
+                class="close" 
+                data-dismiss="modal"
+                ng-click="hideQuestionPaper()">
+            &times;
+        </button>
+        <h4 class="modal-title">Question Paper:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:85vh;'>
+          <div ng-repeat="section in $parent.sections">
+            <p class="full-paper-sec-header">
+                {{section.displayName}} - {{section.questionType}}
+            </p>
+            <div class="question-listing" 
+                 ng-repeat="questionEx in section.questions">
+              <p class="full-paper-question-header">Question {{$index + 1}}</p>
+              <render-question-on-full-question-paper></render-question-on-full-question-paper>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

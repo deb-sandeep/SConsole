@@ -12,6 +12,7 @@ function SectionStats() {
 
 function Section() {
     
+    this.id = null ;
     this.displayName = null ;
     this.questionType = null ;
     this.questions = [] ;

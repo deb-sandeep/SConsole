@@ -7,8 +7,10 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // AMR - Answers marked for review
     // L3P - Level 3 prioritization
     // L2  - Level 3
+    var SEC_INFO_DIV_ID = "#sec-info-div" ;
     var currentLapIndex = -1 ;
     var startTime = 0 ;
+    var secSpanIdVsSectionMap = {} ;
     
     // ---------------- Scope variables --------------------------------------
 
@@ -17,6 +19,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.timeSpent = 0 ;
     $scope.timerActive = false ;
     
+    $scope.currentHoverSection = null ;
     $scope.currentQuestion = null ;
     $scope.currentLapName = null ;
     $scope.nextLapName = null ;
@@ -38,11 +41,85 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // ----------- Exam related scope functions -----------------------------
     
     // ----------- UI related scope functions --------------------------------
+    $scope.showQuestionPaper = function() {
+        saveClickStreamEvent( 
+                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
+                null ) ;
+    }
+    
+    $scope.hideQuestionPaper = function() {
+        saveClickStreamEvent( 
+                ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
+                null ) ;
+    }
     
     // --- [END] Scope functions
     
     // -----------------------------------------------------------------------
     // --- [START] Local functions -------------------------------------------
+    
+    // ------------------- Local utility functions ---------------------------
+    function startTimer() {
+        $scope.timerActive = true ;
+        setTimeout( handleTimerEvent, 1000 ) ;
+    }
+    
+    function handleTimerEvent() {
+        $scope.secondsRemaining-- ;
+        $scope.timeSpent++ ;
+
+        /*
+        $scope.attemptLapDetails[ $scope.currentLapName ].timeSpent++ ;
+        if( $scope.currentQuestion != null ) {
+            $scope.currentQuestion.timeSpent++ ;
+            $scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
+        }
+        */
+        
+        if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
+            setTimeout( handleTimerEvent, 1000 ) ;
+        }
+        else {
+            $scope.timerActive = false ;
+            $scope.secondsRemaining = 0 ;
+            /*
+            if( !$scope.answersSubmitted ) {
+                $scope.submitAnswers() ;
+            }
+            */
+        }
+        $scope.$digest() ;
+    }
+    
+    // ------------------- Server comm functions -----------------------------
+    function saveClickStreamEvent( eventId, payload ) {
+        
+        var timeMarker = (new Date()).getTime() - startTime ;
+        console.log( "ClickStreamEvent[ " + 
+                        "eventId = " + eventId + "," + 
+                        "timeMarker = " + timeMarker + ", " + 
+                        "payload = " + payload + "]" ) ;
+        
+        $scope.interactingWithServer = true ;
+        $http.post( '/ClickStreamEvent', {
+            'eventId'       : eventId,
+            'timeMarker'    : timeMarker,
+            'payload'       : payload,
+            'testAttemptId' : $scope.testAttempt.id
+        } )
+        .then ( 
+            function( response ){
+            }, 
+            function( error ){
+                console.log( "Error saving click stream event." ) ;
+                $scope.addErrorAlert( "Could not save click stream event." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
+    }
+    
     // ------------------- Initialization helpers ----------------------------
     function initializeController() {
         
@@ -70,8 +147,6 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                     timeSpent : 0
                 }
             }
-            
-            initializeHovers() ;
         }
     }
     
@@ -92,13 +167,14 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 }
                 else {
                     initializeExamDataStructures( response.data ) ;
+                    initializeSectionHovers() ;
                     
-                    /*
                     startTime = (new Date()).getTime() ;
                     
                     $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
                     startTimer() ;
-                    
+
+                    /*
                     $scope.$parent.testAttempt.testConfig = $scope.testConfigIndex ;
                     saveTestAttempt() ;
                     */
@@ -134,6 +210,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                             data.mathQuestions ) ;
 
         $scope.$parent.overallSection.displayName = "Sections" ;
+        $scope.$parent.overallSection.id = "overall-sec" ;
         $scope.$parent.overallSection.initializeStats() ;
     }
     
@@ -148,6 +225,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             var secQType = secQTypes[i] ;
             
             section = new Section() ;
+            section.id = secSubjectName.toLowerCase() + "-sec-" + (i+1) ; 
             section.displayName = secSubjectName + " SEC " + (i+1) ;
             section.questionType = secQType ;
 
@@ -221,24 +299,43 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         }
     }
     
-    function initializeHovers() {
+    function initializeSectionHovers() {
+        var allSections = [ $scope.$parent.overallSection ] ;
+        allSections = allSections.concat( $scope.$parent.sections ) ;
         
-        $( "#divtoshow" ).hide() ;
-        $( "#spanhovering" ).hover( function(event) {
-            console.log( event.clientY + ", " + event.clientX ) ;
+        $( SEC_INFO_DIV_ID ).hide() ;
+
+        for( var i=0; i<allSections.length; i++ ) {
+            initializeHoverForSection( allSections[i] ) ;
+        }
+    }
+    
+    function initializeHoverForSection( section ) {
+        
+        console.log( "Initializing hover for " + section.id ) ;
+        
+        var secBtnId = "#" + section.id + "-btn" ;
+        var secInfoSpanId = "#" + section.id + "-info-span" ;
+        
+        secSpanIdVsSectionMap[ secInfoSpanId ] = section ;
+        
+        $( secInfoSpanId ).hover( function( event ) {
             
-            var leftPos  = $("#adv-sections-btn")[0].getBoundingClientRect().left   + $(window)['scrollLeft']();
-            var rightPos = $("#adv-sections-btn")[0].getBoundingClientRect().right  + $(window)['scrollLeft']();
-            var topPos   = $("#adv-sections-btn")[0].getBoundingClientRect().top    + $(window)['scrollTop']();
-            var bottomPos= $("#adv-sections-btn")[0].getBoundingClientRect().bottom + $(window)['scrollTop']();
+            var sec = secSpanIdVsSectionMap[ "#" + event.currentTarget.id ] ;
+            $scope.currentHoverSection = sec ;
+            $scope.$digest() ;
             
-            $( "#divtoshow" ).css( {
+            var leftPos  = $( secBtnId )[0].getBoundingClientRect().left   + $(window)['scrollLeft']();
+            var bottomPos= $( secBtnId )[0].getBoundingClientRect().bottom + $(window)['scrollTop']();
+            
+            $( SEC_INFO_DIV_ID ).css( {
                 top: bottomPos + 2, 
                 left: leftPos 
             }).show() ;
         }, 
         function() {
-            $("#divtoshow").hide();
+            $scope.currentHoverSection = null ;
+            $( SEC_INFO_DIV_ID ).hide() ;
         });
     }
     

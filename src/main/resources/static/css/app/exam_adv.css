@@ -19,10 +19,37 @@
     font-weight:normal;
 }
 
-#divtoshow {
+#sec-info-div {
+	display : none;
 	position : absolute;
-	width : 200px;
-	height : 100px;
-	background-color: red ;
+	background-color : #daf7fe ;
+    border-style:solid ;
+    border-color:#d8dbe2 ;
+    border-width:1px;
 }
 
+#sec-info-div td {
+	font-size : 14px;
+	padding : 2px;
+}
+
+#sec-info-div .section-hover-div-header {
+    background-color : #b3e3fc ;
+	font-size : 15px;
+    padding : 5px;
+}
+
+.full-paper-sec-header {
+	width:100%;
+	padding:10px;
+    background-color : #b3e3fc ;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.full-paper-question-header {
+    width:100%;
+    padding:3px;
+    background-color : #e7e0ea ;
+    font-size: 14px;
+}
