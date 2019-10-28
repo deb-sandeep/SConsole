@@ -1,37 +1,44 @@
-<div id="adv-section-tab-panel-1" class="container">
-  <div class="row">
-    <div class="col-sm-9">
-        <button id="overall-sec-btn" type="button" class="btn btn-info btn-md action-btn">
-        Sections &nbsp;
-        <span id="overall-sec-info-span" class="glyphicon glyphicon-info-sign"></span>
-        </button>
+<div id="adv-exam-header">
+    <div id="adv-exam-section-headers">
+		<div id="adv-section-tab-panel-1" class="container">
+		  <div class="row">
+		    <div class="col-sm-9">
+		        <button id="overall-sec-btn" type="button" class="btn btn-info btn-md action-btn">
+		        Sections &nbsp;
+		        <span id="overall-sec-info-span" class="glyphicon glyphicon-info-sign"></span>
+		        </button>
+		    </div>
+		    <div class="col-sm-1">
+		        <button type="button" 
+		                class="btn btn-info btn-md action-btn"
+		                data-toggle="modal" 
+		                data-target="#questionPaperDialog"
+		                ng-click="showQuestionPaper()">
+		        <span class="glyphicon glyphicon-save"></span>
+		        Question Paper
+		        </button>
+		    </div>
+		    <div class="col-sm-2" style="text-align:right;">
+		        <span id="timer-adv" class="badge">{{ secondsRemaining | mmss }}</span>
+		    </div>
+		  </div>
+		</div>
+		
+		<div id="adv-section-tab-panel-2" class="container">
+		   <button ng-repeat="section in $parent.sections"
+		           ng-attr-id="{{ section.id + '-btn'}}" 
+		           type="button" 
+		           class="btn btn-default btn-md tab-panel-2-btn"
+		           attach-hover-handlers>
+		       {{section.displayName}} &nbsp;
+		       <span ng-attr-id="{{ section.id + '-info-span'}}" 
+		             class="glyphicon glyphicon-info-sign"></span>
+		   </button>
+		</div>
     </div>
-    <div class="col-sm-1">
-        <button type="button" 
-                class="btn btn-info btn-md action-btn"
-                data-toggle="modal" 
-                data-target="#questionPaperDialog"
-                ng-click="showQuestionPaper()">
-        <span class="glyphicon glyphicon-save"></span>
-        Question Paper
-        </button>
+    <div id="candidate-img-header">
+        <img src="/img/self.png">
     </div>
-    <div class="col-sm-2" style="text-align:right;">
-        <span id="timer-adv" class="badge">{{ secondsRemaining | mmss }}</span>
-    </div>
-  </div>
-</div>
-
-<div id="adv-section-tab-panel-2" class="container">
-   <button ng-repeat="section in $parent.sections"
-           ng-attr-id="{{ section.id + '-btn'}}" 
-           type="button" 
-           class="btn btn-default btn-md tab-panel-2-btn"
-           attach-hover-handlers>
-       {{section.displayName}} &nbsp;
-       <span ng-attr-id="{{ section.id + '-info-span'}}" 
-             class="glyphicon glyphicon-info-sign"></span>
-   </button>
 </div>
 
 <div id="sec-info-div">

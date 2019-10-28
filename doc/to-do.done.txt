@@ -11,6 +11,8 @@
 * Section tab 2 - 
     - Lay out the sections as per test configuration
     - Check individual hovers
+    - User image section
+    - Stats section
 
    
 27/Oct

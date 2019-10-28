@@ -1,9 +1,9 @@
-* Split pane
-    - User image section
-    - Stats section
-    - Section pallete    
+* UI
+    - Section pallete   
+    - Footer buttons 
     
 * Clicking on individual sections loads the section as active
+    - Question display
 
 * Handling timer event
    - Add time spent to current question, current lap
