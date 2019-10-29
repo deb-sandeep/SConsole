@@ -119,13 +119,15 @@
     width:100%;
     height:190px;
     background-color:#fff;
-    padding:15px;
+    padding:10px;
+	padding-top:20px;
     font-size:17px;
 }
 
 #adv-attempt-stat-panel td {
     font-size:14px;
-    padding:6px;
+    padding-top:10px;
+    padding-bottom:5px;
 }
 
 #palette-section-name {
@@ -173,3 +175,24 @@
     padding-top:7px;
 }
 
+.selected-section {
+    background-color: #649def  !important;
+    color: white ;
+}
+
+#adv-question-display-scroll-pane {
+    position:relative;
+    width:100%;
+    height:calc(100vh - 177px);
+    padding-left:10px;
+    overflow:auto;
+    background-color:#ffffff;
+}
+
+#adv-question-display-header {
+    border: 1px solid #dddbe4;
+	font-size: 17px;
+	font-weight: bold;
+	padding: 3px;
+	padding-left:10px;
+}

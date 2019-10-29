@@ -1,3 +1,12 @@
+29/Oct
+---------------
+* UI
+    - Section pallete   
+    - Footer buttons 
+* Clicking on individual sections loads the section as active
+    - Question display
+* Question section instruction display
+
 28/Oct
 ---------------
 * section span vs section lookup map

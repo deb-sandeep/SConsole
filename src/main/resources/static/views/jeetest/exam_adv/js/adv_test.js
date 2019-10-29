@@ -21,6 +21,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.paletteHidden = false ;
     
     $scope.currentHoverSection = null ;
+    $scope.currentSection = null ;
     $scope.currentQuestion = null ;
     $scope.currentLapName = null ;
     $scope.nextLapName = null ;
@@ -38,10 +39,64 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // --- [START] Scope functions -------------------------------------------
     
     // ----------- Question response related scope functions -----------------
+    $scope.saveAndNext = function() {
+        console.log( "Saving answer and showing next question." ) ;
+    }
+    
+    $scope.saveAndMarkForReview = function() {
+        console.log( "Saving answer, marking for review and showing next question." ) ;
+    }
+    
+    $scope.clearResponse = function() {
+    }
+    
+    $scope.markForReviewAndNext = function() {
+    }
+    
+    $scope.showQuestion = function( questionEx ) {
+    }
+    
+    $scope.showNextQuestion = function() {
+    }
+    
+    $scope.showPreviousQuestion = function() {
+    }
     
     // ----------- Exam related scope functions -----------------------------
+    $scope.selectSection = function( section ) {
+        $scope.currentSection = section ;
+        $scope.showQuestion( section.questions[0] ) ;
+    }
+    
+    $scope.showQuestion = function( questionEx ) {
+        if( questionEx != null ) {
+            $scope.currentQuestion = questionEx ;
+            if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
+                $scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
+            }
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.QUESTION_VISITED, 
+                    "" + questionEx.question.id ) ;
+            refreshStats( questionEx ) ;
+        }
+    }
     
     // ----------- UI related scope functions --------------------------------
+    $scope.getControlDashboardQuestionButtonStyle = function( questionEx ) {
+        var style = questionEx.getStatusStyle() ;
+        if( $scope.currentQuestion == questionEx ) {
+            style += " q-control-border" ;
+        }
+        return style ;
+    }
+    
+    $scope.getSectionTabClass = function( section ) {
+        if( $scope.currentSection == section ) {
+            return "selected-section" ;
+        }
+        return "" ;
+    }
+    
     $scope.initializeSectionHovers = function() {
         setTimeout( function(){
             var allSections = [ $scope.$parent.overallSection ] ;
@@ -130,6 +185,40 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         $scope.$digest() ;
     }
     
+    function refreshStats( questionEx ) {
+        refreshSectionStats( questionEx.section ) ;
+        refreshSectionStats( $scope.$parent.overallSection ) ;
+    }
+    
+    function refreshSectionStats( section )  {
+        
+        section.stats.numNotVisited = 0 ;
+        section.stats.numNotAnswered = 0 ;
+        section.stats.numAttempted = 0 ;
+        section.stats.numMarkedForReview = 0 ;
+        section.stats.numAnsAndMarkedForReview = 0 ;
+
+        for( var i=0; i<section.questions.length; i++ ) {
+            
+            var q = section.questions[i] ;
+            if( q.attemptState == AttemptState.prototype.NOT_VISITED ) {
+                section.stats.numNotVisited++ ;
+            }
+            else if( q.attemptState == AttemptState.prototype.NOT_ANSWERED ) {
+                section.stats.numNotAnswered++ ;
+            }
+            else if( q.attemptState == AttemptState.prototype.ATTEMPTED ) {
+                section.stats.numAttempted++ ;
+            }
+            else if( q.attemptState == AttemptState.prototype.MARKED_FOR_REVIEW ) {
+                section.stats.numMarkedForReview++ ;
+            }
+            else if( q.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
+                section.stats.numAnsAndMarkedForReview++ ;
+            }
+        }
+    }
+    
     // ------------------- Server comm functions -----------------------------
     function saveClickStreamEvent( eventId, payload ) {
         
@@ -211,6 +300,8 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                     
                     $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
                     startTimer() ;
+                    
+                    $scope.selectSection( $scope.$parent.sections[0] ) ;
 
                     /*
                     $scope.$parent.testAttempt.testConfig = $scope.testConfigIndex ;

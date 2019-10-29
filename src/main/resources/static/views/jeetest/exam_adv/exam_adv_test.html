@@ -29,6 +29,8 @@
 		           ng-attr-id="{{ section.id + '-btn'}}" 
 		           type="button" 
 		           class="btn btn-default btn-md tab-panel-2-btn"
+		           ng-class="getSectionTabClass( section )"
+		           ng-click="selectSection( section )"
 		           attach-hover-handlers>
 		       {{section.displayName}} &nbsp;
 		       <span ng-attr-id="{{ section.id + '-info-span'}}" 
@@ -43,6 +45,27 @@
 
 <div id="adv-question-control-split-pane">
     <div id="adv-question-display-panel">
+        <div id="adv-question-display-header">
+        Question No. {{currentQuestion.index}}
+        </div>
+        <div id="adv-question-display-scroll-pane">
+            <div id="q_top"></div>
+            <img ng-src="{{'/img/' + currentQuestion.section.questionType + '_instructions.jpg'}}"
+                 ng-if="currentQuestion != null"/>
+            <p>
+            <div class="rendered-question">
+                <render-question-for-attempt></render-question-for-attempt>
+            </div>
+            <div id="q_bottom"></div>
+            <div id="scroll-bottom"
+                 ng-click="$parent.scrollBottom()">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span>
+            </div>
+            <div id="scroll-top"
+                 ng-click="$parent.scrollTop()">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span>
+            </div>
+        </div>
         <div id="pane-toggle-tab"
              ng-click="toggleQuestionPalette()">
             <span class="glyphicon glyphicon-menu-right"
@@ -56,15 +79,15 @@
             <table width="100%">
                 <tbody>
                     <tr>
-                        <td width="40px">
+                        <td width="30px">
                             <span class="stat-icon-small not-visited">
-                            {{attemptSummary.notVisited}}
+                            {{currentSection.stats.numNotVisited}}
                             </span>
                         </td>
                         <td>Not Visited</td>
-                        <td width="40px">
+                        <td width="30px">
                             <span class="stat-icon-small not-answered">
-                            {{attemptSummary.notAnswered}}
+                            {{currentSection.stats.numNotAnswered}}
                             </span>
                         </td>
                         <td>Not Answered</td>
@@ -72,13 +95,13 @@
                     <tr>
                         <td>
                             <span class="stat-icon-small answered">
-                            {{attemptSummary.attempted}}
+                            {{currentSection.stats.numAttempted}}
                             </span>
                         </td>
                         <td>Attempted</td>
                         <td>
                             <span class="stat-icon-small review">
-                            {{attemptSummary.markedForReview}}
+                            {{currentSection.stats.numMarkedForReview}}
                             </span>
                         </td>
                         <td>Marked for Review</td>
@@ -86,7 +109,7 @@
                     <tr>
                         <td>
                             <span class="stat-icon-small review-answered">
-                            {{attemptSummary.answeredAndMarkedForReview}}
+                            {{currentSection.stats.numAnsAndMarkedForReview}}
                             </span>
                         </td>
                         <td colspan="3">Answered & Marked for Review</td>
@@ -95,11 +118,11 @@
             </table>
         </div>
         <div id="palette-section-name">
-        PHY SEC 1
+        {{currentSection.displayName}}
         </div>
         <div id="adv-question-control-dashboard">
             <div>
-                <button ng-repeat="questionEx in $parent.questions"
+                <button ng-repeat="questionEx in currentSection.questions"
                         type="button" 
                         class="btn btn-default q-control"
                         ng-click="showQuestion( questionEx )"

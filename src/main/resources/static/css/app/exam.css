@@ -144,9 +144,7 @@
 #scroll-top {
     position: relative;
     float:right;
-    right: 0px;
     font-size: 40px;
-    bottom: 10px;
     color: cornflowerblue;
 }
 
@@ -156,6 +154,7 @@
     font-size: 40px;
     top: 10px;
     color: cornflowerblue;
+    padding-right:5px;
 }
 
 .action-btn {
