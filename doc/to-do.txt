@@ -1,4 +1,8 @@
-
+* Instruction handlers
+    - MCA
+    - LCT
+    - MMT
+    
 * Handling timer event
    - Add time spent to current question, current lap
    - Submit answers on timer expiry

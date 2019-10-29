@@ -185,14 +185,42 @@
     width:100%;
     height:calc(100vh - 177px);
     padding-left:10px;
+    padding-right:10px;
     overflow:auto;
     background-color:#ffffff;
 }
 
 #adv-question-display-header {
-    border: 1px solid #dddbe4;
 	font-size: 17px;
 	font-weight: bold;
 	padding: 3px;
 	padding-left:10px;
 }
+
+.section-instruction-div {
+	padding:5px;
+	border: 1px solid #cbcacc;
+	width: 90%;
+	font-size:13px;
+}
+
+.section-instruction-div>ul {
+    margin-left: 0px;
+    padding-inline-start: 20px;
+}
+
+.section-instruction-div li {
+	line-height: normal;
+	margin: 0 0 5px 0;
+}
+
+.section-instruction-div li li {
+    line-height: normal;
+    margin: 0 0 2px 0;
+}
+
+.marks-desc {
+	width:100px;
+	display:inline-block;
+}
+

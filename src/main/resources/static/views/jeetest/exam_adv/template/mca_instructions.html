@@ -1,0 +1,26 @@
+<div class="section-instruction-div">
+<center>
+    <strong>
+    SECTION {{currentQuestion.section.sectionNumber}}
+    &nbsp;
+    ( Maximum Marks: {{currentQuestion.section.maxMarks }} )
+    </strong>
+</center>
+<ul>
+    <li>This section contains {{currentQuestion.section.stats.numQuestions}} questions. Each 
+        question has FOUR options for correct answer(s). ONE OR MORE THAN ONE
+        of these four option(s) is (are) correct option(s). For each quesiton,
+        choose the correct option(s) to answer the question. </li>
+    <li>Answer to each question will be evaluated according to the following
+        marking scheme:
+        <ul>
+	        <li><span class="marks-desc"><i>Full marks</i></span> : +4 If only (all) the correct option(s) are chosen.</li>
+	        <li><span class="marks-desc"><i>Partial marks</i></span> : +3 If all the four options are correct but only three options are chosen.</li>
+	        <li><span class="marks-desc"><i>Partial marks</i></span> : +2 If three or more options are correct but only TWO options are chosen, both of which are correct options.</li>
+	        <li><span class="marks-desc"><i>Partial marks</i></span> : +1 If two or more options are correct but only ONE option is chosen and is a correct option.</li>
+	        <li><span class="marks-desc"><i>Zero marks</i></span> : 0 If none of the options are chosen (i.e. question is unanswered).</li>
+	        <li><span class="marks-desc"><i>Negative marks</i></span> : -2 In all other cases.</li>
+        </ul>
+    </li>
+</ul>
+</div>

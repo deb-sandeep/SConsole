@@ -355,6 +355,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             
             section = new Section() ;
             section.id = secSubjectName.toLowerCase() + "-sec-" + (i+1) ; 
+            section.sectionNumber = (i+1) ;
             section.displayName = secSubjectName + " SEC " + (i+1) ;
             section.questionType = secQType ;
 
@@ -379,11 +380,12 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 lastSection.nextSection = section ;
             }
 
+            section.computeSectionMaxMarks() ;
             section.initializeStats() ;
             $scope.$parent.sections.push( section ) ;
         }
     }
-
+    
     function getLastSection() {
 
         var allSections = $scope.$parent.sections ;

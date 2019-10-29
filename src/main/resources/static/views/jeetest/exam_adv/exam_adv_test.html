@@ -50,8 +50,21 @@
         </div>
         <div id="adv-question-display-scroll-pane">
             <div id="q_top"></div>
-            <img ng-src="{{'/img/' + currentQuestion.section.questionType + '_instructions.jpg'}}"
-                 ng-if="currentQuestion != null"/>
+            <div ng-if="currentQuestion.question.questionType == 'SCA'"
+                 ng-include="'/views/jeetest/exam_adv/template/sca_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'MCA'"
+                 ng-include="'/views/jeetest/exam_adv/template/mca_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'NT'"
+                 ng-include="'/views/jeetest/exam_adv/template/nt_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'LCT'"
+                 ng-include="'/views/jeetest/exam_adv/template/lct_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'MMT'"
+                 ng-include="'/views/jeetest/exam_adv/template/mmt_instructions.html'">
+            </div>
             <p>
             <div class="rendered-question">
                 <render-question-for-attempt></render-question-for-attempt>

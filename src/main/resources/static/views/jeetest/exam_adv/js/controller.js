@@ -13,15 +13,35 @@ function SectionStats() {
 function Section() {
     
     this.id = null ;
+    this.sectionNumber = 0 ;
     this.displayName = null ;
     this.questionType = null ;
     this.questions = [] ;
     this.stats = new SectionStats() ;
     this.nextSection = null ;
+    this.maxMarks = 0 ;
 
     this.initializeStats = function() {
         this.stats.numQuestions = this.questions.length ;
         this.stats.numNotVisited = this.questions.length ;
+    }
+
+    this.computeSectionMaxMarks = function() {
+        if( this.questionType == 'SCA' ) {
+            this.maxMarks = this.questions.length * 3 ;
+        }
+        else if( this.questionType == 'MCA' ) {
+            this.maxMarks = this.questions.length * 4 ;
+        }
+        else if( this.questionType == 'NT' ) {
+            this.maxMarks = this.questions.length * 3 ;
+        }
+        else if( this.questionType == 'LCT' ) {
+            this.maxMarks = this.questions.length * 3 ;
+        }
+        else if( this.questionType == 'MMT' ) {
+            this.maxMarks = this.questions.length * 3 ;
+        }
     }
 }
 
