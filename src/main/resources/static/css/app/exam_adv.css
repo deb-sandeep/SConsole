@@ -92,3 +92,56 @@
     background-color : #e7e0ea ;
     font-size: 14px;
 }
+
+#adv-question-control-split-pane {
+    width: 100%;
+    height: calc(100vh - 178px);
+    display: flex;
+}
+
+#adv-question-display-panel {
+    position:relative;
+    width: 80%;
+    height: 100%;
+    background-color: green;
+}
+
+#adv-question-palette-panel {
+    position:relative;
+    width: 20%;
+    height: 100%;
+    border-style:hidden;
+    border-left-style:solid;
+    border-color:#f4f4f4;
+    border-width:3px;
+    background-color: brown;
+}
+
+#adv-footer {
+    position:absolute;
+    bottom:0px;
+    width:100%;
+    height:50px;
+    background-color:#ffffff;
+}
+
+#adv-question-action-panel {
+    position:relative;
+    width: 80%;
+    height: 100%;
+    display: inline-block;
+    padding-left:20px;
+    padding-right:20px;
+    padding-top:7px;
+    border: 1px solid #c4c1c8;
+}
+
+#adv-submit-btn-panel {
+    position:relative;
+    width:19%;
+    height: 100%;
+    display: inline-block;
+    padding-left:20px;
+    padding-top:7px;
+}
+

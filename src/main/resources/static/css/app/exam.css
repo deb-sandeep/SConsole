@@ -61,7 +61,6 @@
 #split-pane {
     width: 100%;
     height: calc(100vh - 32px - 60px);
-
     display: flex;
 }
 

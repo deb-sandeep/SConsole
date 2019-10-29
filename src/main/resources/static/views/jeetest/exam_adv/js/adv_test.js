@@ -18,6 +18,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.secondsRemaining = 0 ;
     $scope.timeSpent = 0 ;
     $scope.timerActive = false ;
+    $scope.paletteHidden = false ;
     
     $scope.currentHoverSection = null ;
     $scope.currentQuestion = null ;
@@ -64,6 +65,31 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         saveClickStreamEvent( 
                 ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
                 null ) ;
+    }
+    
+    $scope.toggleQuestionPalette = function() {
+        
+        var palette = document.getElementById( "adv-question-palette-panel" ) ;
+        var display = document.getElementById( "adv-question-display-panel" ) ;
+        
+        if( $scope.paletteHidden ) {
+            palette.style.display = "block" ;
+            palette.style.width = "20%" ;
+            display.style.width = "80%" ;
+            $scope.paletteHidden = false ;
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED, 
+                    null ) ;
+        }
+        else {
+            palette.style.display = "none" ;
+            palette.style.width = "0%" ;
+            display.style.width = "100%" ;
+            $scope.paletteHidden = true ;
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED, 
+                    null ) ;
+        }
     }
     
     // --- [END] Scope functions

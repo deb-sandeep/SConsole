@@ -43,7 +43,6 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     // UI related variables. 
     $scope.alerts = [] ;
     $scope.navBarTitle = "JEE Advanced Practice Test" ;
-    $scope.paletteHidden = false ;
     
     // Exam scope related variables.
     $scope.interactingWithServer = false ;
