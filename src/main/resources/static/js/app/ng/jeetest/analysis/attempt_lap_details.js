@@ -75,6 +75,7 @@ function QuestionAttemptDetails( question, attempt, lapNames, examType ) {
     this.lapAttemptDetailMap = {} ;
     this.totalTimeSpent = 0 ;
     this.answeredInLap = "" ;
+    this.selected = false ;
     
     this.initialize = function() {
         for( var i=0; i<lapNames.length; i++ ) {
@@ -172,6 +173,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     $scope.lapCorrects = {} ;
     $scope.lapAvgQTime = {} ;
     $scope.numAbandoned = 0 ;
+    $scope.selectVisibleRows = false ;
 
     // -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -331,6 +333,29 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         else {
             $scope.$parent.addErrorAlert( "Please provide root cause." ) ;
         }
+    }
+    
+    $scope.toggleVisibleRowSelection = function() {
+        for( var i=0; i<$scope.qaDetails.length; i++ ) {
+            var qaDetail = $scope.qaDetails[i] ;
+            qaDetail.selected = false ;
+            if( $scope.selectVisibleRows ) {
+                qaDetail.selected = $scope.determineVisibility( qaDetail ) ;
+            }
+        }
+    }
+    
+    $scope.getSelectedQuestionIds = function() {
+        var str = "delete from mocktest_question_master where id in ( " ;
+        var ids = [] ;
+        for( var i=0; i<$scope.qaDetails.length; i++ ) {
+            var qaDetail = $scope.qaDetails[i] ;
+            if( qaDetail.selected ) {
+                ids.push( qaDetail.question.id ) ;
+            }
+        }
+        str += ids.join() + " ) ;"
+        return str ;
     }
     
 	// --- [END] Scope functions
