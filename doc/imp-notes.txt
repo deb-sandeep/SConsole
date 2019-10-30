@@ -1,3 +1,12 @@
+Strategy hardening pruning of attempted questions
+-------------------------------------------------------------------
+1. SConsole data refresh on local (call it baseline)
+2. Create question paper on local
+3. Attempt test on local
+4. Select SQL for question deletion
+5. Execute SQL on sconsole
+6. SConsole data refresh
+
 Raspberry Pi Hacks to make sure SConsole is usable
 ================================================================================
 
