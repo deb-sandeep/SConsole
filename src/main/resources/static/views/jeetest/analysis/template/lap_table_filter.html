@@ -86,8 +86,9 @@
     <div id="timeSpentChoice" class="panel-collapse collapse">
         <select id="timeSpentChoiceList" 
                 class="form-control" 
-                size=4
-                ng-model="searchCriteria.timeSpentChoice"
+                size=9
+                multiple
+                ng-model="searchCriteria.timeSpentChoices"
                 ng-options="obj for obj in searchMaster.timeSpentChoices">
         </select>
     </div>
