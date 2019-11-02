@@ -10,6 +10,15 @@ LapAutomata.prototype.mainStrategyA = {
             "q-not-answered"              : "L3"
         }
     },
+    "L2P" : {
+        transitions : {
+            "q-not-visited"               : "XXX",
+            "q-attempted"                 : "ANS",
+            "q-ans-and-marked-for-review" : "AMR",
+            "q-marked-for-review"         : "L2",
+            "q-not-answered"              : "L3"
+        }
+    },
     "L2" : {
         transitions : {
             "q-not-visited"               : "L3",
@@ -129,10 +138,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         subjectNames : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
         questionTypes : [ "All", "SCA", "NT" ],
         resultTypes : [ "All", "Only Correct", "Only Wrong" ],
-        attemptLaps : [ "L1", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
+        attemptLaps : [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
         timeSpentChoices : [ "Any",
-                      "< 1 min", "< 2 min", "< 3 min", "< 5 min", 
-                      "> 1 min", "> 2 min", "> 3 min", "> 5 min" ],
+                      "> 1 min", "> 2 min", "> 3 min", "> 5 min", 
+                      "< 1 min", "< 2 min", "< 3 min", "< 5 min" ],
         rcOptions : new RCOptions().choices 
     } ;
     
@@ -158,7 +167,8 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         questionType : $scope.searchMaster.questionTypes[0],
         resultType : $scope.searchMaster.resultTypes[0],
         attemptLaps : [],
-        timeSpentChoice : $scope.searchMaster.timeSpentChoices[0],
+        answeredInLaps : [],
+        timeSpentChoices : [$scope.searchMaster.timeSpentChoices[0]],
         errorRCAChoices : []
     } ;
     
@@ -174,7 +184,6 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     $scope.lapAvgQTime = {} ;
     $scope.numAbandoned = 0 ;
     $scope.selectVisibleRows = false ;
-
     // -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
     fetchLapDetailsRawData( $scope.testAttemptId ) ;
@@ -182,6 +191,11 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Scope functions -------------------------------------------
+    
+    $scope.refreshData = function() {
+        fetchLapDetailsRawData( $scope.testAttemptId ) ;
+    }
+    
     $scope.attemptDetailTimeHighlight = function( time ) {
         if( time <= 60 ) {
             return "lap-detail-cell-bg-a" ;
@@ -284,6 +298,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             return false ;
         }
         
+        if( isFilteredByAnsweredInLaps( qaDetail ) ) {
+            return false ;
+        }
+        
         if( isFilteredByTimeSpent( qaDetail ) ) {
             return false ;
         }
@@ -356,6 +374,18 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         }
         str += ids.join( ", " ) + " ) ;"
         return str ;
+    }
+    
+    $scope.clearFilters = function() {
+        $scope.searchCriteria = {
+            selectedSubjects : [],
+            questionType : $scope.searchMaster.questionTypes[0],
+            resultType : $scope.searchMaster.resultTypes[0],
+            attemptLaps : [],
+            answeredInLaps : [],
+            timeSpentChoices : [$scope.searchMaster.timeSpentChoices[0]],
+            errorRCAChoices : []
+        } ;
     }
     
 	// --- [END] Scope functions
@@ -455,10 +485,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         return isFiltered ;
     }
         
-    function isFilteredByAttemptLaps( qaDetail ) {
+    function isFilteredByAnsweredInLaps( qaDetail ) {
         
         var isMatched = false ;
-        var selectedLaps = $scope.searchCriteria.attemptLaps ;
+        var selectedLaps = $scope.searchCriteria.answeredInLaps ;
         
         if( selectedLaps.length != 0 ) {
             for( var i=0; i<selectedLaps.length; i++ ) {
@@ -482,26 +512,63 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         return !isMatched ;
     }
         
+    function isFilteredByAttemptLaps( qaDetail ) {
+        
+        var isMatched = false ;
+        var selectedLaps = $scope.searchCriteria.attemptLaps ;
+        
+        if( selectedLaps.length != 0 ) {
+            for( var i=0; i<selectedLaps.length; i++ ) {
+                var selectedLap = selectedLaps[i] ;
+                
+                if( !qaDetail.lapAttemptDetailMap.hasOwnProperty( selectedLap ) ) {
+                    continue ;
+                }
+                
+                if( qaDetail.lapAttemptDetailMap[ selectedLap ].timeSpent > 5 ) {
+                    isMatched = true ;
+                    break ;
+                }
+            }
+        }
+        else {
+            isMatched = true ;
+        }
+        
+        return !isMatched ;
+    }
+        
     function isFilteredByTimeSpent( qaDetail ) {
         
         var isMatched = true ;
-        var choice = $scope.searchCriteria.timeSpentChoice ;
+        var choices = $scope.searchCriteria.timeSpentChoices ;
         
-        var isLessThan = choice.startsWith( "<" ) ;
-        var timeLimit = parseInt( choice.substring( 2, 3 ) )*60 ;
-        var timeSpent = qaDetail.totalTimeSpent ;
-        
-        if( choice != "Any" ) {
-            isMatched = false ;
-            if( isLessThan ) {
-                if( timeSpent < timeLimit ) {
-                    isMatched = true ;
+        for( var i=0; i<choices.length; i++ ) {
+            var choice = choices[i] ;
+            var isLessThan = choice.startsWith( "<" ) ;
+            var timeLimit = parseInt( choice.substring( 2, 3 ) )*60 ;
+            var timeSpent = qaDetail.totalTimeSpent ;
+            
+            if( choice != "Any" ) {
+                var match = false ;
+                if( isLessThan ) {
+                    if( timeSpent < timeLimit ) {
+                        match = true ;
+                    }
+                }
+                else {
+                    if( timeSpent >= timeLimit ) {
+                        match = true ;
+                    }
+                }
+                isMatched = isMatched & match ;
+                if( !isMatched ) {
+                    break ;
                 }
             }
             else {
-                if( timeSpent >= timeLimit ) {
-                    isMatched = true ;
-                }
+                isMatched = true ;
+                break ;
             }
         }
         
@@ -537,6 +604,8 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             function( response ){
                 console.log( response ) ;
                 
+                resetLapDetails() ;
+                
                 $scope.lapEvents        = response.data[0] ;
                 $scope.questions        = response.data[1] ;
                 $scope.questionAttempts = response.data[2] ;
@@ -553,6 +622,29 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         .finally(function() {
             $scope.$parent.interactingWithServer = false ;
         }) ;
+    }
+    
+    function resetLapDetails() {
+        
+        $scope.lapNames = [] ;
+        $scope.lapEvents        = null ;
+        $scope.questions        = null ;
+        $scope.questionAttempts = null ;
+        $scope.lapSnapshots     = null ;
+        
+        $scope.qaDetails = [] ;
+        
+        $scope.selectedQADetail      = null ;
+        $scope.selectedQuestion      = null ;
+        $scope.selectedAttempt       = null ;
+        $scope.selectedQuestionIndex = -1 ;
+        $scope.rootCause             = null ;
+        
+        $scope.lapTimes    = {} ;
+        $scope.lapAttempts = {} ;
+        $scope.lapCorrects = {} ;
+        $scope.lapAvgQTime = {} ;
+        $scope.numAbandoned = 0 ;
     }
     
     function processRawData() {
