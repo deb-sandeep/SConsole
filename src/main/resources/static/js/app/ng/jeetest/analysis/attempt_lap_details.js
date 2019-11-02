@@ -354,7 +354,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                 ids.push( qaDetail.question.id ) ;
             }
         }
-        str += ids.join() + " ) ;"
+        str += ids.join( ", " ) + " ) ;"
         return str ;
     }
     
