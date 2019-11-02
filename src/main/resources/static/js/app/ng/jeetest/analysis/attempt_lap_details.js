@@ -10,6 +10,15 @@ LapAutomata.prototype.mainStrategyA = {
             "q-not-answered"              : "L3"
         }
     },
+    "L2P" : {
+        transitions : {
+            "q-not-visited"               : "XXX",
+            "q-attempted"                 : "ANS",
+            "q-ans-and-marked-for-review" : "AMR",
+            "q-marked-for-review"         : "L2",
+            "q-not-answered"              : "L3"
+        }
+    },
     "L2" : {
         transitions : {
             "q-not-visited"               : "L3",
@@ -157,6 +166,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         questionType : $scope.searchMaster.questionTypes[0],
         resultType : $scope.searchMaster.resultTypes[0],
         attemptLaps : [],
+        answeredInLaps : [],
         timeSpentChoices : [$scope.searchMaster.timeSpentChoices[0]],
         errorRCAChoices : []
     } ;
@@ -287,6 +297,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             return false ;
         }
         
+        if( isFilteredByAnsweredInLaps( qaDetail ) ) {
+            return false ;
+        }
+        
         if( isFilteredByTimeSpent( qaDetail ) ) {
             return false ;
         }
@@ -336,6 +350,18 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         else {
             $scope.$parent.addErrorAlert( "Please provide root cause." ) ;
         }
+    }
+    
+    $scope.clearFilters = function() {
+        $scope.searchCriteria = {
+            selectedSubjects : [],
+            questionType : $scope.searchMaster.questionTypes[0],
+            resultType : $scope.searchMaster.resultTypes[0],
+            attemptLaps : [],
+            answeredInLaps : [],
+            timeSpentChoices : [$scope.searchMaster.timeSpentChoices[0]],
+            errorRCAChoices : []
+        } ;
     }
     
 	// --- [END] Scope functions
@@ -435,10 +461,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         return isFiltered ;
     }
         
-    function isFilteredByAttemptLaps( qaDetail ) {
+    function isFilteredByAnsweredInLaps( qaDetail ) {
         
         var isMatched = false ;
-        var selectedLaps = $scope.searchCriteria.attemptLaps ;
+        var selectedLaps = $scope.searchCriteria.answeredInLaps ;
         
         if( selectedLaps.length != 0 ) {
             for( var i=0; i<selectedLaps.length; i++ ) {
@@ -450,6 +476,32 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                     }
                 }
                 else if( qaDetail.answeredInLap == selectedLaps[i] ) {
+                    isMatched = true ;
+                    break ;
+                }
+            }
+        }
+        else {
+            isMatched = true ;
+        }
+        
+        return !isMatched ;
+    }
+        
+    function isFilteredByAttemptLaps( qaDetail ) {
+        
+        var isMatched = false ;
+        var selectedLaps = $scope.searchCriteria.attemptLaps ;
+        
+        if( selectedLaps.length != 0 ) {
+            for( var i=0; i<selectedLaps.length; i++ ) {
+                var selectedLap = selectedLaps[i] ;
+                
+                if( !qaDetail.lapAttemptDetailMap.hasOwnProperty( selectedLap ) ) {
+                    continue ;
+                }
+                
+                if( qaDetail.lapAttemptDetailMap[ selectedLap ].timeSpent > 5 ) {
                     isMatched = true ;
                     break ;
                 }
