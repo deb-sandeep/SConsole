@@ -31,9 +31,29 @@
     <div id="numQuestionsChoice" class="panel-collapse collapse">
         <select id="numQuestionsChoiceList" 
                 class="form-control" 
-                size=5
-                ng-model="searchCriteria.numQuestion"
+                size=13
+                multiple
+                ng-model="searchCriteria.numQuestions"
                 ng-options="obj for obj in searchMaster.numQuestions">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#effRangeChoice">
+        Efficiency
+        </a>
+      </h4>
+    </div>
+    <div id="effRangeChoice" class="panel-collapse collapse">
+        <select id="effRangeChoiceList" 
+                class="form-control" 
+                size=11
+                multiple
+                ng-model="searchCriteria.efficiencyMarkers"
+                ng-options="obj for obj in searchMaster.efficiencyMarkers">
         </select>
     </div>
   </div>
