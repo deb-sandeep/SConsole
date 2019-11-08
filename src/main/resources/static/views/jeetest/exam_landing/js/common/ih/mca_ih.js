@@ -1,4 +1,4 @@
-function SCAInteractionHandler( questionEx, $rootScope ) {
+function MCAInteractionHandler( questionEx, $rootScope ) {
 	
 	var dom = null ;
 	
@@ -7,7 +7,7 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	var option3 = null ;
 	var option4 = null ;
 	
-	var selectedOption = null ;
+	var selectedOptions = [0, 0, 0, 0] ;
 	
 	var helper = new HanlderHelper( questionEx.question.questionFormattedText ) ;
 	
@@ -28,7 +28,7 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 			option4 = getOption( "4" ) ;
 			
 			this.dom = DIV( { 
-					id : "sca-response-ui",
+					id : "mca-response-ui",
 				}, 
 				TABLE( { width : '100%' },
 					TR( 
@@ -48,13 +48,13 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 		option2.checked = false ;
 		option3.checked = false ;
 		option4.checked = false ;
-		selectedOption = null ;
+		selectedOptions.length = 0 ;
 		questionEx.attemptState = AttemptState.prototype.NOT_ANSWERED ;
         $rootScope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
 	}
 	
 	this.isAnswered = function() {
-		return ( selectedOption != null ) ;
+		return selectedOptions.includes( 1 ) ;
 	}
 	
 	this.getTotalMarks = function() {
@@ -62,17 +62,18 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	}
 	
 	this.getAnswer = function() {
+	    
     	if( questionEx.attemptState == AttemptState.prototype.ATTEMPTED ||
         	questionEx.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
-    		return selectedOption ;
+    	    return selectedOptions ;
        	}
-    	return "" ;
+    	return [0, 0, 0, 0] ;
 	}
 	
 	function getOption( id ) {
 		return INPUT( {
-			type : 'radio',
-			name : 'sca-option',
+			type : 'checkbox',
+			name : 'mca-option',
 			value : id,
 			click : function() {
 				optionClicked( this ) ;
@@ -81,7 +82,13 @@ function SCAInteractionHandler( questionEx, $rootScope ) {
 	}
 	
 	function optionClicked( input ) {
-		selectedOption = input.value ;
+	    var index = parseInt( input.value ) -1 ;
+	    if( input.checked ) {
+	        selectedOptions[ index ] = 1 ;
+	    }
+	    else {
+	        selectedOptions[ index ] = 0 ;
+	    }
 		questionEx.attemptState = AttemptState.prototype.NOT_ANSWERED ;
 		$rootScope.$broadcast( 'refreshAttemptSummary', questionEx ) ;
 	}

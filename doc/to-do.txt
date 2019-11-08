@@ -1,8 +1,5 @@
-* Instruction handlers
-    - MCA
-    - LCT
-    - MMT
-    
+* Lap selection
+* Enable Submit temporarily and submit answers on click
 * Handling timer event
    - Add time spent to current question, current lap
    - Submit answers on timer expiry

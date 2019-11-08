@@ -1,5 +1,21 @@
+8/Nov
+--------------
+* refreshAttemptSummary broadcast needs to be respected in
+  advanced controller. This orginates from input handlers
+  when any of the option is clicked
+* Clear Response
+* Save and Next
+* When the next question belongs to a different section,
+  we should highlight the section 
+* Mark for Review and Next
+    
+
 29/Oct
 ---------------
+* Instruction handlers
+    - MCA
+    - LCT
+    - MMT
 * UI
     - Section pallete   
     - Footer buttons 

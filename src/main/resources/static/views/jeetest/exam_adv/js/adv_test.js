@@ -34,6 +34,10 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     
     // -----------------------------------------------------------------------
     // --- [START] Event listeners -------------------------------------------
+    $scope.$on( 'refreshAttemptSummary', function( event, payload ){
+        refreshStats( payload ) ;
+    }) ;
+    
     // --- [END] Event listeners ---------------------------------------------
     
     // --- [START] Scope functions -------------------------------------------
@@ -41,25 +45,48 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // ----------- Question response related scope functions -----------------
     $scope.saveAndNext = function() {
         console.log( "Saving answer and showing next question." ) ;
-    }
-    
-    $scope.saveAndMarkForReview = function() {
-        console.log( "Saving answer, marking for review and showing next question." ) ;
+        if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
+            $scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
+            
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.ANSWER_SAVE, 
+                    "" + $scope.currentQuestion.question.id ) ;
+            
+            refreshStats( $scope.currentQuestion ) ;
+            $scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
+        }
+        else {
+            alert( "Please provide a valid answer before saving." ) ;
+        }
     }
     
     $scope.clearResponse = function() {
+        console.log( "Clearing response of current question." ) ;
+        $scope.currentQuestion.interactionHandler.clearResponse() ;
+        saveClickStreamEvent( 
+                ClickStreamEvent.prototype.ANSWER_CLEAR_RESPONSE, 
+                "" + $scope.currentQuestion.question.id ) ;
     }
     
     $scope.markForReviewAndNext = function() {
-    }
-    
-    $scope.showQuestion = function( questionEx ) {
-    }
-    
-    $scope.showNextQuestion = function() {
-    }
-    
-    $scope.showPreviousQuestion = function() {
+        if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
+            
+            $scope.currentQuestion.attemptState = AttemptState.prototype
+                                                              .ANS_AND_MARKED_FOR_REVIEW ;
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.ANSWER_SAVE_AND_MARK_REVIEW, 
+                    "" + $scope.currentQuestion.question.id ) ;
+        }
+        else {
+            
+            $scope.currentQuestion.attemptState = AttemptState.prototype
+                                                              .MARKED_FOR_REVIEW ;
+            saveClickStreamEvent( 
+                    ClickStreamEvent.prototype.ANSWER_MARK_FOR_REVIEW, 
+                    "" + $scope.currentQuestion.question.id ) ;
+        }
+        refreshStats( $scope.currentQuestion ) ;
+        $scope.showQuestion( $scope.currentQuestion.nextQuestion ) ;
     }
     
     // ----------- Exam related scope functions -----------------------------
@@ -69,15 +96,22 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     }
     
     $scope.showQuestion = function( questionEx ) {
+        
         if( questionEx != null ) {
-            $scope.currentQuestion = questionEx ;
-            if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
-                $scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
+            if( $scope.currentSection != null && 
+                questionEx.section != $scope.currentSection ) {
+                $scope.selectSection( questionEx.section ) ;
             }
-            saveClickStreamEvent( 
-                    ClickStreamEvent.prototype.QUESTION_VISITED, 
-                    "" + questionEx.question.id ) ;
-            refreshStats( questionEx ) ;
+            else {
+                $scope.currentQuestion = questionEx ;
+                if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
+                    $scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
+                }
+                saveClickStreamEvent( 
+                        ClickStreamEvent.prototype.QUESTION_VISITED, 
+                        "" + questionEx.question.id ) ;
+                refreshStats( questionEx ) ;
+            }
         }
     }
     
@@ -425,8 +459,14 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         if( qEx.question.questionType == "SCA" ) {
             qEx.interactionHandler = new SCAInteractionHandler( qEx, $rootScope ) ;
         }
-        else {
+        else if( qEx.question.questionType == "MCA" ) {
+            qEx.interactionHandler = new MCAInteractionHandler( qEx, $rootScope ) ;
+        }
+        else if( qEx.question.questionType == "NT" ) {
             qEx.interactionHandler = new NTInteractionHandler( qEx, $rootScope ) ;
+        }
+        else {
+            qEx.interactionHandler = new SCAInteractionHandler( qEx, $rootScope ) ;
         }
     }
     
