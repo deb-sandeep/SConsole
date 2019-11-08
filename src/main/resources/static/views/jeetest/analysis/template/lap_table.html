@@ -8,7 +8,12 @@
               ng-class="'lap-detail-cell-bg-' + lapName">
               {{lapName}}
           </th>
-          <th colspan="4"></th>
+          <th colspan="4" rowspan="2">
+	        <button class="btn btn-info btn-sm"
+	                ng-click="refreshData()">
+	            <span class="glyphicon glyphicon-refresh"></span>
+	        </button>
+          </th>
       </tr>
       <tr>
           <th colspan="7" style="text-align:left;">Lap times</th>
@@ -18,7 +23,6 @@
               style="font-family:Courier New;">
               {{lapTimes[lapName] | duration}}
           </th>
-          <th colspan="4"></th>
       </tr>
       <tr>
           <th colspan="7" style="text-align:left;">Lap times (visible rows)</th>

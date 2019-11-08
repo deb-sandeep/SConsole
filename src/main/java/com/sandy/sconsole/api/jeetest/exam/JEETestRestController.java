@@ -111,17 +111,15 @@ public class JEETestRestController {
             @RequestBody List<TestQuestionAttempt> attempts ) {
         
         try {
-            log.debug( "Saving test attempts." ) ;
-            
             if( config.isRecordTestAttempt() ) {
                 for( TestQuestionAttempt attempt : attempts ) {
-                    log.debug( "Saving attempt for quesiton - " + attempt.getTestQuestionId() ) ;
                     tqaRepo.save( attempt ) ; 
                     
                     TestQuestion question = tqRepo.findById( attempt.getTestQuestionId() ).get() ;
                     question.setAttempted( true ) ;
                     tqRepo.save( question ) ;
                 }
+                log.info( "Test attempts saved" ) ;
             }
             else {
                 log.info( "Application has been configured not to save test attempts." ) ;

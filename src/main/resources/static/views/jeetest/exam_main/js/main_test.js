@@ -6,7 +6,7 @@ sConsoleApp.controller( 'JEEMainTestController', function( $scope, $http ) {
     // AMR - Answers marked for review
     // L3P - Level 3 prioritization
     // L2  - Level 3
-    var attemptLaps = [ "L1", "L2", "AMR", "L3P", "Purple", "L3" ] ;
+    var attemptLaps = [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3" ] ;
     
 	$scope.$parent.navBarTitle = "Main" ;
 	

@@ -67,9 +67,28 @@
     <div id="attemptLapsChoice" class="panel-collapse collapse">
         <select id="attemptLapChoiceList" 
                 class="form-control" 
-                size=7
+                size=8
                 multiple
                 ng-model="searchCriteria.attemptLaps"
+                ng-options="obj for obj in searchMaster.attemptLaps">
+        </select>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#answeredInLapsChoice">
+        Answered in laps
+        </a>
+      </h4>
+    </div>
+    <div id="answeredInLapsChoice" class="panel-collapse collapse">
+        <select id="answeredInLapsChoiceList" 
+                class="form-control" 
+                size=8
+                multiple
+                ng-model="searchCriteria.answeredInLaps"
                 ng-options="obj for obj in searchMaster.attemptLaps">
         </select>
     </div>
@@ -86,8 +105,9 @@
     <div id="timeSpentChoice" class="panel-collapse collapse">
         <select id="timeSpentChoiceList" 
                 class="form-control" 
-                size=4
-                ng-model="searchCriteria.timeSpentChoice"
+                size=9
+                multiple
+                ng-model="searchCriteria.timeSpentChoices"
                 ng-options="obj for obj in searchMaster.timeSpentChoices">
         </select>
     </div>
@@ -111,4 +131,11 @@
         </select>
     </div>
   </div>
+  <hr style="height:10px;">
+  <button class="btn btn-info btn-sm"
+	        ng-click="clearFilters()">
+    <span class="glyphicon glyphicon-refresh"></span>
+  </button>
 </div>
+
+

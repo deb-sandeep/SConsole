@@ -138,21 +138,8 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 	}
 	
 	$scope.syncQuestion = function( question ) {
-		
-		console.log( "Synching question = " + question.id ) ;
-        $scope.$parent.interactingWithServer = true ;
-        $http.post( '/SyncTestQuestionsToPimon', [ question.id ] )
-        .then( 
-            function( response ){
-                console.log( "Successfully synched question." ) ;
-                question.synched = true ;
-            }, 
-            function( error ){
-                console.log( "Error synching questions." + error ) ;
-            }
-        )
-        .finally(function() {
-            $scope.$parent.interactingWithServer = false ;
+        syncQuestionsToServer( [ question.id ], function(){
+            question.synched = true ;
         }) ;
 	}
 	
@@ -166,7 +153,32 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
 		return true ;
 	}
 	
+	$scope.automateSyncAllQuestions = function() {
+
+	    var allQuestions = [] ; 
+        for( i=0; i<$scope.searchResults.length; i++ ) {
+            var question = $scope.searchResults[i] ;
+            if( !question.synched ) {
+                allQuestions.push( question ) ;
+            }
+        }
+        
+        if( allQuestions.length > 0 ) {
+            syncAllQuestions( allQuestions ) ;
+        }
+	}
+	
 	// --- [END] Scope functions
+	
+	function syncAllQuestions( questions ) {
+	    if( questions.length > 0 ) {
+	        var question = questions.shift() ;
+	        syncQuestionsToServer( [ question.id ], function(){
+	            question.synched = true ;
+	            syncAllQuestions( questions ) ;
+	        }) ;
+	    }
+	}
 	
 	function syncSelectedQuestions() {
 		var selectedQuestionIds = [] ;
@@ -184,25 +196,34 @@ sConsoleApp.controller( 'SearchQuestionController', function( $scope, $http, $lo
     		$scope.actionCmd = "" ;
 		}
 		else {
-			console.log( "Synching questions = " + selectedQuestionIds ) ;
-	        $scope.$parent.interactingWithServer = true ;
-	        $http.post( '/SyncTestQuestionsToPimon', selectedQuestionIds )
-	        .then( 
-	            function( response ){
-	                console.log( "Successfully synched question." ) ;
-	        		for( i=0; i<selectedQuestions.length; i++ ) {
-	        			selectedQuestions[i].synched = true ;
-	        		}
-	            }, 
-	            function( error ){
-	                console.log( "Error synching questions." + error ) ;
-	            }
-	        )
-	        .finally(function() {
-	            $scope.$parent.interactingWithServer = false ;
-	    		$scope.actionCmd = "" ;
-	        }) ;
+			syncQuestionsToServer( selectedQuestionIds, function(){
+			    for( i=0; i<selectedQuestions.length; i++ ) {
+			        selectedQuestions[i].synched = true ;
+			    }
+                $scope.actionCmd = "" ;
+			}) ;
 		}
+	}
+	
+	function syncQuestionsToServer( questionIds, callbackFn ) {
+	    
+        console.log( "Synching questions = " + questionIds ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/SyncTestQuestionsToPimon', questionIds )
+        .then( 
+            function( response ){
+                console.log( "Successfully synched question." ) ;
+                if( callbackFn != null ) {
+                    callbackFn() ;
+                }
+            }, 
+            function( error ){
+                console.log( "Error synching questions." + error ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
 	}
 	
 	function fetchSearchResults( criteria ) {

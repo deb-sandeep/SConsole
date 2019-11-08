@@ -6,14 +6,22 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
 	$scope.rcOptions = new RCOptions() ;
     $scope.searchMaster = {
         subjectNames  : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
-        numQuestions  : [ "All", "> 20", "> 30", "> 40", "> 50", "> 60", "< 20", "< 30", "< 40", "< 50", "< 60" ],
+        numQuestions  : [ "All", 
+            "> 10", "> 20", "> 30", "> 40", "> 50", "> 60",
+            "< 10", "< 20", "< 30", "< 40", "< 50", "< 60", 
+        ],
+        efficiencyMarkers : [ "Any",
+            "> 90", "> 80", "> 70", "> 60", "> 50", 
+            "< 90", "< 80", "< 70", "< 60", "< 50",  
+        ],
         rcOptions     : $scope.rcOptions.choices 
     } ;
     
     // ------------------ Scope variables ------------------------------------
     $scope.searchCriteria = {
         selectedSubjects : [],
-        numQuestion      : $scope.searchMaster.numQuestions[0],
+        numQuestions     : [$scope.searchMaster.numQuestions[0]],
+        efficiencyMarkers: [$scope.searchMaster.efficiencyMarkers[0]],
         errorRCAChoices  : [
             $scope.rcOptions.choices[0],
             $scope.rcOptions.choices[4],
@@ -43,6 +51,9 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             return false ;
         }
         if( isFilteredByNumQuestions( topicDetail ) ) {
+            return false ;
+        }
+        if( isFilteredByEfficiencyRange( topicDetail ) ) {
             return false ;
         }
         return true ;
@@ -148,25 +159,71 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
     function isFilteredByNumQuestions( topicDetail ) {
         
         var isMatched = true ;
-        var choice = $scope.searchCriteria.numQuestion ;
+        var choices = $scope.searchCriteria.numQuestions ; 
         
-        var isLessThan = choice.startsWith( "<" ) ;
-        var numQuestions = parseInt( choice.substring( 2 ) ) ;
-        
-        if( choice != "All" ) {
-            isMatched = false ;
-            if( isLessThan ) {
-                if( topicDetail.numQuestions < numQuestions ) {
-                    isMatched = true ;
+        for( var i=0; i<choices.length; i++ ) {
+            var choice = choices[i] ; 
+            var isLessThan = choice.startsWith( "<" ) ;
+            var numQuestions = parseInt( choice.substring( 2 ) ) ;
+            
+            if( choice != "All" ) {
+                var match = false ;
+                if( isLessThan ) {
+                    if( topicDetail.numQuestions < numQuestions ) {
+                        match = true ;
+                    }
+                }
+                else {
+                    if( topicDetail.numQuestions >= numQuestions ) {
+                        match = true ;
+                    }
+                }
+                isMatched = isMatched & match ;
+                if( !isMatched ) {
+                    break ;
                 }
             }
             else {
-                if( topicDetail.numQuestions >= numQuestions ) {
-                    isMatched = true ;
-                }
+                isMatched = true ;
+                break ;
             }
         }
+        return !isMatched ;
+    }
+    
+    function isFilteredByEfficiencyRange( topicDetail ) {
         
+        var isMatched = true ;
+        var choices = $scope.searchCriteria.efficiencyMarkers ; 
+        
+        for( var i=0; i<choices.length; i++ ) {
+            var choice = choices[i] ; 
+            var isLessThan = choice.startsWith( "<" ) ;
+            var efficiencyMarker = parseInt( choice.substring( 2 ) ) ;
+            var topicEfficiency = $scope.getTopicEffectiveness( topicDetail ) ;
+            
+            if( choice != "Any" ) {
+                var match = false ;
+                if( isLessThan ) {
+                    if( topicEfficiency < efficiencyMarker ) {
+                        match = true ;
+                    }
+                }
+                else {
+                    if( topicEfficiency >= efficiencyMarker ) {
+                        match = true ;
+                    }
+                }
+                isMatched = isMatched & match ;
+                if( !isMatched ) {
+                    break ;
+                }
+            }
+            else {
+                isMatched = true ;
+                break ;
+            }
+        }
         return !isMatched ;
     }
     
