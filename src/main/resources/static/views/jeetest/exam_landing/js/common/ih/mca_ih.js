@@ -62,12 +62,22 @@ function MCAInteractionHandler( questionEx, $rootScope ) {
 	}
 	
 	this.getAnswer = function() {
-	    
+	    var ans = "" ;
     	if( questionEx.attemptState == AttemptState.prototype.ATTEMPTED ||
         	questionEx.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
-    	    return selectedOptions ;
+    	    
+    	    for( var i=0; i<selectedOptions.length; i++ ) {
+    	        if( selectedOptions[i] == 1 ) {
+    	            ans += (i+1) + "," ;
+    	        }
+    	    }
+    	    
+    	    if( ans.length > 0 ) {
+    	        ans = ans.substring( 0, ans.length-1 ) ;
+    	    }
+    	    console.log( ans ) ;
        	}
-    	return [0, 0, 0, 0] ;
+    	return ans ;
 	}
 	
 	function getOption( id ) {

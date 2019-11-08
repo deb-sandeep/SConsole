@@ -161,10 +161,20 @@
 	            ng-click="saveAndNext()">
 	    Save & Next
 	    </button>
+	    <div style="width:350px;display:inline-block;">&nbsp;</div>
+        <button type="button" 
+                class="btn btn-danger btn-md action-btn"
+                ng-click="endCurrentLapAndStartNextLap()"
+                ng-disabled="currentLapName == 'L3'">
+	        Next Lap 
+	        ( {{currentLapName}} 
+	        <span class="glyphicon glyphicon-chevron-right"></span> 
+	        {{nextLapName}} )
+        </button>
 	</div>
 	<div id="adv-submit-btn-panel" align="center">
         <button type="button" class="btn btn-success btn-md action-btn"
-                disabled>
+                ng-click="submitAnswers()">
         Submit
         </button>
 	</div>

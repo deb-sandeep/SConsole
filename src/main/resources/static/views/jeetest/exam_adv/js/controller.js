@@ -56,7 +56,6 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     // remains read only, attribute values inside these data structures can
     // still get modified
     $scope.testConfigIndex = null ;
-    $scope.attemptLapNames = [] ;
     $scope.overallSection = new Section() ;
     $scope.sections = [] ;
     
@@ -67,6 +66,7 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     // Exam scope related variables.
     $scope.interactingWithServer = false ;
     $scope.answersSubmitted = false ;
+    $scope.examStartTime = 0 ;
     
     $scope.testAttempt = {
         id : 0,
@@ -81,7 +81,6 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         numMarkedForReview : 0,
         numAnsAndMarkedForReview : 0
     } ;
-    $scope.attemptLapDetails = {} ;
     
     // -----------------------------------------------------------------------
     // --- [START] Controller initialization ---------------------------------
@@ -92,6 +91,54 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     
     // -----------------------------------------------------------------------
     // --- [START] Scope functions -------------------------------------------
+    
+    // ------------------- Server comm functions -----------------------------
+    $scope.saveClickStreamEvent = function( eventId, payload ) {
+        
+        var timeMarker = (new Date()).getTime() - $scope.examStartTime ;
+        console.log( "ClickStreamEvent[ " + 
+                        "eventId = " + eventId + "," + 
+                        "timeMarker = " + timeMarker + ", " + 
+                        "payload = " + payload + "]" ) ;
+        
+        $scope.interactingWithServer = true ;
+        $http.post( '/ClickStreamEvent', {
+            'eventId'       : eventId,
+            'timeMarker'    : timeMarker,
+            'payload'       : payload,
+            'testAttemptId' : $scope.testAttempt.id
+        } )
+        .then ( 
+            function( response ){
+            }, 
+            function( error ){
+                console.log( "Error saving click stream event." ) ;
+                $scope.addErrorAlert( "Could not save click stream event." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
+    }
+    
+    $scope.saveTestAttempt = function( callbackFn ) {
+        
+        $scope.interactingWithServer = true ;
+        $http.post( '/TestAttempt', $scope.testAttempt )
+        .then ( 
+            function( response ){
+                $scope.testAttempt = response.data ;
+                callbackFn() ;
+            }, 
+            function( error ){
+                console.log( "Error saving test attempt on server." ) ;
+                $scope.addErrorAlert( "Could not save test attempt." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.interactingWithServer = false ;
+        }) ;
+    }
     
     // ----------- UI related scope functions --------------------------------
 

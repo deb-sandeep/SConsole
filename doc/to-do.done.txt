@@ -8,7 +8,11 @@
 * When the next question belongs to a different section,
   we should highlight the section 
 * Mark for Review and Next
-    
+* Lap selection
+* Handling timer event
+   - Add time spent to current question, current lap
+   - Submit answers on timer expiry
+* Enable Submit temporarily and submit answers on click
 
 29/Oct
 ---------------

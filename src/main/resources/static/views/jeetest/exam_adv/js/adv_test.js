@@ -9,12 +9,11 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // L2  - Level 3
     var SEC_INFO_DIV_ID = "#sec-info-div" ;
     var currentLapIndex = -1 ;
-    var startTime = 0 ;
     var secSpanIdVsSectionMap = {} ;
     
     // ---------------- Scope variables --------------------------------------
 
-    $scope.attemptLapNames = [ "L1", "L2", "AMR", "L3P", "Purple", "L3" ] ;
+    $scope.attemptLapNames = [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3" ] ;
     $scope.secondsRemaining = 0 ;
     $scope.timeSpent = 0 ;
     $scope.timerActive = false ;
@@ -25,6 +24,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.currentQuestion = null ;
     $scope.currentLapName = null ;
     $scope.nextLapName = null ;
+    $scope.attemptLapDetails = {} ;
     
     // -----------------------------------------------------------------------
     // --- [START] Controller initialization ---------------------------------
@@ -48,7 +48,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         if( $scope.currentQuestion.interactionHandler.isAnswered() ) {
             $scope.currentQuestion.attemptState = AttemptState.prototype.ATTEMPTED ;
             
-            saveClickStreamEvent( 
+            $scope.$parent.saveClickStreamEvent( 
                     ClickStreamEvent.prototype.ANSWER_SAVE, 
                     "" + $scope.currentQuestion.question.id ) ;
             
@@ -63,7 +63,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.clearResponse = function() {
         console.log( "Clearing response of current question." ) ;
         $scope.currentQuestion.interactionHandler.clearResponse() ;
-        saveClickStreamEvent( 
+        $scope.$parent.saveClickStreamEvent( 
                 ClickStreamEvent.prototype.ANSWER_CLEAR_RESPONSE, 
                 "" + $scope.currentQuestion.question.id ) ;
     }
@@ -73,7 +73,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             
             $scope.currentQuestion.attemptState = AttemptState.prototype
                                                               .ANS_AND_MARKED_FOR_REVIEW ;
-            saveClickStreamEvent( 
+            $scope.$parent.saveClickStreamEvent( 
                     ClickStreamEvent.prototype.ANSWER_SAVE_AND_MARK_REVIEW, 
                     "" + $scope.currentQuestion.question.id ) ;
         }
@@ -81,7 +81,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             
             $scope.currentQuestion.attemptState = AttemptState.prototype
                                                               .MARKED_FOR_REVIEW ;
-            saveClickStreamEvent( 
+            $scope.$parent.saveClickStreamEvent( 
                     ClickStreamEvent.prototype.ANSWER_MARK_FOR_REVIEW, 
                     "" + $scope.currentQuestion.question.id ) ;
         }
@@ -107,12 +107,37 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 if( $scope.currentQuestion.attemptState == AttemptState.prototype.NOT_VISITED ) {
                     $scope.currentQuestion.attemptState = AttemptState.prototype.NOT_ANSWERED ;
                 }
-                saveClickStreamEvent( 
+                $scope.$parent.saveClickStreamEvent( 
                         ClickStreamEvent.prototype.QUESTION_VISITED, 
                         "" + questionEx.question.id ) ;
                 refreshStats( questionEx ) ;
             }
         }
+    }
+    
+    $scope.endCurrentLapAndStartNextLap = function() {
+        endCurrentLap() ;
+        startNextLap() ;
+    }
+    
+    $scope.submitAnswers = function() {
+        
+        endCurrentLap() ;
+        
+        $scope.timerActive = false ;
+        $scope.answersSubmitted = true ;
+        
+        if( !$scope.$$phase ) {
+            $scope.$apply(function(){
+                $location.path( "/testResult" ) ;
+            });     
+        }
+        else {
+            $location.path( "/testResult" ) ;
+        }
+        
+        var elements = document.getElementsByTagName( "body" ) ;
+        elements[0].style.overflowY = "auto" ;
     }
     
     // ----------- UI related scope functions --------------------------------
@@ -145,13 +170,13 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     }
     
     $scope.showQuestionPaper = function() {
-        saveClickStreamEvent( 
+        $scope.$parent.saveClickStreamEvent( 
                 ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_START, 
                 null ) ;
     }
     
     $scope.hideQuestionPaper = function() {
-        saveClickStreamEvent( 
+        $scope.$parent.saveClickStreamEvent( 
                 ClickStreamEvent.prototype.QUESTION_PAPER_VIEW_END, 
                 null ) ;
     }
@@ -166,7 +191,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             palette.style.width = "20%" ;
             display.style.width = "80%" ;
             $scope.paletteHidden = false ;
-            saveClickStreamEvent( 
+            $scope.$parent.saveClickStreamEvent( 
                     ClickStreamEvent.prototype.CONTROL_PANEL_EXPANDED, 
                     null ) ;
         }
@@ -175,7 +200,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             palette.style.width = "0%" ;
             display.style.width = "100%" ;
             $scope.paletteHidden = true ;
-            saveClickStreamEvent( 
+            $scope.$parent.saveClickStreamEvent( 
                     ClickStreamEvent.prototype.CONTROL_PANEL_COLLAPSED, 
                     null ) ;
         }
@@ -196,13 +221,11 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         $scope.secondsRemaining-- ;
         $scope.timeSpent++ ;
 
-        /*
         $scope.attemptLapDetails[ $scope.currentLapName ].timeSpent++ ;
         if( $scope.currentQuestion != null ) {
             $scope.currentQuestion.timeSpent++ ;
             $scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
         }
-        */
         
         if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
             setTimeout( handleTimerEvent, 1000 ) ;
@@ -210,11 +233,9 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         else {
             $scope.timerActive = false ;
             $scope.secondsRemaining = 0 ;
-            /*
             if( !$scope.answersSubmitted ) {
                 $scope.submitAnswers() ;
             }
-            */
         }
         $scope.$digest() ;
     }
@@ -253,28 +274,70 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         }
     }
     
-    // ------------------- Server comm functions -----------------------------
-    function saveClickStreamEvent( eventId, payload ) {
+    // ------------------- Lap marker functios ------------------------------
+    function startNextLap() {
+        if( currentLapIndex < $scope.attemptLapNames.length-1 ) {
+            currentLapIndex++ ;
+            
+            // Set the lap names, so that the UI displays properly
+            $scope.currentLapName = $scope.attemptLapNames[ currentLapIndex ] ;
+            if( currentLapIndex < $scope.attemptLapNames.length-1 ) {
+                $scope.nextLapName = $scope.attemptLapNames[ currentLapIndex + 1 ] ;
+            }
+            else {
+                $scope.nextLapName = "" ;
+            }
+            
+            var attemptDetail = $scope.attemptLapDetails[ $scope.currentLapName ] ;
+            attemptDetail.startTime = new Date() ;
+            $scope.$parent.saveClickStreamEvent( 
+                                  ClickStreamEvent.prototype.LAP_START, 
+                                  $scope.currentLapName ) ;
+        }
+    }
+    
+    function endCurrentLap() {
         
-        var timeMarker = (new Date()).getTime() - startTime ;
-        console.log( "ClickStreamEvent[ " + 
-                        "eventId = " + eventId + "," + 
-                        "timeMarker = " + timeMarker + ", " + 
-                        "payload = " + payload + "]" ) ;
+        var attemptDetail = $scope.attemptLapDetails[ $scope.currentLapName ] ;
+        attemptDetail.endTime = new Date() ;
+        
+        $scope.$parent.saveClickStreamEvent( 
+                             ClickStreamEvent.prototype.LAP_END, 
+                             $scope.currentLapName ) ;
+
+        var snapshots = [] ;
+        var allQuestions = $scope.$parent.overallSection.questions ;
+        for( var i=0; i<allQuestions.length; i++ ) {
+            var q = allQuestions[i] ;
+            var lapDetails = q.lapDetails[ $scope.currentLapName ] ;
+            
+            lapDetails.attemptState = q.attemptState ;
+            
+            snapshots.push({
+                testAttemptId  : $scope.$parent.testAttempt.id ,
+                questionId     : q.question.id ,
+                lapName        : $scope.currentLapName,
+                timeSpent      : lapDetails.timeSpent, 
+                attemptStatus  : q.attemptState
+            }) ;
+        }
+        saveTestAttemptLapSnapshots( snapshots ) ;
+    }
+    
+    // ------------------- Server comm functions -----------------------------
+    function saveTestAttemptLapSnapshots( snapshots ) {
+        
+        console.log( "Saving test attempt lap snapshots." ) ;
         
         $scope.interactingWithServer = true ;
-        $http.post( '/ClickStreamEvent', {
-            'eventId'       : eventId,
-            'timeMarker'    : timeMarker,
-            'payload'       : payload,
-            'testAttemptId' : $scope.testAttempt.id
-        } )
+        $http.post( '/TestAttempt/LapSnapshot', snapshots )
         .then ( 
             function( response ){
+                console.log( "Successfully saved test lap snapshot." ) ;
             }, 
             function( error ){
-                console.log( "Error saving click stream event." ) ;
-                $scope.addErrorAlert( "Could not save click stream event." ) ;
+                console.log( "Error saving test lap snapshot on server." ) ;
+                $scope.addErrorAlert( "Could not save test attempt lap snapshot." ) ;
             }
         )
         .finally(function() {
@@ -303,7 +366,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
 
             var lapNames = $scope.attemptLapNames ;
             for( var i=0; i<lapNames.length; i++ ) {
-                $scope.$parent.attemptLapDetails[ lapNames[i] ] = {
+                $scope.attemptLapDetails[ lapNames[i] ] = {
                     startTime : null,
                     endTime : null,
                     timeSpent : 0
@@ -330,17 +393,19 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 else {
                     initializeExamDataStructures( response.data ) ;
                     
-                    startTime = (new Date()).getTime() ;
+                    $scope.$parent.examStartTime = (new Date()).getTime() ;
                     
                     $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
                     startTimer() ;
                     
                     $scope.selectSection( $scope.$parent.sections[0] ) ;
-
-                    /*
-                    $scope.$parent.testAttempt.testConfig = $scope.testConfigIndex ;
-                    saveTestAttempt() ;
-                    */
+                    $scope.$parent.testAttempt.testConfig = $scope.$parent.testConfigIndex ;
+                    
+                    $scope.$parent.saveTestAttempt( function() {
+                        $scope.saveClickStreamEvent( 
+                                ClickStreamEvent.prototype.TEST_STARTED, null ) ;
+                        startNextLap() ;
+                    }) ;
                 }
             }, 
             function( error ){

@@ -1,3 +1,8 @@
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
 #adv-section-tab-panel-1 {
     width:100%;
     height:50px;
