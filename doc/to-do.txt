@@ -1,6 +1,1 @@
 * Test result page
-
-* Lap transitions
-    - tracking
-    - snapshot
-

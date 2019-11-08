@@ -76,12 +76,21 @@ function QuestionEx( q, attemptLaps ) {
     	    else if( this.question.questionType == "NT" ) {
     	        return this.getNTScore() ;
     	    }
+            else if( this.question.questionType == "MCA" ) {
+                return this.getMCAScore() ;
+            }
+            else if( this.question.questionType == "LCT" ) {
+                return this.getSCAScore() ;
+            }
     	}
     	return 0 ;
     }
     
     this.getSCAScore = function() {
         if( this.question.answerText == this.interactionHandler.getAnswer() ) {
+            if( this.question.targetExam == "ADV" ) {
+                return 3 ;
+            }
             return 4 ;
         }
         else {
@@ -112,9 +121,59 @@ function QuestionEx( q, attemptLaps ) {
         
         var ansValue = parseFloat( providedAnsText ) ;
         if( ansValue >= lowerBound && ansValue <= upperBound ) {
+            if( this.question.targetExam == "ADV" ) {
+                return 3 ;
+            }
             return 4 ;
         }
         return 0 ;
+    }
+    
+    this.getMCAScore = function() {
+        var providedAnsText = this.interactionHandler.getAnswer() ;
+        var correctAnsText = this.question.answerText ;
+        
+        if( providedAnsText == "" ) {
+            return 0 ;
+        }
+
+        var correctAnswers = correctAnsText.split( "," ) ;
+        var providedAnswers = providedAnsText.split( "," ) ;
+        
+        var numCorrectAnswers = correctAnswers.length ;
+        var numCorrectAnswersProvided = 0 ;
+        var numWrongAnswersProvided = 0 ;
+        
+        for( var i=0; i<providedAnswers.length; i++ ) {
+            var aProvidedAnswer = providedAnswers[i] ;
+            if( correctAnswers.includes( aProvidedAnswer ) ) {
+                numCorrectAnswersProvided++ ;
+            }
+            else {
+                numWrongAnswersProvided++ ;
+            }
+        }
+        
+        if( numWrongAnswersProvided > 0 ) {
+            return -2 ;
+        }
+        
+        if( numCorrectAnswers == numCorrectAnswersProvided ) {
+            return 4 ;
+        }
+        else if( numCorrectAnswers == 4 && 
+                 numCorrectAnswersProvided == 3 ) {
+            return 3 ;
+        }
+        else if( numCorrectAnswers >= 3 && 
+                 numCorrectAnswersProvided == 2 ) {
+           return 2 ;
+       }
+       else if( numCorrectAnswers >= 2 && 
+                numCorrectAnswersProvided == 1 ) {
+           return 1 ;
+       }
+       console.log( "ERROR: Failure in computing MCA marks." ) ;
     }
     
     this.isCorrectlyAnswered = function() {
@@ -127,7 +186,7 @@ function QuestionEx( q, attemptLaps ) {
     		this.attemptState == AttemptState.prototype.ANS_AND_MARKED_FOR_REVIEW ) {
     		
     		var score = this.getScore() ;
-    		return score == 4 ;
+    		return score > 0 ;
         }
     	
     	return false ;

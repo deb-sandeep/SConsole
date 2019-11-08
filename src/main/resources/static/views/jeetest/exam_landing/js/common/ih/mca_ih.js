@@ -75,7 +75,6 @@ function MCAInteractionHandler( questionEx, $rootScope ) {
     	    if( ans.length > 0 ) {
     	        ans = ans.substring( 0, ans.length-1 ) ;
     	    }
-    	    console.log( ans ) ;
        	}
     	return ans ;
 	}

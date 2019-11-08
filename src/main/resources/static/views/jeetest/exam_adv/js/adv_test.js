@@ -464,8 +464,8 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             for( var j=0; j<secQIndices[i].length; j++ ) {
                 var qIndex = secQIndices[i][j] ;
                 var question = secQuestions[qIndex] ;
-                console.log( "    Q index = " + qIndex + ", id = " + question.id ) ;
-
+                question.targetExam = "ADV" ;
+                
                 var questionEx = createEnhancedQuestion( question ) ;
                 questionEx.index = (j+1) ;
                 questionEx.section = section ;

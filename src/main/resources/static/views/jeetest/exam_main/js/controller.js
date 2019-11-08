@@ -478,6 +478,8 @@ sConsoleApp.controller( 'JEEMainExamBaseController', function( $scope, $http, $r
     	for( var i=0; i<questions.length; i++ ) {
     		
     		var question = questions[i] ;
+    		question.targetExam = "MAIN" ;
+    		
     		var questionEx = new QuestionEx( question, $scope.attemptLapNames ) ;
     		var lastQuestionEx = null ;
     		

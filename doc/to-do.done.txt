@@ -13,7 +13,12 @@
    - Add time spent to current question, current lap
    - Submit answers on timer expiry
 * Enable Submit temporarily and submit answers on click
-
+* Lap transitions
+    - tracking
+    - snapshot
+* Mark evaluation for MCA 
+* Mark evaluation based on test type
+    
 29/Oct
 ---------------
 * Instruction handlers
