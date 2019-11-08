@@ -58,7 +58,24 @@ function QuestionEx( q, attemptLaps ) {
     }
     
     this.getTotalMarks = function() {
-    	return this.interactionHandler.getTotalMarks() ;
+        
+        if( this.question.examType == "MAIN" ) {
+            return 4 ;
+        }
+        else {
+            if( this.question.questionType == "SCA" ||
+                this.question.questionType == "NT" || 
+                this.question.questionType == "LCT" ) {
+                return 3 ;
+            }
+            else if( this.question.questionType == "MCA" ) {
+                return 4 ;
+            }
+            else {
+                // For MMT marking is yet to be decided
+                return "XXX" ;
+            }
+        }
     }
     
     this.getScore = function() {
