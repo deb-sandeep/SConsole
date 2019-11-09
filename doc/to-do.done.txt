@@ -18,6 +18,7 @@
     - snapshot
 * Mark evaluation for MCA 
 * Mark evaluation based on test type
+* Test result page
     
 29/Oct
 ---------------

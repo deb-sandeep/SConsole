@@ -9,9 +9,10 @@
 <div id="test-result">
     <div id="test-result-summary">
         <table align="center" class="pure-table pure-table-horizontal"
-               style="font-size:16px;">
+               style="font-size:13px;">
             <thead>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th class="q-attribute">Lat</th>
                     <th class="q-attribute">Solve</br>Time</th>
@@ -30,7 +31,8 @@
                     ng-click="questionAttemptSelected( $index )"
                     ng-class="getRowBackgroundClass( $index )">
                     
-                   <td class="q-attribute">Q {{$index + 1}}</td>
+                   <td class="q-attribute">Q{{$index + 1}}</td>
+                   <td class="q-attribute" style="text-align:left;">{{question.questionType}}</td>
                    <td class="q-attribute">{{question.lateralThinkingLevel}}</td>
                    <td class="q-attribute" style="text-align:right;font-family:Courier;">{{question.projectedSolveTime | mmss}}</td>
                    <td class="q-attribute">{{question.answerText}}</td>

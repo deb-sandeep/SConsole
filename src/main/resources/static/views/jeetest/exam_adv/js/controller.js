@@ -99,7 +99,8 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
         console.log( "ClickStreamEvent[ " + 
                         "eventId = " + eventId + "," + 
                         "timeMarker = " + timeMarker + ", " + 
-                        "payload = " + payload + "]" ) ;
+                        "payload = " + payload + "," + 
+                        "testAttemptId = " + $scope.testAttempt.id + "]" ) ;
         
         $scope.interactingWithServer = true ;
         $http.post( '/ClickStreamEvent', {
@@ -122,6 +123,8 @@ sConsoleApp.controller( 'JEEAdvExamBaseController', function( $scope, $http, $ro
     }
     
     $scope.saveTestAttempt = function( callbackFn ) {
+        
+        console.log( "Saving test attempt." ) ;
         
         $scope.interactingWithServer = true ;
         $http.post( '/TestAttempt', $scope.testAttempt )

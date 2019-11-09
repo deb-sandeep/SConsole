@@ -2,6 +2,7 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
     
 	$scope.$parent.navBarTitle = "Test Attempt Details (Test ID = " + $scope.$parent.selectedTestConfigId + ")" ;
 	$scope.testAttemptId = $routeParams.id ;
+	$scope.examType = $routeParams.examType ;
 	$scope.questionAttempts = [] ;
 	$scope.questions = [] ;
 	
@@ -213,9 +214,8 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	var question = $scope.questions[i] ;
                 	var attempt = $scope.questionAttempts[i] ;
                 	
-                	if( question.targetExam == "MAIN" ) {
-                		$scope.totalMarks += 4 ;
-                	}
+                	question.targetExam = $scope.examType ;
+                	$scope.totalMarks += getMarksForQuestion( question ) ;
                 	
                 	$scope.totalScore += attempt.score ;
                 }

@@ -125,7 +125,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         endCurrentLap() ;
         
         $scope.timerActive = false ;
-        $scope.answersSubmitted = true ;
+        $scope.$parent.answersSubmitted = true ;
         
         if( !$scope.$$phase ) {
             $scope.$apply(function(){
@@ -233,7 +233,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         else {
             $scope.timerActive = false ;
             $scope.secondsRemaining = 0 ;
-            if( !$scope.answersSubmitted ) {
+            if( !$scope.$parent.answersSubmitted ) {
                 $scope.submitAnswers() ;
             }
         }
@@ -348,7 +348,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     // ------------------- Initialization helpers ----------------------------
     function initializeController() {
         
-        console.log( "Initializing JEEAdvExamBaseController" ) ;
+        console.log( "Initializing JEEAdvExamController" ) ;
         
         var parameters = new URLSearchParams( window.location.search ) ;
         var testId = parameters.get( 'id' ) ;
@@ -386,6 +386,7 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                 console.log( response.data ) ;
                 
                 $scope.$parent.testConfigIndex = response.data.testConfigIndex ;
+                
                 if( $scope.$parent.testConfigIndex.attempted == true ) {
                     console.log( "ERROR: This test has already been attempted." ) ;
                     $window.location.href = "/jeetest" ;
@@ -398,12 +399,15 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
                     $scope.secondsRemaining = $scope.testConfigIndex.duration * 60 ;
                     startTimer() ;
                     
-                    $scope.selectSection( $scope.$parent.sections[0] ) ;
+                    $scope.$parent.testAttempt.id = testId ;
                     $scope.$parent.testAttempt.testConfig = $scope.$parent.testConfigIndex ;
                     
                     $scope.$parent.saveTestAttempt( function() {
                         $scope.saveClickStreamEvent( 
                                 ClickStreamEvent.prototype.TEST_STARTED, null ) ;
+                        
+                        
+                        $scope.selectSection( $scope.$parent.sections[0] ) ;
                         startNextLap() ;
                     }) ;
                 }
@@ -445,8 +449,6 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     function initializeSections( secSubjectName, secQTypes, 
                                  secQIndices, secQuestions ) {
         
-        console.log( "Initializing sections for subject - " + secSubjectName ) ;
-        
         var section = null ;
         
         for( var i=0; i<secQTypes.length; i++ ) {
@@ -458,9 +460,6 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
             section.displayName = secSubjectName + " SEC " + (i+1) ;
             section.questionType = secQType ;
 
-            console.log( "  Section Q type = " + secQType ) ;
-            console.log( "  Display name = " + section.displayName ) ;
-            
             for( var j=0; j<secQIndices[i].length; j++ ) {
                 var qIndex = secQIndices[i][j] ;
                 var question = secQuestions[qIndex] ;

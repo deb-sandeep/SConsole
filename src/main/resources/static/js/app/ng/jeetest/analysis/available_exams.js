@@ -15,7 +15,8 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
 	
 	$scope.displayTestAttemptDetails = function( testAttempt ) {
 		$scope.$parent.selectedTestConfigId = testAttempt.testConfig.id ;
-		$location.path( "/attemptDetails/" + testAttempt.id ) ;
+		$location.path( "/attemptDetails/" + testAttempt.id + "/" + 
+		                testAttempt.testConfig.examType ) ;
 	}
 	
 	$scope.displayTestAttemptTimeSequence = function( testAttempt ) {

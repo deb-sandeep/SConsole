@@ -1,3 +1,21 @@
+function getMarksForQuestion( question ) {
+    if( question.targetExam == "MAIN" ) {
+        if      ( question.questionType == "SCA" ) return 4 ;
+        else if ( question.questionType == "NT"  ) return 4 ;
+    }
+    else if( question.targetExam == "ADV" ) {
+        if      ( question.questionType == "SCA" ) return 3 ;
+        else if ( question.questionType == "MCA" ) return 4 ;
+        else if ( question.questionType == "NT"  ) return 3 ;
+        else if ( question.questionType == "LCT" ) return 3 ;
+    }
+    console.log( "ERROR: Marks logic for question not defined. " + 
+                 "Question type = " + targetExam + ", " + 
+                 question.questionType ) ;
+    return -99999 ;
+}
+
+
 sConsoleApp.controller( 'ExamAnalysisController', function( $scope, $http, $location ) {
 	
 	$scope.alerts = [] ;

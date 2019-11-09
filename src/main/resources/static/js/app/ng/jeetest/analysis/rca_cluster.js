@@ -175,13 +175,4 @@ function RCACluster() {
             this.wtfLateralMks += marksLost ;
         }
     }
-
-    function getMarksForQuestion( question ) {
-    	if( question.targetExam == "MAIN" ) {
-    		if( question.questionType == "SCA" ) return 4 ;
-    		else if( question.questionType == "NT"  ) return 4 ;
-    	}
-    	console.log( "ERROR: Marks logic for question not defined." ) ;
-    	return -99999 ;
-    }
 }

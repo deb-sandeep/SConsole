@@ -3,7 +3,7 @@ function LapAutomata() {}
 LapAutomata.prototype.mainStrategyA = {
     "L1" : {
         transitions : {
-            "q-not-visited"               : "L2",
+            "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "AMR",
             "q-marked-for-review"         : "L2",
@@ -12,7 +12,7 @@ LapAutomata.prototype.mainStrategyA = {
     },
     "L2P" : {
         transitions : {
-            "q-not-visited"               : "XXX",
+            "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "AMR",
             "q-marked-for-review"         : "L2",
@@ -30,7 +30,7 @@ LapAutomata.prototype.mainStrategyA = {
     },
     "AMR" : {
         transitions : {
-            "q-not-visited"               : "XXX",
+            "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "XXX",
             "q-marked-for-review"         : "Purple",
@@ -39,7 +39,7 @@ LapAutomata.prototype.mainStrategyA = {
     },
     "L3P" : {
         transitions : {
-            "q-not-visited"               : "XXX",
+            "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "ANS",
             "q-marked-for-review"         : "Purple",
@@ -48,7 +48,7 @@ LapAutomata.prototype.mainStrategyA = {
     },
     "Purple" : {
         transitions : {
-            "q-not-visited"               : "XXX",
+            "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "XXX",
             "q-marked-for-review"         : "L3",
@@ -57,7 +57,7 @@ LapAutomata.prototype.mainStrategyA = {
     },
     "L3" : {
         transitions : {
-            "q-not-visited"               : "XXX",
+            "q-not-visited"               : "ABA",
             "q-attempted"                 : "ANS",
             "q-ans-and-marked-for-review" : "ANS",
             "q-marked-for-review"         : "ABA",
@@ -103,10 +103,7 @@ function QuestionAttemptDetails( question, attempt, lapNames, examType ) {
         
         this.totalTimeSpent += snapshot.timeSpent ;
         
-        var strategyAutomata = null ; 
-        if( examType == "MAIN" ) {
-            strategyAutomata = LapAutomata.prototype.mainStrategyA ;
-        }
+        var strategyAutomata = LapAutomata.prototype.mainStrategyA ; 
         
         if( strategyAutomata != null ) {
             var lapTransitions = strategyAutomata[ snapshot.lapName ].transitions ;
