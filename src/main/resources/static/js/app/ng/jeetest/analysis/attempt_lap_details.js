@@ -132,7 +132,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     // ------------------ Master reference data -----------------------------
     $scope.searchMaster = {
         subjectNames : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
-        questionTypes : [ "All", "SCA", "NT" ],
+        questionTypes : [ "All", "SCA", "NT", "MCA", "LCT", "MMT" ],
         resultTypes : [ "All", "Only Correct", "Only Wrong" ],
         attemptLaps : [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
         timeSpentChoices : [ "Any",
