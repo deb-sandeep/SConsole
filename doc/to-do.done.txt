@@ -19,6 +19,7 @@
 * Mark evaluation for MCA 
 * Mark evaluation based on test type
 * Test result page
+* Saving the attempt on the server
     
 29/Oct
 ---------------

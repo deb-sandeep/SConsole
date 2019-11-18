@@ -10,7 +10,7 @@ public class RegExpTester {
     private static final Logger log = Logger.getLogger( RegExpTester.class ) ;
     
     private static final String PATTERN = 
-            "[^\\{]@[^\\s]+" ;
+            "\\$\\{([^\\{]*)}+" ;
 
     private String processPattern( String input ) 
             throws Exception {
@@ -39,15 +39,11 @@ public class RegExpTester {
     }
     
     private String processMarker( String input ) {
-        log.debug( "Processing marker = " + input ) ;
-        return input.substring( 0,1 ) + "\\(" + input.substring( 2 ) + "\\)" ;
+        return input.substring( 2, input.length()-1 ) ;
     }
-        
+    
     public static void main( String[] args ) throws Exception {
-        String input = "A mass @m supported by a massless string wound around a uniform hollow cylinder of mass @m and radius @R. If the string does not slip on the cylinder, with what acceleration will the mass fall on release?\n" + 
-                "\n" + 
-                "{{@img Phy_Ar_6_T3_1.png}}\n" + 
-                "" ;
+        String input = "This is ${hello} world and ${out} there." ;
         String output = new RegExpTester().processPattern( input ) ;
         log.debug( output ) ;
     }
