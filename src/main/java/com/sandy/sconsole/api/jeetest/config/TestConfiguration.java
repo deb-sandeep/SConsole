@@ -11,6 +11,7 @@ public class TestConfiguration {
     private Integer id = -1 ;
     private String examType = null ;
     private TestConfigIndex tci = null ;
+    private Integer customDuration = null ;
     
     private List<TestQuestion> phyQuestions  = new ArrayList<>() ;
     private List<TestQuestion> chemQuestions = new ArrayList<>() ;
@@ -43,21 +44,27 @@ public class TestConfiguration {
     public int getDuration() {
         
         int duration = 0 ;
-        List<TestQuestion> questions = getAllQuestions() ;
-        
-        if( getExamType().equals( "MAIN" ) ) {
-            for( TestQuestion question : questions ) {
-                if( question.getQuestionType().equals( "SCA" ) ) {
-                    duration += 2 ;
-                }
-                else if( question.getQuestionType().equals( "NT" ) ) {
-                    duration += 4 ;
-                }
-            }
+        if( this.customDuration != null && this.customDuration > 0 ) {
+            duration = this.customDuration ;
         }
         else {
-            duration = (int)Math.ceil( questions.size() * 3.333 ) ;
+            List<TestQuestion> questions = getAllQuestions() ;
+            
+            if( getExamType().equals( "MAIN" ) ) {
+                for( TestQuestion question : questions ) {
+                    if( question.getQuestionType().equals( "SCA" ) ) {
+                        duration += 2 ;
+                    }
+                    else if( question.getQuestionType().equals( "NT" ) ) {
+                        duration += 4 ;
+                    }
+                }
+            }
+            else {
+                duration = (int)Math.ceil( questions.size() * 3.333 ) ;
+            }
         }
+        
         return duration ;
     }
     
@@ -177,5 +184,13 @@ public class TestConfiguration {
     public void setMathSecQuestionIndices(
             List<List<Integer>> mathSecQuestionIndices ) {
         this.mathSecQuestionIndices = mathSecQuestionIndices ;
+    }
+
+    public Integer getCustomDuration() {
+        return customDuration ;
+    }
+
+    public void setCustomDuration( Integer customDuration ) {
+        this.customDuration = customDuration ;
     }
 }

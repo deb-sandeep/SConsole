@@ -10,6 +10,15 @@
                                <span class="glyphicon glyphicon-floppy-save"></span>
                                Save
                         </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="panel-title">
+                        Custom duration (min) :
+                        <input type="number"
+                               ng-model="$parent.customDuration"
+                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                               maxlength="4"
+                               style="width:60px;">
+                        </span>
                     </div>
                 </div>
             </td>

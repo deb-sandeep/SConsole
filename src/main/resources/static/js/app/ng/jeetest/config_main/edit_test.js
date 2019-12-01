@@ -44,6 +44,8 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		'IIT - Chemistry' : [],
 		'IIT - Maths'     : []
 	}
+	$scope.customDuration = null ;
+	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
 	loadQBInsights() ;
@@ -342,11 +344,12 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestConfiguration', {
-        	id            : $scope.testId,
-        	examType      : $scope.examType,
-        	phyQuestions  : $scope.assembledQuestions[ 'IIT - Physics' ],
-	    	chemQuestions : $scope.assembledQuestions[ 'IIT - Chemistry' ],
-	    	mathQuestions : $scope.assembledQuestions[ 'IIT - Maths' ]
+        	id             : $scope.testId,
+        	examType       : $scope.examType,
+        	customDuration : $scope.customDuration, 
+        	phyQuestions   : $scope.assembledQuestions[ 'IIT - Physics' ],
+	    	chemQuestions  : $scope.assembledQuestions[ 'IIT - Chemistry' ],
+	    	mathQuestions  : $scope.assembledQuestions[ 'IIT - Maths' ]
         })
         .then( 
             function( response ){
