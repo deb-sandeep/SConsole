@@ -216,7 +216,6 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	
                 	question.targetExam = $scope.examType ;
                 	$scope.totalMarks += getMarksForQuestion( question ) ;
-                	
                 	$scope.totalScore += attempt.score ;
                 }
                 
