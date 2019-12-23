@@ -41,6 +41,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	$scope.assembledQuestionsForSelectedSubject = null ;
 	
 	$scope.selectedQuestion = null ;
+    $scope.customDuration = null ;
 		
 	var topicQSortDir = {} ;
 	var assembledQSortDir = {} ;
@@ -764,11 +765,12 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestConfiguration', {
-        	id            : $scope.testId,
-        	examType      : $scope.examType,
-        	phyQuestions  : phyQs,
-	    	chemQuestions : chemQs,
-	    	mathQuestions : mathQs
+        	id             : $scope.testId,
+        	examType       : $scope.examType,
+            customDuration : $scope.customDuration, 
+        	phyQuestions   : phyQs,
+	    	chemQuestions  : chemQs,
+	    	mathQuestions  : mathQs
         })
         .then( 
             function( response ){

@@ -173,12 +173,16 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     $scope.selectedAttempt       = null ;
     $scope.selectedQuestionIndex = -1 ;
     $scope.rootCause             = null ;
+    $scope.graceScoreForSelectedQuestion = 4 ;
     
     $scope.lapTimes    = {} ;
     $scope.lapAttempts = {} ;
     $scope.lapCorrects = {} ;
     $scope.lapAvgQTime = {} ;
     $scope.numAbandoned = 0 ;
+    
+    $scope.totalScore = 0 ;
+    $scope.totalMarks = 0 ;
     
     // -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -359,6 +363,39 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             timeSpentChoices : [$scope.searchMaster.timeSpentChoices[0]],
             errorRCAChoices : []
         } ;
+    }
+    
+    $scope.showAwardGraceDialog = function( index ) {
+        console.log( "Showing award grace dialog... " + index ) ;
+        selectQADetail( index ) ;
+        $( '#graceInputDialog' ).modal( 'show' ) ;
+    }
+    
+    $scope.awardGraceToSelectedQuestion = function() {
+        console.log( "Awarding grace to selected question ..." ) ;
+        
+        var preGraceScore = $scope.selectedAttempt.score ;
+        var preGraceAttemptStatus = $scope.selectedAttempt.attemptStatus ;
+        
+        $scope.selectedAttempt.score = $scope.graceScoreForSelectedQuestion ;
+        $scope.selectedAttempt.attemptStatus = "q-attempted" ;
+        if( $scope.graceScoreForSelectedQuestion > 0 ) {
+            $scope.selectedAttempt.isCorrect = true ;
+        }
+        else {
+            $scope.selectedAttempt.isCorrect = false ;
+        }
+        
+        // Nullify the pre grace score and add the new one
+        $scope.totalScore += ( -1 * preGraceScore ) ;
+        $scope.totalScore += $scope.graceScoreForSelectedQuestion ;
+        
+        updateGraceScoreOnServer( $scope.testAttemptId,
+                                  $scope.selectedAttempt.testQuestionId,
+                                  preGraceAttemptStatus,
+                                  preGraceScore,
+                                  $scope.selectedAttempt.attemptStatus,
+                                  $scope.selectedAttempt.score ) ;
     }
     
 	// --- [END] Scope functions
@@ -652,6 +689,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                                                    question, attempt, 
                                                    $scope.lapNames, 
                                                    $scope.examType ) ;
+            
+            $scope.totalMarks += getMarksForQuestion( question ) ;
+            $scope.totalScore += attempt.score ;
+
             $scope.qaDetails.push( attemptDetail ) ;
         }
     }
@@ -710,5 +751,35 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         }
     }
     
+    function updateGraceScoreOnServer( testAttemptId, 
+                                       testQuestionId,
+                                       preGraceAttemptState,
+                                       preGraceScore,
+                                       postGraceAttemptState,
+                                       postGraceScore ) {
+        
+        console.log( "Updating grace score on server." ) ;
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/TestAttempt/UpdateGraceScore', {
+            testAttemptId : testAttemptId,
+            testQuestionId : testQuestionId,
+            preGraceAttemptState : preGraceAttemptState,
+            preGraceScore : preGraceScore,
+            postGraceAttemptState : postGraceAttemptState,
+            postGraceScore : postGraceScore
+        } )
+        .then ( function( response ){
+            console.log( "Successfully updated grace score" ) ;
+        }, 
+        function( error ){
+            console.log( "Error saving grace score on server." ) ;
+            $scope.$parent.addErrorAlert( "Could not save grace score." ) ;
+        })
+        .finally( function() {
+            $scope.$parent.interactingWithServer = false ;
+        } ) ;
+    }
+
     // --- [END] Local functions
 } ) ;

@@ -1,8 +1,9 @@
 <div style="padding: 0px; margin: 10px" align="center">
 	<table class="table table-bordered table-compact"
-		style="width: auto !important;">
+		style="width: auto !important;font-size:12px !important;">
 		<thead>
 			<tr class="success">
+			    <th>#</th>
 				<th>ID</th>
 				<th>Type</th>
 				<th>Dur (min)</th>
@@ -28,6 +29,7 @@
 		<tbody>
 	        <tr ng-repeat="attempt in attemptSummaries"
 	            class="test-summary-{{test.examType}}">
+	           <td>{{attemptSummaries.length - $index}}</td>
 	           <td>{{attempt.testConfig.id}}</td>
 	           <td>{{attempt.testConfig.examType}}</td>
 	           <td style="text-align:right;font-family:Courier;">{{attempt.testConfig.duration*60 | duration}}</td>

@@ -32,7 +32,7 @@
               style="font-family:Courier New;">
               {{getTimeSpentForVisibleQuestions( lapName ) | duration}}
           </th>
-          <th colspan="4"></th>
+          <th colspan="4" rowspan="2" style="font-size:20px">{{totalScore}} / {{totalMarks}}</th>
       </tr>
       <tr>
           <th colspan="7" style="text-align:left;">Num questions answered</th>
@@ -41,7 +41,6 @@
               ng-class="'lap-detail-cell-bg-' + lapName">
               {{lapAttempts[lapName]}}
           </th>
-          <th colspan="4"></th>
       </tr>
       <tr>
           <th colspan="7" style="text-align:left;">Num wrong answers</th>
@@ -120,10 +119,13 @@
                   style="color:green;"></span>
             <span ng-if="!qaDetail.attempt.isCorrect && qaDetail.attempt.attemptStatus == 'q-attempted'" 
                   class="glyphicon glyphicon-remove"
-                  style="color:red;"></span>
+                  style="color:red;"
+                  ng-click="showAwardGraceDialog( $index )"></span>
             <span ng-if="!qaDetail.attempt.isCorrect && qaDetail.attempt.attemptStatus != 'q-attempted'" 
                   class="glyphicon glyphicon-remove"
-                  style="color:blue;"></span>
+                  style="color:blue;"
+                  ng-click="showAwardGraceDialog( $index )"></span>
+            </span>
          </td>
          <td>
              <span ng-show="!qaDetail.attempt.isCorrect"
