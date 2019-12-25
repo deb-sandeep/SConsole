@@ -119,17 +119,11 @@ function EditHelper() {
 	
 	function checkMultipleOptions( text, validationErrors ) {
 		var parts = text.split( "," ) ;
-		if( parts.length < 2 ) {
-			validationErrors.push( "Answer is MCA but only one answer marked correct." ) ;
-			return false ;
-		}
-		else {
-			for( var i=0; i<parts.length; i++ ) {
-				if( !checkValueIsIntegerAndBetween1to4( parts[i] ) ) {
-					return false ;
-				}
-			}
-		}
+        for( var i=0; i<parts.length; i++ ) {
+            if( !checkValueIsIntegerAndBetween1to4( parts[i] ) ) {
+                return false ;
+            }
+        }
 		return true ;
 	}
 	
