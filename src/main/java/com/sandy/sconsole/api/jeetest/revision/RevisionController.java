@@ -95,8 +95,8 @@ public class RevisionController {
                     paaMap.put( question.getProblemType(), paa ) ;
                 }
                 
-                if( question.getDuration() < paa.getSeventyPercentile() ) {
-                    log.debug( "Removing question because it is less than 70%ile" ) ;
+                if( question.getDuration() < paa.getEightyPercentile() ) {
+                    log.debug( "Removing question because it is less than 80%ile" ) ;
                     iter.remove() ;
                 }
             }
