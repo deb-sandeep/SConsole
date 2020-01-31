@@ -17,8 +17,12 @@ sConsoleApp.config( function( $routeProvider ) {
 		controller : "BulkEditController"
 	})
 	.when("/editQuestion/:id", {
-		templateUrl : "/jeetest/qbm/editQuestion",
-		controller : "EditQuestionController"
+	    templateUrl : "/jeetest/qbm/editQuestion",
+	    controller : "EditQuestionController"
+	})
+	.when("/mmtEditor", {
+		templateUrl : "/jeetest/qbm/mmtEditor",
+		controller : "MMTEditorController"
 	})
 });
 

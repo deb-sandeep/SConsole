@@ -1,0 +1,196 @@
+<div class="panel panel-default" style="padding:0px; margin:0px">
+  <div class="panel-body" style="padding:5px">
+  <table style="table-layout: fixed; width:100%;" border>
+  <tr>
+    <td valign="top">
+        <table class="table table-condensed">
+            <!-- First row -->
+            <tr>
+                <td class="labelcell"><label for="subject">Subject</label></td>
+                <td width="5px">:</td>
+                <td colspan="4">
+                 <select id="subject" 
+                         class="form-control"  
+                         ng-model="question.subject.name"
+                         ng-options="item for item in $parent.qbmMasterData.subjectNames"
+                         ng-disabled="isExistingQuestion()">
+                 </select>
+                </td>
+                <td class="labelcell"><label for="book">Book</label></td>
+                <td>:</td>
+                <td>
+                 <select id="book" 
+                         class="form-control"  
+                         ng-model="question.book"
+                         ng-change="bookUpdated()"
+                         ng-options="item as item.bookShortName for item in $parent.qbmMasterData.books[question.subject.name] track by item.id"
+                         ng-disabled="isExistingQuestion()">
+                 </select>
+                </td>
+            </tr>
+            <!-- Fifth row -->
+            <tr>
+                <td class="labelcell"><label for="qref">Q Ref</label></td>
+                <td>:</td>
+                <td colspan="4">
+                    <input id="questionRef"
+                           type="text" 
+                           ng-model="question.questionRef" 
+                           style="width:100%"
+                           ng-disabled="isExistingQuestion()"/>
+                </td>
+                <td class="labelcell"><label for="answer">Answer</label></td>
+                <td>:</td>
+                <td>
+                    <input id="answer" 
+                           type="text" 
+                           ng-model="question.answerText" 
+                           style="width:100%"/>
+                </td>
+            </tr>
+            <!-- Seventh row -->
+            <tr>
+                <td class="labelcell"><label for="answer">Body</label></td>
+                <td>:</td>
+                <td colspan="7">
+		             <button class="btn btn-default"
+		                     data-toggle="modal" 
+		                     data-target="#latexSnippetsDlg"
+		                     style="padding:0px 5px;">
+		                    <span class="glyphicon glyphicon-th"></span>
+		             </button>
+                     <button class="btn btn-success"
+                             ng-show="question.questionType == 'LCT'"
+                             data-toggle="modal" 
+                             data-target="#lctContext"
+                             style="padding:0px 5px;">
+                            <span class="glyphicon glyphicon-th"></span>
+                     </button>
+                </td>
+            </tr>
+            <!-- Eighth row -->
+            <tr>
+                <td colspan="9">
+                    <textarea id="questionText"
+                              rows="15" 
+                              ng-model="question.questionText"
+                              ng-focus="prePopulateAnswerText()"
+                              style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </td>
+    <td valign="top">
+        <table class="table table-condensed">
+            <!-- First row -->
+            <tr>
+                <td width="100%" class="labelcell">
+                <label for="preview">Preview</label>
+                </td>
+            </tr>
+            <!-- Second row -->
+            <tr>
+                <td style="font-size:16px">
+                    <div class="rendered-question">
+                        <render-test-question-on-edit-page></render-test-question-on-edit-page>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </td>
+  </tr>
+  </table>
+  </div>
+  <div class="panel-footer clearfix">
+	  <div class="pull-left">
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="saveAndCreateNew()">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              <span class="glyphicon glyphicon-plus"></span>
+              Save & New
+          </button>
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="save()">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              Save
+          </button>
+          <button type="button" class="btn btn-success btn-sm"
+                  ng-click="editNewQuestion()">
+              <span class="glyphicon glyphicon-plus"></span>
+              New
+          </button>
+          <button type="button" class="btn btn-danger btn-sm"
+                  ng-click="discardChange()">
+	          Discard
+          </button>
+          <button type="button" class="btn btn-info btn-sm"
+                  ng-click="preview()">
+              <span class="glyphicon glyphicon-eye-open"></span>
+              Preview
+	          <input type="checkbox"
+	                 ng-model="isAutoPreviewOn">
+	              <span class="glyphicon glyphicon-time"></span>
+	          </input>
+          </button>
+	  </div>
+  </div>
+</div>
+
+<div id="latexSnippetsDlg" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Latex snippets</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:600px;'>
+           <div ng-include="'../views/jeetest/config_main/template/latex_snippets.html'">
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="validationErrorsDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title" style="color:red;">Please correct the errors before submitting</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px;color:blue;">
+        <ol>
+            <li ng-repeat="error in validationErrors">
+                {{error}}
+            </li>
+        </ol>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" 
+                class="btn btn-default" 
+                ng-click="closeValidationErrorsDialog()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lctContext" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" style="width:550px">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Edit LCT context</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px;"">
+          <textarea id="questionText"
+                    rows="15" 
+                    ng-model="question.lctContext"
+                    style="border: none; width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;">
+          </textarea>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

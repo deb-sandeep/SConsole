@@ -28,10 +28,8 @@ import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.SConsole ;
-import com.sandy.sconsole.api.jeetest.qbm.helper.BulkQuestionEntryHelper ;
 import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSearchEngine ;
 import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSynchronizer ;
-import com.sandy.sconsole.api.jeetest.qbm.vo.BulkQEntry ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.QBMMasterData ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.QBTopicInsight ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.TestQuestionEx ;
@@ -456,29 +454,5 @@ public class QBMRestController {
         }
         
         return insights ;
-    }
-
-    @GetMapping( "/BulkQuestionsEntryMeta" ) 
-    public ResponseEntity<List<BulkQEntry>> getRevisionQuestions(
-            @RequestParam( name="subjectName",  required=true ) String  subjectName,
-            @RequestParam( name="topicId",      required=true ) Integer topicId,
-            @RequestParam( name="bookId",       required=true ) Integer bookId,
-            @RequestParam( name="baseQRef",     required=false) String  baseQRef ) {
-        
-        try {
-            Topic topic = topicRepo.findById( topicId ).get() ;
-            Book  book  = bookRepo.findById( bookId ).get() ;
-            
-            BulkQuestionEntryHelper helper = new BulkQuestionEntryHelper( tqRepo ) ;
-            List<BulkQEntry> entries = helper.findBulkQuestionEntries( subjectName, topic, book, baseQRef ) ;
-            
-            return ResponseEntity.status( HttpStatus.OK )
-                                 .body( entries ) ;
-        }
-        catch( Exception e ) {
-            log.error( "Error getting available test attempts.", e ) ;
-            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
-                                 .body( null ) ;
-        }
     }
 }

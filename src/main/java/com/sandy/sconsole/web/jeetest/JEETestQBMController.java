@@ -12,6 +12,11 @@ public class JEETestQBMController {
         return "jeetest/qbm/edit_question" ;
     }
     
+    @RequestMapping( "/mmtEditor" )
+    public String mmtEditor() {
+        return "jeetest/qbm/mmt_editor" ;
+    }
+    
     @RequestMapping( "/bulkEdit" )
     public String bulkEdit() {
         return "jeetest/qbm/bulk_edit" ;

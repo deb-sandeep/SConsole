@@ -39,5 +39,4 @@ public interface TopicRepository extends CrudRepository<Topic, Integer> {
           + "    p.problemType"
     )
     List<Object[]> getActiveProblemCountByTopic() ;
-    
 }

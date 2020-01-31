@@ -132,6 +132,7 @@ public class BulkQuestionEntryHelper {
             }
             
             for( BulkQEntry entry : entriesMap.values() ) {
+                entry.setTopic( topic ) ;
                 qEntries.add( entry ) ;
             }
         }

@@ -4,6 +4,7 @@ import java.util.ArrayList ;
 import java.util.List ;
 
 import com.sandy.sconsole.api.jeetest.qbm.helper.BulkQuestionEntryHelper.FileInfo ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 
 public class BulkQEntry {
 
@@ -13,6 +14,7 @@ public class BulkQEntry {
     private Integer latLevel = 3 ;
     private Integer projTime = 120 ;
     private Boolean saved    = false ;
+    private Topic   topic    = null ;
     
     private List<String> imgPaths  = new ArrayList<>() ;
     private List<String> imgNames  = new ArrayList<>() ;
@@ -113,5 +115,13 @@ public class BulkQEntry {
 
     public void setImgPaths( List<String> imgPaths ) {
         this.imgPaths = imgPaths;
+    }
+
+    public Topic getTopic() {
+        return topic ;
+    }
+
+    public void setTopic( Topic topic ) {
+        this.topic = topic ;
     }
 }
