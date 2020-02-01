@@ -44,7 +44,10 @@
                    <td>{{questionAttempts[$index].answerProvided}}</td>
                    <td style="text-align:right;font-family:Courier;">{{questionAttempts[$index].timeSpent | mmss}}</td>
                    <td>
-                        <span ng-if="questionAttempts[$index].isCorrect"  
+                        <span ng-if="questionAttempts[$index].partialCorrect"  
+                              class="glyphicon glyphicon-ok"
+                              style="color:orange;"></span>
+                        <span ng-if="questionAttempts[$index].isCorrect && !questionAttempts[$index].partialCorrect"  
                               class="glyphicon glyphicon-ok"
                               style="color:green;"></span>
                         <span ng-if="!questionAttempts[$index].isCorrect" 

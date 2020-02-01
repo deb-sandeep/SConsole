@@ -133,7 +133,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     $scope.searchMaster = {
         subjectNames : [ "IIT - Physics", "IIT - Chemistry", "IIT - Maths" ],
         questionTypes : [ "All", "SCA", "NT", "MCA", "LCT", "MMT" ],
-        resultTypes : [ "All", "Only Correct", "Only Wrong" ],
+        resultTypes : [ "All", "Only Correct", "Partially Correct", "Only Wrong" ],
         attemptLaps : [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3", "Abandoned" ],
         timeSpentChoices : [ "Any",
                       "> 1 min", "> 2 min", "> 3 min", "> 5 min", 
@@ -481,13 +481,18 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         var selectedType = $scope.searchCriteria.resultType ;
         
         if( selectedType != "All" ) {
-            if( qaDetail.attempt.isCorrect ) {
-                if( selectedType == "Only Wrong" ) {
+            if( selectedType == "Partially Correct" ) {
+                if( !qaDetail.attempt.partialCorrect ) {
                     isFiltered = true ;
                 }
-            } 
-            else {
-                if( selectedType == "Only Correct" ) {
+            }
+            else if( selectedType == "Only Wrong" ) {
+                if( qaDetail.attempt.isCorrect ) {
+                    isFiltered = true ;
+                }
+            }
+            else if( selectedType == "Only Correct" ) {
+                if( !qaDetail.attempt.isCorrect ) {
                     isFiltered = true ;
                 }
             }
@@ -655,18 +660,37 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         $scope.lapCorrects = {} ;
         $scope.lapAvgQTime = {} ;
         $scope.numAbandoned = 0 ;
+        
+        $scope.totalScore = 0 ;
+        $scope.totalMarks = 0 ;
     }
     
     function processRawData() {
         
         if( $scope.lapEvents.length == 0 ) return ;
         
+        markPartiallyCorrectAnswers() ;
         extractLapNames() ;
         constructQuestionAttemptDetails() ;
         processLapSnapshots() ;
         collectLapStatistics() ;
         
         console.log( "Raw data processed." ) ;
+    }
+    
+    function markPartiallyCorrectAnswers() {
+        
+        for( var i=0; i<$scope.questions.length; i++ ) {
+            var question = $scope.questions[i] ;
+            var attempt  = $scope.questionAttempts[i] ;
+            
+            attempt.partialCorrect = false ;
+            if( attempt.isCorrect ) {
+                if( attempt.score < getMarksForQuestion( question ) ) {
+                    attempt.partialCorrect = true ;
+                }
+            }
+        }
     }
     
     function extractLapNames() {

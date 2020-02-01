@@ -114,7 +114,10 @@
             </span>
          </td>
          <td>
-            <span ng-if="qaDetail.attempt.isCorrect"  
+	        <span ng-if="qaDetail.attempt.partialCorrect"  
+	              class="glyphicon glyphicon-ok"
+	              style="color:orange;"></span>
+            <span ng-if="qaDetail.attempt.isCorrect && !qaDetail.attempt.partialCorrect"  
                   class="glyphicon glyphicon-ok"
                   style="color:green;"></span>
             <span ng-if="!qaDetail.attempt.isCorrect && qaDetail.attempt.attemptStatus == 'q-attempted'" 
