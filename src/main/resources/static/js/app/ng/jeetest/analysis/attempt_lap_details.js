@@ -709,10 +709,14 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             var question = $scope.questions[i] ;
             var attempt  = $scope.questionAttempts[i] ;
             
+            question.targetExam = $scope.examType ;
+            
             var attemptDetail = new QuestionAttemptDetails( 
                                                    question, attempt, 
                                                    $scope.lapNames, 
                                                    $scope.examType ) ;
+            
+            console.log( question.questionType + " - " + getMarksForQuestion( question ) ) ;
             
             $scope.totalMarks += getMarksForQuestion( question ) ;
             $scope.totalScore += attempt.score ;

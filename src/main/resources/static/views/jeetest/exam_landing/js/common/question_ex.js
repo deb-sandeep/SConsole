@@ -65,15 +65,12 @@ function QuestionEx( q, attemptLaps ) {
         else {
             if( this.question.questionType == "SCA" ||
                 this.question.questionType == "NT" || 
-                this.question.questionType == "LCT" ) {
+                this.question.questionType == "LCT" || 
+                this.question.questionType == "MMT" ) {
                 return 3 ;
             }
             else if( this.question.questionType == "MCA" ) {
                 return 4 ;
-            }
-            else {
-                // For MMT marking is yet to be decided
-                return "XXX" ;
             }
         }
     }
@@ -99,6 +96,9 @@ function QuestionEx( q, attemptLaps ) {
             else if( this.question.questionType == "LCT" ) {
                 return this.getSCAScore() ;
             }
+            else if( this.question.questionType == "MMT" ) {
+                return this.getMMTScore() ;
+            }
     	}
     	return 0 ;
     }
@@ -109,6 +109,15 @@ function QuestionEx( q, attemptLaps ) {
                 return 3 ;
             }
             return 4 ;
+        }
+        else {
+            return -1 ;
+        }
+    }
+    
+    this.getMMTScore = function() {
+        if( this.question.answerText == this.interactionHandler.getAnswer() ) {
+            return 3 ;
         }
         else {
             return -1 ;

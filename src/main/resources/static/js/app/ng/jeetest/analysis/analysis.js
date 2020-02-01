@@ -8,9 +8,10 @@ function getMarksForQuestion( question ) {
         else if ( question.questionType == "MCA" ) return 4 ;
         else if ( question.questionType == "NT"  ) return 3 ;
         else if ( question.questionType == "LCT" ) return 3 ;
+        else if ( question.questionType == "MMT" ) return 3 ;
     }
     console.log( "ERROR: Marks logic for question not defined. " + 
-                 "Question type = " + targetExam + ", " + 
+                 "Question type = " + question.targetExam + ", " + 
                  question.questionType ) ;
     return -99999 ;
 }
