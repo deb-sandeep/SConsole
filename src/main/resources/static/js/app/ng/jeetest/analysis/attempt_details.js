@@ -214,6 +214,8 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	var question = $scope.questions[i] ;
                 	var attempt = $scope.questionAttempts[i] ;
                 	
+                	question.targetExam = $scope.examType ;
+                	
                 	attempt.partialCorrect = false ;
                 	if( attempt.isCorrect ) {
                 	    if( attempt.score < getMarksForQuestion( question ) ) {
@@ -221,7 +223,6 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
                 	    }
                 	}
                 	
-                	question.targetExam = $scope.examType ;
                 	$scope.totalMarks += getMarksForQuestion( question ) ;
                 	$scope.totalScore += attempt.score ;
                 }

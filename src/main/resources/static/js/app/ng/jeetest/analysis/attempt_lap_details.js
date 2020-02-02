@@ -669,9 +669,9 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         
         if( $scope.lapEvents.length == 0 ) return ;
         
-        markPartiallyCorrectAnswers() ;
         extractLapNames() ;
         constructQuestionAttemptDetails() ;
+        markPartiallyCorrectAnswers() ;
         processLapSnapshots() ;
         collectLapStatistics() ;
         
