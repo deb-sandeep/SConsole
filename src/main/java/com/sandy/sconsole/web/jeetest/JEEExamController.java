@@ -9,7 +9,7 @@ public class JEEExamController {
     
     @RequestMapping( "/mainTest" )
     public String mainTest() {
-        return "jeetest/exam_main/exam_main_base" ;
+        return "jeetest/exam_xmain/exam_xmain_base" ;
     }
 
     @RequestMapping( "/mainTestExam" )
