@@ -1,0 +1,224 @@
+<h2 style="text-align:center;">Score : {{totalScore}} / {{totalMarks}} </h2>
+<div id="test-result">
+    <div id="test-result-summary">
+        <table align="center" class="pure-table pure-table-horizontal"
+               style="font-size:16px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="q-attribute">Lat</th>
+                    <th class="q-attribute">Solve</br>Time</th>
+                    <th class="q-attribute">Correct<br/>Answer</th>
+                    <th></th>
+                    <th>Answer</th>
+                    <th>Time</th>
+                    <th>Result</th>
+                    <th>Marks</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="questionEx in $parent.overallSection.questions"
+                    ng-click="selectQuestion( questionEx )"
+                    ng-class="getRowBackgroundClass( questionEx )">
+                   <td class="q-attribute">Q {{$index + 1}}</td>
+                   <td class="q-attribute">{{questionEx.question.lateralThinkingLevel}}</td>
+                   <td class="q-attribute" style="text-align:right;">{{questionEx.question.projectedSolveTime | mmss}}</td>
+                   <td class="q-attribute">{{questionEx.question.answerText}}</td>
+                   <td>
+                        <span class="stat-icon-small" 
+                              ng-class="questionEx.getResultStatusIconStyle()">
+                        </span>
+                    </td>
+                   <td>{{questionEx.interactionHandler.getAnswer()}}</td>
+                   <td>{{questionEx.timeSpent | mmss}}</td>
+                   <td>
+                        <span ng-if="questionEx.isCorrectlyAnswered()"  
+                              class="glyphicon glyphicon-ok"
+                              style="color:green;"></span>
+                        <span ng-if="!questionEx.isCorrectlyAnswered()" 
+                              class="glyphicon glyphicon-remove"
+                              style="color:red;"></span>
+                        <span ng-show="!questionEx.isCorrectlyAnswered()"
+                              class="glyphicon glyphicon-ok-circle"
+                              ng-click="showAwardGraceDialog( questionEx )">
+                        </span>
+                   </td>
+                   <td>{{questionEx.getScore()}}</td>
+                   <td>
+                        <span ng-show="!questionEx.isCorrectlyAnswered()"
+                              class="glyphicon glyphicon-tags"
+                              ng-click="showRootCauseDialog( questionEx )">
+                        </span>
+                   </td>
+                   <td style="text-align:left">{{questionEx.rootCause}}</td>
+                </tr>        
+            </tbody>
+        </table>
+    </div>
+    <div id="test-question-display">
+        <table align="center" class="pure-table pure-table-horizontal"
+               ng-show="selectedQuestion != null">
+            <tr>
+                <th>Question ID</th>
+                <td>{{selectedQuestion.question.id}}</td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td>{{selectedQuestion.question.subject.name}}</td>
+            </tr>
+            <tr>
+                <th>Topic</th>
+                <td>{{selectedQuestion.question.topic.topicName}}</td>
+            </tr>
+            <tr>
+                <th>Book</th>
+                <td>{{selectedQuestion.question.book.bookShortName}}</td>
+            </tr>
+            <tr>
+                <th>Question type</th>
+                <td>{{selectedQuestion.question.questionType}}</td>
+            </tr>
+            <tr>
+                <th>Question reference</th>
+                <td>{{selectedQuestion.question.questionRef}}</td>
+            </tr>
+        </table>
+        <div id="test-question-render">
+            <render-test-summary-question></render-test-summary-question>
+        </div>
+        <button id="return-to-test-index"
+                class="btn btn-info btn-md"
+                ng-click="returnToDashboard()">
+            Return to Dashboard
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+    </div>
+</div>
+
+<div id="graceInputDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:450px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Enter grace inputs:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:300px;'>
+            <table width="100%" class="pure-table pure-table-horizontal"
+                   ng-show="selectedQuestion != null">
+                <tr>
+                    <td>Question ID</td>
+                    <td><strong>{{selectedQuestion.question.id}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Subject</td>
+                    <td><strong>{{selectedQuestion.question.subject.name}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Topic</td>
+                    <td><strong>{{selectedQuestion.question.topic.topicName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Book</td>
+                    <td><strong>{{selectedQuestion.question.book.bookShortName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question type</td>
+                    <td><strong>{{selectedQuestion.question.questionType}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question reference</td>
+                    <td><strong>{{selectedQuestion.question.questionRef}}</strong></td>
+                </tr>
+                <tr>
+                    <td>New score</td>
+                    <td>
+                        <input type="number"
+                               min="-2"
+                               max="4" 
+                               ng-model="graceScoreForSelectedQuestion" 
+                               style="width:100%"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info"    
+                data-dismiss="modal"
+                ng-click="awardGraceToSelectedQuestion()">
+            Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rootCauseDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:450px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <h4 class="modal-title">Enter root cause:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:300px;'>
+            <table width="100%" class="pure-table pure-table-horizontal"
+                   ng-show="selectedQuestion != null">
+                <tr>
+                    <td>Question ID</td>
+                    <td><strong>{{selectedQuestion.question.id}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Subject</td>
+                    <td><strong>{{selectedQuestion.question.subject.name}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Topic</td>
+                    <td><strong>{{selectedQuestion.question.topic.topicName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Book</td>
+                    <td><strong>{{selectedQuestion.question.book.bookShortName}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question type</td>
+                    <td><strong>{{selectedQuestion.question.questionType}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Question reference</td>
+                    <td><strong>{{selectedQuestion.question.questionRef}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Root cause</td>
+                    <td>
+                         <select id="topic" 
+                                 class="form-control"  
+                                 ng-model="rootCause"
+                                 ng-options="item as item.displayName for item in rcOptions.choices track by item.id">
+                         </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:5px">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info"    
+                data-dismiss="modal"
+                ng-click="saveRootCause()">
+            Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

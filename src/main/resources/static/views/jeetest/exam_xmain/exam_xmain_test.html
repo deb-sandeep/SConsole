@@ -1,0 +1,265 @@
+<div id="adv-exam-header">
+    <div id="adv-exam-section-headers">
+		<div id="adv-section-tab-panel-1" class="container">
+		  <div class="row">
+		    <div class="col-sm-9">
+		        <button id="overall-sec-btn" type="button" class="btn btn-info btn-md action-btn">
+		        Sections &nbsp;
+		        <span id="overall-sec-info-span" class="glyphicon glyphicon-info-sign"></span>
+		        </button>
+		    </div>
+		    <div class="col-sm-1">
+		        <button type="button" 
+		                class="btn btn-info btn-md action-btn"
+		                data-toggle="modal" 
+		                data-target="#questionPaperDialog"
+		                ng-click="showQuestionPaper()">
+		        <span class="glyphicon glyphicon-save"></span>
+		        Question Paper
+		        </button>
+		    </div>
+		    <div class="col-sm-2" style="text-align:right;">
+		        <span id="timer-adv" class="badge">{{ secondsRemaining | mmss }}</span>
+		    </div>
+		  </div>
+		</div>
+		
+		<div id="adv-section-tab-panel-2" class="container">
+		   <button ng-repeat="section in $parent.sections"
+		           ng-attr-id="{{ section.id + '-btn'}}" 
+		           type="button" 
+		           class="btn btn-default btn-md tab-panel-2-btn"
+		           ng-class="getSectionTabClass( section )"
+		           ng-click="selectSection( section )"
+		           attach-hover-handlers>
+		       {{section.displayName}} &nbsp;
+		       <span ng-attr-id="{{ section.id + '-info-span'}}" 
+		             class="glyphicon glyphicon-info-sign"></span>
+		   </button>
+		</div>
+    </div>
+    <div id="candidate-img-header">
+        <img src="/img/self.png">
+    </div>
+</div>
+
+<div id="adv-question-control-split-pane">
+    <div id="adv-question-display-panel">
+        <div id="adv-question-display-header">
+        Question No. {{currentQuestion.index}}
+        </div>
+        <div id="adv-question-display-scroll-pane">
+            <div id="q_top"></div>
+            <div ng-if="currentQuestion.question.questionType == 'SCA'"
+                 ng-include="'/views/jeetest/exam_adv/template/sca_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'MCA'"
+                 ng-include="'/views/jeetest/exam_adv/template/mca_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'NT'"
+                 ng-include="'/views/jeetest/exam_adv/template/nt_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'LCT'"
+                 ng-include="'/views/jeetest/exam_adv/template/lct_instructions.html'">
+            </div>
+            <div ng-if="currentQuestion.question.questionType == 'MMT'"
+                 ng-include="'/views/jeetest/exam_adv/template/mmt_instructions.html'">
+            </div>
+            <p>
+            <div class="rendered-question">
+                <render-question-for-attempt></render-question-for-attempt>
+            </div>
+            <div id="q_bottom"></div>
+            <div id="scroll-bottom"
+                 ng-click="$parent.scrollBottom()">
+                <span class="glyphicon glyphicon-circle-arrow-down"></span>
+            </div>
+            <div id="scroll-top"
+                 ng-click="$parent.scrollTop()">
+                <span class="glyphicon glyphicon-circle-arrow-up"></span>
+            </div>
+        </div>
+        <div id="pane-toggle-tab"
+             ng-click="toggleQuestionPalette()">
+            <span class="glyphicon glyphicon-menu-right"
+                  ng-show="!paletteHidden"></span>
+            <span class="glyphicon glyphicon-menu-left"
+                  ng-show="paletteHidden"></span>
+        </div>
+    </div>
+    <div id="adv-question-palette-panel">
+        <div id="adv-attempt-stat-panel">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="30px">
+                            <span class="stat-icon-small not-visited">
+                            {{currentSection.stats.numNotVisited}}
+                            </span>
+                        </td>
+                        <td>Not Visited</td>
+                        <td width="30px">
+                            <span class="stat-icon-small not-answered">
+                            {{currentSection.stats.numNotAnswered}}
+                            </span>
+                        </td>
+                        <td>Not Answered</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="stat-icon-small answered">
+                            {{currentSection.stats.numAttempted}}
+                            </span>
+                        </td>
+                        <td>Attempted</td>
+                        <td>
+                            <span class="stat-icon-small review">
+                            {{currentSection.stats.numMarkedForReview}}
+                            </span>
+                        </td>
+                        <td>Marked for Review</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="stat-icon-small review-answered">
+                            {{currentSection.stats.numAnsAndMarkedForReview}}
+                            </span>
+                        </td>
+                        <td colspan="3">Answered & Marked for Review</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="palette-section-name">
+        {{currentSection.displayName}}
+        </div>
+        <div id="adv-question-control-dashboard">
+            <div>
+                <button ng-repeat="questionEx in currentSection.questions"
+                        type="button" 
+                        class="btn btn-default q-control"
+                        ng-click="showQuestion( questionEx )"
+                        ng-class="getControlDashboardQuestionButtonStyle( questionEx )">
+                {{$index + 1}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adv-footer">
+	<div id="adv-question-action-panel">
+	    <button type="button" class="btn btn-info btn-md action-btn"
+	            ng-click="markForReviewAndNext()">
+	    Mark for Review & Next
+	    </button>
+	    <button type="button" class="btn btn-default btn-md action-btn"
+	            ng-click="clearResponse()">
+	    Clear Response
+	    </button>
+	    <button type="button" class="btn btn-success btn-md action-btn pull-right"
+	            ng-click="saveAndNext()">
+	    Save & Next
+	    </button>
+	    <div style="width:350px;display:inline-block;">&nbsp;</div>
+        <button type="button" 
+                class="btn btn-danger btn-md action-btn"
+                ng-click="endCurrentLapAndStartNextLap()"
+                ng-disabled="currentLapName == 'L3'">
+	        Next Lap 
+	        ( {{currentLapName}} 
+	        <span class="glyphicon glyphicon-chevron-right"></span> 
+	        {{nextLapName}} )
+        </button>
+	</div>
+	<div id="adv-submit-btn-panel" align="center">
+        <button type="button" class="btn btn-success btn-md action-btn"
+                ng-click="submitAnswers()">
+        Submit
+        </button>
+	</div>
+</div>
+
+<div id="sec-info-div">
+  <div class="section-hover-div-header" style="width:100%">
+      {{currentHoverSection.displayName}}
+  </div>
+  <table width="100%"">
+    <tbody>
+      <tr>
+          <td width="40px">
+              <span class="stat-icon-small not-visited">
+              {{currentHoverSection.stats.numNotVisited}}
+              </span>
+          </td>
+          <td>Not Visited</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small not-answered">
+              {{currentHoverSection.stats.numNotAnswered}}
+              </span>
+          </td>
+          <td>Not Answered</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small answered">
+              {{currentHoverSection.stats.numAttempted}}
+              </span>
+          </td>
+          <td>Attempted</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small review">
+              {{currentHoverSection.stats.numMarkedForReview}}
+              </span>
+          </td>
+          <td>Marked for Review</td>
+      </tr>
+      <tr>
+          <td>
+              <span class="stat-icon-small review-answered">
+              {{currentHoverSection.stats.numAnsAndMarkedForReview}}
+              </span>
+          </td>
+          <td>Ans & Marked for Review</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="questionPaperDialog" 
+     class="modal fade" 
+     role="dialog"
+     data-backdrop="static">
+  <div class="modal-dialog" style="width:1000px;">
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#E5E5E5;padding:5px">
+        <button type="button" 
+                class="close" 
+                data-dismiss="modal"
+                ng-click="hideQuestionPaper()">
+            &times;
+        </button>
+        <h4 class="modal-title">Question Paper:</h4>
+      </div>
+      <div class="modal-body" style="background-color:#FEFEFE;padding:5px">
+        <div style='overflow:auto;height:85vh;'>
+          <div ng-repeat="section in $parent.sections">
+            <p class="full-paper-sec-header">
+                {{section.displayName}} - {{section.questionType}}
+            </p>
+            <div class="question-listing" 
+                 ng-repeat="questionEx in section.questions">
+              <p class="full-paper-question-header">Question {{$index + 1}}</p>
+              <render-question-on-full-question-paper></render-question-on-full-question-paper>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

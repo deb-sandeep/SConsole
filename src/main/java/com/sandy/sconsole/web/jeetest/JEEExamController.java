@@ -36,4 +36,19 @@ public class JEEExamController {
     public String advTestResult() {
         return "jeetest/exam_adv/exam_adv_result" ;
     }
+    
+    @RequestMapping( "/xMainTest" )
+    public String xMainTest() {
+        return "jeetest/exam_adv/exam_xmain_base" ;
+    }
+
+    @RequestMapping( "/xMainTestExam" )
+    public String xMainTestExam() {
+        return "jeetest/exam_xmain/exam_xmain_test" ;
+    }
+
+    @RequestMapping( "/xMainTestResult" )
+    public String xMainTestResult() {
+        return "jeetest/exam_xmain/exam_xmain_result" ;
+    }
 }
