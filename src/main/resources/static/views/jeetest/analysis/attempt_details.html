@@ -46,21 +46,20 @@
                    <td>
                         <span ng-if="questionAttempts[$index].partialCorrect"  
                               class="glyphicon glyphicon-ok"
-                              style="color:orange;"></span>
+                              style="color:orange;"                              
+                              ng-click="showAwardGraceDialog( $index )"></span>
                         <span ng-if="questionAttempts[$index].isCorrect && !questionAttempts[$index].partialCorrect"  
                               class="glyphicon glyphicon-ok"
                               style="color:green;"></span>
                         <span ng-if="!questionAttempts[$index].isCorrect" 
                               class="glyphicon glyphicon-remove"
-                              style="color:red;"></span>
-                        <span ng-show="!questionAttempts[$index].isCorrect"
-                              class="glyphicon glyphicon-ok-circle"
-                              ng-click="showAwardGraceDialog( $index )">
+                              style="color:red;"            
+                              ng-click="showAwardGraceDialog( $index )"></span>
                         </span>
                    </td>
                    <td>{{questionAttempts[$index].score}}</td>
                    <td>
-                        <span ng-show="!questionAttempts[$index].isCorrect"
+                        <span ng-show="!questionAttempts[$index].isCorrect || questionAttempts[$index].partialCorrect"
                               class="glyphicon glyphicon-tags"
                               ng-click="showRootCauseDialog( $index )">
                         </span>

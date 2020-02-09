@@ -178,6 +178,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     $scope.lapTimes    = {} ;
     $scope.lapAttempts = {} ;
     $scope.lapCorrects = {} ;
+    $scope.lapPartials = {} ;
     $scope.lapAvgQTime = {} ;
     $scope.numAbandoned = 0 ;
     
@@ -597,7 +598,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         
         if( rcaChoices.length > 0 ) {
             isMatched = false ;
-            if( !qaDetail.attempt.isCorrect ) {
+            if( !qaDetail.attempt.isCorrect || qaDetail.attempt.partialCorrect ) {
                 for( var i=0; i<rcaChoices.length; i++ ) {
                     if( qaDetail.attempt.rootCause == rcaChoices[i].id ) {
                         isMatched = true ;
@@ -606,7 +607,6 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                 }
             }
         }
-        
         return !isMatched ;
     }
         
@@ -658,6 +658,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
         $scope.lapTimes    = {} ;
         $scope.lapAttempts = {} ;
         $scope.lapCorrects = {} ;
+        $scope.lapPartials = {} ;
         $scope.lapAvgQTime = {} ;
         $scope.numAbandoned = 0 ;
         
@@ -716,8 +717,6 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                                                    $scope.lapNames, 
                                                    $scope.examType ) ;
             
-            console.log( question.questionType + " - " + getMarksForQuestion( question ) ) ;
-            
             $scope.totalMarks += getMarksForQuestion( question ) ;
             $scope.totalScore += attempt.score ;
 
@@ -745,6 +744,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             var lapName = $scope.lapNames[i] ;
             var lapTime = 0 ;
             var numAnswered = 0 ;
+            var numPartial = 0 ;
             var numCorrect = 0 ;
             
             for( var j=0; j<$scope.qaDetails.length; j++ ) {
@@ -754,7 +754,10 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
                 lapTime += lapAttemptDetail.timeSpent ;
                 if( qaDetail.answeredInLap == lapName ) {
                     numAnswered++ ;
-                    if( qaDetail.attempt.isCorrect ) {
+                    if( qaDetail.attempt.partialCorrect ) {
+                        numPartial++ ;
+                    }
+                    else if( qaDetail.attempt.isCorrect ) {
                         numCorrect++ ;
                     }
                 }
@@ -762,6 +765,7 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             $scope.lapTimes[ lapName ] = lapTime ;
             $scope.lapAttempts[ lapName ] = numAnswered ;
             $scope.lapCorrects[ lapName ] = numCorrect ;
+            $scope.lapPartials[ lapName ] = numPartial ;
             
             var avgQTime = 0 ;
             if( numAnswered > 0 ) {

@@ -6,6 +6,9 @@ function RCACluster() {
 	this.numCorrect           = 0 ;
 	this.correctMks           = 0 ;
 	
+    this.numPartial           = 0 ;
+    this.partialMks           = 0 ;
+    
 	this.numWrong             = 0 ;
 	this.wrongMks             = 0 ;
 	
@@ -59,6 +62,8 @@ function RCACluster() {
         this.totalMarks           = 0 ;
         this.numCorrect           = 0 ;
         this.correctMks           = 0 ;
+        this.numPartial           = 0 ;
+        this.partialMks           = 0 ;
         this.numWrong             = 0 ;
         this.wrongMks             = 0 ;
         this.numRecollection      = 0 ;
@@ -99,15 +104,20 @@ function RCACluster() {
     	
     	this.numQuestions++ ;
     	this.totalMarks += marks ;
-    	this.correctMks += marksGained ;
-    	this.wrongMks   += marksLost ;
     	
-    	if( attempt.isCorrect ) {
-    		this.numCorrect++ ;
+    	if( attempt.partialCorrect ) {
+    	    this.partialMks += marksGained ;
+    	    this.numPartial++ ;
+            this.updateRCStat( attempt.rootCause, marksLost ) ;
+    	}
+    	else if( attempt.isCorrect ) {
+    	    this.correctMks += marksGained ;
+    	    this.numCorrect++ ;
     	}
     	else {
-    		this.numWrong++ ;
-    		this.updateRCStat( attempt.rootCause, marksLost ) ;
+    	    this.wrongMks   += marksLost ;
+    	    this.numWrong++ ;
+    	    this.updateRCStat( attempt.rootCause, marksLost ) ;
     	}
     }
     
