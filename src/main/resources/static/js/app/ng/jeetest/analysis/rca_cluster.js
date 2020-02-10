@@ -9,8 +9,11 @@ function RCACluster() {
     this.numPartial           = 0 ;
     this.partialMks           = 0 ;
     
-	this.numWrong             = 0 ;
-	this.wrongMks             = 0 ;
+	this.numNegative          = 0 ;
+	this.negativeMarks        = 0 ;
+	
+	this.netScore             = 0 ;
+    this.totalLoss            = 0 ;
 	
     this.numRecollection      = 0 ;
     this.recollectionMks      = 0 ;
@@ -64,8 +67,10 @@ function RCACluster() {
         this.correctMks           = 0 ;
         this.numPartial           = 0 ;
         this.partialMks           = 0 ;
-        this.numWrong             = 0 ;
-        this.wrongMks             = 0 ;
+        this.numNegative          = 0 ;
+        this.negativeMarks        = 0 ;
+        this.netScore             = 0 ;
+        this.totalLoss            = 0 ;
         this.numRecollection      = 0 ;
         this.recollectionMks      = 0 ;
         this.numCalculation       = 0 ;
@@ -96,14 +101,23 @@ function RCACluster() {
         this.wtfLateralMks        = 0 ;
     }
     
-    this.updateStats = function( question, attempt ) {
+    this.updateStats = function( question, attempt, printLog ) {
     	
     	var marks = getMarksForQuestion( question ) ;
+    	
     	var marksGained = ( attempt.score > 0 ) ? attempt.score : 0 ;
+    	var negativeMarks = ( attempt.score < 0 ) ? attempt.score : 0 ;
     	var marksLost   = ( marks > attempt.score ) ? ( marks - attempt.score ) : 0 ;
     	
     	this.numQuestions++ ;
     	this.totalMarks += marks ;
+    	
+    	this.netScore += ( marksGained + negativeMarks ) ;
+    	this.totalLoss += marksLost ;
+    	
+    	if( printLog ) {
+    	    console.log( marksGained + " :: " + negativeMarks + " = " + this.netScore ) ;
+    	}
     	
     	if( attempt.partialCorrect ) {
     	    this.partialMks += marksGained ;
@@ -114,10 +128,16 @@ function RCACluster() {
     	    this.correctMks += marksGained ;
     	    this.numCorrect++ ;
     	}
-    	else {
-    	    this.wrongMks   += marksLost ;
-    	    this.numWrong++ ;
+    	else if( negativeMarks < 0 ) {
+    	    this.numNegative++ ;
+    	    this.negativeMarks += negativeMarks ;
+            this.updateRCStat( attempt.rootCause, marksLost ) ;
+    	}
+    	else if( attempt.score == 0 ){
     	    this.updateRCStat( attempt.rootCause, marksLost ) ;
+    	}
+    	else {
+    	    console.log( "ERROR: Unhandled situation." ) ;
     	}
     }
     

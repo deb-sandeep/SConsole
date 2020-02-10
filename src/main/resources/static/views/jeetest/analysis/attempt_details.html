@@ -14,8 +14,6 @@
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="q-attribute">Lat</th>
-                    <th class="q-attribute">Solve</br>Time</th>
                     <th class="q-attribute">Correct<br/>Answer</th>
                     <th></th>
                     <th>Ans</th>
@@ -33,15 +31,13 @@
                     
                    <td class="q-attribute">Q{{$index + 1}}</td>
                    <td class="q-attribute" style="text-align:left;">{{question.questionType}}</td>
-                   <td class="q-attribute">{{question.lateralThinkingLevel}}</td>
-                   <td class="q-attribute" style="text-align:right;font-family:Courier;">{{question.projectedSolveTime | mmss}}</td>
-                   <td class="q-attribute">{{question.answerText}}</td>
+                   <td class="q-attribute" style="text-align:right;">{{question.answerText}}</td>
                    <td>
                         <span class="stat-icon-small" 
                               ng-class="getAttemptStatusIconStyle( $index )">
                         </span>
                     </td>
-                   <td>{{questionAttempts[$index].answerProvided}}</td>
+                   <td style="text-align:right">{{questionAttempts[$index].answerProvided}}</td>
                    <td style="text-align:right;font-family:Courier;">{{questionAttempts[$index].timeSpent | mmss}}</td>
                    <td>
                         <span ng-if="questionAttempts[$index].partialCorrect"  

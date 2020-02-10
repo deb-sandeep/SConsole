@@ -251,15 +251,16 @@ sConsoleApp.controller( 'TestAttemptDetailsController', function( $scope, $http,
         	var question = $scope.questions[i] ;
         	var attempt = $scope.questionAttempts[i] ;
         	
-        	$scope.testSummary.overall.updateStats( question, attempt ) ;
+        	$scope.testSummary.overall.updateStats( question, attempt, false ) ;
+        	
         	if( question.subject.name == "IIT - Physics" ) {
-            	$scope.testSummary.phy.updateStats( question, attempt ) ;
+            	$scope.testSummary.phy.updateStats( question, attempt, true ) ;
         	}
         	else if( question.subject.name == "IIT - Chemistry" ) {
-            	$scope.testSummary.chem.updateStats( question, attempt ) ;
+            	$scope.testSummary.chem.updateStats( question, attempt, false ) ;
         	}
         	else if( question.subject.name == "IIT - Maths" ) {
-            	$scope.testSummary.math.updateStats( question, attempt ) ;
+            	$scope.testSummary.math.updateStats( question, attempt, false ) ;
         	}
         }
     }

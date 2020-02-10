@@ -342,7 +342,7 @@
 #test-result-summary {
     position: relative;
     left: 0;
-    width: calc( 45% - 10px );
+    width: calc( 40% - 10px );
     height: calc( 100% - 20px );
     padding: 10px;
     overflow: auto;
@@ -380,7 +380,7 @@
     top: 0;
     background-color: #ffffff;
     overflow-y: auto;
-    width: 55%;
+    width: 60%;
     height: calc(100% - 55px);
     margin: 10px;
     padding: 10px;
@@ -415,7 +415,7 @@
     top: 0;
     background-color: #f2fffd;
     overflow-y: auto;
-    width: 55%;
+    width: 60%;
     height: calc(100% - 55px);
     margin: 10px;
     padding: 10px;

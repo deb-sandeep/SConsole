@@ -31,14 +31,14 @@
         <td>{{testSummary.math.totalMarks}}</td>
     </tr>
     <tr>
-        <th>Net marks</th>
-        <td colspan="2">{{testSummary.overall.totalMarks - testSummary.overall.wrongMks}}</td>
-        <td colspan="2">{{testSummary.phy.totalMarks - testSummary.phy.wrongMks}}</td>
-        <td colspan="2">{{testSummary.chem.totalMarks - testSummary.chem.wrongMks}}</td>
-        <td colspan="2">{{testSummary.math.totalMarks - testSummary.math.wrongMks}}</td>
+        <th>Net score</th>
+        <td colspan="2">{{testSummary.overall.netScore}}</td>
+        <td colspan="2">{{testSummary.phy.netScore}}</td>
+        <td colspan="2">{{testSummary.chem.netScore}}</td>
+        <td colspan="2">{{testSummary.math.netScore}}</td>
     </tr>
     <tr>
-        <th>Correct</th>
+        <th>&nbsp;&nbsp;&nbsp;<i>Correct</i></th>
         <td>{{testSummary.overall.numCorrect}}</td>
         <td>{{testSummary.overall.correctMks}}</td>
         <td>{{testSummary.phy.numCorrect}}</td>
@@ -49,7 +49,7 @@
         <td>{{testSummary.math.correctMks}}</td>
     </tr>
     <tr>
-        <th>Partial</th>
+        <th>&nbsp;&nbsp;&nbsp;<i>Partial</i></th>
         <td>{{testSummary.overall.numPartial}}</td>
         <td>{{testSummary.overall.partialMks}}</td>
         <td>{{testSummary.phy.numPartial}}</td>
@@ -60,15 +60,26 @@
         <td>{{testSummary.math.partialMks}}</td>
     </tr>
     <tr>
-        <th>Wrong</th>
-        <td>{{testSummary.overall.numWrong}}</td>
-        <td>{{testSummary.overall.wrongMks}}</td>
-        <td>{{testSummary.phy.numWrong}}</td>
-        <td>{{testSummary.phy.wrongMks}}</td>
-        <td>{{testSummary.chem.numWrong}}</td>
-        <td>{{testSummary.chem.wrongMks}}</td>
-        <td>{{testSummary.math.numWrong}}</td>
-        <td>{{testSummary.math.wrongMks}}</td>
+        <th>&nbsp;&nbsp;&nbsp;<i>Negative</i></th>
+        <td>{{testSummary.overall.numNegative}}</td>
+        <td>{{testSummary.overall.negativeMarks}}</td>
+        <td>{{testSummary.phy.numNegative}}</td>
+        <td>{{testSummary.phy.negativeMarks}}</td>
+        <td>{{testSummary.chem.numNegative}}</td>
+        <td>{{testSummary.chem.negativeMarks}}</td>
+        <td>{{testSummary.math.numNegative}}</td>
+        <td>{{testSummary.math.negativeMarks}}</td>
+    </tr>
+    <tr>
+        <th>Total loss</th>
+        <td></td>
+        <td>{{testSummary.overall.totalLoss}}</td>
+        <td></td>
+        <td>{{testSummary.phy.totalLoss}}</td>
+        <td></td>
+        <td>{{testSummary.chem.totalLoss}}</td>
+        <td></td>
+        <td>{{testSummary.math.totalLoss}}</td>
     </tr>
     <tr>
         <th>Potential marks</th>
