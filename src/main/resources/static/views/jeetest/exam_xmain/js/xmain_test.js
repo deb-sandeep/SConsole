@@ -219,6 +219,11 @@ sConsoleApp.controller( 'JEEXMainTestController',
     }
     
     function handleTimerEvent() {
+        
+        if( $scope.currentLapName == null ) {
+            setTimeout( handleTimerEvent, 1000 ) ;
+        }
+        
         $scope.secondsRemaining-- ;
         $scope.timeSpent++ ;
 
