@@ -218,6 +218,10 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     }
     
     function handleTimerEvent() {
+        if( $scope.currentLapName == null ) {
+            setTimeout( handleTimerEvent, 1000 ) ;
+        }
+        
         $scope.secondsRemaining-- ;
         $scope.timeSpent++ ;
 
@@ -233,9 +237,11 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         else {
             $scope.timerActive = false ;
             $scope.secondsRemaining = 0 ;
-            if( !$scope.$parent.answersSubmitted ) {
+            if( $scope != null && 
+                $scope.$parent != null && 
+                !$scope.$parent.answersSubmitted ) {
                 $scope.submitAnswers() ;
-            }
+            }        
         }
         $scope.$digest() ;
     }

@@ -59,7 +59,7 @@ function QuestionEx( q, attemptLaps ) {
     
     this.getTotalMarks = function() {
         
-        if( this.question.examType == "MAIN" ) {
+        if( this.question.targetExam == "MAIN" ) {
             return 4 ;
         }
         else {

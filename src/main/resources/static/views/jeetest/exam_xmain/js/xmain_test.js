@@ -239,7 +239,9 @@ sConsoleApp.controller( 'JEEXMainTestController',
         else {
             $scope.timerActive = false ;
             $scope.secondsRemaining = 0 ;
-            if( !$scope.$parent.answersSubmitted ) {
+            if( $scope != null && 
+                $scope.$parent != null && 
+                !$scope.$parent.answersSubmitted ) {
                 $scope.submitAnswers() ;
             }
         }

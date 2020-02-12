@@ -27,21 +27,7 @@ function Section() {
     }
 
     this.computeSectionMaxMarks = function() {
-        if( this.questionType == 'SCA' ) {
-            this.maxMarks = this.questions.length * 3 ;
-        }
-        else if( this.questionType == 'MCA' ) {
-            this.maxMarks = this.questions.length * 4 ;
-        }
-        else if( this.questionType == 'NT' ) {
-            this.maxMarks = this.questions.length * 3 ;
-        }
-        else if( this.questionType == 'LCT' ) {
-            this.maxMarks = this.questions.length * 3 ;
-        }
-        else if( this.questionType == 'MMT' ) {
-            this.maxMarks = this.questions.length * 3 ;
-        }
+        this.maxMarks = this.questions.length * 4 ;
     }
 }
 
