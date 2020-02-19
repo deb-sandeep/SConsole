@@ -32,7 +32,7 @@ LapAutomata.prototype.mainStrategyA = {
         transitions : {
             "q-not-visited"               : "L3",
             "q-attempted"                 : "ANS",
-            "q-ans-and-marked-for-review" : "XXX",
+            "q-ans-and-marked-for-review" : "Purple",
             "q-marked-for-review"         : "Purple",
             "q-not-answered"              : "L3"
         }
