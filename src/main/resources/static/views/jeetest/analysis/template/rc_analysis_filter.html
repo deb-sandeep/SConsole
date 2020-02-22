@@ -76,4 +76,23 @@
         </select>
     </div>
   </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" data-target="#timeRangeChoice">
+        Time horizon
+        </a>
+      </h4>
+    </div>
+    <div id="timeRangeChoice" class="panel-collapse collapse">
+        <select id="timeHorizonList" 
+                class="form-control" 
+                ng-model="searchCriteria.timeHorizon"
+                ng-options="obj for obj in searchMaster.timeHorizon"
+                ng-change="refreshDataForTimeHorizon()">
+        </select> 
+    </div>
+  </div>
+
 </div>

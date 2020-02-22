@@ -1,5 +1,6 @@
 package com.sandy.sconsole.dao.repository;
 
+import java.util.Date ;
 import java.util.List ;
 
 import javax.transaction.Transactional ;
@@ -65,12 +66,15 @@ public interface TestQuestionBindingRepository
             + "    count( tqb.question_id ) as numQuestions "
             + "FROM "
             + "    test_question_binding tqb, "
+            + "    test_attempt ta, "
             + "    topic_master tm, "
             + "    mocktest_question_master mqm "
             + "WHERE "
             + "    tqb.topic_id = tm.id AND "
+            + "    tqb.test_config_id = ta.test_id AND "
             + "    tqb.question_id = mqm.id AND "
-            + "    mqm.attempted = 1 "
+            + "    mqm.attempted = 1 AND "
+            + "    ta.date_attempted > ?1 "
             + "GROUP BY "
             + "    tm.subject_name, "
             + "    tm.id, "
@@ -79,5 +83,5 @@ public interface TestQuestionBindingRepository
             + "    tm.subject_name ASC, "
             + "    tm.id ASC "
     )
-    List<TopicTestQuestionCount> getTestQuestionCountPerTopic() ;
+    List<TopicTestQuestionCount> getTestQuestionCountPerTopic( Date date ) ;
 }

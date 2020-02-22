@@ -7,6 +7,7 @@ import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
 
+import org.apache.commons.lang.time.DateUtils ;
 import org.apache.log4j.Logger ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.http.HttpStatus ;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping ;
 import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.PostMapping ;
 import org.springframework.web.bind.annotation.RequestBody ;
+import org.springframework.web.bind.annotation.RequestParam ;
 import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.common.util.StringUtil ;
@@ -364,18 +366,22 @@ public class JEETestRestController {
 
     @GetMapping( "/TestAttempt/TopicWiseTestQuestionErrorDetails" )
     public ResponseEntity<List<TopicWiseTestQuestionErrorDetails>> 
-                getTopicWiseTestQuestionErrorDetails() {
+                getTopicWiseTestQuestionErrorDetails( 
+                        @RequestParam(name = "timeHorizon") Integer timeHorizon ) {
         
         try {
             log.debug( "Fetching topic wise test question error details." ) ;
+            log.debug( "Time horizon = " + timeHorizon ) ;
+            
+            Date horizonDate = DateUtils.addMonths( new Date(), -1*timeHorizon ) ;
             
             List<TopicTestQuestionCount> topicQCounts ;
             List<IncorrectTestAnswerRC> wrongAnswerRCs ;
             List<TopicWiseTestQuestionErrorDetails> details = null ;
             details = new ArrayList<>() ;
             
-            topicQCounts = tqbRepo.getTestQuestionCountPerTopic() ;
-            wrongAnswerRCs = tqaRepo.getIncorrectTestAnswersRC() ;
+            topicQCounts = tqbRepo.getTestQuestionCountPerTopic( horizonDate ) ;
+            wrongAnswerRCs = tqaRepo.getIncorrectTestAnswersRC( horizonDate ) ;
             
             populateTopicWiseQuestionErrorDetails( details, topicQCounts, 
                                                    wrongAnswerRCs ) ;

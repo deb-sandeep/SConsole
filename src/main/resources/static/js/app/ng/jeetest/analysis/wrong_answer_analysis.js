@@ -14,7 +14,20 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             "> 90", "> 80", "> 70", "> 60", "> 50", 
             "< 90", "< 80", "< 70", "< 60", "< 50",  
         ],
-        rcOptions     : $scope.rcOptions.choices 
+        rcOptions     : $scope.rcOptions.choices,
+        timeHorizon   : [ "1 months",
+                          "2 months",
+                          "3 months",
+                          "4 months",
+                          "5 months",
+                          "6 months",
+                          "9 months",
+                          "12 months",
+                          "15 months",
+                          "18 months",
+                          "21 months",
+                          "24 months"
+       ]
     } ;
     
     // ------------------ Scope variables ------------------------------------
@@ -27,8 +40,11 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             $scope.rcOptions.choices[4],
             $scope.rcOptions.choices[5],
             $scope.rcOptions.choices[6],
-            $scope.rcOptions.choices[8]
-        ]
+            $scope.rcOptions.choices[8],
+            $scope.rcOptions.choices[9],
+            $scope.rcOptions.choices[10]
+        ],
+        timeHorizon : $scope.searchMaster.timeHorizon[2]
     } ;
     
     $scope.topicDetails = [] ;
@@ -38,7 +54,7 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
     
-    fetchErrorDetailsRawData() ;
+    fetchErrorDetailsRawData( 3 ) ;
 	
 	// --- [END] Controller initialization -----------------------------------
 	
@@ -108,6 +124,13 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             $scope.selectedQuestionsRC = rc ;
             displayQuestions( questions ) ;
         }
+    }
+    
+    $scope.refreshDataForTimeHorizon = function() {
+        
+        var timeHorizon = $scope.searchCriteria.timeHorizon ;
+        var numMonths = parseInt( timeHorizon.substring( 0, timeHorizon.length - 7 ) ) ;
+        fetchErrorDetailsRawData( numMonths ) ;
     }
 	
 	// --- [END] Scope functions
@@ -227,11 +250,11 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
         return !isMatched ;
     }
     
-    function fetchErrorDetailsRawData() {
+    function fetchErrorDetailsRawData( numMonths ) {
         
         console.log( "Fetching error details raw data" ) ;
         $scope.$parent.interactingWithServer = true ;
-        $http.get( "/TestAttempt/TopicWiseTestQuestionErrorDetails" )
+        $http.get( "/TestAttempt/TopicWiseTestQuestionErrorDetails?timeHorizon=" + numMonths )
         .then( 
             function( response ){
                 console.log( response ) ;
