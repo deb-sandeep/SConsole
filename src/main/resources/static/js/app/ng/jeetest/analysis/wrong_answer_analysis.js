@@ -39,7 +39,6 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             $scope.rcOptions.choices[0],
             $scope.rcOptions.choices[4],
             $scope.rcOptions.choices[5],
-            $scope.rcOptions.choices[6],
             $scope.rcOptions.choices[8],
             $scope.rcOptions.choices[9],
             $scope.rcOptions.choices[10]

@@ -36,6 +36,7 @@ public class PAAGenerator implements DayTickListener {
         this.paaRepo = paaRepo ;
         this.topicRepo = topicRepo ;
         this.paRepo = paRepo ;
+        
         this.paaLookup = new LinkedHashMap<>() ;
         this.analysisUpdater = new PAARecordUpdater() ;
     }

@@ -1,23 +1,31 @@
 package com.sandy.sconsole.analysis;
 
 import java.util.ArrayList ;
+import java.util.Date ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
 
+import org.apache.commons.lang.time.DateUtils ;
 import org.apache.commons.math3.stat.StatUtils ;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation ;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile ;
 import org.apache.log4j.Logger ;
 import org.springframework.context.ApplicationContext ;
 
+import com.sandy.common.util.StringUtil ;
 import com.sandy.sconsole.SConsole ;
+import com.sandy.sconsole.api.jeetest.exam.TopicWiseTestQuestionErrorDetails ;
 import com.sandy.sconsole.dao.entity.ProblemAttempt ;
 import com.sandy.sconsole.dao.entity.ProblemAttemptAnalysis ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptAnalysisRepository ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionAttemptRepository.IncorrectTestAnswerRC ;
+import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
+import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository.TopicTestQuestionCount ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
 
 public class PAARecordUpdater {
@@ -27,6 +35,10 @@ public class PAARecordUpdater {
     private ProblemRepository pRepo = null ;
     private ProblemAttemptRepository paRepo = null ;
     private ProblemAttemptAnalysisRepository paaRepo = null ;
+    private TestQuestionAttemptRepository tqaRepo = null ;
+    private TestQuestionBindingRepository tqbRepo = null ;
+    
+    private HashMap<Integer, Float> topicEfficiencyMap = new HashMap<>() ;
     
     public PAARecordUpdater() {
         ApplicationContext ctx = SConsole.getAppContext() ;
@@ -34,6 +46,75 @@ public class PAARecordUpdater {
         pRepo   = ctx.getBean( ProblemRepository.class ) ;
         paRepo  = ctx.getBean( ProblemAttemptRepository.class ) ;
         paaRepo = ctx.getBean( ProblemAttemptAnalysisRepository.class ) ;
+        tqaRepo = ctx.getBean( TestQuestionAttemptRepository.class ) ;
+        tqbRepo = ctx.getBean( TestQuestionBindingRepository.class ) ;
+        
+        computeTopicEfficiencies() ;
+    }
+    
+    private void computeTopicEfficiencies() {
+        
+        log.debug( "Computing topic efficiencies." ) ;
+        
+        List<TopicTestQuestionCount> topicQCounts ;
+        List<IncorrectTestAnswerRC> wrongAnswerRCs ;
+        
+        Date horizonDate = DateUtils.addMonths( new Date(), -3 ) ;
+
+        topicQCounts = tqbRepo.getTestQuestionCountPerTopic( horizonDate ) ;
+        wrongAnswerRCs = tqaRepo.getIncorrectTestAnswersRC( horizonDate ) ;
+        
+        populateTopicWiseQuestionErrorDetails( topicQCounts, wrongAnswerRCs ) ;
+    }
+
+    private void populateTopicWiseQuestionErrorDetails( 
+                                List<TopicTestQuestionCount> topicQCounts,
+                                List<IncorrectTestAnswerRC> wrongAnswerRCs ) {
+        
+        List<TopicWiseTestQuestionErrorDetails> details = new ArrayList<>() ;
+        Map<Integer, TopicWiseTestQuestionErrorDetails> map = new HashMap<>() ;
+        Map<Integer, String> qRCMap = null ;
+        Map<String, List<Integer>> rcClusters = null ;
+        TopicWiseTestQuestionErrorDetails detail = null ;
+        
+        for( TopicTestQuestionCount ttqc : topicQCounts ) {
+            detail = new TopicWiseTestQuestionErrorDetails( ttqc ) ;
+            map.put( ttqc.getTopicId(), detail ) ;
+            details.add( detail ) ;
+        }
+        
+        for( IncorrectTestAnswerRC rc : wrongAnswerRCs ) {
+            
+            List<Integer> questionList = null ;
+            
+            qRCMap = map.get( rc.getTopicId() ).getErrorDetails() ;
+            rcClusters = map.get( rc.getTopicId() ).getRcClusters() ;
+            
+            Integer questionId = rc.getTestQuestionId() ;
+            String rootCause = rc.getRootCause() ;
+            
+            if( StringUtil.isEmptyOrNull( rootCause ) ) {
+                rootCause = "-UNASSIGNED-" ;
+            }
+            
+            qRCMap.put( questionId, rc.getRootCause() ) ;
+            
+            questionList = rcClusters.get( rootCause ) ;
+            if( questionList == null ) {
+                questionList = new ArrayList<>() ;
+                rcClusters.put( rootCause, questionList ) ;
+            }
+            questionList.add( questionId ) ;
+        }
+        
+        for( Integer topicId : map.keySet() ) {
+            detail = map.get( topicId ) ;
+            if( topicId == 106 ) {
+                log.debug( "Atomic structure." ) ;
+            }
+            float efficiency = detail.computeEfficiency() ;
+            topicEfficiencyMap.put( topicId, efficiency ) ;
+        }
     }
     
     public void updateAnalysis( Problem problem ) {
@@ -64,27 +145,24 @@ public class PAARecordUpdater {
     public void updateAnalysis( ProblemAttemptAnalysis paa,
                                 List<ProblemAttempt> attempts ) {
         
-        if( attempts == null || attempts.isEmpty() ) {
-            return ;
-        }
-        
         Map<Integer, Integer[]> problemTimeMap = new HashMap<>() ;
         
-        for( ProblemAttempt pa : attempts ) {
-            Integer   problemId = pa.getProblem().getId() ;
-            Integer[] data      = problemTimeMap.get( problemId ) ;
-            
-            if( data == null ) {
-                data = new Integer[] { 0, 0, 0 } ;
-                problemTimeMap.put( problemId, data ) ;
-            }
-            data[0] += pa.getDuration() ;
-            data[1] += 1 ;
-            if( pa.getOutcome().equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
-                data[2] = 1 ;
+        if( attempts != null ) {
+            for( ProblemAttempt pa : attempts ) {
+                Integer   problemId = pa.getProblem().getId() ;
+                Integer[] data      = problemTimeMap.get( problemId ) ;
+                
+                if( data == null ) {
+                    data = new Integer[] { 0, 0, 0 } ;
+                    problemTimeMap.put( problemId, data ) ;
+                }
+                data[0] += pa.getDuration() ;
+                data[1] += 1 ;
+                if( pa.getOutcome().equals( ProblemAttempt.OUTCOME_SOLVED ) ) {
+                    data[2] = 1 ;
+                }
             }
         }
-        
         computeStatsAndUpdateRecord( paa, problemTimeMap ) ;
     }
 
@@ -92,7 +170,6 @@ public class PAARecordUpdater {
                                               Map<Integer, Integer[]> timeMap ) {
         
         int   totalProblemsAttempted = 0 ;
-        int   totalProblemsSolvedInOneAttempt = 0 ;
         int   stddev = 0 ;
         int   average = 0 ;
         int   pctile50 = 0 ;
@@ -120,14 +197,12 @@ public class PAARecordUpdater {
             if( tupule[2] == 1 ) {
                 // The problem is solved
                 timeList.add( Double.valueOf( tupule[0] ) ) ;
-                if( tupule[1] == 1 ) {
-                    // The problem has been solved in one attempt
-                    totalProblemsSolvedInOneAttempt++ ;
-                }
             }
         }
         
-        efficiency = ((float)totalProblemsSolvedInOneAttempt)/totalProblemsAttempted ;
+        if( topicEfficiencyMap.containsKey( paa.getTopic().getId() ) ) {
+            efficiency = topicEfficiencyMap.get( paa.getTopic().getId() ) ;
+        }
         timesArray = timeList.stream().mapToDouble(d -> d).toArray() ;
         
         pctile50 = (int)percentileHelper.evaluate( timesArray, 50 ) ;

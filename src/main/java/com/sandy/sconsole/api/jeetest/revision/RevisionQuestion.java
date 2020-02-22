@@ -5,6 +5,7 @@ import java.sql.Timestamp ;
 public interface RevisionQuestion {
 
     public Integer getQuestionId() ;
+    public String getSubjectName() ;
     public String getTopicName() ;
     public String getBookShortName() ;
     public String getExerciseName() ;

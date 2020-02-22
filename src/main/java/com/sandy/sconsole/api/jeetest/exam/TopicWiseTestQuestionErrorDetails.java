@@ -69,4 +69,26 @@ public class TopicWiseTestQuestionErrorDetails {
     public void setRcClusters( Map<String, List<Integer>> rcClusters ) {
         this.rcClusters = rcClusters ;
     }
+
+    public float computeEfficiency() {
+        if( this.numQuestions == 0 ) {
+            return 0 ;
+        }
+        
+        int numEfficiencyErrors = 0 ;
+        for( String rc : rcClusters.keySet() ) {
+            if( rc.equals( "RECOLLECTION" ) || 
+                rc.equals( "LATERAL" ) || 
+                rc.equals( "CONCEPT" ) || 
+                rc.equals( "WTF_LATERAL" ) || 
+                rc.equals( "ALIEN_CONCEPT" ) || 
+                rc.equals( "WTF" ) || 
+                rc.equals( "-UNASSIGNED-" ) ) {
+                
+                numEfficiencyErrors += rcClusters.get( rc ).size() ;
+            }
+        }
+        float eff = ((float)( numQuestions - numEfficiencyErrors )/numQuestions)*100 ;
+        return (float)Math.floor( eff * 100 ) / 100 ;
+    }
 }

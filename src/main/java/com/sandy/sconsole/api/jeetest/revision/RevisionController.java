@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.sconsole.dao.entity.ProblemAttemptAnalysis ;
 import com.sandy.sconsole.dao.entity.master.Problem ;
+import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptAnalysisRepository ;
 import com.sandy.sconsole.dao.repository.ProblemAttemptRepository ;
 import com.sandy.sconsole.dao.repository.master.ProblemRepository ;
+import com.sandy.sconsole.dao.repository.master.TopicRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
 
 @RestController
@@ -35,6 +37,9 @@ public class RevisionController {
     
     @Autowired
     private ProblemAttemptAnalysisRepository paaRepo = null ;
+    
+    @Autowired
+    private TopicRepository topicRepo = null ;
     
     @GetMapping( "/RevisionQuestions" ) 
     public ResponseEntity<List<RevisionQuestion>> getRevisionQuestions(
@@ -83,6 +88,10 @@ public class RevisionController {
         iter = questions.iterator() ;
         while( iter.hasNext() ) {
             RevisionQuestion question = iter.next() ;
+            Topic topic = topicRepo.findBySubjectNameAndTopicName( 
+                                                question.getSubjectName(), 
+                                                question.getTopicName() ) ;
+            
             if( question.getOutcome().equals( "Redo" ) || 
                 question.getOutcome().equals( "Pigeon" ) || 
                 question.getStarred() == 1 ) {
@@ -91,10 +100,14 @@ public class RevisionController {
             else {
                 ProblemAttemptAnalysis paa = paaMap.get( question.getProblemType() ) ;
                 if( paa == null ) {
-                    paa = paaRepo.findByTopicIdAndProblemType( topicId, question.getProblemType() ) ;
+                    paa = paaRepo.findByTopicIdAndProblemType( 
+                                                topic.getId(), 
+                                                question.getProblemType() ) ;
                     paaMap.put( question.getProblemType(), paa ) ;
                 }
-                if( question.getDuration() < paa.getEightyPercentile() ) {
+                
+                int pctileThreshold = paa.getPercentileThreshold() ;
+                if( question.getDuration() < pctileThreshold ) {
                     iter.remove() ;
                 }
             }

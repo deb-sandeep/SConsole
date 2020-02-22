@@ -179,4 +179,41 @@ public class ProblemAttemptAnalysis {
     public void setNinetyFivePercentile( Integer ninetyFivePercentile ) {
         this.ninetyFivePercentile = ninetyFivePercentile ;
     }
+
+    public int getPercentileThreshold() {
+        
+        float efficiency = getEfficiency() ;
+        
+        if( efficiency < 50 ) {
+            return 0 ;
+        }
+        else if( efficiency >= 50 && efficiency < 55 ) {
+            return getFiftyPercentile() ;
+        }
+        else if( efficiency >= 55 && efficiency < 60 ) {
+            return getFiftyFivePercentile() ;
+        }
+        else if( efficiency >= 60 && efficiency < 65 ) {
+            return getSixtyPercentile() ;
+        }
+        else if( efficiency >= 65 && efficiency < 70 ) {
+            return getSixtyFivePercentile() ;
+        }
+        else if( efficiency >= 70 && efficiency < 75 ) {
+            return getSeventyPercentile() ;
+        }
+        else if( efficiency >= 75 && efficiency < 80 ) {
+            return getSeventyFivePercentile() ;
+        }
+        else if( efficiency >= 80 && efficiency < 85 ) {
+            return getEightyPercentile() ;
+        }
+        else if( efficiency >= 85 && efficiency < 90 ) {
+            return getEightyFivePercentile() ;
+        }
+        else if( efficiency >= 85 && efficiency < 90 ) {
+            return getNinetyPercentile() ;
+        }
+        return getNinetyFivePercentile() ;
+    }
 }

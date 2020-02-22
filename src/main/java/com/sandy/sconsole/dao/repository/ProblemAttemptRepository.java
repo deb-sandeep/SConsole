@@ -16,6 +16,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
               "SELECT "
             + "    pm.id as questionId, "
+            + "    tm.subject_name as subjectName, "
             + "    tm.topic_name as topicName, "
             + "    bm.book_short_name as bookShortName, "
             + "    pm.exercise_name as exerciseName, "
@@ -58,6 +59,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
               "SELECT "
             + "    pm.id as questionId, "
+            + "    tm.subject_name as subjectName, "
             + "    tm.topic_name as topicName, "
             + "    bm.book_short_name as bookShortName, "
             + "    pm.exercise_name as exerciseName, "
@@ -98,6 +100,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
               "SELECT "
             + "    pm.id as questionId, "
+            + "    tm.subject_name as subjectName, "
             + "    tm.topic_name as topicName, "
             + "    bm.book_short_name as bookShortName, "
             + "    pm.exercise_name as exerciseName, "
@@ -138,6 +141,7 @@ public interface ProblemAttemptRepository extends CrudRepository<ProblemAttempt,
             value = 
               "SELECT "
             + "    pm.id as questionId, "
+            + "    tm.subject_name as subjectName, "
             + "    tm.topic_name as topicName, "
             + "    bm.book_short_name as bookShortName, "
             + "    pm.exercise_name as exerciseName, "
