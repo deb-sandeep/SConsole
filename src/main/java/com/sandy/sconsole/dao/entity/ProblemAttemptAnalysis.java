@@ -32,9 +32,17 @@ public class ProblemAttemptAnalysis {
     private Integer numProblemsAttempted = 0 ;
     private Integer avgTime              = 0 ;
     private Integer stddev               = 0 ;
-    private Integer seventyPercentile    = 0 ;
-    private Integer eightyPercentile     = 0 ;
     private Float   efficiency           = 0.0F ;
+    private Integer fiftyPercentile    = 0 ;
+    private Integer fiftyFivePercentile     = 0 ;
+    private Integer sixtyPercentile    = 0 ;
+    private Integer sixtyFivePercentile     = 0 ;
+    private Integer seventyPercentile    = 0 ;
+    private Integer seventyFivePercentile     = 0 ;
+    private Integer eightyPercentile     = 0 ;
+    private Integer eightyFivePercentile     = 0 ;
+    private Integer ninetyPercentile    = 0 ;
+    private Integer ninetyFivePercentile    = 0 ;
     
     public Integer getId() { return id ; }
     public void setId( Integer id ) { this.id = id ; }
@@ -95,11 +103,53 @@ public class ProblemAttemptAnalysis {
         this.stddev = stddev ;
     }
 
+    public Float getEfficiency() {
+        return efficiency ;
+    }
+    public void setEfficiency( Float efficiency ) {
+        this.efficiency = efficiency ;
+    }
+    
+    public Integer getFiftyPercentile() {
+        return fiftyPercentile ;
+    }
+    public void setFiftyPercentile( Integer fiftyPercentile ) {
+        this.fiftyPercentile = fiftyPercentile ;
+    }
+    
+    public Integer getFiftyFivePercentile() {
+        return fiftyFivePercentile ;
+    }
+    public void setFiftyFivePercentile( Integer fiftyFivePercentile ) {
+        this.fiftyFivePercentile = fiftyFivePercentile ;
+    }
+    
+    public Integer getSixtyPercentile() {
+        return sixtyPercentile ;
+    }
+    public void setSixtyPercentile( Integer sixtyPercentile ) {
+        this.sixtyPercentile = sixtyPercentile ;
+    }
+    
+    public Integer getSixtyFivePercentile() {
+        return sixtyFivePercentile ;
+    }
+    public void setSixtyFivePercentile( Integer sixtyFivePercentile ) {
+        this.sixtyFivePercentile = sixtyFivePercentile ;
+    }
+    
     public Integer getSeventyPercentile() {
         return seventyPercentile ;
     }
     public void setSeventyPercentile( Integer seventyPercentile ) {
         this.seventyPercentile = seventyPercentile ;
+    }
+    
+    public Integer getSeventyFivePercentile() {
+        return seventyFivePercentile ;
+    }
+    public void setSeventyFivePercentile( Integer seventyFivePercentile ) {
+        this.seventyFivePercentile = seventyFivePercentile ;
     }
     
     public Integer getEightyPercentile() {
@@ -109,10 +159,24 @@ public class ProblemAttemptAnalysis {
         this.eightyPercentile = eightyPercentile ;
     }
     
-    public Float getEfficiency() {
-        return efficiency ;
+    public Integer getEightyFivePercentile() {
+        return eightyFivePercentile ;
     }
-    public void setEfficiency( Float efficiency ) {
-        this.efficiency = efficiency ;
+    public void setEightyFivePercentile( Integer eightyFivePercentile ) {
+        this.eightyFivePercentile = eightyFivePercentile ;
+    }
+    
+    public Integer getNinetyPercentile() {
+        return ninetyPercentile ;
+    }
+    public void setNinetyPercentile( Integer ninetyPercentile ) {
+        this.ninetyPercentile = ninetyPercentile ;
+    }
+    
+    public Integer getNinetyFivePercentile() {
+        return ninetyFivePercentile ;
+    }
+    public void setNinetyFivePercentile( Integer ninetyFivePercentile ) {
+        this.ninetyFivePercentile = ninetyFivePercentile ;
     }
 }

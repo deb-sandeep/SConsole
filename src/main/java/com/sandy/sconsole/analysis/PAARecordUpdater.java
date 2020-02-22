@@ -95,8 +95,16 @@ public class PAARecordUpdater {
         int   totalProblemsSolvedInOneAttempt = 0 ;
         int   stddev = 0 ;
         int   average = 0 ;
+        int   pctile50 = 0 ;
+        int   pctile55 = 0 ;
+        int   pctile60 = 0 ;
+        int   pctile65 = 0 ;
         int   pctile70 = 0 ;
+        int   pctile75 = 0 ;
         int   pctile80 = 0 ;
+        int   pctile85 = 0 ;
+        int   pctile90 = 0 ;
+        int   pctile95 = 0 ;
         float efficiency = 0 ;
         
         List<Double> timeList = new ArrayList<>() ;
@@ -122,16 +130,35 @@ public class PAARecordUpdater {
         efficiency = ((float)totalProblemsSolvedInOneAttempt)/totalProblemsAttempted ;
         timesArray = timeList.stream().mapToDouble(d -> d).toArray() ;
         
+        pctile50 = (int)percentileHelper.evaluate( timesArray, 50 ) ;
+        pctile55 = (int)percentileHelper.evaluate( timesArray, 55 ) ;
+        pctile60 = (int)percentileHelper.evaluate( timesArray, 60 ) ;
+        pctile65 = (int)percentileHelper.evaluate( timesArray, 65 ) ;
         pctile70 = (int)percentileHelper.evaluate( timesArray, 70 ) ;
+        pctile75 = (int)percentileHelper.evaluate( timesArray, 75 ) ;
         pctile80 = (int)percentileHelper.evaluate( timesArray, 80 ) ;
+        pctile85 = (int)percentileHelper.evaluate( timesArray, 85 ) ;
+        pctile90 = (int)percentileHelper.evaluate( timesArray, 90 ) ;
+        pctile95 = (int)percentileHelper.evaluate( timesArray, 95 ) ;
+        
         stddev   = (int)stddevHelper.evaluate( timesArray ) ;
         average  = (int)StatUtils.mean( timesArray ) ;
         
         paa.setStddev( stddev ) ;
         paa.setAvgTime( average ) ;
         paa.setEfficiency( efficiency ) ;
-        paa.setSeventyPercentile( (int)pctile70 ) ;
-        paa.setEightyPercentile( (int)pctile80 ) ;
+        
+        paa.setFiftyPercentile      ( pctile50 ) ;
+        paa.setFiftyFivePercentile  ( pctile55 ) ;
+        paa.setSixtyPercentile      ( pctile60 ) ;
+        paa.setSixtyFivePercentile  ( pctile65 ) ;
+        paa.setSeventyPercentile    ( pctile70 ) ;
+        paa.setSeventyFivePercentile( pctile75 ) ;
+        paa.setEightyPercentile     ( pctile80 ) ;
+        paa.setEightyFivePercentile ( pctile85 ) ;
+        paa.setNinetyPercentile     ( pctile90 ) ;
+        paa.setNinetyFivePercentile ( pctile95 ) ;
+        
         paa.setNumProblemsAttempted( totalProblemsAttempted ) ;
         
         paaRepo.save( paa ) ;

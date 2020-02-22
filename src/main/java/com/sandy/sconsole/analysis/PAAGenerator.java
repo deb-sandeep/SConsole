@@ -122,6 +122,8 @@ public class PAAGenerator implements DayTickListener {
     private void refreshAnalysis( Topic topic, 
                                   Map<String, ProblemAttemptAnalysis> paaMap ) {
         
+        log.debug( "Updating PAA for topic - " + topic.getTopicName() ) ;
+        
         List<ProblemAttempt> attempts = paRepo.findByTopicId( topic.getId() ) ;
         Map<String, List<ProblemAttempt>> attemptsByType = new HashMap<>() ;
         
