@@ -10,6 +10,7 @@ public class SConsoleConfig {
 
     private boolean recordTestAttempt = true ;
     private boolean showSwingApp = true ;
+    private String envType = "dev" ;
 
     public boolean isShowSwingApp() {
         return showSwingApp ;
@@ -25,5 +26,13 @@ public class SConsoleConfig {
 
     public void setRecordTestAttempt( boolean recordTestAttempt ) {
         this.recordTestAttempt = recordTestAttempt ;
+    }
+
+    public String getEnvType() {
+        return envType ;
+    }
+
+    public void setEnvType( String envType ) {
+        this.envType = envType ;
     }
 }

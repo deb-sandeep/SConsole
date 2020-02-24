@@ -1,9 +1,9 @@
 package com.sandy.sconsole.core.util;
 
-import java.net.InetAddress ;
+import com.sandy.sconsole.SConsole ;
 
 public class SConsoleUtil {
-
+    
     public static String getElapsedTimeLabel( long seconds, boolean longFormat ) {
         
         int secs    = (int)(seconds) % 60 ;
@@ -17,8 +17,6 @@ public class SConsoleUtil {
     }
 
     public static boolean isOperatingOnPiMon() throws Exception {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        String ipAddress = inetAddress.getHostAddress() ;
-        return ipAddress.equals( "192.168.0.117" ) ;
+        return SConsole.getConfig().getEnvType().equalsIgnoreCase( "PROD" ) ;
     }
 }

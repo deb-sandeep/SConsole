@@ -1,11 +1,22 @@
 package test;
 
-public class SplitTest {
+import java.net.InetAddress ;
 
-    public static void main( String[] args ) {
-        String[] parts = "2,3,4,5,,,6".split( "," ) ;
-        for( String part : parts ) {
-            System.out.println( ">" + part ) ;
-        }
+import org.apache.log4j.Logger ;
+
+public class SplitTest {
+    
+    private static final Logger log = Logger.getLogger( SplitTest.class ) ;
+
+    public static void main( String[] args ) throws Exception {
+        isOperatingOnPiMon() ;
+    }
+
+    public static boolean isOperatingOnPiMon() throws Exception {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        String ipAddress = inetAddress.getHostAddress() ;
+        log.debug( "isOperatingOnPiMon = " + ipAddress ) ;
+        log.debug( "\tresult = " + ipAddress.equals( "192.168.0.117" ) ) ;
+        return ipAddress.equals( "192.168.0.117" ) ;
     }
 }
