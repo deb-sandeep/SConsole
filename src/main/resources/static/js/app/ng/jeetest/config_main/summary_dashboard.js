@@ -28,6 +28,11 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
 		$location.path( "/editTest/-1" ) ;
 	}
 	
+    $scope.syncTestToPiMon = function( test ) {
+        console.log( "Synching test = " + test.id + " to pimon." ) ;
+        syncTestToPiMon( test ) ;
+    }
+
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -63,7 +68,7 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
             function( response ){
                 console.log( "Test Configuration summaries received." ) ;
                 console.log( response ) ;
-                
+                $scope.testSummaries = [] ;
                 for( var i=0; i<response.data.length; i++ ) {
                 	var testSummary = response.data[i] ;
                 	if( testSummary.examType == 'MAIN' ) {
@@ -75,6 +80,27 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
                 console.log( "Error getting Test Configuration summaries." ) ;
                 console.log( error ) ;
                 $scope.$parent.addErrorAlert( "Could not test summaries." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function syncTestToPiMon( test ) {
+        
+        console.log( "Synching test to PiMon." ) ;
+        
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( '/SyncTestToPimon/' + test.id )
+        .then( 
+            function( response ){
+                console.log( "Successfully synched test configuration." ) ;
+                fetchTestConfigurations() ;
+            }, 
+            function( error ){
+                console.log( "Error synching test on server." + error ) ;
+                $scope.$parent.addErrorAlert( "Could not save test." ) ;
             }
         )
         .finally(function() {

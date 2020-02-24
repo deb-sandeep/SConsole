@@ -17,6 +17,7 @@
                            ng-click="newTest()"></span>
               </button>
           </th>
+          <th></th>
         </tr>
 	    <tr class="success">
 	      <th>ID</th>
@@ -28,6 +29,7 @@
           <th>Creation Dt</th>
           <th colspan="2" align="center" 
               style="text-align:center;">Edit</th>
+          <th>Sync</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -47,6 +49,11 @@
            <td>
               <span class="glyphicon glyphicon-pencil"
                     ng-click="editTest( test )"></span>
+           </td>
+           <td>
+              <span class="glyphicon glyphicon-cloud-upload"
+                    ng-click="syncTestToPiMon( test )"
+                    ng-if="!test.synched"></span>
            </td>
 	    </tr>
 	  </tbody>

@@ -109,9 +109,6 @@ public class PAARecordUpdater {
         
         for( Integer topicId : map.keySet() ) {
             detail = map.get( topicId ) ;
-            if( topicId == 106 ) {
-                log.debug( "Atomic structure." ) ;
-            }
             float efficiency = detail.computeEfficiency() ;
             topicEfficiencyMap.put( topicId, efficiency ) ;
         }

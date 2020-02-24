@@ -195,7 +195,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		$scope.assembledQSortDir[ subjectName ].proj = toggleSortDirection( sortDir ) ;
 		refreshRampGraph( subjectName ) ;
     }
-
+	
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------

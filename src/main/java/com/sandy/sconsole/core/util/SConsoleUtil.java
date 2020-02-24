@@ -1,5 +1,7 @@
 package com.sandy.sconsole.core.util;
 
+import java.net.InetAddress ;
+
 public class SConsoleUtil {
 
     public static String getElapsedTimeLabel( long seconds, boolean longFormat ) {
@@ -12,5 +14,11 @@ public class SConsoleUtil {
             return String.format("%02d:%02d:%02d", hours, minutes, secs ) ;
         }
         return String.format("%02d:%02d", minutes, secs ) ;
+    }
+
+    public static boolean isOperatingOnPiMon() throws Exception {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        String ipAddress = inetAddress.getHostAddress() ;
+        return ipAddress.equals( "192.168.0.117" ) ;
     }
 }

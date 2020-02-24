@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody ;
 import org.springframework.web.bind.annotation.RestController ;
 
 import com.sandy.sconsole.api.jeetest.qbm.vo.QBMMasterData ;
+import com.sandy.sconsole.core.util.SConsoleUtil ;
 import com.sandy.sconsole.dao.entity.TestConfigIndex ;
 import com.sandy.sconsole.dao.entity.TestQuestionBinding ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
@@ -30,6 +31,9 @@ import com.sandy.sconsole.util.ResponseMsg ;
 public class TestConfiguratorRestController {
     
     static final Logger log = Logger.getLogger( TestConfiguratorRestController.class ) ;
+    
+//    private static final String SERVER_HOST = "192.168.0.117:8080" ;
+    private static final String SERVER_HOST = "192.168.0.117:8080" ;
     
     @Autowired
     private TestConfigIndexRepository tciRepo = null ;
@@ -119,6 +123,37 @@ public class TestConfiguratorRestController {
             log.error( "Error saving test configuration", e ) ;
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
                                  .body( null ) ;
+        }
+    }
+    
+    /**
+     * This method is called upon by the browser to the local server. The 
+     * local server then posts the locally configured test to PiMon. This feature
+     * enables us to create tests offline on a local app and then sync it
+     * to PiMon once connectivity is established.
+     */
+    @PostMapping( "/SyncTestToPimon/{testId}" )
+    public ResponseEntity<ResponseMsg> syncTestToPiMon( 
+                @PathVariable(name="testId", required=true) Integer testId ) {
+        
+        try {
+            if( SConsoleUtil.isOperatingOnPiMon() ) {
+                return ResponseEntity.status( HttpStatus.BAD_REQUEST )
+                                     .body( new ResponseMsg( "Already on server. Can't sync" ) ) ;
+            }
+            else {
+                TestSynchronizer synchronizer = null ;
+                TestConfiguration config = loadConfig( testId ) ;
+                synchronizer = new TestSynchronizer( SERVER_HOST ) ;
+                synchronizer.syncTest( config ) ;
+                
+                return ResponseEntity.status( HttpStatus.OK )
+                                     .body( ResponseMsg.SUCCESS ) ;
+            }
+        }
+        catch( Exception e ) {
+            log.error( "Error synchronizing questions to server", e ) ;
+            return ResponseEntity.status( 500 ).body( null ) ;
         }
     }
     
@@ -304,6 +339,10 @@ public class TestConfiguratorRestController {
         ci.setDuration( config.getDuration() ) ;
         ci.setProjectedSolveTime( config.getProjectedSolveTime() ) ;
         ci.setLastUpdateDate( new Timestamp( System.currentTimeMillis() ) ) ;
+        
+        if( SConsoleUtil.isOperatingOnPiMon() ) {
+            ci.setSynched( true ) ;
+        }
         
         ci = tciRepo.save( ci ) ;
         

@@ -26,6 +26,7 @@ public class TestConfigIndex {
     // Note that duration is in seconds.
     private Integer projectedSolveTime = 0 ;
     private Integer duration = 0 ;
+    private boolean synched = false ;
     
     private Timestamp creationDate         = null ;
     private Timestamp lastUpdateDate       = null ;
@@ -108,5 +109,12 @@ public class TestConfigIndex {
     }
     public void setAttempted( Boolean attempted ) {
         this.attempted = attempted ;
+    }
+    
+    public boolean isSynched() {
+        return synched ;
+    }
+    public void setSynched( boolean synched ) {
+        this.synched = synched ;
     }
 }

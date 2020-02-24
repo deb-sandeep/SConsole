@@ -6,7 +6,7 @@ import java.util.List ;
 import com.sandy.sconsole.dao.entity.TestConfigIndex ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 
-public class TestConfiguration {
+public class TestConfiguration implements Cloneable {
 
     private Integer id = -1 ;
     private String examType = null ;
@@ -192,5 +192,10 @@ public class TestConfiguration {
 
     public void setCustomDuration( Integer customDuration ) {
         this.customDuration = customDuration ;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone() ;
     }
 }

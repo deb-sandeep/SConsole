@@ -33,6 +33,7 @@ import com.sandy.sconsole.api.jeetest.qbm.helper.TestQuestionSynchronizer ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.QBMMasterData ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.QBTopicInsight ;
 import com.sandy.sconsole.api.jeetest.qbm.vo.TestQuestionEx ;
+import com.sandy.sconsole.core.util.SConsoleUtil ;
 import com.sandy.sconsole.dao.entity.master.Book ;
 import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
@@ -276,9 +277,7 @@ public class QBMRestController {
             // local question which has been previously synched - if we 
             // don't turn off the synched marker, we won't be able to 
             // see this question in the list of unsynched questions.
-            InetAddress inetAddress = InetAddress.getLocalHost();
-            String ipAddress = inetAddress.getHostAddress() ;
-            if( !ipAddress.equals( "192.168.0.117" ) ) {
+            if( !SConsoleUtil.isOperatingOnPiMon() ) {
                 question.setSynched( false ) ;
             }
         
