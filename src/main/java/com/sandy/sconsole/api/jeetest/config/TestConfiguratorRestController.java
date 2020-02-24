@@ -32,7 +32,6 @@ public class TestConfiguratorRestController {
     
     static final Logger log = Logger.getLogger( TestConfiguratorRestController.class ) ;
     
-//    private static final String SERVER_HOST = "192.168.0.117:8080" ;
     private static final String SERVER_HOST = "192.168.0.117:8080" ;
     
     @Autowired
