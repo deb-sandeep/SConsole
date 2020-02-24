@@ -28,6 +28,7 @@ public class TestSynchronizer {
         TestConfiguration clone = ( TestConfiguration )config.clone() ;
         if( !config.getTestConfigIndex().isSynched() ) {
             clone.setId( -1 ) ;
+            clone.setCustomDuration( config.getTestConfigIndex().getDuration() ) ;
             clone.setTestConfigIndex( null ) ;
         }
         

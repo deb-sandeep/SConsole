@@ -146,6 +146,9 @@ public class TestConfiguratorRestController {
                 synchronizer = new TestSynchronizer( SERVER_HOST ) ;
                 synchronizer.syncTest( config ) ;
                 
+                config.getTestConfigIndex().setSynched( true ) ;
+                tciRepo.save( config.getTestConfigIndex() ) ;
+                
                 return ResponseEntity.status( HttpStatus.OK )
                                      .body( ResponseMsg.SUCCESS ) ;
             }

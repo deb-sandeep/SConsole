@@ -47,6 +47,9 @@ public class TestConfiguration implements Cloneable {
         if( this.customDuration != null && this.customDuration > 0 ) {
             duration = this.customDuration ;
         }
+        else if( this.tci != null && this.tci.getDuration() > 0 ) {
+            duration = this.tci.getDuration() ;
+        }
         else {
             List<TestQuestion> questions = getAllQuestions() ;
             
