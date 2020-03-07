@@ -65,7 +65,7 @@ sConsoleApp.controller( 'AdvTestConfigSummaryDashboardController', function( $sc
             function( response ){
                 console.log( "Test Configuration summaries received." ) ;
                 console.log( response ) ;
-                
+                $scope.testSummaries = [] ;
                 for( var i=0; i<response.data.length; i++ ) {
                 	var testSummary = response.data[i] ;
                 	if( testSummary.examType == "ADV" ) {
