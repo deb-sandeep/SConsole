@@ -36,7 +36,12 @@
 	        </a>
 	    </td>
         <td>
-            <span style="color:red">{{getNumErrorsForRC( topicDetail, '-UNASSIGNED-' )}}</span>
+            <span>
+            <a ng-click="showQuestions( topicDetail, '-UNASSIGNED-' )"
+               style="color:red;">
+            {{getNumErrorsForRC( topicDetail, '-UNASSIGNED-' )}}
+            </a>
+            </span>
         </td>
         <td style="text-align:right;">{{topicDetail.numWrongAnswers}}</td>          
       </tr>        

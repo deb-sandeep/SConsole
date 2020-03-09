@@ -16,6 +16,10 @@
                 <ul>
                     <li>Total duration of examination is <strong>
                     {{$parent.activeTest.duration}} minutes</strong></li>
+                    <li>Questions in each subject are presented in the following sections</li>
+                    <ul>
+                        <li ng-repeat="section in sectionDetails">{{section}} questions</li>
+                    </ul>
                     <li>The on-screen computer countdown timer on the top right corner of 
                         computer screen will display the remaining time (in minutes) available 
                         to you for completing the paper. When the on-screen countdown timer 
