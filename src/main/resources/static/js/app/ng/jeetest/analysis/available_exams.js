@@ -34,6 +34,10 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
                          testAttempt.testConfig.examType ) ;
     }
     
+    $scope.cloneTest = function( testId ) {
+        cloneTest( testId ) ;
+    }
+    
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -53,6 +57,27 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
                 console.log( "Error getting Test Attempt Summaries." ) ;
                 console.log( error ) ;
                 $scope.$parent.addErrorAlert( "Could not test summaries." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function cloneTest( testId ) {
+        
+        console.log( "Cloning test id = " + testId ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( "/CloneTestConfiguration/" + testId )
+        .then( 
+            function( response ){
+                console.log( response.data ) ;
+                alert( "Test cloned successfully. Test id = " + response.data.id ) ;
+            }, 
+            function( error ){
+                console.log( "Could not clone test." ) ;
+                console.log( error ) ;
+                $scope.$parent.addErrorAlert( "Could not clone test." ) ;
             }
         )
         .finally(function() {

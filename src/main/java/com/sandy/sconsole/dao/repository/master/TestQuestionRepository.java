@@ -92,6 +92,21 @@ public interface TestQuestionRepository
             + "FROM TestQuestion q "
             + "WHERE "
             +   "q.topic.id = :topicId AND "
+            +   "q.questionType = :questionType AND "
+            +   "q.id NOT IN ( " 
+            +   "    SELECT " 
+            +   "      tqb.question.id "
+            +   "    FROM "
+            +   "      TestQuestionBinding tqb " 
+            +   ")" )
+    public List<TestQuestion> findActiveQuestionsForTopicAndType( 
+                                       @Param( "topicId" ) Integer topicId,
+                                       @Param( "questionType" ) String questionType ) ;
+    
+    @Query(   "SELECT q "
+            + "FROM TestQuestion q "
+            + "WHERE "
+            +   "q.topic.id = :topicId AND "
             +   "q.book.id = :bookId AND "
             +   "q.questionRef like :qRef%" )
     public List<TestQuestion> findQuestionsWithQRef( 

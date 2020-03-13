@@ -32,7 +32,7 @@ public class TestConfiguration implements Cloneable {
     private List<TestQuestion> allQuestions = null ;
     
     public List<TestQuestion> getAllQuestions() {
-        if( allQuestions == null ) {
+        if( allQuestions == null || allQuestions.isEmpty() ) {
             allQuestions = new ArrayList<>() ;
             allQuestions.addAll( phyQuestions ) ;
             allQuestions.addAll( chemQuestions ) ;

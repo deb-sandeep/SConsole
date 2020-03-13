@@ -25,6 +25,7 @@ import com.sandy.sconsole.dao.entity.master.TestQuestion ;
 import com.sandy.sconsole.dao.entity.master.Topic ;
 import com.sandy.sconsole.dao.repository.TestConfigIndexRepository ;
 import com.sandy.sconsole.dao.repository.TestQuestionBindingRepository ;
+import com.sandy.sconsole.dao.repository.master.TestQuestionRepository ;
 import com.sandy.sconsole.util.ResponseMsg ;
 
 @RestController
@@ -39,6 +40,9 @@ public class TestConfiguratorRestController {
     
     @Autowired
     private TestQuestionBindingRepository tqbRepo = null ;
+    
+    @Autowired
+    private TestQuestionRepository tqRepo = null ;
     
     @GetMapping( "/TestConfigurationIndex" )
     public ResponseEntity<List<TestConfigIndex>> getTestConfigIndexList() {
@@ -117,6 +121,26 @@ public class TestConfiguratorRestController {
             config.setId( id ) ;
             return ResponseEntity.status( HttpStatus.OK )
                                  .body( config ) ;
+        }
+        catch( Exception e ) {
+            log.error( "Error saving test configuration", e ) ;
+            return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
+                                 .body( null ) ;
+        }
+    }
+    
+    @PostMapping( "/CloneTestConfiguration/{testId}" ) 
+    public ResponseEntity<TestConfiguration> cloneTestConfiguration(
+            @PathVariable(name="testId", required=true) Integer testId  ) {
+        
+        try {
+            log.debug( "Cloning a test configuration." ) ;
+            TestConfiguration config = loadConfig( testId ) ;
+            TestConfiguration clonedConfig = cloneConfig( config ) ;
+            Integer newId = saveConfig( clonedConfig ) ;
+            clonedConfig = loadConfig( newId ) ;
+            return ResponseEntity.status( HttpStatus.OK )
+                                 .body( clonedConfig ) ;
         }
         catch( Exception e ) {
             log.error( "Error saving test configuration", e ) ;
@@ -400,5 +424,22 @@ public class TestConfiguratorRestController {
             tqbList.add( tqb ) ;
         }
         return tqbList ;
+    }
+    
+    private TestConfiguration cloneConfig( TestConfiguration config ) 
+        throws Exception {
+        
+        TestCloner cloner = new TestCloner( tqRepo ) ;
+        
+        config.setId( -1 ) ;
+        config.getAllQuestions().clear() ;
+        config.setCustomDuration( config.getDuration() ) ;
+        config.setTestConfigIndex( null ) ;
+        
+        cloner.cloneQuestions( config.getPhyQuestions() ) ;
+        cloner.cloneQuestions( config.getChemQuestions() ) ;
+        cloner.cloneQuestions( config.getMathQuestions() ) ;
+        
+        return config ;
     }
 }

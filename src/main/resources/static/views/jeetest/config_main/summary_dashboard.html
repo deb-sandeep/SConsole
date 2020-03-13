@@ -18,6 +18,7 @@
               </button>
           </th>
           <th></th>
+          <th></th>
         </tr>
 	    <tr class="success">
 	      <th>ID</th>
@@ -30,6 +31,7 @@
           <th colspan="2" align="center" 
               style="text-align:center;">Edit</th>
           <th>Sync</th>
+          <th></th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -55,6 +57,11 @@
                     ng-click="syncTestToPiMon( test )"
                     ng-if="!test.synched"></span>
            </td>
+           <td>
+              <span class="glyphicon glyphicon-road"
+                    style="color:red;"
+                    ng-click="cloneTest( test.id )"></span>
+           </td>               
 	    </tr>
 	  </tbody>
 	</table>

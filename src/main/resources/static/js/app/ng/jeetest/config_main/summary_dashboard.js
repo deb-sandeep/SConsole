@@ -33,6 +33,10 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
         syncTestToPiMon( test ) ;
     }
 
+    $scope.cloneTest = function( testId ) {
+        cloneTest( testId ) ;
+    }
+    
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -101,6 +105,28 @@ sConsoleApp.controller( 'SummaryDashboardController', function( $scope, $http, $
             function( error ){
                 console.log( "Error synching test on server." + error ) ;
                 $scope.$parent.addErrorAlert( "Could not save test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function cloneTest( testId ) {
+        
+        console.log( "Cloning test id = " + testId ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( "/CloneTestConfiguration/" + testId )
+        .then( 
+            function( response ){
+                console.log( response.data ) ;
+                alert( "Test cloned successfully. Test id = " + response.data.id ) ;
+                fetchTestConfigurations() ;
+            }, 
+            function( error ){
+                console.log( "Could not clone test." ) ;
+                console.log( error ) ;
+                $scope.$parent.addErrorAlert( "Could not clone test." ) ;
             }
         )
         .finally(function() {
