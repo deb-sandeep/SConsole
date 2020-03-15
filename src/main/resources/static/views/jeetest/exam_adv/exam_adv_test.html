@@ -45,7 +45,7 @@
 
 <div id="adv-question-control-split-pane">
     <div id="adv-question-display-panel">
-        <div id="adv-question-display-header">
+        <div id="adv-question-display-header"  ng-class="thresholdAlertClass">
         Question No. {{currentQuestion.index}}
         </div>
         <div id="adv-question-display-scroll-pane">
@@ -170,6 +170,9 @@
 	        ( {{currentLapName}} 
 	        <span class="glyphicon glyphicon-chevron-right"></span> 
 	        {{nextLapName}} )
+
+            <span id="timer-lap" class="badge">{{ timeSpentInCurrentLap | mmss }}</span>
+            
         </button>
 	</div>
 	<div id="adv-submit-btn-panel" align="center">

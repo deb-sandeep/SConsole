@@ -16,8 +16,10 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
     $scope.attemptLapNames = [ "L1", "L2P", "L2", "AMR", "L3P", "Purple", "L3" ] ;
     $scope.secondsRemaining = 0 ;
     $scope.timeSpent = 0 ;
+    $scope.timeSpentInCurrentLap = 0 ;
     $scope.timerActive = false ;
     $scope.paletteHidden = false ;
+    $scope.thresholdAlertClass = "" ;
     
     $scope.currentHoverSection = null ;
     $scope.currentSection = null ;
@@ -229,7 +231,12 @@ sConsoleApp.controller( 'JEEAdvTestController', function( $scope, $http, $rootSc
         if( $scope.currentQuestion != null ) {
             $scope.currentQuestion.timeSpent++ ;
             $scope.currentQuestion.lapDetails[ $scope.currentLapName ].timeSpent++ ;
+            
+            $scope.thresholdAlertClass = ( $scope.currentQuestion.timeSpent > 300 ) ?
+                                         "threshold-alert" : "" ;
         }
+        
+        $scope.timeSpentInCurrentLap = $scope.attemptLapDetails[ $scope.currentLapName ].timeSpent ;
         
         if( $scope.secondsRemaining > 0 && $scope.timerActive ) {
             setTimeout( handleTimerEvent, 1000 ) ;

@@ -64,6 +64,18 @@
     font-weight:normal;
 }
 
+#timer-lap {
+    padding-left:10px;
+    padding-right:10px;
+    margin-left:5px;
+    margin-right:5px;
+    text-align:center;
+    font-size:15px;
+    font-family:Courier New;
+    font-style:normal;
+    font-weight:normal;
+}
+
 #sec-info-div {
 	display : none;
 	position : absolute;
@@ -230,3 +242,15 @@
 	display:inline-block;
 }
 
+.threshold-alert{
+    border-radius: 5px;
+    animation: blinkingBackground 10s infinite;
+}
+
+@keyframes blinkingBackground{
+    0%    { background-color: #feffb7;}
+    15%   { background-color: #ffea81;}
+    40%   { background-color: #ffd68a;}
+    65%   { background-color: #ffad63;}
+    80%   { background-color: #fd8e86;}
+}
