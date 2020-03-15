@@ -30,6 +30,10 @@ sConsoleApp.controller( 'AdvTestConfigSummaryDashboardController', function( $sc
         syncTestToPiMon( test ) ;
     }
     
+    $scope.cloneTest = function( testId ) {
+        cloneTest( testId ) ;
+    }
+    
 	// --- [END] Scope functions
 	
 	// -----------------------------------------------------------------------
@@ -104,6 +108,45 @@ sConsoleApp.controller( 'AdvTestConfigSummaryDashboardController', function( $sc
         .finally(function() {
             $scope.$parent.interactingWithServer = false ;
         }) ;
+    }
+    
+    function cloneTest( testId ) {
+        
+        console.log( "Cloning test id = " + testId ) ;
+        $scope.$parent.interactingWithServer = true ;
+        $http.post( "/CloneTestConfiguration/" + testId )
+        .then( 
+            function( response ){
+                console.log( response.data ) ;
+                showTestCloneSuccessMsg( response.data ) ;
+                fetchTestConfigurations() ;
+            }, 
+            function( error ){
+                console.log( "Could not clone test." ) ;
+                console.log( error ) ;
+                $scope.$parent.addErrorAlert( "Could not clone test." ) ;
+            }
+        )
+        .finally(function() {
+            $scope.$parent.interactingWithServer = false ;
+        }) ;
+    }
+    
+    function showTestCloneSuccessMsg( test ) {
+        
+        var msg = "Test cloned successfully.\nID = " + test.id  ;
+        
+        if( test.examType == 'ADV' ) {
+            if( test.phySectionNames.includes( "LCT" ) || 
+                test.chemSectionNames.includes( "LCT" ) || 
+                test.mathSectionNames.includes( "LCT" ) ) {
+                
+                msg += "\n" ;
+                msg += "Test contains LCT. Needs manual intervention." ;
+            } 
+        }
+        
+        alert( msg ) ;
     }
     
 	// --- [END] Local functions

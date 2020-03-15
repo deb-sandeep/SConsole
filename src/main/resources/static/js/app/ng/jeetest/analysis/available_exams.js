@@ -72,7 +72,7 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
         .then( 
             function( response ){
                 console.log( response.data ) ;
-                alert( "Test cloned successfully. Test id = " + response.data.id ) ;
+                showTestCloneSuccessMsg( response.data ) ;
             }, 
             function( error ){
                 console.log( "Could not clone test." ) ;
@@ -83,6 +83,22 @@ sConsoleApp.controller( 'AvailableTestAttemptsController', function( $scope, $ht
         .finally(function() {
             $scope.$parent.interactingWithServer = false ;
         }) ;
+    }
+    
+    function showTestCloneSuccessMsg( test ) {
+        
+        var msg = "Test cloned successfully.\nID = " + test.id  ;
+        if( test.examType == 'ADV' ) {
+            if( test.phySectionNames.includes( "LCT" ) || 
+                test.chemSectionNames.includes( "LCT" ) || 
+                test.mathSectionNames.includes( "LCT" ) ) {
+                
+                msg += "\n" ;
+                msg += "\nTest contains LCT. Needs manual intervention." ;
+            } 
+        }
+        
+        alert( msg ) ;
     }
     
 	// --- [END] Local functions
