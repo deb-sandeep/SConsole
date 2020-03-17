@@ -12,6 +12,7 @@ public class TestConfiguration implements Cloneable {
     private String examType = null ;
     private TestConfigIndex tci = null ;
     private Integer customDuration = null ;
+    private String shortName = null ;
     
     private List<TestQuestion> phyQuestions  = new ArrayList<>() ;
     private List<TestQuestion> chemQuestions = new ArrayList<>() ;
@@ -195,6 +196,13 @@ public class TestConfiguration implements Cloneable {
 
     public void setCustomDuration( Integer customDuration ) {
         this.customDuration = customDuration ;
+    }
+
+    public String getShortName() {
+        return shortName ;
+    }
+    public void setShortName( String shortName ) {
+        this.shortName = shortName ;
     }
 
     @Override

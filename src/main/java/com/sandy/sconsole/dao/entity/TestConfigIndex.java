@@ -18,6 +18,7 @@ public class TestConfigIndex {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id ;
     private String examType = null ;
+    private String shortName = null ;
     private Integer numPhyQuestions = 0 ;
     private Integer numChemQuestions = 0 ;
     private Integer numMathQuestions = 0 ;
@@ -116,5 +117,12 @@ public class TestConfigIndex {
     }
     public void setSynched( boolean synched ) {
         this.synched = synched ;
+    }
+    
+    public String getShortName() {
+        return shortName ;
+    }
+    public void setShortName( String shortName ) {
+        this.shortName = shortName ;
     }
 }

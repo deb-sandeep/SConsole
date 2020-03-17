@@ -232,6 +232,7 @@ public class TestConfiguratorRestController {
             config = new TestConfiguration() ;
             config.setId( id ) ;
             config.setExamType( tci.getExamType() ) ;
+            config.setShortName( tci.getShortName() ) ;
             config.setTestConfigIndex( tci ) ;
             
             List<TestQuestionBinding> bindings = tqbRepo.findAllByTestConfigId( id ) ;
@@ -357,6 +358,7 @@ public class TestConfiguratorRestController {
             ci.setCreationDate( new Timestamp( System.currentTimeMillis() ) ) ;
         }
         
+        ci.setShortName( config.getShortName() ) ;
         ci.setExamType( config.getExamType() ) ;
         ci.setNumPhyQuestions( config.getPhyQuestions().size() ) ;
         ci.setNumChemQuestions( config.getChemQuestions().size() ) ;

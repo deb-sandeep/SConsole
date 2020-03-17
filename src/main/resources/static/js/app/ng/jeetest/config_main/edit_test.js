@@ -45,6 +45,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
 		'IIT - Maths'     : []
 	}
 	$scope.customDuration = null ;
+	$scope.shortName = null ;
 	
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -301,6 +302,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
                 console.log( "Successfully loaded test configuration." ) ;
                 
                 $scope.examType = response.data.examType ;
+                $scope.shortName = response.data.shortName ;
                 $scope.assembledQuestions[ 'IIT - Physics'   ] = response.data.phyQuestions ;
                 $scope.assembledQuestions[ 'IIT - Chemistry' ] = response.data.chemQuestions ;
                 $scope.assembledQuestions[ 'IIT - Maths'     ] = response.data.mathQuestions ;
@@ -346,6 +348,7 @@ sConsoleApp.controller( 'EditTestController', function( $scope, $http, $routePar
         $http.post( '/TestConfiguration', {
         	id             : $scope.testId,
         	examType       : $scope.examType,
+        	shortName      : $scope.shortName,
         	customDuration : $scope.customDuration, 
         	phyQuestions   : $scope.assembledQuestions[ 'IIT - Physics' ],
 	    	chemQuestions  : $scope.assembledQuestions[ 'IIT - Chemistry' ],

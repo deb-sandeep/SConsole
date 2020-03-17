@@ -6,6 +6,7 @@
         <tr class="success">
           <th></th>
           <th></th>
+          <th></th>
           <th colspan="3" align="center" 
               style="text-align:center;"># Questions</th>
           <th></th>
@@ -23,6 +24,7 @@
 	    <tr class="success">
 	      <th>ID</th>
 	      <th>Type</th>
+	      <th>Name</th>
 	      <th># Phy</th>
 	      <th># Chem</th>
 	      <th># Math</th>
@@ -39,9 +41,10 @@
 	        class="test-summary-{{test.examType}}">
 	       <td>{{test.id}}</td>
 	       <td>{{test.examType}}</td>
+	       <td>{{test.shortName}}</td>
            <td>{{test.numPhyQuestions}}</td>
-           <td>{{test.numMathQuestions}}</td>
            <td>{{test.numChemQuestions}}</td>
+           <td>{{test.numMathQuestions}}</td>
            <td>{{test.duration}}</td>
            <td>{{test.creationDate | date}}</td>
            <td>

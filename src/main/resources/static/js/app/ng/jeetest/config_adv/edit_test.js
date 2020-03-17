@@ -42,6 +42,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 	
 	$scope.selectedQuestion = null ;
     $scope.customDuration = null ;
+    $scope.shortName = null ;
 		
 	var topicQSortDir = {} ;
 	var assembledQSortDir = {} ;
@@ -456,6 +457,8 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
 		
 		$scope.testId = config.id ;
 		$scope.examType = config.examType ;
+        $scope.shortName = config.shortName ;
+
 		setTitle() ;
 
 		// Identify and select the topics for which there are assembled questions
@@ -767,6 +770,7 @@ sConsoleApp.controller( 'EditAdvTestController', function( $scope, $http, $route
         $http.post( '/TestConfiguration', {
         	id             : $scope.testId,
         	examType       : $scope.examType,
+        	shortName      : $scope.shortName,
             customDuration : $scope.customDuration, 
         	phyQuestions   : phyQs,
 	    	chemQuestions  : chemQs,
