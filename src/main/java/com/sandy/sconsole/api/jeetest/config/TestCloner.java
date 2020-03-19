@@ -28,15 +28,20 @@ public class TestCloner {
         
         for( int i=0; i<questions.size(); i++ ) {
             boolean cloneFound = false ;
+            
             TestQuestion originalQ = questions.get( i ) ;
-            TestQuestion clonedQ = cloneTestQuestion( originalQ ) ;
+            String qType = originalQ.getQuestionType() ;
+            
+            TestQuestion clonedQ = cloneTestQuestion( originalQ.getTopic().getId(),
+                                                      qType ) ;
             if( clonedQ != null ) {
                 questions.set( i, clonedQ ) ;
                 cloneFound = true ;
             }
             else {
                 for( int j=0; j<questions.size(); j++ ) {
-                    clonedQ = cloneTestQuestion( questions.get( j ) ) ;
+                    TestQuestion question = questions.get( j ) ;
+                    clonedQ = cloneTestQuestion( question.getTopic().getId(), qType ) ;
                     if( clonedQ != null ) {
                         questions.set( i, clonedQ ) ;
                         cloneFound = true ;
@@ -51,14 +56,14 @@ public class TestCloner {
         }
     }
     
-    private TestQuestion cloneTestQuestion( TestQuestion originalQ ) {
+    private TestQuestion cloneTestQuestion( Integer topicId,
+                                            String questionType ) {
         
-        Stack<TestQuestion> questions = fetchUnassignedQuestions( originalQ.getTopic().getId(), 
-                                                                  originalQ.getQuestionType() ) ;
+        Stack<TestQuestion> questions = null ;
+        questions = fetchUnassignedQuestions( topicId, questionType ) ;
         if( !questions.isEmpty() ) {
             return questions.pop() ;
         }
-        
         return null ;
     }
 
@@ -81,7 +86,6 @@ public class TestCloner {
             questions.addAll( qList ) ;
             questionTypeMap.put( questionType, questions ) ;
         }
-        
         return questions ;
     }
 }
