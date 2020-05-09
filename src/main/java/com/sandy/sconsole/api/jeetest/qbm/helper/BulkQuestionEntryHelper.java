@@ -128,6 +128,13 @@ public class BulkQuestionEntryHelper {
                     if( SConsole.BULK_ANS_LOOKUP.containsKey( ansLookupKey ) ) {
                         entry.setaText( SConsole.BULK_ANS_LOOKUP.getProperty( ansLookupKey ) ) ;
                     }
+                    else if( ansLookupKey.contains( "_LCT_" ) ) {
+                        String[] parts = ansLookupKey.split( "_" ) ;
+                        ansLookupKey = parts[0] + "_Q_YG201_LCT_" + parts[5] ;
+                        if( SConsole.BULK_ANS_LOOKUP.containsKey( ansLookupKey ) ) {
+                            entry.setaText( SConsole.BULK_ANS_LOOKUP.getProperty( ansLookupKey ) ) ;
+                        }
+                    }
                 }
             }
             
