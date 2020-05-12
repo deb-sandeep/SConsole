@@ -129,8 +129,7 @@ public class BulkQuestionEntryHelper {
                         entry.setaText( SConsole.BULK_ANS_LOOKUP.getProperty( ansLookupKey ) ) ;
                     }
                     else if( ansLookupKey.contains( "_LCT_" ) ) {
-                        String[] parts = ansLookupKey.split( "_" ) ;
-                        ansLookupKey = parts[0] + "_Q_YG201_LCT_" + parts[5] ;
+                        ansLookupKey = getLCTAnsLookupKey( ansLookupKey ) ;
                         if( SConsole.BULK_ANS_LOOKUP.containsKey( ansLookupKey ) ) {
                             entry.setaText( SConsole.BULK_ANS_LOOKUP.getProperty( ansLookupKey ) ) ;
                         }
@@ -144,6 +143,20 @@ public class BulkQuestionEntryHelper {
             }
         }
         return qEntries ;
+    }
+    
+    private String getLCTAnsLookupKey( String originalLookupKey ) {
+        StringBuilder buffer = new StringBuilder() ;
+        String[] parts = originalLookupKey.split( "_" ) ;
+        int numParts = parts.length ;
+        
+        for( int i=0; i<numParts; i++ ) {
+            if( i != numParts-2 ) {
+                buffer.append( parts[i] ).append( "_" ) ;
+            }
+        }
+        buffer.deleteCharAt( buffer.length()-1 ) ;
+        return buffer.toString() ;
     }
     
     private BulkQEntry getBulkQEntry( Map<String, BulkQEntry> entriesMap, 
