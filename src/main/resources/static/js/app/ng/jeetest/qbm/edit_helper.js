@@ -120,7 +120,7 @@ function EditHelper() {
 	function checkMultipleOptions( text, validationErrors ) {
 		var parts = text.split( "," ) ;
         for( var i=0; i<parts.length; i++ ) {
-            if( !checkValueIsIntegerAndBetween1to4( parts[i] ) ) {
+            if( !checkValueIsIntegerAndBetween1to4( parts[i], validationErrors ) ) {
                 return false ;
             }
         }

@@ -108,11 +108,13 @@ public class BulkQuestionEntryHelper {
                               !fi.isPart() ) {
                             
                             BulkQEntry lctCtx = lctContextMap.get( fi.lctRef ) ;
-                            for( String imgName : lctCtx.getImgNames() ) {
-                                entry.getImgNames().add( imgName ) ;
-                            }
-                            for( String imgPath : lctCtx.getImgPaths() ) {
-                                entry.getImgPaths().add( imgPath ) ;
+                            if( lctCtx != null ) {
+                                for( String imgName : lctCtx.getImgNames() ) {
+                                    entry.getImgNames().add( imgName ) ;
+                                }
+                                for( String imgPath : lctCtx.getImgPaths() ) {
+                                    entry.getImgPaths().add( imgPath ) ;
+                                }
                             }
                         }
                     }

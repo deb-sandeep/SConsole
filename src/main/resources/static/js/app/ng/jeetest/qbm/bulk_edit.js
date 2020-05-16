@@ -8,6 +8,7 @@ function BulkQEntry( entry ) {
 	this.imgNames = entry.imgNames ;
 	this.imgPaths = entry.imgPaths ;
 	this.hidden   = false ;
+	this.topic    = entry.topic ;
 	
 	this.nextEntry = null ;
 }
@@ -55,11 +56,17 @@ sConsoleApp.controller( 'BulkEditController',
 		$( '#validationErrorsDialog' ).modal( 'hide' ) ;
 	}
 	
-	$scope.saveEntry = function( entry ) {
+	$scope.saveAll = function() {
+	    if( $scope.entries.length > 0 ) {
+	        $scope.saveEntry( $scope.entries[0], true ) ;
+	    }
+	}
+	
+	$scope.saveEntry = function( entry, saveLinkedEntry ) {
 		$scope.validationErrors.length = 0 ;
 		if( editHelper.isAnswerSemanticallyValid( entry.aText, entry.qType, 
 				                                  $scope.validationErrors ) ) {
-			saveEntryOnServer( entry ) ;
+			saveEntryOnServer( entry, saveLinkedEntry ) ;
 		}
 		else {
 			for( var i=0; i<$scope.validationErrors.length; i++ ) {
@@ -153,9 +160,9 @@ sConsoleApp.controller( 'BulkEditController',
 			$scope.validationErrors.push( "Subject name should be specified." ) ;
 		}
 		
-		if( $scope.baseInput.topic == null ) {
-			$scope.validationErrors.push( "Topic should be specified." ) ;
-		}
+//		if( $scope.baseInput.topic == null ) {
+//			$scope.validationErrors.push( "Topic should be specified." ) ;
+//		}
 		
 		if( $scope.baseInput.book == null ) {
 			$scope.validationErrors.push( "Book should be specified." ) ;
@@ -163,12 +170,17 @@ sConsoleApp.controller( 'BulkEditController',
 	}
 
     function getBulkQuestionMetaData() {
+        
+        var topicId = null ;
+        if( $scope.baseInput.topic != null ) {
+            topicId = $scope.baseInput.topic.id ;
+        }
     	
         $scope.interactingWithServer = true ;
         $http.get( '/BulkQuestionsEntryMeta', {
         	params:{
         		subjectName : $scope.baseInput.subjectName,
-        		topicId : $scope.baseInput.topic.id,
+        		topicId : topicId,
         		bookId : $scope.baseInput.book.id,
         		baseQRef : $scope.baseInput.baseQRef
         	}
@@ -199,7 +211,7 @@ sConsoleApp.controller( 'BulkEditController',
         }) ;
     }
     
-    function saveEntryOnServer( entry ) {
+    function saveEntryOnServer( entry, saveLinkedEntry ) {
     	
     	console.log( "Saving entrh on server." ) ;
     	
@@ -220,7 +232,7 @@ sConsoleApp.controller( 'BulkEditController',
             subject               : {
             	name : $scope.baseInput.subjectName,
             },
-            topic                 : $scope.baseInput.topic,
+            topic                 : entry.topic,
             book                  : $scope.baseInput.book,
             targetExam            : tgtExam,
             questionType          : entry.qType,
@@ -240,6 +252,9 @@ sConsoleApp.controller( 'BulkEditController',
             function( response ){
                 console.log( "Successfully saved question." ) ;
                 entry.saved = true ;
+                if( saveLinkedEntry && entry.nextEntry != null ) {
+                    $scope.saveEntry( entry.nextEntry, true ) ;
+                } 
             }, 
             function( error ){
                 console.log( "Error saving question on server." + error ) ;
