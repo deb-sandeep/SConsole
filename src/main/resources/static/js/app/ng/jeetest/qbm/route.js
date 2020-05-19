@@ -20,9 +20,5 @@ sConsoleApp.config( function( $routeProvider ) {
 	    templateUrl : "/jeetest/qbm/editQuestion",
 	    controller : "EditQuestionController"
 	})
-	.when("/mmtEditor", {
-		templateUrl : "/jeetest/qbm/mmtEditor",
-		controller : "MMTEditorController"
-	})
 });
 
