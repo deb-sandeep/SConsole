@@ -44,6 +44,12 @@ sConsoleApp.controller( 'MMTEditorController', function( $scope, $http ) {
     $scope.col2KeysRange = "p-t" ;
     $scope.meta = new MatrixMeta() ;
     
+    $scope.$on( 'mmtEditorIsBeingShown', function( event, entry ){
+        if( $scope.$parent.entry == entry ) {
+            $scope.refreshGridKeys() ;
+        }
+    }) ;
+    
     $scope.grids = [ 
         new SolutionGrid( $scope.meta ),
         new SolutionGrid( $scope.meta ),
@@ -65,7 +71,6 @@ sConsoleApp.controller( 'MMTEditorController', function( $scope, $http ) {
     
     $scope.masterMatchChanged = function( rowIndex, colIndex ) {
         var cellVal = $scope.grids[0].grid[rowIndex][colIndex] ;
-        console.log( "[r,c,v] = " + rowIndex + "," + colIndex + ", " + cellVal ) ;
         for( var i=1; i<$scope.grids.length; i++ ) {
             $scope.grids[i].grid[rowIndex][colIndex] = cellVal ;
         }

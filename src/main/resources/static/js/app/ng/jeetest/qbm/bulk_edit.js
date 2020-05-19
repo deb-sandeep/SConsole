@@ -156,6 +156,11 @@ sConsoleApp.controller( 'BulkEditController',
 		entry.hidden = true ;
 	}
 	
+	$scope.showMMTEditor = function( entry ) {
+	    entry.showMMTOptionsEditor = true ;
+	    $scope.$broadcast( 'mmtEditorIsBeingShown', entry ) ;
+	}
+	
 	// --- [START] Internal functions
 	function validateBaseCriteria() {
 		
@@ -238,9 +243,8 @@ sConsoleApp.controller( 'BulkEditController',
                 qText += "\t<li>)&nbsp;" + entry.mmtOptions[i] + "</li>\n" ;  
             }
             qText += "</ol>\n" ;
+            console.log( qText ) ;
     	}
-    	
-    	console.log( qText ) ;
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestQuestion', {

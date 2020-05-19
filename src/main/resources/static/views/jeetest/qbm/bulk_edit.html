@@ -197,7 +197,7 @@
 					                   Answer : <strong>{{entry.aText}}</strong>
 			                            <span class="glyphicon glyphicon-pencil"
 			                                  ng-show="entry.qType == 'MMT' && entry.aText == '' && !entry.showMMTOptionsEditor"
-			                                  ng-click="entry.showMMTOptionsEditor = true;">
+			                                  ng-click="showMMTEditor( entry )">
 			                            </span>
 			                        </th>
 					                <th width="33%">Lateral level : <strong>{{entry.latLevel}}</strong></th>
