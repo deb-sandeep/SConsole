@@ -186,11 +186,28 @@
 					        <img ng-repeat="imgPath in entry.imgPaths track by $index"
 					             ng-src="/jeetest/images/{{imgPath}}"/>
 					        <br>
+					        <ol type="A" ng-if="entry.qType == 'MMT'" >
+					           <li ng-repeat="option in entry.mmtOptions">
+					               ) &nbsp; {{option}}
+					           </li>
+					        </ol>
 					        <table class="pure-table pure-table-horizontal" width="100%">
 					            <tr>
-					                <th width="33%">Answer : <strong>{{entry.aText}}</strong></th>
+					                <th width="33%">
+					                   Answer : <strong>{{entry.aText}}</strong>
+			                            <span class="glyphicon glyphicon-pencil"
+			                                  ng-show="entry.qType == 'MMT' && entry.aText == '' && !entry.showMMTOptionsEditor"
+			                                  ng-click="entry.showMMTOptionsEditor = true;">
+			                            </span>
+			                        </th>
 					                <th width="33%">Lateral level : <strong>{{entry.latLevel}}</strong></th>
                                     <th width="33%">Proj Time : <strong>{{entry.projTime}}</strong></th>
+					            </tr>
+					            <tr ng-show="entry.showMMTOptionsEditor">
+					               <td colspan="3">
+							           <div ng-include="'../views/jeetest/qbm/template/mmt_editor.html'">
+							           </div>
+					               </td>
 					            </tr>
 					        </table>
 					      </div>

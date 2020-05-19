@@ -10,6 +10,9 @@ function BulkQEntry( entry ) {
 	this.hidden   = false ;
 	this.topic    = entry.topic ;
 	
+	this.mmtOptions = [] ;
+	this.showMMTOptionsEditor = false ;
+	
 	this.nextEntry = null ;
 }
 
@@ -226,6 +229,18 @@ sConsoleApp.controller( 'BulkEditController',
     			qText += "<br/>" ;
     		}
     	}
+    	
+    	if( entry.qType == "MMT" && entry.mmtOptions.length > 0 ) {
+    	    qText += "\n" ;
+            qText += "<br/>\n" ;
+            qText += "<ol type='A'>\n" ;
+            for( var i=0; i<entry.mmtOptions.length; i++ ) {
+                qText += "\t<li>)&nbsp;" + entry.mmtOptions[i] + "</li>\n" ;  
+            }
+            qText += "</ol>\n" ;
+    	}
+    	
+    	console.log( qText ) ;
     	
         $scope.$parent.interactingWithServer = true ;
         $http.post( '/TestQuestion', {

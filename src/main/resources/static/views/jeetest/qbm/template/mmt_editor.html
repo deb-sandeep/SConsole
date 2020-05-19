@@ -1,0 +1,112 @@
+<div ng-controller="MMTEditorController">
+	<table width="100%">
+	   <tr>
+	       <td>
+	           Col 1 Keys : <input type="text" ng-model="col1KeysRange"/>	       
+           </td>
+           <td>
+               Col 2 Keys : <input type="text" ng-model="col2KeysRange"/>
+               &nbsp;&nbsp;
+              <button type="button"
+                      class="btn btn-default"
+                      style="padding:0px"
+                      ng-click="refreshGridKeys()"> Refresh grid
+              </button>
+           </td>
+	   </tr>
+	   <tr>
+	       <td width="50%" align="center">
+	           <table style="background-color:lightblue;">
+	               <tr>
+                       <td>
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           {{meta.col2EntryKeys[$index]}}
+                       </td>
+	               </tr>
+	               <tr ng-repeat="row in meta.col1EntryKeys">
+	                   <td>
+	                       {{meta.col1EntryKeys[$index]}}
+	                   </td>
+	                   <td ng-repeat="col in meta.col2EntryKeys">
+	                       <input type="checkbox"
+	                              ng-model="grids[0].grid[$parent.$index][$index]"
+	                              ng-change="masterMatchChanged( $parent.$index, $index )">
+	                   </td>
+	               </tr>
+	           </table>
+	       </td>
+           <td width="50%" align="center">
+               <table>
+                   <tr>
+                       <td>
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           {{meta.col2EntryKeys[$index]}}
+                       </td>
+                   </tr>
+                   <tr ng-repeat="row in meta.col1EntryKeys">
+                       <td>
+                           {{meta.col1EntryKeys[$index]}}
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           <input type="checkbox"
+                                  ng-model="grids[1].grid[$parent.$index][$index]">
+                       </td>
+                   </tr>
+               </table>
+           </td>
+	   </tr>
+       <tr>
+           <td width="50%" align="center">
+               <table>
+                   <tr>
+                       <td>
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           {{meta.col2EntryKeys[$index]}}
+                       </td>
+                   </tr>
+                   <tr ng-repeat="row in meta.col1EntryKeys">
+                       <td>
+                           {{meta.col1EntryKeys[$index]}}
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           <input type="checkbox"
+                                  ng-model="grids[2].grid[$parent.$index][$index]">
+                       </td>
+                   </tr>
+               </table>
+           </td>
+           <td width="50%" align="center">
+               <table>
+                   <tr>
+                       <td>
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           {{meta.col2EntryKeys[$index]}}
+                       </td>
+                   </tr>
+                   <tr ng-repeat="row in meta.col1EntryKeys">
+                       <td>
+                           {{meta.col1EntryKeys[$index]}}
+                       </td>
+                       <td ng-repeat="col in meta.col2EntryKeys">
+                           <input type="checkbox"
+                                  ng-model="grids[3].grid[$parent.$index][$index]">
+                       </td>
+                   </tr>
+               </table>
+           </td>
+       </tr>
+       <tr>
+           <td colspan="2">
+              <button type="button"
+                      class="btn btn-success"
+                      ng-click="applyMCAOptions()"> Apply
+              </button>
+           </td>
+       </tr>
+	</table>
+</div>
+
