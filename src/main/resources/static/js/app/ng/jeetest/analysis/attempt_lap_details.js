@@ -696,10 +696,16 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
     
     function extractLapNames() {
         
+        // Logic enhanced to cater for cases where lap details could not
+        // be saved.
         for( var i=0; i<$scope.lapEvents.length; i++ ) {
             var event = $scope.lapEvents[i] ;
-            if( event.eventId == "LAP_START" ) {
-                $scope.lapNames.push( event.payload ) ;
+            if( event.eventId == "LAP_START" || 
+                event.eventId == "LAP_END" ) {
+
+                if( !$scope.lapNames.includes( event.payload ) ) {
+                    $scope.lapNames.push( event.payload ) ;
+                }
             }
         }
     }
@@ -731,8 +737,14 @@ sConsoleApp.controller( 'TestAttemptLapDetailsController', function( $scope, $ht
             for( var j=0; j<$scope.questions.length; j++ ) {
                 var qaDetail = $scope.qaDetails[ j ] ;
                 var lapSnapshotIndex = (i*$scope.questions.length) + j ;
-                var lapSnapshot = $scope.lapSnapshots[ lapSnapshotIndex ] ;
                 
+                // Logic enhanced to cater for cases where lap details could not
+                // be saved.
+                if( lapSnapshotIndex >= $scope.lapSnapshots.length ) {
+                    return ;
+                }
+                
+                var lapSnapshot = $scope.lapSnapshots[ lapSnapshotIndex ] ;
                 qaDetail.ingestLapSnapshot( lapSnapshot ) ;
             }
         }
