@@ -323,3 +323,7 @@ li {
 .fixed-font {
 	font-family:Courier;
 }
+
+ol[type='A']>li {
+	padding-left:0px;
+}
