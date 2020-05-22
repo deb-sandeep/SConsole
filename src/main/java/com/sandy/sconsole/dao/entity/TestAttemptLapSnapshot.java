@@ -61,4 +61,12 @@ public class TestAttemptLapSnapshot {
     public void setLapName( String lapName ) {
         this.lapName = lapName ;
     }
+    
+    public String toString() {
+        return testAttemptId + "," + 
+               questionId + "," + 
+               lapName + "," + 
+               timeSpent + "," + 
+               attemptStatus ;
+    }
 }

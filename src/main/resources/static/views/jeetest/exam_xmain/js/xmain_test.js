@@ -336,11 +336,11 @@ sConsoleApp.controller( 'JEEXMainTestController',
                 attemptStatus  : q.attemptState
             }) ;
         }
-        saveTestAttemptLapSnapshots( snapshots ) ;
+        saveTestAttemptLapSnapshots( snapshots, 1 ) ;
     }
     
     // ------------------- Server comm functions -----------------------------
-    function saveTestAttemptLapSnapshots( snapshots ) {
+    function saveTestAttemptLapSnapshots( snapshots, attemptNumber ) {
         
         console.log( "Saving test attempt lap snapshots." ) ;
         
@@ -351,13 +351,47 @@ sConsoleApp.controller( 'JEEXMainTestController',
                 console.log( "Successfully saved test lap snapshot." ) ;
             }, 
             function( error ){
-                console.log( "Error saving test lap snapshot on server." ) ;
-                $scope.addErrorAlert( "Could not save test attempt lap snapshot." ) ;
+                if( attemptNumber < 4 ) {
+                    // Attempt again to save the snapshots after some time
+                    // with exponential backoff
+                    console.log( "Lapshot save attempt " + attemptNumber + 
+                                " failed. Trying again in " + 
+                                ( 5 * attemptNumber ) + " seconds." ) ;
+                    setTimeout( saveTestAttemptLapSnapshots, 5000*attemptNumber, 
+                                snapshots, attemptNumber+1 ) ;
+                }
+                else {
+                    // If we have not been able to save the snapshots after
+                    // three attempts, log it onto the console for manual
+                    // intervention
+                    console.log( "Error saving test lap snapshot on server." ) ;
+                    
+                    var strMsg = "Could not save test attempt lap snapshot." + 
+                                 "Please save the data shown on this alert for manual import.<copy>" +
+                                 getLapSnapshotLog( snapshots ) + "</copy>";
+                    
+                    $scope.addErrorAlert( strMsg ) ;
+                }
             }
         )
         .finally(function() {
             $scope.interactingWithServer = false ;
         }) ;
+    }
+    
+    function getLapSnapshotLog( snapshots ) {
+        
+        var csvStr = "" ;
+        for( var i=0; i<snapshots.length; i++ ) {
+            var snapshot = snapshots[i] ;
+            csvStr += snapshot.testAttemptId + "," + 
+                      snapshot.questionId + "," + 
+                      snapshot.lapName + "," + 
+                      snapshot.timeSpent + "," + 
+                      snapshot.attemptStatus + ";" ;
+        }
+        console.log( csvStr ) ;
+        return csvStr ;
     }
     
     // ------------------- Initialization helpers ----------------------------

@@ -141,7 +141,8 @@ public class JEETestRestController {
             @RequestBody List<TestAttemptLapSnapshot> snapshots ) {
         
         try {
-            log.debug( "Saving test attempt lap snapshots." ) ;
+            log.debug( "Saving test attempt lap snapshots." + 
+                       getSnapshotsLog( snapshots ) ) ;
             
             if( config.isRecordTestAttempt() ) {
                 talsRepo.saveAll( snapshots ) ;
@@ -157,6 +158,15 @@ public class JEETestRestController {
             return ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR )
                                  .body( null ) ;
         }
+    }
+    
+    private String getSnapshotsLog( List<TestAttemptLapSnapshot> snapshots ) {
+        StringBuilder builder = new StringBuilder( "\n\n" ) ;
+        for( TestAttemptLapSnapshot snapshot : snapshots ) {
+            builder.append( snapshot.toString() ).append( "\n" ) ;
+        }
+        builder.append( "\n" ) ;
+        return builder.toString() ;
     }
     
     @PostMapping( "/ClickStreamEvent" ) 
