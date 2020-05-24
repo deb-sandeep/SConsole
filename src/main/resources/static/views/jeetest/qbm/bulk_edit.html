@@ -187,7 +187,7 @@
 					             ng-src="/jeetest/images/{{imgPath}}"/>
 					        <br>
 					        <ol type="A" ng-if="entry.qType == 'MMT'" >
-					           <li ng-repeat="option in entry.mmtOptions">
+					           <li ng-repeat="option in entry.mmtOptions track by $index">
 					               ) &nbsp; {{option}}
 					           </li>
 					        </ol>

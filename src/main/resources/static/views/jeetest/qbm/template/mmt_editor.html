@@ -37,7 +37,7 @@
 	           </table>
 	       </td>
            <td width="50%" align="center">
-               <table>
+               <table ng-style="getOptionBackgroundStyle(1)">
                    <tr>
                        <td>
                        </td>
@@ -59,7 +59,7 @@
 	   </tr>
        <tr>
            <td width="50%" align="center">
-               <table>
+               <table ng-style="getOptionBackgroundStyle(2)">
                    <tr>
                        <td>
                        </td>
@@ -79,7 +79,7 @@
                </table>
            </td>
            <td width="50%" align="center">
-               <table>
+               <table ng-style="getOptionBackgroundStyle(3)">
                    <tr>
                        <td>
                        </td>
@@ -101,6 +101,10 @@
        </tr>
        <tr>
            <td colspan="2">
+              <button type="button"
+                      class="btn btn-success"
+                      ng-click="mutateOptions()"> Mutate
+              </button>
               <button type="button"
                       class="btn btn-success"
                       ng-click="applyMCAOptions()"> Apply
