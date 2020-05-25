@@ -66,6 +66,13 @@ sConsoleApp.controller( 'BulkEditController',
 	}
 	
 	$scope.saveEntry = function( entry, saveLinkedEntry ) {
+		
+		if( entry == null ) return ;
+		
+		if( entry.hidden ) {
+			$scope.saveEntry( entry.next ) ;
+		}
+		
 		$scope.validationErrors.length = 0 ;
 		if( editHelper.isAnswerSemanticallyValid( entry.aText, entry.qType, 
 				                                  $scope.validationErrors ) ) {
