@@ -11,22 +11,22 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             "< 10", "< 20", "< 30", "< 40", "< 50", "< 60", 
         ],
         efficiencyMarkers : [ "Any",
-            "> 90", "> 80", "> 70", "> 60", "> 50", 
-            "< 90", "< 80", "< 70", "< 60", "< 50",  
+            "> 95", "> 90", "> 85", "> 80", "> 75", "> 70", "> 60", "> 50", 
+            "< 95", "< 90", "< 85", "< 80", "< 75", "< 70", "< 60", "< 50",  
         ],
         rcOptions     : $scope.rcOptions.choices,
-        timeHorizon   : [ "1 months",
-                          "2 months",
-                          "3 months",
-                          "4 months",
-                          "5 months",
-                          "6 months",
-                          "9 months",
-                          "12 months",
-                          "15 months",
-                          "18 months",
-                          "21 months",
-                          "24 months"
+        timeHorizon   : [ "1 weeks",
+                          "2 weeks",
+                          "3 weeks",
+                          "4 weeks",
+                          "5 weeks",
+                          "6 weeks",
+                          "9 weeks",
+                          "12 weeks",
+                          "15 weeks",
+                          "18 weeks",
+                          "21 weeks",
+                          "24 weeks"
        ]
     } ;
     
@@ -43,7 +43,7 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             $scope.rcOptions.choices[9],
             $scope.rcOptions.choices[10]
         ],
-        timeHorizon : $scope.searchMaster.timeHorizon[2]
+        timeHorizon : $scope.searchMaster.timeHorizon[1]
     } ;
     
     $scope.topicDetails = [] ;
@@ -54,7 +54,7 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
     
-    fetchErrorDetailsRawData( 3 ) ;
+    fetchErrorDetailsRawData( 2 ) ;
 	
 	// --- [END] Controller initialization -----------------------------------
 	
@@ -137,8 +137,8 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
     $scope.refreshDataForTimeHorizon = function() {
         
         var timeHorizon = $scope.searchCriteria.timeHorizon ;
-        var numMonths = parseInt( timeHorizon.substring( 0, timeHorizon.length - 7 ) ) ;
-        fetchErrorDetailsRawData( numMonths ) ;
+        var numWeeks = parseInt( timeHorizon.substring( 0, timeHorizon.length - 6 ) ) ;
+        fetchErrorDetailsRawData( numWeeks ) ;
     }
 	
 	// --- [END] Scope functions
@@ -258,11 +258,11 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
         return !isMatched ;
     }
     
-    function fetchErrorDetailsRawData( numMonths ) {
+    function fetchErrorDetailsRawData( numWeeks ) {
         
         console.log( "Fetching error details raw data" ) ;
         $scope.$parent.interactingWithServer = true ;
-        $http.get( "/TestAttempt/TopicWiseTestQuestionErrorDetails?timeHorizon=" + numMonths )
+        $http.get( "/TestAttempt/TopicWiseTestQuestionErrorDetails?timeHorizon=" + numWeeks )
         .then( 
             function( response ){
                 console.log( response ) ;

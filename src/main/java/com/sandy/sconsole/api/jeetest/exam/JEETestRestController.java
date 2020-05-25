@@ -383,7 +383,7 @@ public class JEETestRestController {
             log.debug( "Fetching topic wise test question error details." ) ;
             log.debug( "Time horizon = " + timeHorizon ) ;
             
-            Date horizonDate = DateUtils.addMonths( new Date(), -1*timeHorizon ) ;
+            Date horizonDate = DateUtils.addWeeks( new Date(), -1*timeHorizon ) ;
             
             List<TopicTestQuestionCount> topicQCounts ;
             List<IncorrectTestAnswerRC> wrongAnswerRCs ;
