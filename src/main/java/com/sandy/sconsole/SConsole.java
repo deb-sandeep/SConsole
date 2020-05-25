@@ -61,6 +61,9 @@ public class SConsole
     public static File JEETEST_IMG_DIR = new File( System.getProperty( "user.home" ),
                                                   "projects/workspace/sconsole/jeetest/images" ) ;
 
+    public static File JEETEST_EFFGRAPH_IMG_DIR = new File( System.getProperty( "user.home" ),
+                                                  "projects/workspace/sconsole/jeetest/effgraphs" ) ;
+
     public static File MATHJAX_DIR = new File( "/var/www/lib-ext/MathJax" ) ;
 
     private static Timer              SEC_TIMER = new Timer( "SEC_TIMER", true ) ;
@@ -280,6 +283,9 @@ public class SConsole
         registry.addResourceHandler("/jeetest/images/**")
                 .addResourceLocations( "file:" + JEETEST_IMG_DIR.getAbsolutePath() + "/" ) ;
         
+        registry.addResourceHandler("/jeetest/effgraphs/**")
+                .addResourceLocations( "file:" + JEETEST_EFFGRAPH_IMG_DIR.getAbsolutePath() + "/" ) ;
+
         registry.addResourceHandler("/js/lib/MathJax/**")
                 .addResourceLocations( "file:" + MATHJAX_DIR.getAbsolutePath() + "/" ) ;
     }

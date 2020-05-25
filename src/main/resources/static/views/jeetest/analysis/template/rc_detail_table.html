@@ -21,12 +21,16 @@
       <tr ng-repeat="topicDetail in topicDetails"
           ng-show="determineVisibility( topicDetail )">
         <td>{{topicDetail.subjectName.substring( 5 )}}</td>          
-        <td>{{topicDetail.topicName}}</td>          
+        <td>
+            {{topicDetail.topicName}}
+        </td>          
         <td style="text-align:right;">{{topicDetail.numQuestions}}</td>
         <td style="text-align:right;">{{getNumErrorsForChosenRCs( topicDetail )}}</td>          
         <td style="text-align:right;"
             ng-class="getEffectivenessClass( topicDetail )">
+            <span ng-click="showEffGraph( topicDetail )">
             {{getTopicEffectiveness( topicDetail )}} %
+            </span>
         </td>          
 	    <td ng-repeat="option in searchMaster.rcOptions track by $index"
 	        style="text-align:right;">

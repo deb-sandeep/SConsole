@@ -49,6 +49,7 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
     $scope.topicDetails = [] ;
     $scope.selectedQuestions = [] ;
     $scope.selectedQuestionsRC = "" ;
+    $scope.effGraphImgPath = "" ;
         
 	// -----------------------------------------------------------------------
 	// --- [START] Controller initialization ---------------------------------
@@ -123,6 +124,14 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
             $scope.selectedQuestionsRC = rc ;
             displayQuestions( questions ) ;
         }
+    }
+    
+    $scope.showEffGraph = function( topicDetail ) {
+        $scope.effGraphImgPath = "/jeetest/effgraphs/" + 
+                                 topicDetail.subjectName + "/" + 
+                                 topicDetail.topicName + "/graph.png" ;
+        
+        $( '#effGraphDialog' ).modal( 'show' ) ;
     }
     
     $scope.refreshDataForTimeHorizon = function() {
