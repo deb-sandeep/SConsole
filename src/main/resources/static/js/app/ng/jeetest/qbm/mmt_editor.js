@@ -35,6 +35,59 @@ function SolutionGrid( matrixMeta ) {
         return optionString ;
     }
     
+    this.mutate = function() {
+
+    	// For each row.. 
+        for( var i=0; i<this.meta.col1EntryKeys.length; i++ ) {
+        	var gridRow = this.grid[i] ;
+        	var numMutations = 0 ;
+        	
+        	var numSelections = this.getNumCellsSelected( gridRow ) ;
+        	
+        	var iterIndex = 0 ;
+        	while( numMutations <= 0 || 
+        		   this.getNumCellsSelected( gridRow ) != numSelections ) {
+
+        		if( iterIndex > gridRow.length-1 ) {
+        			iterIndex = 0 ;
+        		}
+        		
+        		// Mutate this index with a 10% probability
+            	if( Math.random() >= 0.9 ) {
+            		numMutations++ ;
+            		gridRow[iterIndex] = gridRow[iterIndex] ? false : true ;
+            	}
+
+            	iterIndex++ ;
+        	}
+        }
+    }
+    
+    this.equals = function( aGrid ) {
+        for( var i=0; i<this.meta.col1EntryKeys.length; i++ ) {
+            for( var j=0; j<this.meta.col2EntryKeys.length; j++ ) {
+                if( this.grid[i][j] == true && 
+                    aGrid.grid[i][j] != true ) {
+                    return false ;
+                }
+                
+                if( aGrid.grid[i][j] == true && 
+                    this.grid[i][j]  != true ) {
+                    return false ;
+                }
+            }
+        }
+        return true ;
+    }
+    
+    this.getNumCellsSelected = function( gridRow ) {
+    	var numSelected = 0 ;
+        for( var j=0; j<this.meta.col2EntryKeys.length; j++ ) {
+            if( gridRow[j] ) numSelected++ ;
+        }
+        return numSelected ;
+    }
+    
     this.init() ;
 }
 
@@ -104,6 +157,28 @@ sConsoleApp.controller( 'MMTEditorController', function( $scope, $http ) {
         console.log( $scope.$parent.entry.aText ) ;
         
         $scope.$parent.entry.showMMTOptionsEditor = false ;
+    }
+    
+    $scope.mutateOptions = function() {
+        for( var i=0; i<$scope.grids.length; i++ ) {
+            var grid = $scope.grids[i] ;
+            if( i > 0 ) {
+            	grid.mutate() ;
+            } 
+        }
+    }
+    
+    $scope.getOptionBackgroundStyle = function( optIndex ) {
+    	
+    	var srcGrid = $scope.grids[optIndex] ;
+        for( var i=0; i<$scope.grids.length; i++ ) {
+        	if( i == optIndex ) continue ;
+            var tgtGrid = $scope.grids[i] ;
+            if( srcGrid.equals( tgtGrid ) ) {
+            	return {'background-color':'red'} ;
+            } 
+        }
+        return null ;
     }
     
     function shuffle( array ) {
