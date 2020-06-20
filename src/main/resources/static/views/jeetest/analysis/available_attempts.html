@@ -6,6 +6,7 @@
 			    <th>#</th>
 				<th>ID</th>
 				<th>Type</th>
+                <th>Name</th>
 				<th>Dur (min)</th>
 				<th>#Q</th>
 				<th>Date</th>
@@ -33,6 +34,7 @@
 	           <td>{{attemptSummaries.length - $index}}</td>
 	           <td>{{attempt.testConfig.id}}</td>
 	           <td>{{attempt.testConfig.examType}}</td>
+               <td>{{attempt.testConfig.shortName}}</td>
 	           <td style="text-align:right;font-family:Courier;">{{attempt.testConfig.duration*60 | duration}}</td>
 	           <td style="text-align:right;">
 	               {{attempt.testConfig.numPhyQuestions + 
