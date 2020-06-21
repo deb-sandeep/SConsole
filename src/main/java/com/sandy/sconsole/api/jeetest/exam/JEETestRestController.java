@@ -2,7 +2,9 @@ package com.sandy.sconsole.api.jeetest.exam;
 
 import java.sql.Timestamp ;
 import java.util.ArrayList ;
+import java.util.Calendar ;
 import java.util.Date ;
+import java.util.GregorianCalendar ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
@@ -382,8 +384,9 @@ public class JEETestRestController {
         try {
             log.debug( "Fetching topic wise test question error details." ) ;
             log.debug( "Time horizon = " + timeHorizon ) ;
-            
-            Date horizonDate = DateUtils.addWeeks( new Date(), -1*timeHorizon ) ;
+
+            Date startOfToday = getStartOfToday() ;
+            Date horizonDate = DateUtils.addWeeks( startOfToday, -1*timeHorizon ) ;
             
             List<TopicTestQuestionCount> topicQCounts ;
             List<IncorrectTestAnswerRC> wrongAnswerRCs ;
@@ -445,5 +448,14 @@ public class JEETestRestController {
             }
             questionList.add( questionId ) ;
         }
+    }
+    
+    private Date getStartOfToday() {
+         Calendar date = new GregorianCalendar();
+         date.set(Calendar.HOUR_OF_DAY, 0);
+         date.set(Calendar.MINUTE, 0);
+         date.set(Calendar.SECOND, 0);
+         date.set(Calendar.MILLISECOND, 0);
+         return date.getTime() ;
     }
 }
