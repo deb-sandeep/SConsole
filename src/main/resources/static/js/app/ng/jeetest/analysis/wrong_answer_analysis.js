@@ -26,7 +26,8 @@ sConsoleApp.controller( 'WrongAnswersAnalysisController', function( $scope, $htt
                           "15 weeks",
                           "18 weeks",
                           "21 weeks",
-                          "24 weeks"
+                          "24 weeks",
+                          "208 weeks"
        ]
     } ;
     
