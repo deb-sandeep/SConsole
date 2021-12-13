@@ -159,12 +159,12 @@
 		        <table class="table table-condensed">
 		            <!-- First row -->
 		            <tr>
-		                <td width="100%" class="labelcell">
+		                <td style="width:100%" class="labelcell">
     		                <label for="preview">Preview</label>
                         </td>
 		            </tr>
 		            </tr>
-		              <td width="100%">
+		              <td style="width:100%">
 					    <div class="panel panel-success" 
 					         ng-repeat="entry in entries track by $index"
 					         ng-hide="( hideSaved && entry.saved ) || entry.hidden">
@@ -191,7 +191,7 @@
 					               ) &nbsp; {{option}}
 					           </li>
 					        </ol>
-					        <table class="pure-table pure-table-horizontal" width="100%">
+					        <table class="pure-table pure-table-horizontal" style="width:100%">
 					            <tr>
 					                <th width="33%">
 					                   Answer : <strong>{{entry.aText}}</strong>
